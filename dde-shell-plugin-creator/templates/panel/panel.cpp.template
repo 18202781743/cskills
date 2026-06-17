@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 - 2026 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,13 +7,18 @@
 #include "pluginfactory.h"
 
 {{CLASS_NAME}}::{{CLASS_NAME}}(QObject *parent)
-    : DApplet(parent)
+    : DPanel(parent)
 {
+}
+
+bool {{CLASS_NAME}}::load()
+{
+    return DPanel::load();
 }
 
 bool {{CLASS_NAME}}::init()
 {
-    return DApplet::init();
+    return DPanel::init();
 }
 
 D_APPLET_CLASS({{CLASS_NAME}})

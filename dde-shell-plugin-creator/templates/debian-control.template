@@ -10,7 +10,7 @@ Build-Depends:
  qt6-declarative-dev,
  qt6-tools-dev,
  libdtk6core-dev (>= 6.0),
- libdde-shell-dev (>= 0.0.10)
+ libdde-shell-dev (>= 0.1.0)
 Standards-Version: 4.6.0
 Rules-Requires-Root: no
 
@@ -19,6 +19,6 @@ Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- dde-shell (>= 2.0)
+ dde-shell (>= 0.1.0)
 Description: {{DESCRIPTION}}
  {{LONG_DESCRIPTION}}
