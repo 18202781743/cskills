@@ -34,8 +34,6 @@ Ask the user / 询问用户：
 1. **Plugin name / 插件名称**: What should the plugin be called? (e.g., `org.deepin.ds.weather`)
 2. **Plugin type / 插件类型**: Applet, Containment, or Panel?
 3. **UI technology / UI 技术**: QWidget (embedded in panel), QQuick (standalone window), or both?
-4. **Configuration / 配置**: Does the plugin need DConfig for user settings?
-5. **Cross-plugin access / 跨插件访问**: Does it need to access data from other plugins via DAppletBridge?
 
 ### Step 2: Generate Project Structure / 第二步：生成项目结构
 
