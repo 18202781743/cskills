@@ -1,0 +1,21 @@
+// SPDX-FileCopyrightText: 2024 - 2026 UnionTech Software Technology Co., Ltd.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+#include "{{CLASS_NAME_LOWER}}.h"
+
+#include "pluginfactory.h"
+
+{{CLASS_NAME}}::{{CLASS_NAME}}(QObject *parent)
+    : DApplet(parent)
+{
+}
+
+bool {{CLASS_NAME}}::init()
+{
+    return DApplet::init();
+}
+
+D_APPLET_CLASS({{CLASS_NAME}})
+
+#include "{{CLASS_NAME_LOWER}}.moc"
