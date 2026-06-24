@@ -2,7 +2,9 @@
 
 ## 1. 概述
 
-在 QML 中使用 dci 图标，需要使用 `DciIcon` 或 `DciIconImage` 组件。
+在 QML 中使用 dci 图标，可通过 `DciIconImage` 组件（对应 C++ 后端 `DQuickDciIconImage`）。
+
+> **注意**：`DciIconImage` 是 dtkdeclarative 的公开 QML 组件名，其 C++ 实现类为 `DQuickDciIconImage`（私有 API）。在 QML 中应使用 `DciIconImage`。
 
 ## 2. 使用方式
 
@@ -16,7 +18,6 @@ DciIconImage {
     source: "qrc:/icons/my-icon.dci"
     width: 32
     height: 32
-    theme: DGuiApplicationHelper.DarkType  // 或 LightType
 }
 ```
 
@@ -37,13 +38,13 @@ Button {
 
 ```qml
 import org.deepin.dtk 1.0
-import org.deepin.dtk.private 1.0 as D
 
 DciIconImage {
     id: iconImage
     source: "qrc:/icons/my-icon.dci"
-    theme: DGuiApplicationHelper.instance.themeType === DGuiApplicationHelper.DarkType
-           ? DciIcon.Dark : DciIcon.Light
+    width: 32
+    height: 32
+    // DciIconImage 自动跟随系统主题切换
 }
 ```
 

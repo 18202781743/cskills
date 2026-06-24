@@ -32,14 +32,14 @@ dFatal() << "致命错误";
 
 ## 4. 配置日志输出
 
-### 4.1 输出到控制台
+### 4.1 注册 Appender
 
 ```cpp
 #include <Logger>
 #include <ConsoleAppender>
 
 int main(int argc, char *argv[]) {
-    DLogHelper::setGlobalAppender(new ConsoleAppender);
+    Logger::globalInstance()->registerAppender(new ConsoleAppender);
     dInfo() << "应用启动";
 }
 ```
@@ -52,10 +52,8 @@ int main(int argc, char *argv[]) {
 
 int main(int argc, char *argv[]) {
     auto *fileAppender = new RollingFileAppender("/var/log/myapp.log");
-    fileAppender->setMaxFileSize(10 * 1024 * 1024); // 10MB
-    fileAppender->setMaxBackupIndex(5); // 保留 5 个备份
-    
-    DLogHelper::setGlobalAppender(fileAppender);
+    Logger::globalInstance()->registerAppender(fileAppender);
+    dInfo() << "应用启动";
 }
 ```
 
@@ -66,24 +64,46 @@ int main(int argc, char *argv[]) {
 #include <ConsoleAppender>
 #include <FileAppender>
 
-auto *logger = DLogHelper::getLogger("myapp");
-logger->addAppender(new ConsoleAppender);
-logger->addAppender(new FileAppender("/var/log/myapp.log"));
+Logger::globalInstance()->registerAppender(new ConsoleAppender);
+Logger::globalInstance()->registerAppender(new FileAppender("/var/log/myapp.log"));
 ```
 
-## 5. 日志格式
+### 4.4 分类 Appender
 
 ```cpp
-// 设置日志格式
-ConsoleAppender *appender = new ConsoleAppender;
-appender->setFormat("%{time yyyy-MM-dd HH:mm:ss} [%{type}] %{file}:%{line}: %{message}");
+#include <Logger>
+#include <FileAppender>
+
+// 为特定分类注册 appender
+Logger::globalInstance()->registerCategoryAppender("network", 
+    new FileAppender("/var/log/myapp-network.log"));
 ```
 
-## 6. 日志级别控制
+## 5. 日志级别
+
+| 级别 | 枚举值 | 说明 |
+|------|--------|------|
+| Trace | `Logger::Trace` | 代码追踪 |
+| Debug | `Logger::Debug` | 调试信息 |
+| Info | `Logger::Info` | 普通信息 |
+| Warning | `Logger::Warning` | 警告 |
+| Error | `Logger::Error` | 错误 |
+| Fatal | `Logger::Fatal` | 致命错误（会 abort） |
+
+## 6. Logger 核心 API
 
 ```cpp
-// 设置最低日志级别
-DLogHelper::setLogLevel(DLogHelper::Debug);
+// 全局实例
+Logger *Logger::globalInstance();
+
+// 注册/注销 appender
+void registerAppender(AbstractAppender *appender);
+void registerCategoryAppender(const QString &category, AbstractAppender *appender);
+void unregisterAppender(AbstractAppender *appender);
+
+// 日志级别转换
+static QString levelToString(LogLevel level);
+static LogLevel levelFromString(const QString &str);
 ```
 
 ## 7. 相关文档

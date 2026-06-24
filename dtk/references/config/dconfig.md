@@ -19,17 +19,35 @@ target_link_libraries(your_target Dtk::Core)
 
 ## 3. 基本 API
 
-```cpp
-// 构造
-DConfig(const QString &appId, const QString &name, QObject *parent = nullptr);
+### 3.1 创建方式
 
+```cpp
+// 推荐：静态方法创建（需要 appId）
+DConfig *DConfig::create(const QString &appId, const QString &name,
+                          const QString &subpath = QString(),
+                          QObject *parent = nullptr);
+
+// 构造函数创建（仅 name，无 appId）
+explicit DConfig(const QString &name, const QString &subpath = QString(),
+                 QObject *parent = nullptr);
+
+// 通用配置（无 appId）
+static DConfig *createGeneric(const QString &name, const QString &subpath = QString(),
+                               QObject *parent = nullptr);
+```
+
+### 3.2 读写与查询
+
+```cpp
 // 读写
-QVariant value(const QString &key) const;
+QVariant value(const QString &key, const QVariant &fallback = QVariant()) const;
 void setValue(const QString &key, const QVariant &value);
 
-// 检查
-bool contains(const QString &key) const;
+// 查询
 QStringList keyList() const;
+bool isValid() const;
+bool isDefaultValue(const QString &key) const;
+bool isReadOnly(const QString &key) const;
 
 // 重置
 void reset(const QString &key);
@@ -37,23 +55,38 @@ void reset(const QString &key);
 
 ## 4. 完整示例
 
+### 4.1 使用静态方法创建（推荐）
+
 ```cpp
 #include <DConfig>
-#include <DApplication>
 
-int main(int argc, char *argv[]) {
-    DApplication app(argc, argv);
-    
-    DConfig config("org.deepin.myapp", "myapp");
-    
-    // 检查配置是否存在
-    if (!config.contains("first-run")) {
-        config.setValue("first-run", false);
-        // 显示欢迎界面
-    }
-    
-    return app.exec();
+auto *config = DConfig::create("org.deepin.myapp", "myapp", "", this);
+if (!config->isValid()) {
+    qWarning() << "DConfig is not valid";
+    return;
 }
+
+// 读取配置
+bool firstRun = config->value("first-run", true).toBool();
+
+// 写入配置
+config->setValue("first-run", false);
+
+// 监听配置变化
+connect(config, &DConfig::valueChanged, [](const QString &key) {
+    qInfo() << "Config changed:" << key;
+});
+```
+
+### 4.2 使用构造函数创建
+
+```cpp
+#include <DConfig>
+
+auto *config = new DConfig("myapp", "", this);
+
+QVariant value = config->value("key-name");
+config->setValue("key-name", QVariant("value"));
 ```
 
 ## 5. 相关文档

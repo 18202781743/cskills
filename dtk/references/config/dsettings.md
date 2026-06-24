@@ -73,7 +73,8 @@ bool autoSave = settings->option("appearance.auto-save")->value().toBool();
 settings->option("appearance.auto-save")->setValue(false);
 
 // 显示设置对话框
-auto *dialog = new DSettingsDialog(settings, this);
+auto *dialog = new DSettingsDialog(this);
+dialog->updateSettings(settings);
 dialog->exec();
 ```
 
