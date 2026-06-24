@@ -67,6 +67,27 @@ QIcon icon = DIconTheme::findQIcon("document-open",
     DIconTheme::Options());
 ```
 
+**⚠️ 参数顺序差异**
+
+顶层 API `DIconTheme::findQIcon()` 与 `DIconTheme::Cached::findQIcon()` 参数顺序不同：
+
+```cpp
+// 顶层 API（无缓存）：iconName, fallback, options
+QIcon DIconTheme::findQIcon(const QString &iconName, const QIcon &fallback, Options options);
+
+// Cached API：iconName, options, fallback  （顺序不同！）
+QIcon DIconTheme::Cached::findQIcon(const QString &iconName, Options options, const QIcon &fallback);
+```
+
+使用缓存查找时注意参数顺序：
+
+```cpp
+auto *cache = DIconTheme::cached();
+
+// ⚠️ Cached::findQIcon 参数顺序：iconName, options, fallback
+QIcon icon = cache->findQIcon("my-icon", DIconTheme::Options(), fallbackIcon);
+```
+
 ### 3.2 创建图标引擎
 
 ```cpp

@@ -119,7 +119,32 @@ DGuiApplicationHelper::generatePaletteColor(palette, DPalette::TextTitle,
 DGuiApplicationHelper::generatePalette(palette, DGuiApplicationHelper::DarkType);
 ```
 
-### 3.4 颜色调整
+### 3.4 DGuiApplicationHelper 核心 Palette API
+
+```cpp
+#include <DGuiApplicationHelper>
+
+// 获取应用调色板
+DPalette appPalette = DGuiApplicationHelper::instance()->applicationPalette();
+
+// 获取指定主题类型的应用调色板
+DPalette lightAppPalette = DGuiApplicationHelper::instance()->applicationPalette(
+    DGuiApplicationHelper::LightType);
+DPalette darkAppPalette = DGuiApplicationHelper::instance()->applicationPalette(
+    DGuiApplicationHelper::DarkType);
+
+// 获取标准调色板（系统默认）
+DPalette standardLight = DGuiApplicationHelper::standardPalette(
+    DGuiApplicationHelper::LightType);
+DPalette standardDark = DGuiApplicationHelper::standardPalette(
+    DGuiApplicationHelper::DarkType);
+
+// 从 DPlatformTheme 获取调色板
+DPlatformTheme *theme = DGuiApplicationHelper::instance()->applicationTheme();
+DPalette palette = DGuiApplicationHelper::fetchPalette(theme);
+```
+
+### 3.5 颜色调整
 
 ```cpp
 #include <DGuiApplicationHelper>

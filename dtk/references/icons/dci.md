@@ -130,6 +130,39 @@ DDciIconPalette palette(QColor("#000000"), QColor("#ffffff"),
 QPixmap pix = icon.pixmap(dpr, 32, theme, DDciIcon::Normal, palette);
 ```
 
+#### DDciIconPalette 颜色角色
+
+`DDciIconPalette` 定义四个颜色角色，用于控制 dci 图标的着色：
+
+| 颜色角色 | 方法 | 用途 |
+|----------|------|------|
+| `Foreground` | `foreground()` / `setForeground()` | 前景色（图标主体颜色） |
+| `Background` | `background()` / `setBackground()` | 背景色（图标填充颜色） |
+| `Highlight` | `highlight()` / `setHighlight()` | 高亮色（选中/激活状态） |
+| `HighlightForeground` | `highlightForeground()` / `setHighlightForeground()` | 高亮前景色 |
+
+```cpp
+DDciIconPalette palette;
+
+// 设置前景色（图标线条/填充的主体颜色）
+palette.setForeground(QColor("#303030"));
+
+// 设置背景色（图标背景填充）
+palette.setBackground(QColor("#FFFFFF"));
+
+// 设置高亮色（选中状态背景）
+palette.setHighlight(QColor("#007AFF"));
+
+// 设置高亮前景色（选中状态文字/图标）
+palette.setHighlightForeground(QColor("#FFFFFF"));
+
+// 转换为字符串（用于序列化）
+QString str = DDciIconPalette::convertToString(palette);
+
+// 从字符串恢复
+DDciIconPalette restored = DDciIconPalette::convertFromString(str);
+```
+
 ### 3.5 检查图标属性
 
 ```cpp
