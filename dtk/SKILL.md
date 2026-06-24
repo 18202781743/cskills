@@ -1,0 +1,59 @@
+---
+name: dtk
+description: |
+  DTK (Deepin Tool Kit) 开发指南，覆盖 dtkcore/dtkgui/dtkwidget/dtkdeclarative/dtklog。
+  触发场景：
+  - 开发 DDE 应用需要选择 DTK 控件
+  - 实现主题感知 UI（图标、配色、窗口装饰）
+  - 使用 DConfig/DSettings 管理配置
+  - 需要遵循 DDE 日志规范
+  - 图标/主题/窗口装饰相关问题
+---
+
+# DTK 开发指南
+
+DTK 是深度桌面环境的核心开发框架，包含控件、主题、图标、配置等完整解决方案。
+
+## 快速路由
+
+按问题类型定位参考文档：
+
+| 场景 | 参考文档 |
+|------|----------|
+| 选择/显示图标 | [references/icons/index.md](references/icons/index.md) |
+| 主题切换/配色 | [references/theming/index.md](references/theming/index.md) |
+| 选择 QWidget 控件 | [references/widgets/index.md](references/widgets/index.md) |
+| 选择 QML 控件 | [references/declarative/index.md](references/declarative/index.md) |
+| 应用配置持久化 | [references/config/index.md](references/config/index.md) |
+| 日志规范 | [references/log/index.md](references/log/index.md) |
+
+## 高频跨域场景
+
+- **在自定义控件中使用主题图标** → 先读 [icons/index.md](references/icons/index.md)，再读 [theming/palette.md](references/theming/palette.md)
+- **QML 中显示 dci 图标** → [declarative/dci-icon.md](references/declarative/dci-icon.md)
+- **控件内嵌入消息提示** → [widgets/message.md](references/widgets/message.md) + [core/notify.md](references/core/notify.md)
+
+## 仓库依赖关系
+
+```
+dtkcore ← dtkgui ← dtkwidget
+          ↓
+      dtkdeclarative
+```
+
+建议按依赖顺序查阅文档：
+1. **dtkcore** - 基础工具、配置、文件系统
+2. **dtkgui** - 图标系统、调色板、窗口管理
+3. **dtkwidget** - QWidget 控件库
+4. **dtkdeclarative** - QML 控件库
+
+## 核心模块速览
+
+| 模块 | 来源 | 核心功能 |
+|------|------|----------|
+| 图标系统 | dtkgui | DDciIcon, DIcon, DIconTheme |
+| 调色板 | dtkgui/dtkwidget | DPalette, DStyle |
+| QWidget 控件 | dtkwidget | 110+ 控件 |
+| QML 控件 | dtkdeclarative | 33+ QML 组件 |
+| 配置系统 | dtkcore | DConfig, DSettings |
+| 日志系统 | dtklog | Logger, Appender |
