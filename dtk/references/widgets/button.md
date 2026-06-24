@@ -50,13 +50,21 @@ connect(deleteBtn, &DWarningButton::clicked, this, &MyClass::remove);
 // 使用 DStyle 标准图标
 auto *closeBtn = new DIconButton(DStyle::SP_CloseButton, this);
 
-// 使用 DDciIcon
+// 使用 DDciIcon（构造函数直接传入）
 DDciIcon icon = DDciIcon::fromTheme("my-action-icon");
 auto *actionBtn = new DIconButton(icon, this);
 
 // 使用 QIcon
 auto *btn = new DIconButton(this);
 btn->setIcon(DIconTheme::findQIcon("icon_ok_32px"));
+
+// 使用 DDciIcon（通过 setIcon 设置）
+DDciIcon dciIcon(":/icons/custom.dci");
+auto *dciBtn = new DIconButton(this);
+dciBtn->setIcon(dciIcon);
+
+// 获取当前 dci 图标
+DDciIcon currentIcon = dciBtn->dciIcon();
 
 // 扁平模式（无边框）
 btn->setFlat(true);

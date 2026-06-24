@@ -52,24 +52,26 @@ dtkcommon ──→ dtkcore ──→ dtkgui ──→ dtkwidget
                    ╱    │    ╲
               实线╱  实线│  实线╲
                 ╱      │      ╲
-          dtklog   dtkcore   dtkcore(dci)
-                      │          │
-                  实线│      实线│
-                      ↓          ↓
-                    dtkgui ←─────┘
-                   ╱      ╲
-              实线╱      实线╲
-                ╱          ╲
-        dtkwidget    dtkdeclarative
-           │
-      虚线│ (风格插件渲染)
-           ↓
-      qt5integration
-           │
-      虚线│ (平台窗口管理)
-           ↓
-   qt5platform-plugins
+          dtklog   dtkcore ──→ dtkgui
+                       │         │
+                   实线│     实线╱   实线╲
+                       ↓     ╱         ╲
+                     dtkgui ←┘    dtkdeclarative
+                    ╱      ╲            │
+               实线╱      实线╲    虚线╱   虚线╲
+                 ╱          ╲      ╱         ╲
+         dtkwidget    dtkdeclarative  │          │
+            │                          │          │
+       虚线╱   虚线╲              虚线↓          虚线↓
+          ↓       ↓          qt5integration  qt5platform-plugins
+   qt5integration  qt5platform-plugins
 ```
+
+> **说明**：`DDciFile`（dci 文件解析）来自 dtkcore，`DDciIcon`（dci 图标渲染）来自 dtkgui，dtkgui 依赖 dtkcore 中的 `DDciFile`。图中 `dtkcore ──→ dtkgui` 实线已包含此依赖关系。
+
+**核心库 vs 平台集成库：**
+- **核心库**（dtkcommon/dtklog/dtkcore/dtkgui/dtkwidget/dtkdeclarative）：编译期依赖，提供 API 接口
+- **平台集成库**（qt5integration/qt5platform-plugins）：运行时依赖，提供风格渲染和平台窗口管理，编译不依赖
 
 **依赖说明：**
 
