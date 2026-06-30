@@ -1,14 +1,13 @@
 ---
-name: dock-tray-plugin-dev
+name: dde-tray-development
 description: >
-  辅助为 dde-tray-loader 开发托盘（Tray）插件。当需要为 DDE 任务栏编写新的托盘插件、
-  修改现有托盘插件、或理解托盘插件接口时使用此 skill。仅支持 Tray 类型插件，
-  不涉及 Dock/Quick 等其他插件类型。
+  为 dde-tray-loader 开发托盘（Tray）插件。当需要为 DDE 任务栏编写新的托盘插件、
+  修改现有托盘插件、或理解托盘插件接口时使用此 skill。
 ---
 
-# dock-tray-plugin-dev
+# dde-tray-development
 
-辅助为 dde-tray-loader 开发托盘（Tray）插件。
+为 dde-tray-loader 开发托盘（Tray）插件。
 
 ## 概述
 
@@ -17,8 +16,8 @@ description: >
 ## 前置条件
 
 - Qt 6 + C++17 开发环境
-- `dde-tray-loader-dev` 包（提供接口头文件和 CMake 配置）：`sudo apt install dde-tray-loader-dev`
 - DTK 开发库（Dtk6::Widget, Dtk6::Gui）
+- dde-tray-loader-dev 开发库（提供接口头文件和 CMake 配置）
 
 ## 托盘插件核心知识
 
@@ -58,16 +57,60 @@ description: >
 
 ```
 my-plugin/
+├── CMakeLists.txt        # CMake 构建配置
 ├── myplugin.h            # 插件类声明
 ├── myplugin.cpp          # 插件类实现
 ├── mywidget.h            # 主控件声明
 ├── mywidget.cpp          # 主控件实现
 ├── myplugin.json         # 元数据文件
 ├── myplugin.qrc          # Qt 资源文件（图标等）
-├── icons/                # 图标资源目录
-│   ├── myplugin.svg
-│   └── myplugin-dark.svg
-└── CMakeLists.txt        # 构建配置
+└── icons/                # 图标资源目录
+    ├── myplugin.svg
+    └── myplugin-dark.svg
+```
+
+## 构建与调试流程
+
+### 使用 CMake 构建
+
+```bash
+cmake -B build -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build build -j$(nproc)
+```
+
+### 安装插件
+
+```bash
+cmake --install build
+```
+
+### 调试插件
+
+编译安装插件后，重启 dde-shell 使插件生效：
+
+```bash
+systemctl --user restart dde-shell@DDE
+```
+
+## CMakeLists.txt 模板
+
+```cmake
+cmake_minimum_required(VERSION 3.16)
+
+set(CMAKE_CXX_STANDARD 17)
+
+find_package(DdeTrayLoader REQUIRED)
+
+add_library(myplugin SHARED
+    myplugin.cpp
+    mywidget.cpp
+)
+
+target_include_directories(myplugin PRIVATE
+    ${DDE_TRAY_LOADER_INCLUDE_DIR}
+)
+
+install(TARGETS myplugin LIBRARY DESTINATION lib/dde-dock/plugins)
 ```
 
 ## 开发流程指引
@@ -77,8 +120,6 @@ my-plugin/
 3. **实现 `init()`**：保存 proxy，使用延迟加载模式创建主控件
 4. **实现交互功能**：tips / applet / context menu / command
 5. **编写 JSON 元数据和 CMakeLists.txt**
-
-> 快速上手？直接阅读 references/ai-usage-guide.md，按章节逐步生成插件代码。
 
 ## 参考实现
 
@@ -91,4 +132,3 @@ notification 插件路径：https://github.com/linuxdeepin/dde-tray-loader/tree/
 1. **`tray-plugin-spec.md`** — 托盘插件接口规范（V1/V2 + flags + proxy 合并文档）。**首次开发时必须阅读。**
 2. **`message-protocol.md`** — 消息协议。当插件需要与任务栏进行消息通信时阅读。
 3. **`context-menu.md`** — 右键菜单协议。当插件需要实现右键菜单时阅读。
-4. **`ai-usage-guide.md`** — AI 使用指南。按章节指导 AI 逐步生成托盘插件代码，每章含 prompt 示例和代码骨架。
