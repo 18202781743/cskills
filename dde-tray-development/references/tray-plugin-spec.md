@@ -15,7 +15,7 @@ IID 声明：
 - V1 IID: `"com.deepin.dock.PluginsItemInterface"` — 定义为 `ModuleInterface_iid`
 - V2 IID: `"com.deepin.dock.PluginsItemInterface_V2"` — 定义为 `ModuleInterface_iid_V2`
 
-> **注意**：任务栏插件加载器通过 V1 IID `"com.deepin.dock.PluginsItemInterface"` 发现插件。若 `Q_PLUGIN_METADATA` 使用 V2 IID，加载器将无法识别该插件。因此新插件必须使用 V1 IID，并通过 `Q_INTERFACES(PluginsItemInterfaceV2)` 声明 V2 接口支持。
+> **注意**：托盘插件应使用 V2 IID `"com.deepin.dock.PluginsItemInterface_V2"`，并通过 `Q_INTERFACES(PluginsItemInterfaceV2)` 声明接口支持。
 
 ## 2. PluginsItemInterface (V1 基类)
 
@@ -40,7 +40,8 @@ IID 声明：
 | `itemContextMenu` | `virtual const QString itemContextMenu(const QString &itemKey)` | 返回右键菜单的 JSON 数据，详见 `context-menu.md` |
 | `invokedMenuItem` | `virtual void invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked)` | 右键菜单项被点击的回调 |
 
-> **翻译说明**：涉及翻译的内容（如菜单文本、面板文字等），需要插件自行加载翻译文件处理，框架不处理翻译问题。使用 Qt 的翻译机制（`tr()` 函数 + `.ts`/`.qm` 文件）。
+> **翻译说明**：dde-tray-loader 主程序只加载内置的 `dde-dock` 翻译文件，**不会自动加载第三方插件的独立翻译文件**。插件必须在 `init()` 函数中主动加载自己的翻译文件。详见 SKILL.md 中的「翻译加载」章节。
+
 | `itemSortKey` | `virtual int itemSortKey(const QString &itemKey)` | 返回控件排序位置，1 为默认，0 为左侧，-1 为右侧 |
 | `setSortKey` | `virtual void setSortKey(const QString &itemKey, const int order)` | 用户拖拽后保存新的排序位置 |
 | `pluginIsAllowDisable` | `virtual bool pluginIsAllowDisable()` | 插件是否允许被禁用，默认 `false` |
@@ -229,6 +230,13 @@ using MessageCallbackFunc = QString (*)(PluginsItemInterfaceV2 *, const QString&
 | `requestRefreshWindowVisible` | `void requestRefreshWindowVisible(PluginsItemInterface *itemInter, const QString &itemKey)` | 通知任务栏刷新隐藏状态 |
 | `requestSetAppletVisible` | `void requestSetAppletVisible(PluginsItemInterface *itemInter, const QString &itemKey, const bool visible)` | 控制弹出面板的显隐 |
 
+> **快捷面板子页面显示（重要）**：对于快捷面板插件，`itemPopupApplet` 返回子页面控件后，Dock 框架不会自动显示。插件必须通过调用 `requestSetAppletVisible(this, itemKey, true)` 来主动请求显示子页面。
+>
+> 实现流程：
+> 1. 快捷面板控件发出点击信号（如 `requestShowDetail`）
+> 2. 插件连接该信号，在回调中调用 `requestSetAppletVisible(this, itemKey, true)`
+> 3. Dock 框架收到请求后，调用 `itemPopupApplet` 获取子页面控件并显示
+
 ### 6.3 配置存储
 
 | 方法 | 签名 | 说明 |
@@ -268,7 +276,38 @@ using MessageCallbackFunc = QString (*)(PluginsItemInterfaceV2 *, const QString&
 | `PROP_POSITION` | `"Position"` |
 | `PLUGIN_MIN_ICON_NAME` | `"-dark"` — 最小尺寸图标的后缀 |
 
-## 8. JSON 元数据格式
+### 8.3 插件状态管理
+
+**插件不需要直接读取或修改 DConfig**，而是通过以下接口与 Dock 交互：
+
+1. **`pluginIsDisable()`**：Dock 调用此接口查询插件是否被禁用
+2. **`pluginStateSwitched()`**：用户在控制中心切换插件状态时，Dock 调用此接口通知插件
+3. **`saveValue()`/`getValue()`**：插件通过 proxy 保存/读取自己的启用状态
+
+```cpp
+// 插件查询自身是否被禁用
+bool MyPlugin::pluginIsDisable() {
+    return m_proxyInter->getValue(this, "enable", false).toBool();
+}
+
+// 用户切换插件状态时的回调
+void MyPlugin::pluginStateSwitched() {
+    bool disabled = pluginIsDisable();
+    if (disabled) {
+        m_proxyInter->itemRemoved(this, pluginName());
+    } else {
+        m_proxyInter->itemAdded(this, pluginName());
+    }
+}
+```
+
+Dock 框架会根据 `pluginIsDisable()` 返回值自动更新 `quickPlugins` 配置。
+
+> **重要说明**：
+> - **插件不需要直接操作 DConfig**，通过 `pluginIsDisable()` 和 `saveValue()` 与 Dock 交互
+> - 用户通过「控制中心 → 个性化 → 任务栏」管理快捷面板插件时，Dock 自动调用 `pluginStateSwitched()`
+
+## 9. JSON 元数据格式
 
 插件必须包含一个 JSON 元数据文件，通过 `Q_PLUGIN_METADATA(FILE "...")` 宏加载：
 
@@ -281,7 +320,7 @@ using MessageCallbackFunc = QString (*)(PluginsItemInterfaceV2 *, const QString&
 字段说明：
 - `api`：**必填**，接口版本号，必须为 `"2.0.0"`
 
-## 9. DisplayMode 与 Position 枚举
+## 10. DisplayMode 与 Position 枚举
 
 ### DisplayMode
 
@@ -298,3 +337,23 @@ using MessageCallbackFunc = QString (*)(PluginsItemInterfaceV2 *, const QString&
 | 1 | `Right` | 右侧 |
 | 2 | `Bottom` | 底部 |
 | 3 | `Left` | 左侧 |
+
+#### 位置变化监听
+
+任务栏位置可能发生变化，如果托盘图标内部显示需要根据位置调整（如图标旋转、布局方向变化），插件需要覆写 `positionChanged` 接口并主动更新控件。
+
+```cpp
+void MyPlugin::positionChanged(const Dock::Position position)
+{
+    // 更新托盘图标显示以适配新位置
+    if (m_trayIcon) {
+        m_trayIcon->updatePosition(position);
+    }
+    // 通知框架刷新控件
+    m_proxyInter->itemUpdate(this, MYPLUGIN_KEY);
+}
+```
+
+> **适配场景**：
+> - 图标需要根据任务栏方向旋转（如上下左右不同朝向）
+> - 控件内部布局需要根据位置调整（如横向/纵向切换）
