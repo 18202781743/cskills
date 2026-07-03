@@ -20,9 +20,9 @@ dtkcore 提供丰富的工具类，按模块分类：
 #include <DStandardPaths>
 
 QString configPath = DStandardPaths::writableLocation(
-    DStandardPaths::AppConfigLocation);
+    QStandardPaths::AppConfigLocation);
 QString cachePath = DStandardPaths::writableLocation(
-    DStandardPaths::CacheLocation);
+    QStandardPaths::CacheLocation);
 ```
 
 ### 2.2 DFileWatcher — 文件监听
@@ -30,11 +30,10 @@ QString cachePath = DStandardPaths::writableLocation(
 ```cpp
 #include <DFileWatcher>
 
-auto *watcher = new DFileWatcher(this);
-watcher->addPath("/path/to/file");
+auto *watcher = new DFileWatcher("/path/to/file", this);
 
-connect(watcher, &DFileWatcher::fileChanged, [](const QString &path) {
-    qInfo() << "File changed:" << path;
+connect(watcher, &DFileWatcher::fileModified, [](const QUrl &url) {
+    qInfo() << "File modified:" << url;
 });
 ```
 
@@ -43,11 +42,11 @@ connect(watcher, &DFileWatcher::fileChanged, [](const QString &path) {
 ```cpp
 #include <DNotifySender>
 
-DNotifySender::Message msg;
-msg.summary = "提示";
-msg.body = "操作已完成";
+using namespace Dtk::Core::DUtil;
 
-DNotifySender::instance()->sendMessage(msg);
+DNotifySender("提示")
+    .appBody("操作已完成")
+    .call();
 ```
 
 ### 2.4 DDBusInterface — DBus 辅助
@@ -57,8 +56,10 @@ DNotifySender::instance()->sendMessage(msg);
 
 DDBusInterface iface("org.example.Service",
                      "/org/example/Object",
+                     "org.example.Interface",
                      QDBusConnection::sessionBus());
 
+// 调用方法（继承自 QDBusAbstractInterface::call）
 QDBusReply<QString> reply = iface.call("GetStatus");
 ```
 

@@ -4,12 +4,13 @@
 
 ```cpp
 #include <DStandardPaths>
+#include <QStandardPaths>
 
-// 获取标准路径
-QString config = DStandardPaths::writableLocation(DStandardPaths::AppConfigLocation);
-QString data = DStandardPaths::writableLocation(DStandardPaths::AppDataLocation);
-QString cache = DStandardPaths::writableLocation(DStandardPaths::CacheLocation);
-QString temp = DStandardPaths::writableLocation(DStandardPaths::TempLocation);
+// 获取标准路径（使用 QStandardPaths::StandardLocation 枚举）
+QString config = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+QString data = DStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+QString cache = DStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+QString temp = DStandardPaths::writableLocation(QStandardPaths::TempLocation);
 ```
 
 ## 2. DFileWatcher
@@ -17,10 +18,11 @@ QString temp = DStandardPaths::writableLocation(DStandardPaths::TempLocation);
 ```cpp
 #include <DFileWatcher>
 
-auto *watcher = new DFileWatcher(this);
-watcher->addPath("/path/to/watch");
+// 构造函数传入文件路径，监听单个文件
+auto *watcher = new DFileWatcher("/path/to/watch", this);
 
-connect(watcher, &DFileWatcher::fileChanged, [](const QString &path) {
+// 文件修改信号
+connect(watcher, &DFileWatcher::fileModified, [](const QUrl &url) {
     // 文件变化处理
 });
 ```
@@ -30,11 +32,11 @@ connect(watcher, &DFileWatcher::fileChanged, [](const QString &path) {
 ```cpp
 #include <DTrashManager>
 
-// 移动到回收站
-DTrashManager::moveToTrash("/path/to/file");
+// 移动到回收站（实例方法，通过 instance() 获取单例）
+DTrashManager::instance()->moveToTrash("/path/to/file");
 
 // 清空回收站
-DTrashManager::emptyTrash();
+DTrashManager::instance()->cleanTrash();
 ```
 
 ## 4. 相关文档

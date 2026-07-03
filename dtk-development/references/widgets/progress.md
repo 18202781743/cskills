@@ -28,11 +28,10 @@ bar->setOrientation(Qt::Horizontal);
 ### 2.2 DIndeterminateProgressBar — 不确定进度
 
 ```cpp
-#include <DIndeterminateProgressBar>
+#include <DIndeterminateProgressbar>
 
-auto *bar = new DIndeterminateProgressBar(this);
-bar->start();  // 开始动画
-bar->stop();   // 停止动画
+auto *bar = new DIndeterminateProgressbar(this);
+// 自动显示动画，无需手动 start/stop
 ```
 
 ### 2.3 DSpinner — 旋转加载

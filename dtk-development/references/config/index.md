@@ -34,7 +34,7 @@ DTK 提供两种配置方案：
 ```cpp
 #include <DConfig>
 
-auto *config = new DConfig("org.deepin.myapp", "myapp", this);
+auto *config = DConfig::create("org.deepin.myapp", "org.deepin.myapp.resource");
 
 // 读取配置
 QVariant value = config->value("key-name");
@@ -70,7 +70,8 @@ QVariant value = settings->option("group.key")->value();
 settings->option("group.key")->setValue(QVariant("value"));
 
 // 显示设置对话框
-auto *dialog = new DSettingsDialog(settings, this);
+auto *dialog = new DSettingsDialog(this);
+dialog->updateSettings(settings);
 dialog->exec();
 ```
 

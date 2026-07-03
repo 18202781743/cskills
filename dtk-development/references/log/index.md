@@ -7,10 +7,10 @@ dtklog 是 DTK 的日志框架，支持多输出目标。
 ## 2. 头文件与依赖
 
 ```cpp
-#include <Logger>
-#include <FileAppender>
-#include <ConsoleAppender>
-#include <RollingFileAppender>
+#include <Logger.h>
+#include <FileAppender.h>
+#include <ConsoleAppender.h>
+#include <RollingFileAppender.h>
 
 // CMake
 find_package(DtkLog REQUIRED)
@@ -20,7 +20,7 @@ target_link_libraries(your_target Dtk::Log)
 ## 3. 基本 API
 
 ```cpp
-#include <Logger>
+#include <Logger.h>
 
 // 日志级别
 dDebug() << "调试信息";
@@ -35,8 +35,8 @@ dFatal() << "致命错误";
 ### 4.1 注册 Appender
 
 ```cpp
-#include <Logger>
-#include <ConsoleAppender>
+#include <Logger.h>
+#include <ConsoleAppender.h>
 
 int main(int argc, char *argv[]) {
     Logger::globalInstance()->registerAppender(new ConsoleAppender);
@@ -47,8 +47,8 @@ int main(int argc, char *argv[]) {
 ### 4.2 输出到文件
 
 ```cpp
-#include <Logger>
-#include <RollingFileAppender>
+#include <Logger.h>
+#include <RollingFileAppender.h>
 
 int main(int argc, char *argv[]) {
     auto *fileAppender = new RollingFileAppender("/var/log/myapp.log");
@@ -60,9 +60,9 @@ int main(int argc, char *argv[]) {
 ### 4.3 多输出目标
 
 ```cpp
-#include <Logger>
-#include <ConsoleAppender>
-#include <FileAppender>
+#include <Logger.h>
+#include <ConsoleAppender.h>
+#include <FileAppender.h>
 
 Logger::globalInstance()->registerAppender(new ConsoleAppender);
 Logger::globalInstance()->registerAppender(new FileAppender("/var/log/myapp.log"));
@@ -71,8 +71,8 @@ Logger::globalInstance()->registerAppender(new FileAppender("/var/log/myapp.log"
 ### 4.4 分类 Appender
 
 ```cpp
-#include <Logger>
-#include <FileAppender>
+#include <Logger.h>
+#include <FileAppender.h>
 
 // 为特定分类注册 appender
 Logger::globalInstance()->registerCategoryAppender("network", 

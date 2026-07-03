@@ -7,17 +7,18 @@
 
 DDBusInterface iface("org.deepin.dde.Dock1",
                      "/org/deepin/dde/Dock1",
+                     "org.deepin.dde.Dock1",
                      QDBusConnection::sessionBus());
 
-// 调用方法
+// 调用方法（继承自 QDBusAbstractInterface::call）
 QDBusReply<bool> reply = iface.call("IsVisible");
 if (reply.isValid()) {
     bool visible = reply.value();
 }
 
-// 连接信号
-connect(&iface, &DDBusInterface::signal, [](const QString &name, const QVariantList &args) {
-    qInfo() << "Signal:" << name << args;
+// 连接服务状态变化信号
+connect(&iface, &DDBusInterface::serviceValidChanged, [](bool valid) {
+    qInfo() << "Service valid:" << valid;
 });
 ```
 
@@ -26,15 +27,22 @@ connect(&iface, &DDBusInterface::signal, [](const QString &name, const QVariantL
 ```cpp
 #include <DDBusSender>
 
-// 发送信号
+// 调用方法（通过 method() 获取 DDBusCaller，.call() 发送）
 DDBusSender()
     .service("org.example.Service")
     .path("/org/example/Object")
     .interface("org.example.Interface")
-    .signal("SignalName")
-    .arg(value1)
-    .arg(value2)
-    .publish();
+    .method("MethodName")
+    .call();
+
+// 带参数的方法调用
+DDBusSender()
+    .service("org.example.Service")
+    .path("/org/example/Object")
+    .interface("org.example.Interface")
+    .method("SetValue")
+    .arg(value)
+    .call();
 ```
 
 ## 3. 相关文档

@@ -86,9 +86,11 @@ dialog->exec();
 | `combobox` | 下拉选择 |
 | `spinbutton` | 数值调节 |
 | `lineedit` | 单行输入 |
-| `textedit` | 多行输入 |
 | `slider` | 滑动条 |
-| `colorbutton` | 颜色选择 |
+| `shortcut` | 快捷键编辑 |
+| `buttongroup` | 按钮组 |
+| `radiogroup` | 单选组 |
+| `switchbutton` | 开关按钮 |
 
 ## 6. 相关文档
 

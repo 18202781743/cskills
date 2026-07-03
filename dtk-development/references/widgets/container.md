@@ -7,7 +7,6 @@
 | `DFrame` | 带圆角边框的容器 |
 | `DBackgroundGroup` | 带背景色的分组 |
 | `DHeaderLine` | 带标题的分割线 |
-| `DLine` | 分割线 |
 | `DHorizontalLine` | 水平分割线 |
 | `DVerticalLine` | 垂直分割线 |
 
@@ -48,18 +47,13 @@ auto *header = new DHeaderLine(this);
 header->setTitle("高级设置");
 ```
 
-### 2.4 DLine — 分割线
+### 2.4 分割线
 
 ```cpp
-#include <DLine>
-
-auto *line = new DLine(this);
-line->setOrientation(Qt::Horizontal);
-
-// 简单水平线
+// 水平分割线
 auto *hline = new DHorizontalLine(this);
 
-// 简单垂直线
+// 垂直分割线
 auto *vline = new DVerticalLine(this);
 ```
 

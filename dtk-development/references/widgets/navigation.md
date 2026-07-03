@@ -64,13 +64,10 @@ auto *group = new DDrawerGroup(this);
 // 添加多个 DDrawer
 auto *drawer1 = new DDrawer(this);
 auto *drawer2 = new DDrawer(this);
-group->addDrawer(drawer1);
-group->addDrawer(drawer2);
+group->addExpand(drawer1);
+group->addExpand(drawer2);
 
-// 同一时间只展开一个
-connect(group, &DDrawerGroup::drawerClicked, [group](int index) {
-    // 折叠其他，展开当前
-});
+// DDrawerGroup 自动确保同一时间只展开一个
 ```
 
 ### 2.4 DFrame — 容器

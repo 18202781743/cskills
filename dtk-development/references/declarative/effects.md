@@ -6,10 +6,10 @@ dtkdeclarative 提供多种视觉效果组件：
 
 | 组件 | 用途 |
 |------|------|
-| `Blur` / `InWindowBlur` / `BehindWindowBlur` | 模糊效果 |
-| `Glow` | 辉光效果 |
-| `ColorOverlay` / `OpacityMask` | 颜色叠加 |
-| `WaterProgress` | 水波纹进度 |
+| `InWindowBlur` / `BehindWindowBlur` | 模糊效果 |
+| `GlowEffect` | 辉光效果 |
+| `ColorOverlay` / `OpacityMask` | 颜色叠加（位于 `private/` 子目录） |
+| `WaterProgressBar` | 水波纹进度 |
 
 ## 2. 模糊效果
 
@@ -19,7 +19,6 @@ import org.deepin.dtk 1.0
 Item {
     InWindowBlur {
         anchors.fill: parent
-        source: backgroundItem
         radius: 20
     }
 }

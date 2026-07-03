@@ -42,7 +42,7 @@ TabBar {
     onCurrentIndexChanged: stackView.currentIndex = currentIndex
 }
 
-StackLayout {
+StackView {
     id: stackView
     currentIndex: tabBar.currentIndex
     Item { /* 常规页 */ }
