@@ -20,6 +20,7 @@ DTK 是深度桌面环境的核心开发框架，包含控件、主题、图标�
 
 | 场景 | 参考文档 |
 |------|----------|
+| 创建新项目/环境搭建 | [references/build-and-debug.md](references/build-and-debug.md) |
 | 选择/显示图标 | [references/icons/index.md](references/icons/index.md) |
 | 主题切换/配色 | [references/theming/index.md](references/theming/index.md) |
 | 选择 QWidget 控件 | [references/widgets/index.md](references/widgets/index.md) |
@@ -29,6 +30,7 @@ DTK 是深度桌面环境的核心开发框架，包含控件、主题、图标�
 
 ## 高频跨域场景
 
+- **创建新的 DTK 项目** → [build-and-debug.md](references/build-and-debug.md)（debian 依赖、CMake 配置、编译、调试环境变量，区分 DTK5/DTK6）
 - **在自定义控件中使用主题图标** → 先读 [icons/index.md](references/icons/index.md)，再读 [theming/palette.md](references/theming/palette.md)
 - **QML 中显示 dci 图标** → [declarative/dci-icon.md](references/declarative/dci-icon.md)
 - **控件内嵌入消息提示** → [widgets/message.md](references/widgets/message.md) + [core/notify.md](references/core/notify.md)

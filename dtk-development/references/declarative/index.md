@@ -9,11 +9,13 @@ dtkdeclarative 提供符合 DTK 设计规范的 QML 控件，用于 Qt Quick 应
 - QML 应用
 - 需要动态 UI 的场景
 
-**CMake 依赖：**
+**CMake 依赖（仅当使用 dtkdeclarative 的 C++ API 时需要）：**
 ```cmake
 find_package(DtkDeclarative REQUIRED)
 target_link_libraries(your_target Dtk::Declarative)
 ```
+
+纯 QML 应用通过 `import org.deepin.dtk 1.0` 即可，运行时由 QML 引擎自动查找，不需要 CMake 依赖。
 
 ## 2. 快速决策树
 
