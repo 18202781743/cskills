@@ -191,7 +191,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ## 模块 4：declarative（QML 控件）— 来源 dtkdeclarative
 
-**参考文档：** `references/declarative/index.md`, `references/declarative/controls.md`, `references/declarative/dci-icon.md`, `references/declarative/effects.md`
+**参考文档：** `references/declarative/index.md`, `references/declarative/controls.md`, `references/declarative/color-selector.md`, `references/declarative/dci-icon.md`, `references/declarative/effects.md`
 
 **源码位置：** `~/dtk/dtkdeclarative/qmlplugin/`（Qt5）+ `~/dtk/dtkdeclarative/qt6/`（Qt6）+ `~/dtk/dtkdeclarative/src/qml/`
 
@@ -207,6 +207,15 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | 4.8 | `StackLayout` 类型存在（controls.md 中使用，注意 index.md 列的是 `StackView`） | grep `StackLayout` in qmldir | `qmldir` |
 | 4.9 | CMake `find_package(DtkDeclarative)` + `Dtk::Declarative` | 检查 cmake | `dtkdeclarative/cmake/` |
 | 4.10 | **文档一致性**：index.md 列出 21 个 QML 类型，controls.md 额外提到 `StackLayout`，确认是否遗漏或不一致 | 交叉比对 | - |
+| 4.11 | `ColorSelector` 类型为附加属性（`QML_ATTACHED` + `QML_UNCREATABLE`） | grep `ColorSelector` in 注册代码 | `src/private/dquickcontrolpalette_p.h` |
+| 4.12 | `ColorSelector` 属性 `control`/`controlTheme`/`controlState`/`family`/`hovered`/`pressed`/`disabled`/`inactived` 存在 | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
+| 4.13 | `ColorSelector::controlState` 枚举值 `NormalState`/`HoveredState`/`PressedState`/`DisabledState`/`InactiveState` 存在 | grep `ControlState` 枚举 | `dqmlglobalobject_p.h` |
+| 4.14 | `ColorSelector` 信号 `colorPropertyChanged(QByteArray name)` 存在 | 核对 SIGNAL | `dquickcontrolpalette_p.h` |
+| 4.15 | `Palette` 类型可创建（`QML_NAMED_ELEMENT(Palette)`） | grep `Palette` in 注册代码 | `dquickcontrolpalette_p.h` |
+| 4.16 | `Palette` 属性 `enabled`/`normal`/`normalDark`/`hovered`/`hoveredDark`/`pressed`/`pressedDark`/`disabled`/`disabledDark` 存在 | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
+| 4.17 | `Palette::ColorFamily` 枚举有 `CommonColor`/`CrystalColor` | grep `enum ColorFamily` | `dquickcontrolpalette_p.h` |
+| 4.18 | `Palette::ColorGroup` 枚举有 `Light`/`Dark`/`Normal`/`Hovered`/`Pressed`/`Disabled` | grep `enum ColorGroup` | `dquickcontrolpalette_p.h` |
+| 4.19 | `DQuickControlColor` 类型有 `common`/`crystal` 属性（支持分组语法 `normal { common: ...; crystal: ... }`） | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
 
 ---
 
@@ -311,11 +320,54 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ---
 
+## 模块 10：architecture（核心架构）— 来源全部项目
+
+**参考文档：** `references/architecture.md`
+
+**源码位置：** `~/dtk/dtkgui/`、`~/dtk/dtkwidget/`、`~/dtk/dtkdeclarative/`、`~/dtk/qt5integration/`、`~/dtk/qt5platform-plugins/`
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 10.1 | 调色板系统：`DPalette` 类存在，`DGuiApplicationHelper::standardPalette()` 方法 | grep class + method | `dtkgui/include/kernel/dguiapplicationhelper.h` |
+| 10.2 | 调色板系统：`DStyleHelper::getColor()` 方法存在 | grep method | `dtkwidget/include/widgets/dstyle.h` |
+| 10.3 | 字体系统：`DFontManager` 类存在，`t1()`-`t11()` 方法，`SizeType` 枚举 T1-T11 | grep class + enum | `dtkgui/include/util/dfontmanager.h` |
+| 10.4 | 字体系统：`DFontSizeManager` 类存在，`bind(QWidget*, SizeType)` 方法 | grep class + method | `dtkwidget/include/widgets/dstyleoption.h` |
+| 10.5 | 字体系统：`D.DTK.fontManager` QML 属性存在 | grep `fontManager` | `dtkdeclarative/src/private/dqmlglobalobject_p.h` |
+| 10.6 | 图标系统：`DDciIcon`/`DIconTheme`/`DDciIconPlayer` 类存在 | grep class | `dtkgui/include/util/ddciicon.h`、`dicontheme.h` |
+| 10.7 | 平台抽象：`DPlatformHandle` 类存在，属性 `windowRadius`/`shadowRadius`/`enableBlurWindow` 等 | grep class + Q_PROPERTY | `dtkgui/include/kernel/dplatformhandle.h` |
+| 10.8 | 平台抽象：`DPlatformTheme` 类存在，属性 `fontName`/`activeColor`/`iconThemeName` 等 | grep class + Q_PROPERTY | `dtkgui/include/kernel/dplatformtheme.h` |
+| 10.9 | 平台抽象：`DPlatformWindowInterface` 抽象基类存在 | grep class | `dtkgui/src/private/dplatformwindowinterface_p.h` |
+| 10.10 | 平台分发：`DXCBPlatformWindowInterface`/`DTreeLandPlatformWindowInterface` 存在 | grep class | `dtkgui/src/plugins/platform/xcb/`、`treeland/` |
+| 10.11 | QPA 层：`DPlatformIntegration`/`DWaylandIntegration` 存在 | grep class | `qt5platform-plugins/xcb/`、`wayland/` |
+| 10.12 | 平台检测：`DGuiApplicationHelper::IsXWindowPlatform`/`IsWaylandPlatform` 属性存在 | grep enum Attribute | `dtkgui/include/kernel/dguiapplicationhelper.h` |
+
+## 模块 11：platform-abstraction（平台抽象层）— 来源 dtkgui + qt5platform-plugins
+
+**参考文档：** `references/platform-abstraction.md`
+
+**源码位置：** `~/dtk/dtkgui/` + `~/dtk/qt5platform-plugins/`
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.1 | `DPlatformHandle` 属性全部存在：`windowRadius`/`borderWidth`/`borderColor`/`shadowRadius`/`shadowOffset`/`shadowColor`/`clipPath`/`frameMask`/`frameMargins`/`translucentBackground`/`enableSystemResize`/`enableSystemMove`/`enableBlurWindow`/`autoInputMaskByClipPath`/`realWindowId` | 核对 Q_PROPERTY | `dplatformhandle.h` |
+| 11.2 | `DPlatformHandle::EffectScene` 枚举值 `EffectNoRadius`/`EffectNoShadow`/`EffectNoBorder`/`EffectNoStart`/`EffectNoClose`/`EffectNoMaximize`/`EffectNoMinimize` | grep enum | 同上 |
+| 11.3 | `DPlatformHandle::EffectType` 枚举值 `EffectNormal`/`EffectCursor`/`EffectTop`/`EffectBottom`/`EffectOut` | grep enum | 同上 |
+| 11.4 | `DPlatformHandle::WMBlurArea` 结构体存在，`dMakeWMBlurArea()` 辅助函数 | grep struct + inline | 同上 |
+| 11.5 | `DPlatformHandle::setWindowBlurAreaByWM()` 静态方法存在（2 个重载） | grep method | 同上 |
+| 11.6 | `DPlatformHandle::setEnabledNoTitlebarForWindow()`/`isEnabledNoTitlebar()` 静态方法 | grep method | 同上 |
+| 11.7 | `DPlatformTheme` 属性全部存在：字体（fontName/monoFontName/fontPointSize/gtkFontName）、主题（themeName/iconThemeName/soundThemeName/activeColor/darkActiveColor）、输入（cursorBlink* / doubleClick* / dndDragThreshold）、sizeMode/scrollBarPolicy | 核对 Q_PROPERTY | `dplatformtheme.h` |
+| 11.8 | 平台分发：`createWindowInterface()` 函数按 `IsXWindowPlatform`/`IsWaylandPlatform` 分发 | 核对代码逻辑 | `dplatformhandle.cpp:307-328` |
+| 11.9 | `DPlatformWindowInterface` 抽象基类虚函数完整 | grep virtual | `dplatformwindowinterface_p.h` |
+| 11.10 | Treeland 实现通过 `treeland_personalization_manager_v1` Wayland 协议通信 | grep protocol | `dtkgui/src/plugins/platform/treeland/personalizationwaylandclientextension.h` |
+| 11.11 | `qt5platform-plugins` 包含 `xcb/` 和 `wayland/` 两个 QPA 插件目录 | ls 目录结构 | `qt5platform-plugins/` |
+
+---
+
 ## 执行策略
 
 ### 并行分组
 
-建议将 9 个模块分为以下并行执行组（每组分配一个 explore agent）：
+建议将 11 个模块分为以下并行执行组（每组分配一个 explore agent）：
 
 | 执行组 | 包含模块 | 预估项数 |
 |--------|----------|---------|
@@ -323,11 +375,12 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | Group B | 模块 2（theming） | 14 |
 | Group C | 模块 3（widgets，3.1-3.5） | ~25 |
 | Group D | 模块 3（widgets，3.6-3.10） | ~20 |
-| Group E | 模块 4（declarative） | 10 |
+| Group E | 模块 4（declarative） | 19 |
 | Group F | 模块 5（config） | 15 |
 | Group G | 模块 6（core） | 11 |
 | Group H | 模块 7（log） | 10 |
 | Group I | 模块 8（平台集成）+ 模块 9（跨文档一致性） | 10 |
+| Group J | 模块 10（architecture）+ 模块 11（platform-abstraction） | 23 |
 
 ### 执行方式
 
