@@ -26,7 +26,7 @@ sudo pkill dde-dconfig-dae && sudo -u deepin-daemon dde-dconfig-daemon
 sudo -u deepin-daemon QT_LOGGING_RULES="*dsg.config.debug=true" dde-dconfig-daemon
 ```
 
-日志文件存储在 `$HOME_DIR/.cache/deepin/dde-dconfig-daemon`。
+systemd 服务日志通过 journal 查看，文件日志路径由 `LOGS_DIRECTORY` 环境变量控制：`{LOGS_DIRECTORY}/dde-dconfig-daemon/dde-dconfig-daemon.log`。
 
 ## 2. 热加载更新
 

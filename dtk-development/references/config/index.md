@@ -1,6 +1,13 @@
 # 配置系统决策树
 
-## 1. DConfig 适用场景
+## 1. 相关项目
+
+| 项目 | 仓库 | 说明 |
+|------|------|------|
+| dtkcore | [linuxdeepin/dtkcore](https://github.com/linuxdeepin/dtkcore) | DConfig 客户端 API、dconfig2cpp 工具 |
+| dde-app-services | [linuxdeepin/dde-app-services](https://github.com/linuxdeepin/dde-app-services) | dde-dconfig-daemon 服务、dde-dconfig CLI、dde-dconfig-editor |
+
+## 2. DConfig 适用场景
 
 ```
 需要配置持久化？
@@ -18,7 +25,7 @@
         └─ DConfig（override 机制）
 ```
 
-## 2. 快速路由
+## 3. 快速路由
 
 | 场景 | 参考文档 |
 |------|----------|

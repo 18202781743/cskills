@@ -210,11 +210,11 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ---
 
-## 模块 5：config（配置系统）— 来源 dtkcore
+## 模块 5：config（配置系统）— 来源 dtkcore + dde-app-services
 
-**参考文档：** `references/config/index.md`, `references/config/dconfig.md`, `references/config/dsettings.md`
+**参考文档：** `references/config/index.md`, `references/config/concepts.md`, `references/config/dconfig-cpp.md`, `references/config/dconfig-dbus.md`, `references/config/dconfig-debug.md`
 
-**源码位置：** `~/dtk/dtkcore/include/global/` + `~/dtk/dtkcore/include/settings/` + `~/dtk/dtkwidget/include/widgets/`
+**源码位置：** `~/dtk/dtkcore/include/global/` + `~/dtk/dde-app-services/dconfig-center/`
 
 | # | 验证项 | 验证方法 | 对应源码文件 |
 |---|--------|----------|-------------|
@@ -223,16 +223,20 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | 5.3 | `DConfig` 构造函数 `DConfig(name, subpath, parent)`（无 appId） | 核对 | 同上 |
 | 5.4 | `DConfig` 实例方法：`value(key, fallback)`/`setValue(key, value)`/`keyList()`/`isValid()`/`isDefaultValue(key)`/`isReadOnly(key)`/`reset(key)` | 逐个核对 | 同上 |
 | 5.5 | `DConfig` 信号 `valueChanged(const QString &)` | grep signal | 同上 |
-| 5.6 | **文档不一致验证**：index.md 用 `new DConfig("org.deepin.myapp", "myapp", this)`（3 参数含 appId），dconfig.md 说构造函数无 appId，推荐用 `DConfig::create`。确认哪个正确 | 核对实际构造函数签名 | 同上 |
-| 5.7 | `DSettings` 类存在 | grep `class DSettings` | `dtkcore/include/settings/dsettings.h` |
-| 5.8 | `DSettings::fromJsonFile(QString)` 静态方法 | 核对 | 同上 |
-| 5.9 | `DSettings::option(QString)` 方法返回 `DSettingsOption*` | 核对返回类型 | 同上 |
-| 5.10 | `DSettingsOption` 类存在，方法 `value()`/`setValue(QVariant)` | grep class + methods | `dtkcore/include/settings/dsettingsoption.h` |
-| 5.11 | `DSettingsGroup` 类存在 | grep class | `dtkcore/include/settings/dsettingsgroup.h` |
-| 5.12 | `DSettingsDialog` 类存在（在 dtkwidget 中） | grep `class DSettingsDialog` | `dtkwidget/include/widgets/dsettingsdialog.h` |
-| 5.13 | **文档不一致验证**：index.md 用 `new DSettingsDialog(settings, this)`，dsettings.md 用 `new DSettingsDialog(this)` + `updateSettings(settings)`。确认哪个正确 | 核对构造函数 + 方法 | 同上 |
-| 5.14 | JSON `type` 字段值列表（`checkbox`/`combobox`/`spinbutton`/`lineedit`/`textedit`/`slider`/`colorbutton`）与代码支持的类型匹配 | grep type 字符串 | `dtkwidget/include/widgets/dsettingswidgetfactory.h` 或 src |
-| 5.15 | CMake `find_package(DtkCore)` + `Dtk::Core` | 检查 cmake | `dtkcore/dtkcore.cmake` |
+| 5.6 | `DConfig::setAppId()` 和 `DConfig::globalThread()` 静态方法 | 核对 | 同上 |
+| 5.7 | dconfig2cpp 工具存在：`dtkcore/tools/dconfig2cpp/main.cpp` | glob 检查 | `tools/dconfig2cpp/` |
+| 5.8 | dconfig2cpp 生成的类有 `create(appId, subpath, parent)` 工厂方法 | grep `static.*create` | `tools/dconfig2cpp/main.cpp` |
+| 5.9 | 生成类信号 `configInitializeSucceed(DConfig*)` / `configInitializeFailed()` | grep signals | 同上 |
+| 5.10 | 生成类状态方法：`isInitializeSucceeded()`（新接口）/ `isInitializeSucceed()`（deprecated） | grep `isInitializeSucceed` | 同上 |
+| 5.11 | CMake `dtk_add_config_meta_files()` 宏定义 | grep macro/function | `dtkcore/cmake/DtkDConfig/DtkDConfigConfig.cmake` |
+| 5.12 | CMake `dtk_add_config_to_cpp()` 宏定义 | grep macro/function | `dtkcore/cmake/DtkTools/DtkDConfigMacros.cmake` |
+| 5.13 | meta 文件 `magic` 值 `"dsg.config.meta"` 与 dconfig2cpp 校验一致 | grep `dsg.config.meta` | `tools/dconfig2cpp/main.cpp` |
+| 5.14 | dde-dconfig CLI 支持 `-s <subpath>` 选项 | 运行 `dde-dconfig --help` | `dde-app-services/dconfig-center/dde-dconfig/` |
+| 5.15 | dde-dconfig-daemon systemd service 用户为 `deepin-daemon` | grep `User=` | `dde-dconfig-daemon/services/dde-dconfig-daemon.service` |
+| 5.16 | systemd service `StateDirectory=dde-dconfig-daemon` + `LogsDirectory=deepin` | grep | 同上 |
+| 5.17 | daemon 中 `setCachePathPrefix()` 调用：global 为 `configPrefixPath() + "/global"`，用户为 `configPrefixPath() + "/{uid}"` | grep `setCachePathPrefix` | `dde-dconfig-daemon/dconfigresource.cpp` |
+| 5.18 | daemon `configPrefixPath()` 优先 `STATE_DIRECTORY` 环境变量 | grep `STATE_DIRECTORY` | `dde-dconfig-daemon/dconfig_global.h` |
+| 5.19 | DSMG 概念：`DSettingsDialog` 属 dtkwidget 而非 config 模块，已在 `widgets/dialog.md` 中描述 | 确认文件位置 | `widgets/dialog.md` |
 
 ---
 
@@ -302,10 +306,8 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | # | 验证项 | 不一致描述 | 涉及文档 |
 |---|--------|-----------|----------|
 | 9.1 | `DNotifySender` API 形态 | index.md（`Message` 结构体 + `instance()->sendMessage()` 单例模式）vs notify.md（构造函数 `DNotifySender("summary")` + builder 链 + `.call()`） | `core/index.md` vs `core/notify.md` |
-| 9.2 | `DSettingsDialog` 构造函数 | index.md（`new DSettingsDialog(settings, this)`）vs dsettings.md（`new DSettingsDialog(this)` + `updateSettings(settings)`） | `config/index.md` vs `config/dsettings.md` |
-| 9.3 | `DConfig` 构造函数 | index.md（3 参数含 appId `new DConfig("org.deepin.myapp", "myapp", this)`）vs dconfig.md（无 appId 构造函数 + `DConfig::create` 静态方法推荐） | `config/index.md` vs `config/dconfig.md` |
-| 9.4 | QML `StackView` vs `StackLayout` | index.md 列 `StackView`，controls.md 用 `StackLayout` | `declarative/index.md` vs `declarative/controls.md` |
-| 9.5 | `DciIconImage` vs `DciIcon` QML 类型名 | 文档用 `DciIconImage`，源码注册名可能是 `DciIcon` | `declarative/dci-icon.md` vs 源码 |
+| 9.2 | QML `StackView` vs `StackLayout` | index.md 列 `StackView`，controls.md 用 `StackLayout` | `declarative/index.md` vs `declarative/controls.md` |
+| 9.3 | `DciIconImage` vs `DciIcon` QML 类型名 | 文档用 `DciIconImage`，源码注册名可能是 `DciIcon` | `declarative/dci-icon.md` vs 源码 |
 
 ---
 
