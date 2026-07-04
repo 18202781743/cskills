@@ -1,4 +1,4 @@
----
+--- 
 name: dtk
 description: |
   DTK (Deepin Tool Kit) 开发指南，覆盖 dtkcore/dtkgui/dtkwidget/dtkdeclarative/dtklog。
@@ -8,11 +8,65 @@ description: |
   - 使用 DConfig 管理配置
   - 需要遵循 DDE 日志规范
   - 图标/主题/窗口装饰相关问题
+  - 修改/维护/验证 skill 自身文档
 ---
 
 # DTK 开发指南
 
 DTK 是深度桌面环境的核心开发框架，包含控件、主题、图标、配置等完整解决方案。
+
+## Skill 维护工作流
+
+当需要修改 skill 文档时，遵循以下流程：
+
+### 1. 探索源码
+
+从对应的 DTK 源码项目中查找实际 API、类、枚举值：
+
+| 文档模块 | 对应源码项目 | 关键目录 |
+|----------|-------------|----------|
+| config | dtkcore + dde-app-services | `dtkcore/include/global/` + `dde-app-services/dconfig-center/` |
+| icons | dtkgui | `dtkgui/include/util/` |
+| theming | dtkgui + dtkwidget | `dtkgui/include/kernel/` + `dtkwidget/include/widgets/` |
+| widgets | dtkwidget | `dtkwidget/include/widgets/` + `dtkwidget/include/DWidget/` |
+| declarative | dtkdeclarative | `dtkdeclarative/qmlplugin/` + `dtkdeclarative/src/` |
+| core | dtkcore | `dtkcore/include/` |
+| log | dtklog | `dtklog/include/` |
+
+### 2. 修改文档
+
+根据源码验证结果修改 `references/` 下的文档，确保：
+
+- 类名、方法签名、枚举值与头文件一致
+- 代码示例可编译运行
+- 概念描述与官方文档/源码注释一致
+- 相关文档交叉引用正确
+
+### 3. 更新验证计划
+
+修改 `verification-plan.md` 中对应模块的验证项，确保计划与实际文档结构匹配。
+
+### 4. 验证
+
+按 `verification-plan.md` 逐项验证，对照源码头文件确认：
+
+- **PASS** — 文档与源码一致
+- **FAIL** — 文档与源码不一致（修正文档）
+- **NOT FOUND** — 源码中未找到（检查是否已移除或重命名）
+
+重复步骤 2-4 直到全部验证项 PASS。
+
+### 5. 提交推送
+
+验证完成后提交并推送：
+
+```bash
+git add <modified files>
+git commit -m "docs: <description>"
+git push origin main
+```
+
+提交信息格式参照 [git-commit-workflow](../../../git-commit-workflow/)。
 
 ## 快速路由
 
