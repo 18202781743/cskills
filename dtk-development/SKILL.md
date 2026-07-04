@@ -66,7 +66,7 @@ git commit -m "docs: <description>"
 git push origin main
 ```
 
-提交信息格式参照 [git-commit-workflow](../../../git-commit-workflow/)。
+提交信息格式参照 git-commit-workflow 规范。
 
 ## 快速路由
 
