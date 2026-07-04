@@ -5,7 +5,7 @@ description: |
   触发场景：
   - 开发 DDE 应用需要选择 DTK 控件
   - 实现主题感知 UI（图标、配色、窗口装饰）
-  - 使用 DConfig/DSettings 管理配置
+  - 使用 DConfig 管理配置
   - 需要遵循 DDE 日志规范
   - 图标/主题/窗口装饰相关问题
 ---
@@ -110,5 +110,5 @@ dtkgui ──→ dtkwidget
 | 调色板 | dtkgui/dtkwidget | DPalette, DStyle |
 | QWidget 控件 | dtkwidget | 110+ 控件 |
 | QML 控件 | dtkdeclarative | 33+ QML 组件 |
-| 配置系统 | dtkcore | DConfig, DSettings |
+| 配置系统 | dtkcore | DConfig |
 | 日志系统 | dtklog | Logger, Appender |

@@ -10,6 +10,7 @@ DTK 提供多种对话框控件，适用于不同交互场景：
 | `DInputDialog` | 快速获取用户输入 |
 | `DFileDialog` | 文件/目录选择 |
 | `DAboutDialog` | 应用关于信息 |
+| `DSettingsDialog` | 应用设置界面（JSON 驱动） |
 | `DAbstractDialog` | 自定义对话框基类 |
 
 **不适用场景：**
@@ -138,9 +139,100 @@ public:
 };
 ```
 
-## 6. 关键 API
+## 6. DSettingsDialog 设置对话框
 
-### DDialog 常用方法
+### 6.1 概述
+
+`DSettingsDialog` 配合 `DSettings` 使用，通过 JSON 配置文件自动生成应用设置界面。`DSettings` 负责数据模型（来自 dtkcore），`DSettingsDialog` 负责 UI 展示（来自 dtkwidget）。
+
+### 6.2 头文件与依赖
+
+```cpp
+#include <DSettings>
+#include <DSettingsDialog>
+#include <DSettingsOption>
+#include <DSettingsGroup>
+
+// CMake
+find_package(DtkCore REQUIRED)
+find_package(DtkWidget REQUIRED)
+target_link_libraries(your_target Dtk::Core Dtk::Widget)
+```
+
+### 6.3 JSON 配置格式
+
+```json
+{
+    "groups": [
+        {
+            "key": "appearance",
+            "name": "外观",
+            "options": [
+                {
+                    "key": "theme",
+                    "name": "主题",
+                    "type": "combobox",
+                    "items": ["自动", "浅色", "深色"],
+                    "default": 0
+                },
+                {
+                    "key": "font-size",
+                    "name": "字体大小",
+                    "type": "spinbutton",
+                    "default": 12,
+                    "min": 8,
+                    "max": 24
+                },
+                {
+                    "key": "auto-save",
+                    "name": "自动保存",
+                    "type": "checkbox",
+                    "default": true
+                }
+            ]
+        }
+    ]
+}
+```
+
+### 6.4 代码示例
+
+```cpp
+#include <DSettings>
+#include <DSettingsDialog>
+
+// 从 JSON 文件加载设置
+auto *settings = DSettings::fromJsonFile(":/settings.json");
+
+// 读取值
+bool autoSave = settings->option("appearance.auto-save")->value().toBool();
+
+// 写入值
+settings->option("appearance.auto-save")->setValue(false);
+
+// 显示设置对话框
+auto *dialog = new DSettingsDialog(this);
+dialog->updateSettings(settings);
+dialog->exec();
+```
+
+### 6.5 支持的控件类型
+
+| type | 控件 |
+|------|------|
+| `checkbox` | 复选框 |
+| `combobox` | 下拉选择 |
+| `spinbutton` | 数值调节 |
+| `lineedit` | 单行输入 |
+| `slider` | 滑动条 |
+| `shortcut` | 快捷键编辑 |
+| `buttongroup` | 按钮组 |
+| `radiogroup` | 单选组 |
+| `switchbutton` | 开关按钮 |
+
+## 7. 关键 API
+
+### 7.1 DDialog 常用方法
 
 | 方法 | 说明 |
 |------|------|
@@ -153,14 +245,14 @@ public:
 | `setOnButtonClickedClose(bool)` | 点击按钮后是否关闭 |
 | `exec()` | 模态执行，返回点击的按钮索引 |
 
-### DAbstractDialog 显示位置
+### 7.2 DAbstractDialog 显示位置
 
 | 枚举值 | 说明 |
 |--------|------|
 | `Center` | 屏幕中央 |
 | `TopRight` | 屏幕右上角 |
 
-## 7. 常见错误与避坑
+## 8. 常见错误与避坑
 
 ### 错误 1：使用废弃的 setIconPixmap
 
@@ -186,7 +278,7 @@ dialog->exec();
 connect(dialog, &DDialog::closed, this, &MyClass::onDialogClosed);
 ```
 
-## 8. 相关文档
+## 9. 相关文档
 
 - [index.md](index.md) - 控件选择决策树
 - [window.md](window.md) - 窗口规范
