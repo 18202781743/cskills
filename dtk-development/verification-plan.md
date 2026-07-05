@@ -191,25 +191,26 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ## 模块 4：declarative（QML 控件）— 来源 dtkdeclarative
 
-**参考文档：** `references/declarative/index.md`, `references/declarative/controls.md`, `references/declarative/color-selector.md`, `references/declarative/dci-icon.md`, `references/declarative/effects.md`
+**参考文档：** `references/declarative/index.md`, `references/declarative/controls.md`, `references/declarative/buttons.md`, `references/declarative/inputs.md`, `references/declarative/menus.md`, `references/declarative/dialogs.md`, `references/declarative/panels.md`, `references/declarative/lists.md`, `references/declarative/progress.md`, `references/declarative/color-selector.md`, `references/declarative/dci-icon.md`, `references/declarative/effects.md`
 
 **源码位置：** `~/dtk/dtkdeclarative/qmlplugin/`（Qt5）+ `~/dtk/dtkdeclarative/qt6/`（Qt6）+ `~/dtk/dtkdeclarative/src/qml/`
 
 | # | 验证项 | 验证方法 | 对应源码文件 |
 |---|--------|----------|-------------|
 | 4.1 | QML 模块 URI `org.deepin.dtk` 正确 | 检查 `qmldir` 文件 | `qmlplugin/qmldir` |
-| 4.2 | 样式封装控件 QML 文件存在：`Button`/`RadioButton`/`CheckBox`/`Switch`/`TextField`/`TextArea`/`SpinBox`/`ComboBox`/`Slider`/`Dial`/`ProgressBar`/`DelayButton`/`ScrollBar`/`ScrollView`/`Popup`/`Menu`/`MenuItem`/`ToolTip`/`Frame`/`GroupBox`/`Pane`/`StackView`/`PageIndicator`/`BusyIndicator`/`ItemDelegate`/`CheckDelegate` | 在 `src/qml/` 中逐个确认 | `src/qml/` |
-| 4.3 | 自定义控件 QML 文件存在：`RecommandButton`/`WarningButton`/`ToolButton`/`IconButton`/`ActionButton`/`FloatingButton`/`LineEdit`/`SearchEdit`/`PasswordEdit`/`IpV4LineEdit`/`KeySequenceEdit`/`PlusMinusSpinBox`/`TipsSlider`/`WaterProgressBar`/`EmbeddedProgressBar`/`BoxPanel`/`ButtonPanel`/`ButtonBox`/`FloatingPanel`/`HighlightPanel`/`DialogWindow`/`DialogTitleBar`/`AboutDialog`/`TitleBar`/`WindowButtonGroup`/`FloatingMessage`/`AlertToolTip`/`ArrowShapePopup`/`ArrowListView`/`BoxShadow`/`BoxInsetShadow`/`RectangularShadow`/`InsideBoxBorder`/`OutsideBoxBorder`/`FocusBoxBorder`/`CicleSpreadAnimation`/`ThemeMenu`/`SortFilterModel` | 在 `src/qml/` 中逐个确认 | `src/qml/` |
-| 4.4 | C++ 注册类型：`DciIcon`/`QtIcon`/`IconLabel`/`RoundRectangle`/`ArrowBoxPath`/`InWindowBlurImpl`/`BehindWindowBlur`/`GlowEffect`/`SoftwareColorOverlay`/`SoftwareOpacityMask`/`ItemViewport`/`BackdropBlitter`/`WaterProgressAttribute`/`Config`/`KeySequenceListener`/`FloatingMessageContainer`/`MessageManager` 存在 | grep `QML_NAMED_ELEMENT` in `src/private/` | `src/private/*.h` |
-| 4.5 | CMake `find_package(DtkDeclarative)` + `Dtk::Declarative` | 检查 cmake | `dtkdeclarative/cmake/` |
-| 4.6 | `ColorSelector` 类型为附加属性（`QML_ATTACHED` + `QML_UNCREATABLE`） | grep `ColorSelector` in 注册代码 | `src/private/dquickcontrolpalette_p.h` |
-| 4.7 | `ColorSelector` 属性 `control`/`controlTheme`/`controlState`/`family`/`hovered`/`pressed`/`disabled`/`inactived` 存在 | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
-| 4.8 | `ColorSelector::controlState` 枚举值 `NormalState`/`HoveredState`/`PressedState`/`DisabledState`/`InactiveState` 存在 | grep `ControlState` 枚举 | `dqmlglobalobject_p.h` |
-| 4.9 | `Palette` 类型可创建（`QML_NAMED_ELEMENT(Palette)`） | grep `Palette` in 注册代码 | `dquickcontrolpalette_p.h` |
-| 4.10 | `Palette` 属性 `enabled`/`normal`/`normalDark`/`hovered`/`hoveredDark`/`pressed`/`pressedDark`/`disabled`/`disabledDark` 存在 | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
-| 4.11 | `Palette::ColorFamily` 枚举有 `CommonColor`/`CrystalColor` | grep `enum ColorFamily` | `dquickcontrolpalette_p.h` |
-| 4.12 | `Palette::ColorGroup` 枚举有 `Light`/`Dark`/`Normal`/`Hovered`/`Pressed`/`Disabled` | grep `enum ColorGroup` | `dquickcontrolpalette_p.h` |
-| 4.13 | `DQuickControlColor` 类型有 `common`/`crystal` 属性 | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
+| 4.2 | 按钮类控件 QML 文件存在：`Button`/`RecommandButton`/`WarningButton`/`ToolButton`/`IconButton`/`ActionButton`/`FloatingButton`/`DelayButton`/`RadioButton`/`CheckBox`/`Switch` | 在 `src/qml/` 中确认 | `src/qml/` |
+| 4.3 | 输入类控件 QML 文件存在：`TextField`/`LineEdit`/`SearchEdit`/`PasswordEdit`/`SpinBox`/`PlusMinusSpinBox`/`IpV4LineEdit`/`KeySequenceEdit`/`ComboBox` | 在 `src/qml/` 中确认 | `src/qml/` |
+| 4.4 | 菜单类控件 QML 文件存在：`Menu`/`MenuItem`/`MenuSeparator`/`ThemeMenu` | 在 `src/qml/` 中确认 | `src/qml/` |
+| 4.5 | 对话框/窗口类控件 QML 文件存在：`ApplicationWindow`/`DialogWindow`/`DialogTitleBar`/`AboutDialog`/`TitleBar`/`WindowButtonGroup`/`Popup`/`ArrowShapePopup`/`FloatingMessage`/`AlertToolTip` | 在 `src/qml/` 中确认 | `src/qml/` |
+| 4.6 | 面板/视觉类控件 QML 文件存在：`BoxPanel`/`ButtonPanel`/`ButtonBox`/`FloatingPanel`/`HighlightPanel`/`BoxShadow`/`BoxInsetShadow`/`InsideBoxBorder`/`OutsideBoxBorder`/`FocusBoxBorder`/`CicleSpreadAnimation` | 在 `src/qml/` 中确认 | `src/qml/` |
+| 4.7 | 列表类控件 QML 文件存在：`ItemDelegate`/`CheckDelegate`/`ArrowListView` | 在 `src/qml/` 中确认 | `src/qml/` |
+| 4.8 | 进度/滑动类控件 QML 文件存在：`ProgressBar`/`EmbeddedProgressBar`/`WaterProgressBar`/`BusyIndicator`/`ScrollBar`/`Slider`/`TipsSlider` | 在 `src/qml/` 中确认 | `src/qml/` |
+| 4.9 | CMake `find_package(DtkDeclarative)` + `Dtk::Declarative` | 检查 cmake | `dtkdeclarative/cmake/` |
+| 4.10 | `ColorSelector` 类型为附加属性（`QML_ATTACHED` + `QML_UNCREATABLE`） | grep `ColorSelector` | `src/private/dquickcontrolpalette_p.h` |
+| 4.11 | `ColorSelector` 属性 `control`/`controlTheme`/`controlState`/`family`/`hovered`/`pressed`/`disabled`/`inactived` 存在 | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
+| 4.12 | `ColorSelector::controlState` 枚举值 `NormalState`/`HoveredState`/`PressedState`/`DisabledState`/`InactiveState` | grep `ControlState` | `dqmlglobalobject_p.h` |
+| 4.13 | `Palette` 类型可创建，属性 `enabled`/`normal`/`normalDark`/`hovered`/`hoveredDark`/`pressed`/`pressedDark`/`disabled`/`disabledDark` 存在 | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
+| 4.14 | `Palette::ColorFamily` 枚举 `CommonColor`/`CrystalColor`，`DQuickControlColor` 有 `common`/`crystal` | grep enum + Q_PROPERTY | `dquickcontrolpalette_p.h` |
 
 ---
 

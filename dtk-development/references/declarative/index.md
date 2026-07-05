@@ -94,7 +94,7 @@ ColumnLayout {
 
 ## 5. 相关文档
 
-- [controls.md](controls.md) - 控件详细规范
-- [color-selector.md](color-selector.md) - ColorSelector 取色器与 Palette 调色板
-- [effects.md](effects.md) - QML 效果组件
-- [dci-icon.md](dci-icon.md) - QML 中使用 dci 图标
+- [controls.md](controls.md) — 控件分类索引（按按钮/输入/菜单/对话框/面板/列表/进度分类）
+- [color-selector.md](color-selector.md) — ColorSelector 取色器与 Palette 调色板
+- [effects.md](effects.md) — QML 视觉效果（模糊/光晕/叠加/遮罩）
+- [dci-icon.md](dci-icon.md) — QML 中使用 dci 图标
