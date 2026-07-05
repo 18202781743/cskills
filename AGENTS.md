@@ -44,6 +44,7 @@ cskills/
 ├── dtk-development/        # DTK 开发指南 skill
 ├── dde-shell-plugin-creator/  # DDE Shell 插件开发 skill
 ├── dde-tray-development/   # DDE 托盘开发 skill
+├── dde-control-center-development/  # DDE 控制中心开发 skill
 └── .opencode/             # opencode 配置
 ```
 
@@ -58,3 +59,17 @@ cskills/
 | declarative | dtkdeclarative | `dtkdeclarative/qmlplugin/` + `dtkdeclarative/src/` |
 | core | dtkcore | `dtkcore/include/` |
 | log | dtklog | `dtklog/include/` |
+
+## DDE Control Center Skill 源码映射
+
+| 文档模块 | 对应源码项目 | 关键目录 |
+|----------|-------------|----------|
+| architecture + plugin-development | dde-control-center | `include/dccfactory.h` + `src/dde-control-center/plugin/` + `misc/` |
+| dccobject-api + dccapp-api | dde-control-center | `src/dde-control-center/plugin/dccobject.h` + `dccapp.h` + `dccmanager.h` |
+| qml-components | dde-control-center | `src/dde-control-center/plugin/*.qml` + `*.h` |
+| data-binding + dbus-integration | dde-control-center + 各个 plugin-*/ | `src/dde-control-center/plugin/dccquickdbusinterface.h` + `src/plugin-*/operation/` |
+| dconfig-integration | dde-control-center + dde-app-services | 根 `CMakeLists.txt` + `dde-app-services/dconfig-center/` |
+| debian-packaging | dde-control-center | `debian/` |
+| translation | dde-control-center | `misc/DdeControlCenterPluginMacros.cmake` |
+| plugin-example-walkthrough | dde-control-center | `examples/plugin-example/` |
+| debugging | dde-control-center | `src/dde-control-center/main.cpp` (--spec) + `dccpluginloader.h/cpp` |
