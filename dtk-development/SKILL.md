@@ -22,6 +22,7 @@ DTK 是深度桌面环境的核心开发框架。按场景快速定位：
 | 修改/编译/调试 DTK 自身源码 | [references/dtksrc-compile-debug.md](references/dtksrc-compile-debug.md) |
 | 创建新应用项目 | [references/app-dev-with-dtk.md](references/app-dev-with-dtk.md) |
 | 窗口装饰（圆角/阴影/模糊/CSD） | [references/platform-abstraction.md](references/platform-abstraction.md) |
+| 控件用法示例（QWidget + QML） | [references/examples.md](references/examples.md) |
 | 选择/显示图标 | [references/icons/index.md](references/icons/index.md) |
 | 主题切换/配色 | [references/theming/index.md](references/theming/index.md) |
 | 选择 QWidget 控件 | [references/widgets/index.md](references/widgets/index.md) |
@@ -32,6 +33,7 @@ DTK 是深度桌面环境的核心开发框架。按场景快速定位：
 ## 高频跨域场景
 
 - **了解 DTK 架构和仓库依赖** → [architecture.md](references/architecture.md)
+- **查看控件用法示例** → [examples.md](references/examples.md)（QWidget 16 个分类、QML 2 个完整 Demo）
 - **窗口圆角/阴影/模糊/无标题栏** → [platform-abstraction.md](references/platform-abstraction.md)
 - **修改 DTK 源码并编译调试** → [dtksrc-compile-debug.md](references/dtksrc-compile-debug.md)
 - **创建新的 DTK 项目** → [app-dev-with-dtk.md](references/app-dev-with-dtk.md)
