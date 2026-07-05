@@ -34,7 +34,7 @@
 ### 5. 提交推送
 
 验证完成后提交并推送，提交信息格式参照 git-commit-workflow 规范。
-提交时若用户未提供 PMS 和 GitHub Issue 编号，直接跳过对应的 `PMS:` 和 `Issue:` 行。
+提交时若用户未提供 PMS 和 GitHub Issue 编号，不要询问用户，直接跳过对应的 `PMS:` 和 `Issue:` 行。
 
 ## 项目结构
 

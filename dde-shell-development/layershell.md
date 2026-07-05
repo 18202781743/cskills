@@ -96,12 +96,9 @@ Window {
 
 ## 独立使用（非插件场景）
 
-不依赖 dde-shell 插件体系，直接使用 LayerShell 窗口：
+不依赖 dde-shell 插件体系，直接使用 LayerShell 窗口。
 
-```cmake
-find_package(DDEShell REQUIRED)
-target_link_libraries(my-app PRIVATE Dde::Shell)
-```
+### QML 方式
 
 ```qml
 import org.deepin.ds 1.0
@@ -111,6 +108,27 @@ Window {
         | DLayerShellWindow.AnchorLeft | DLayerShellWindow.AnchorRight
 }
 ```
+
+### C++ 方式
+
+通过 `DLayerShellWindow::get()` 直接操作已有 `QWindow`：
+
+```cpp
+#include <dlayershellwindow.h>
+DS_USE_NAMESPACE
+
+auto window = new QQuickWindow();
+window->setVisible(true);
+
+auto *shell = DLayerShellWindow::get(window);
+shell->setAnchors(DLayerShellWindow::AnchorBottom
+    | DLayerShellWindow::AnchorLeft
+    | DLayerShellWindow::AnchorRight);
+shell->setLayer(DLayerShellWindow::LayerTop);
+shell->setExclusiveZone(50);
+```
+
+C++ 方式同样链接 `Dde::Shell`，不依赖 QML 导入。
 
 ## 实现
 
