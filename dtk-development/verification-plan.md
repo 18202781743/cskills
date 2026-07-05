@@ -244,9 +244,9 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ---
 
-## 模块 6：core（核心工具）— 来源 dtkcore
+## 模块 6：utilities（工具类）— 来源 dtkcore + dtkgui/dtkwidget
 
-**参考文档：** `references/core/index.md`, `references/core/log.md`, `references/core/util.md`, `references/core/singleton.md`
+**参考文档：** `references/utilities/index.md`, `references/utilities/log.md`, `references/utilities/util.md`, `references/utilities/singleton.md`
 
 **源码位置：** `~/dtk/dtkcore/include/`
 
@@ -269,9 +269,9 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ---
 
-## 模块 7：log（已合并到模块 6 core）
+## 模块 7：log（已合并到模块 6 utilities）
 
-日志文档已合并到 `references/core/index.md`，原 `references/log/` 目录已删除。模块 7 的验证项已合并到模块 6（6.11-6.14）。
+日志文档已合并到 `references/utilities/index.md`，原 `references/log/` 目录已删除。模块 7 的验证项已合并到模块 6（6.11-6.14）。
 
 ---
 
@@ -297,7 +297,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 | # | 验证项 | 不一致描述 | 涉及文档 |
 |---|--------|-----------|----------|
-| 9.1 | `DNotifySender` API 形态 | index.md 描述 builder 链模式 `.call()` | `core/index.md` |
+| 9.1 | `DNotifySender` API 形态 | index.md 描述 builder 链模式 `.call()` | `utilities/index.md` |
 | 9.2 | QML `StackView` vs `StackLayout` | index.md 列 `StackView`，controls.md 用 `StackLayout`（controls.md 已删除，此条已废弃） | `declarative/index.md` |
 | 9.3 | `DciIconImage` vs `DciIcon` QML 类型名 | 文档用 `DciIconImage`，源码注册名可能是 `DciIcon` | `declarative/dci-icon.md` vs 源码 |
 
@@ -360,7 +360,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | Group D | 模块 3（widgets，3.6-3.10） | ~20 |
 | Group E | 模块 4（declarative） | 19 |
 | Group F | 模块 5（config） | 15 |
-| Group G | 模块 6（core，含日志） | 14 |
+| Group G | 模块 6（utilities，含日志） | 14 |
 | Group H | 模块 8（平台集成）+ 模块 9（跨文档一致性） | 10 |
 | Group J | 模块 10（architecture）+ 模块 11（platform-abstraction） | 23 |
 

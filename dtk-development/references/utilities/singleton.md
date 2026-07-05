@@ -129,5 +129,5 @@ QObject::connect(&app, &DApplication::newInstanceStarted, []() {
 
 ## 7. 相关文档
 
-- [index.md](index.md) — 核心工具索引
+- [index.md](index.md) — 工具类索引
 - [log.md](log.md) — 日志系统

@@ -29,7 +29,7 @@ DTK 是深度桌面环境的核心开发框架，包含控件、主题、图标�
 | 选择 QWidget 控件 | [references/widgets/index.md](references/widgets/index.md) |
 | 选择 QML 控件 | [references/declarative/index.md](references/declarative/index.md) |
 | 应用配置持久化 | [references/config/index.md](references/config/index.md) |
-| 日志/核心工具/DBus/通知 | [references/core/index.md](references/core/index.md) |
+| 日志/核心工具/DBus/通知 | [references/utilities/index.md](references/utilities/index.md) |
 
 ## 场景决策
 
@@ -53,7 +53,7 @@ DTK 是深度桌面环境的核心开发框架，包含控件、主题、图标�
 - **创建新的 DTK 项目** → [app-dev-with-dtk.md](references/app-dev-with-dtk.md)（CMake 配置、头文件、日志、示例）
 - **在自定义控件中使用主题图标** → 先读 [icons/index.md](references/icons/index.md)，再读 [theming/palette.md](references/theming/palette.md)
 - **QML 中显示 dci 图标** → [declarative/dci-icon.md](references/declarative/dci-icon.md)
-- **控件内嵌入消息提示** → [widgets/message.md](references/widgets/message.md) + [core/index.md](references/core/index.md)
+- **控件内嵌入消息提示** → [widgets/message.md](references/widgets/message.md) + [utilities/index.md](references/utilities/index.md)
 
 ## 仓库依赖关系
 
@@ -117,4 +117,4 @@ dtkgui ──→ dtkwidget
 | QWidget 控件 | dtkwidget | 110+ 控件 |
 | QML 控件 | dtkdeclarative | 33+ QML 组件 |
 | 配置系统 | dtkcore | DConfig |
-| 核心工具与日志 | dtkcore + dtklog | DLogManager, DStandardPaths, DDBusInterface, DNotifySender |
+| 核心工具与日志 | dtkcore + dtklog | DLogManager, DStandardPaths, DDBusInterface, DNotifySender, 单实例 |

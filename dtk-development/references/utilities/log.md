@@ -63,5 +63,5 @@ int main(int argc, char *argv[]) {
 
 ## 3. 相关文档
 
-- [index.md](index.md) — 核心工具索引
+- [index.md](index.md) — 工具类索引
 - [../config/index.md](../config/index.md) — DConfig 配置系统
