@@ -246,7 +246,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ## 模块 6：core（核心工具）— 来源 dtkcore
 
-**参考文档：** `references/core/index.md`
+**参考文档：** `references/core/index.md`, `references/core/log.md`, `references/core/util.md`, `references/core/singleton.md`
 
 **源码位置：** `~/dtk/dtkcore/include/`
 
