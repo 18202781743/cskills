@@ -329,6 +329,29 @@ if (weather && weather.rootObject) {
 ## 十、测试
 
 ```bash
-dde-shell --list-plugins
+# 列出所有插件
+dde-shell --list
+
+# 测试单个插件
 dde-shell -p <plugin-id>
+
+# 测试多个插件
+dde-shell -p <plugin-id1> -p <plugin-id2>
+
+# 禁用指定插件
+dde-shell -d <plugin-id>
+
+# 按分类加载面板
+dde-shell -C <category>
+
+# 重启系统服务
+systemctl --user restart dde-shell@DDE
+
+# 从 build 目录加载（自动检测同级 packages/ 和 plugins/）
+./build/shell/dde-shell -p <plugin-id>
+
+# 指定自定义路径加载
+DDE_SHELL_PACKAGE_PATH=/path/to/packages \
+DDE_SHELL_PLUGIN_PATH=/path/to/plugins \
+./build/shell/dde-shell -p <plugin-id>
 ```

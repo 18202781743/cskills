@@ -38,7 +38,7 @@ virtual QObject *createProxyMeta();  // 暴露给其他插件的代理
 
 **生命周期**: 构造 → `load()` → `init()` → `rootObjectChanged`
 
-**注册**: `D_APPLET_CLASS(ClassName)` 在 .cpp 中使用一次。需 `#include "pluginfactory.h"`，使用后 `#include "classname.moc"`。
+**注册**: `D_APPLET_CLASS(ClassName)` 在 .cpp 中使用一次。需 `#include <pluginfactory.h>`，使用后 `#include "classname.moc"`。
 
 ## DContainment
 
