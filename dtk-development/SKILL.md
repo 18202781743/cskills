@@ -41,13 +41,14 @@ DTK 是深度桌面环境的核心开发框架。按场景快速定位：
 
 ## 核心模块速览
 
-| 模块 | 所在项目 | 入口文档 |
-|------|----------|----------|
-| 架构与依赖 | 全部 | [references/architecture.md](references/architecture.md) |
-| 平台抽象 | dtkgui + qt5platform-plugins | [references/platform-abstraction.md](references/platform-abstraction.md) |
-| 图标系统 | dtkgui | [references/icons/index.md](references/icons/index.md) |
-| 主题与调色板 | dtkgui + dtkwidget | [references/theming/index.md](references/theming/index.md) |
-| QWidget 控件 | dtkwidget | [references/widgets/index.md](references/widgets/index.md) |
-| QML 控件 | dtkdeclarative | [references/declarative/index.md](references/declarative/index.md) |
-| 配置 DConfig | dtkcore | [references/config/index.md](references/config/index.md) |
-| 工具类 | dtkcore + dtklog | [references/utilities/index.md](references/utilities/index.md) |
+| 模块 | 基础层（dtkcore/dtkgui） | QWidget 层（dtkwidget/qt5integration） | QML 层（dtkdeclarative） | 入口文档 |
+|------|--------------------------|----------------------------------------|--------------------------|----------|
+| 架构与依赖 | 全部 8 个项目 | — | — | [architecture.md](references/architecture.md) |
+| 图标 | DDciIcon/DIconTheme (dtkgui), DDciFile (dtkcore) | DStyle::standardIcon, DIcon | DciIcon, IconLabel | [icons/index.md](references/icons/index.md) |
+| 主题/调色板 | DPalette/DGuiApplicationHelper (dtkgui), QDeepinTheme (qt5integration) | DStyle/DStyleHelper | Palette, ColorSelector | [theming/index.md](references/theming/index.md) |
+| 字体 | DFontManager/DPlatformTheme (dtkgui) | DFontSizeManager | D.DTK.fontManager | [theming/index.md](references/theming/index.md) |
+| 平台抽象 | DPlatformHandle/DPlatformTheme (dtkgui) | — | — | [platform-abstraction.md](references/platform-abstraction.md) |
+| QWidget 控件 | — | 110+ 控件 | — | [widgets/index.md](references/widgets/index.md) |
+| QML 控件 | — | — | 70+ 控件 | [declarative/index.md](references/declarative/index.md) |
+| 配置 DConfig | DConfig (dtkcore) | — | D.Config | [config/index.md](references/config/index.md) |
+| 工具类 | DLogManager/DDBusInterface 等 (dtkcore+dtklog) | DApplication 单实例 (dtkwidget) | — | [utilities/index.md](references/utilities/index.md) |
