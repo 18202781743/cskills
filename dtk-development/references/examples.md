@@ -39,7 +39,7 @@ sudo apt install dtk6widget-examples    # DTK6
 | LCDNumber | DLCDNumber |
 | ImageViewer | DImageViewer（缩放/旋转/裁剪） |
 
-**源码路径：** `dtkwidget/examples/collections/`，随 dtkwidget 主项目编译。
+**源码路径：** `dtkwidget/examples/collections/`，随 dtkwidget 主项目编译（cmake option `BUILD_EXAMPLES`，默认 ON）。
 
 ## QML 示例
 
