@@ -2,11 +2,9 @@
 
 ## 1. 概述
 
-DTK 提供基于 `QLocalServer`/`QLocalSocket` 的单实例机制，确保同一应用只运行一个进程。第二个实例启动时会通知第一个实例，并传递启动参数。
+DTK 在 dtkgui 层提供基于 `QLocalServer`/`QLocalSocket` 的单实例机制，确保同一应用只运行一个进程。第二个实例启动时会通知第一个实例，并传递启动参数。非 dtkwidget 应用可直接使用 `DGuiApplicationHelper` 的接口。
 
 ## 2. 基本用法
-
-在 `main()` 中调用 `DGuiApplicationHelper::setSingleInstance()`：
 
 ```cpp
 #include <DGuiApplicationHelper>
@@ -25,32 +23,14 @@ int main(int argc, char *argv[]) {
                      &DGuiApplicationHelper::newProcessInstance,
                      [](qint64 pid, const QStringList &args) {
         qInfo() << "新实例启动:" << pid << args;
+        // 在此激活窗口
     });
 
     return app.exec();
 }
 ```
 
-使用 `DApplication`（dtkwidget）时更简洁，自动处理窗口激活：
-
-```cpp
-#include <DApplication>
-
-int main(int argc, char *argv[]) {
-    DApplication app(argc, argv);
-
-    if (!app.setSingleInstance("myapp")) {
-        return 0;
-    }
-
-    // DApplication 自动将 newProcessInstance 信号转发为 newInstanceStarted
-    QObject::connect(&app, &DApplication::newInstanceStarted, []() {
-        qInfo() << "新实例已启动";
-    });
-
-    return app.exec();
-}
-```
+使用 `DApplication`（dtkwidget）时，`setSingleInstance()` 内部转发到 `DGuiApplicationHelper::setSingleInstance()`，并额外提供 `newInstanceStarted()` 信号和 `autoActivateWindows` 自动窗口激活。
 
 ## 3. 原理
 
@@ -74,7 +54,7 @@ int main(int argc, char *argv[]) {
 
 通过 `QDataStream` 序列化传递：
 
-1. **协议版本号** (`qint8`) — 未来扩展用
+1. **协议版本号** (`qint8`)
 2. **进程 PID** (`qint64`)
 3. **启动参数** (`QStringList`) — `QApplication::arguments()`
 
@@ -92,19 +72,12 @@ DGuiApplicationHelper::setSingleInstance("myapp", DGuiApplicationHelper::GroupSc
 
 ## 4. 窗口激活
 
-### 4.1 DApplication 自动激活
-
-使用 `DApplication` + `DMainWindow` 时，设置 `autoActivateWindows` 后，新实例启动时自动找到第一个 `DMainWindow` 并激活：
+收到 `DGuiApplicationHelper::newProcessInstance` 信号后手动激活窗口：
 
 ```cpp
-DApplication app(argc, argv);
-app.setAutoActivateWindows(true);
-```
-
-### 4.2 手动激活
-
-```cpp
-QObject::connect(&app, &DApplication::newInstanceStarted, []() {
+QObject::connect(DGuiApplicationHelper::instance(),
+                 &DGuiApplicationHelper::newProcessInstance,
+                 [](qint64 pid, const QStringList &args) {
     for (QWidget *w : qApp->topLevelWidgets()) {
         if (auto *mainWin = qobject_cast<QMainWindow*>(w)) {
             if (mainWin->isMinimized() || mainWin->isHidden())
@@ -118,14 +91,12 @@ QObject::connect(&app, &DApplication::newInstanceStarted, []() {
 
 ## 5. 沙箱环境（Flatpak）
 
-沙箱环境中的 DBus 方案（需编译时启用 `DTK_DBUS_SINGLEINSTANCE` 宏）：通过注册 DBus 服务名 `com.deepin.SingleInstance.<key>` 判断唯一性。无法注册说明已有实例。
+需编译时启用 `DTK_DBUS_SINGLEINSTANCE` 宏，通过注册 DBus 服务名 `com.deepin.SingleInstance.<key>` 判断唯一性。无法注册说明已有实例。
 
 ## 6. 注意事项
 
 - `setSingleInstanceInterval(ms)` 必须在 `setSingleInstance()` 之前调用，控制新实例等待第一个实例响应的超时时间（默认 3000ms）
 - Linux 下 socket key 包含 uid 和 pid namespace，确保不同用户和容器隔离
-- `DGuiApplicationHelper::newProcessInstance` 信号携带 pid 和 arguments
-- 窗口激活部分仅对 `DMainWindow` 类型生效，普通 `QMainWindow` 需手动处理
 
 ## 7. 相关文档
 
