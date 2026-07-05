@@ -346,6 +346,6 @@ FloatingPanel {
 
 ## 8. 相关文档
 
-- [controls.md](controls.md) — QML 控件详细规范
+- [index.md](index.md) — QML 控件选择决策树
 - [effects.md](effects.md) — QML 效果组件
 - [index.md](index.md) — QML 控件选择决策树

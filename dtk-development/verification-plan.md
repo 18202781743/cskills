@@ -191,7 +191,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ## 模块 4：declarative（QML 控件）— 来源 dtkdeclarative
 
-**参考文档：** `references/declarative/index.md`, `references/declarative/controls.md`, `references/declarative/buttons.md`, `references/declarative/inputs.md`, `references/declarative/menus.md`, `references/declarative/dialogs.md`, `references/declarative/panels.md`, `references/declarative/lists.md`, `references/declarative/progress.md`, `references/declarative/color-selector.md`, `references/declarative/dci-icon.md`, `references/declarative/effects.md`
+**参考文档：** `references/declarative/index.md`, `references/declarative/buttons.md`, `references/declarative/inputs.md`, `references/declarative/menus.md`, `references/declarative/dialogs.md`, `references/declarative/panels.md`, `references/declarative/lists.md`, `references/declarative/progress.md`, `references/declarative/color-selector.md`, `references/declarative/dci-icon.md`, `references/declarative/effects.md`
 
 **源码位置：** `~/dtk/dtkdeclarative/qmlplugin/`（Qt5）+ `~/dtk/dtkdeclarative/qt6/`（Qt6）+ `~/dtk/dtkdeclarative/src/qml/`
 
@@ -310,7 +310,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | # | 验证项 | 不一致描述 | 涉及文档 |
 |---|--------|-----------|----------|
 | 9.1 | `DNotifySender` API 形态 | index.md（`Message` 结构体 + `instance()->sendMessage()` 单例模式）vs notify.md（构造函数 `DNotifySender("summary")` + builder 链 + `.call()`） | `core/index.md` vs `core/notify.md` |
-| 9.2 | QML `StackView` vs `StackLayout` | index.md 列 `StackView`，controls.md 用 `StackLayout` | `declarative/index.md` vs `declarative/controls.md` |
+| 9.2 | QML `StackView` vs `StackLayout` | index.md 列 `StackView`，controls.md 用 `StackLayout`（controls.md 已删除，此条已废弃） | `declarative/index.md` |
 | 9.3 | `DciIconImage` vs `DciIcon` QML 类型名 | 文档用 `DciIconImage`，源码注册名可能是 `DciIcon` | `declarative/dci-icon.md` vs 源码 |
 
 ---
