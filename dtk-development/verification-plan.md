@@ -287,7 +287,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | 8.2 | SKILL.md 声称 qt5integration 运行时依赖 qt5platform-plugins | 确认两者有关联（检查 cmake 或代码引用） | 两项目源码 |
 | 8.3 | SKILL.md 声称 dtkwidget 编译不依赖 qt5integration/qt5platform-plugins | 确认 dtkwidget 的 CMakeLists 不引用这两个项目 | `dtkwidget/CMakeLists.txt` |
 | 8.4 | SKILL.md 声称 `DDciFile` 来自 dtkcore，`DDciIcon` 来自 dtkgui | 确认类所在项目 | 已在 1.1 和 6.11 验证 |
-| 8.5 | SKILL.md 依赖图：dtkcommon <- dtklog, dtkcommon <- dtkcore, dtkcore <- dtkgui, dtkgui <- dtkwidget, dtkgui <- dtkdeclarative | 逐个检查 CMakeLists 中的 `find_package` | 各项目 `CMakeLists.txt` |
+| 8.5 | SKILL.md 依赖图：dtkcommon→dtkcore, dtkcommon→dtkgui, dtkcore→dtklog, dtkcore→dtkgui, dtkcore→dtkwidget, dtkcore→dtkdeclarative, dtkgui→dtkdeclarative, dtkgui→qt5platform-plugins | 逐个检查 CMakeLists 中的 `find_package` | 各项目 `CMakeLists.txt` |
 
 ---
 

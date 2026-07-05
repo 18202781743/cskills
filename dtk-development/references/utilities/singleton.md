@@ -52,11 +52,14 @@ int main(int argc, char *argv[]) {
 
 ### 3.2 进程间传递的数据
 
-通过 `QDataStream` 序列化传递：
+通过 `QDataStream` 序列化传递（v2 协议）：
 
-1. **协议版本号** (`qint8`)
+1. **协议版本号** (`quint8`) — 当前版本 2
 2. **进程 PID** (`qint64`)
 3. **启动参数** (`QStringList`) — `QApplication::arguments()`
+4. **环境变量** (`QStringList`) — v2 新增，仅转发白名单中的 key
+
+白名单当前包含 `XDG_ACTIVATION_TOKEN`，用于 Wayland 下将新实例的窗口激活 token 传递给第一个实例的进程环境（`qputenv`），确保窗口能正确获取焦点。
 
 ### 3.3 SingleScope 作用域
 

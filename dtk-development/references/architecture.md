@@ -138,30 +138,33 @@ qt5platform-plugins 层（QPA 插件）
 ## 6. 仓库依赖关系
 
 ```
-                     dtkcommon (CMake 宏/构建基础设施)
-                    ╱    │    ╲
-               虚线╱  虚线│  虚线╲
-                 ╱      │      ╲
-           dtklog   dtkcore ──→ dtkgui
-                        │         │
-                    虚线│     实线╱   实线╲
-                        ↓     ╱         ╲
-                      dtkgui ←┘    dtkdeclarative
-                     ╱      ╲            │
-                实线╱      实线╲    虚线╱   虚线╲
-                  ╱          ╲      ╱         ╲
-          dtkwidget    dtkdeclarative  │          │
-             │                          │          │
-        虚线╱   虚线╲              虚线↓          虚线↓
-           ↓       ↓          qt5integration  qt5platform-plugins
-    qt5integration  qt5platform-plugins
+                     dtkcommon (CMake 构建宏 DtkBuildHelper)
+                    ╱    │    ╲     ╲
+               实线╱  实线│  实线╲  实线╲
+                 ╱      │      ╲      ╲
+           dtklog ──→ dtkcore ──→ dtkgui
+              │                            │
+              │                        实线╱   实线╲
+              │                         ╱         ╲
+              └──────→ dtkcore  dtkdeclarative  qt5platform-plugins
+                         │           │
+                    实线╱    实线╱    实线╲
+                     ╱        ╱         ╲
+              dtkgui ←┘ dtkwidget   dtkdeclarative
+                        │
+                   虚线╱   虚线╲
+                      ↓       ↓
+               qt5integration qt5platform-plugins
 ```
 
 | 项目 | 编译依赖 | 运行时/功能关联 |
 |------|----------|----------------|
-| dtkgui | dtkcore | — |
-| dtkwidget | dtkgui | qt5integration（Chameleon 风格渲染） |
-| dtkdeclarative | dtkgui | — |
+| dtkcommon | 无 | — |
+| dtklog | dtkcommon（DtkBuildHelper） | — |
+| dtkcore | dtkcommon, dtklog | — |
+| dtkgui | dtkcommon, dtkcore | — |
+| dtkwidget | dtkcore, dtkgui | qt5integration（Chameleon 风格渲染） |
+| dtkdeclarative | dtkcore, dtkgui | — |
 | qt5integration | dtkgui, dtkwidget | — |
 | qt5platform-plugins | dtkgui | — |
 
