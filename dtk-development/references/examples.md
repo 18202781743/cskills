@@ -14,8 +14,8 @@ sudo apt install dtk6widget-examples    # DTK6
 
 **运行：**
 ```bash
-/usr/lib/x86_64-linux-gnu/dtk5/DWidget/examples/collections   # DTK5
-/usr/lib/x86_64-linux-gnu/dtk6/DWidget/examples/collections   # DTK6
+/usr/lib/*/dtk5/DWidget/examples/collections   # DTK5
+/usr/lib/*/dtk6/DWidget/examples/collections   # DTK6
 ```
 
 **分类总览：**
@@ -39,7 +39,7 @@ sudo apt install dtk6widget-examples    # DTK6
 | LCDNumber | DLCDNumber |
 | ImageViewer | DImageViewer（缩放/旋转/裁剪） |
 
-**源码路径：** `dtkwidget/examples/collections/`
+**源码路径：** `dtkwidget/examples/collections/`，随 dtkwidget 主项目编译。
 
 ## QML 示例
 
@@ -54,7 +54,7 @@ sudo apt install dtk6-exhibition      # DTK6
 **运行：**
 ```bash
 dtk-exhibition                        # DTK5
-/usr/lib/x86_64-linux-gnu/dtk6/DDeclarative/dtk6-exhibition  # DTK6
+/usr/lib/*/dtk6/DDeclarative/dtk6-exhibition  # DTK6
 ```
 
 **分类总览：**
@@ -76,25 +76,7 @@ dtk-exhibition                        # DTK5
 | ToolBar | TitleBar 变体 + FloatingPanel 工具栏 |
 | Group | ControlGroup + ControlGroupItem 折叠组 |
 
-**源码路径：** `dtkdeclarative/examples/exhibition/`
-
-## 从源码编译
-
-如需修改示例代码后重新编译：
-
-```bash
-# dtkwidget 示例
-cd dtkwidget/examples/collections
-mkdir build && cd build
-cmake .. -DCMAKE_PREFIX_PATH=/path/to/dtk/install
-make
-
-# dtkdeclarative 示例
-cd dtkdeclarative/examples
-mkdir build && cd build
-cmake .. -DCMAKE_PREFIX_PATH=/path/to/dtk/install
-make
-```
+**源码路径：** `dtkdeclarative/examples/exhibition/`，随 dtkdeclarative 主项目编译。
 
 ## 相关文档
 
