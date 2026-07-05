@@ -224,7 +224,12 @@ if (dialog->exec() == okIdx) { /* 点击了确定 */ }
 
 ## 6. 相关文档
 
-- [dialog.md](dialog.md) - 对话框详细规范
-- [window.md](window.md) - 窗口详细规范
-- [button.md](button.md) - 按钮详细规范
-- [input.md](input.md) - 输入控件详细规范
+- [dialog.md](dialog.md) — 对话框详细规范
+- [window.md](window.md) — 窗口详细规范
+- [button.md](button.md) — 按钮详细规范
+- [input.md](input.md) — 输入控件详细规范
+- [container.md](container.md) — 容器控件
+- [navigation.md](navigation.md) — 导航控件
+- [progress.md](progress.md) — 进度与状态
+- [message.md](message.md) — 消息与通知
+- [view.md](view.md) — 视图控件

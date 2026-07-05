@@ -79,7 +79,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ## 模块 3：widgets（QWidget 控件）— 来源 dtkwidget
 
-**参考文档：** `references/widgets/index.md` + 8 个子文档（`button.md`/`container.md`/`dialog.md`/`input.md`/`message.md`/`navigation.md`/`progress.md`/`view.md`/`window.md`）
+**参考文档：** `references/widgets/index.md` + 9 个子文档（`button.md`/`container.md`/`dialog.md`/`input.md`/`message.md`/`navigation.md`/`progress.md`/`view.md`/`window.md`）
 
 **源码位置：** `~/dtk/dtkwidget/include/widgets/` + `~/dtk/dtkwidget/include/DWidget/`（转发头文件）
 
@@ -258,14 +258,12 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | 6.4 | `DTrashManager` 类存在，静态方法 `moveToTrash`/`emptyTrash` | grep class + methods | `include/filesystem/dtrashmanager.h` |
 | 6.5 | `DDBusInterface` 类存在，构造函数 `(service, path, connection)` + `call` 方法 + `signal` 信号 | grep class + methods | `include/util/ddbusinterface.h` |
 | 6.6 | `DDBusSender` 类存在，builder 方法 `service`/`path`/`interface`/`signal`/`arg`/`publish` 全部存在且返回 `DDBusSender&` | 逐个核对 | `include/util/ddbussender.h` |
-| 6.7 | `DNotifySender` 类存在 | grep `class DNotifySender` | `include/util/dnotifysender.h` |
-| 6.8 | **文档不一致验证**：index.md 描述 `DNotifySender::Message` 结构体 + `instance()->sendMessage()` 单例模式；notify.md 描述构造函数 `DNotifySender("summary")` + builder 链 + `.call()`。确认实际 API 是哪种 | 仔细阅读头文件完整 API | 同上 |
-| 6.9 | `DNotifySender` builder 方法（如 notify.md 所述）：`appName`/`appIcon`/`appBody`/`replaceId`/`timeOut`/`actions`/`hints`/`call` | 逐个核对 | 同上 |
-| 6.10 | `DObject`/`DSingleton`/`DError` 基类存在 | grep class | `include/base/` |
-| 6.11 | `DLogManager` 类存在，`registerConsoleAppender`/`registerFileAppender`/`registerJournalAppender`/`setlogFilePath`/`setLogFormat` 方法 | grep class + method | `include/log/LogManager.h` |
-| 6.12 | `DDciFile` 类存在（dci 文件解析，来自 dtkcore） | grep `class DDciFile` | `include/dci/ddcifile.h` |
-| 6.13 | dtklog 日志宏 `dDebug`/`dInfo`/`dWarning`/`dError`/`dFatal` 存在 | grep 宏定义 | `dtklog/include/dloggerdefs.h` |
-| 6.14 | dtklog `Logger` 类存在，`LogLevel` 枚举 `Trace`/`Debug`/`Info`/`Warning`/`Error`/`Fatal` | grep class + enum | `dtklog/include/Logger.h` |
+| 6.7 | `DNotifySender` 类存在，builder 方法 `appName`/`appIcon`/`appBody`/`replaceId`/`timeOut`/`actions`/`hints`/`call` | grep class + methods | `include/util/dnotifysender.h` |
+| 6.8 | `DObject`/`DSingleton`/`DError` 基类存在 | grep class | `include/base/` |
+| 6.9 | `DLogManager` 类存在，`registerConsoleAppender`/`registerFileAppender`/`registerJournalAppender`/`setlogFilePath`/`setLogFormat` 方法 | grep class + method | `include/log/LogManager.h` |
+| 6.10 | `DDciFile` 类存在（dci 文件解析，来自 dtkcore） | grep `class DDciFile` | `include/dci/ddcifile.h` |
+| 6.11 | dtklog 日志宏 `dDebug`/`dInfo`/`dWarning`/`dError`/`dFatal` 存在 | grep 宏定义 | `dtklog/include/dloggerdefs.h` |
+| 6.12 | dtklog `Logger` 类存在，`LogLevel` 枚举 `Trace`/`Debug`/`Info`/`Warning`/`Error`/`Fatal` | grep class + enum | `dtklog/include/Logger.h` |
 
 ---
 

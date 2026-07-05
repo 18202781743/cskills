@@ -348,4 +348,3 @@ FloatingPanel {
 
 - [index.md](index.md) — QML 控件选择决策树
 - [effects.md](effects.md) — QML 效果组件
-- [index.md](index.md) — QML 控件选择决策树

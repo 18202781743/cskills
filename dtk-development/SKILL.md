@@ -33,13 +33,13 @@ DTK 是深度桌面环境的核心开发框架。按场景快速定位：
 ## 高频跨域场景
 
 - **了解 DTK 架构和仓库依赖** → [architecture.md](references/architecture.md)
-- **查看控件用法示例** → [examples.md](references/examples.md)（QWidget 16 个分类、QML 2 个完整 Demo）
+- **查看控件用法示例** → [examples.md](references/examples.md)（QWidget 16 个分类、QML 控件画廊）
 - **窗口圆角/阴影/模糊/无标题栏** → [platform-abstraction.md](references/platform-abstraction.md)
 - **修改 DTK 源码并编译调试** → [dtksrc-compile-debug.md](references/dtksrc-compile-debug.md)
 - **创建新的 DTK 项目** → [app-dev-with-dtk.md](references/app-dev-with-dtk.md)
 - **自定义控件使用主题图标** → [icons/index.md](references/icons/index.md) + [theming/palette.md](references/theming/palette.md)
 - **QML 中显示 dci 图标** → [declarative/dci-icon.md](references/declarative/dci-icon.md)
-- **控件内嵌入消息提示** → [widgets/message.md](references/widgets/message.md) + [utilities/index.md](references/utilities/index.md)
+- **控件内嵌入消息提示** → [widgets/message.md](references/widgets/message.md)
 
 ## 核心模块速览
 
@@ -50,7 +50,7 @@ DTK 是深度桌面环境的核心开发框架。按场景快速定位：
 | 主题/调色板 | DPalette/DGuiApplicationHelper (dtkgui), QDeepinTheme (qt5integration) | DStyle/DStyleHelper | Palette, ColorSelector | [theming/index.md](references/theming/index.md) |
 | 字体 | DFontManager/DPlatformTheme (dtkgui) | DFontSizeManager | D.DTK.fontManager | [theming/index.md](references/theming/index.md) |
 | 平台抽象 | DPlatformHandle/DPlatformTheme (dtkgui) | — | — | [platform-abstraction.md](references/platform-abstraction.md) |
-| QWidget 控件 | — | 110+ 控件 | — | [widgets/index.md](references/widgets/index.md) |
-| QML 控件 | — | — | 70+ 控件 | [declarative/index.md](references/declarative/index.md) |
+| QWidget 控件 | — | 55+ 控件 | — | [widgets/index.md](references/widgets/index.md) |
+| QML 控件 | — | — | 60+ 控件 | [declarative/index.md](references/declarative/index.md) |
 | 配置 DConfig | DConfig (dtkcore) | — | D.Config | [config/index.md](references/config/index.md) |
 | 工具类 | DLogManager/DDBusInterface 等 (dtkcore+dtklog) | DApplication 单实例 (dtkwidget) | — | [utilities/index.md](references/utilities/index.md) |
