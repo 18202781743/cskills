@@ -29,7 +29,7 @@ DTK 是深度桌面环境的核心开发框架，包含控件、主题、图标�
 | 选择 QWidget 控件 | [references/widgets/index.md](references/widgets/index.md) |
 | 选择 QML 控件 | [references/declarative/index.md](references/declarative/index.md) |
 | 应用配置持久化 | [references/config/index.md](references/config/index.md) |
-| 日志规范 | [references/log/index.md](references/log/index.md) |
+| 日志/核心工具/DBus/通知 | [references/core/index.md](references/core/index.md) |
 
 ## 场景决策
 
@@ -117,4 +117,4 @@ dtkgui ──→ dtkwidget
 | QWidget 控件 | dtkwidget | 110+ 控件 |
 | QML 控件 | dtkdeclarative | 33+ QML 组件 |
 | 配置系统 | dtkcore | DConfig |
-| 日志系统 | dtklog | Logger, Appender |
+| 核心工具与日志 | dtkcore + dtklog | DLogManager, DStandardPaths, DDBusInterface, DNotifySender |

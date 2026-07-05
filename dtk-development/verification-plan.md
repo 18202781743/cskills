@@ -262,28 +262,16 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | 6.8 | **文档不一致验证**：index.md 描述 `DNotifySender::Message` 结构体 + `instance()->sendMessage()` 单例模式；notify.md 描述构造函数 `DNotifySender("summary")` + builder 链 + `.call()`。确认实际 API 是哪种 | 仔细阅读头文件完整 API | 同上 |
 | 6.9 | `DNotifySender` builder 方法（如 notify.md 所述）：`appName`/`appIcon`/`appBody`/`replaceId`/`timeOut`/`actions`/`hints`/`call` | 逐个核对 | 同上 |
 | 6.10 | `DObject`/`DSingleton`/`DError` 基类存在 | grep class | `include/base/` |
-| 6.11 | `DDciFile` 类存在（dci 文件解析，来自 dtkcore） | grep `class DDciFile` | `include/dci/ddcifile.h` |
+| 6.11 | `DLogManager` 类存在，`registerConsoleAppender`/`registerFileAppender`/`registerJournalAppender`/`setlogFilePath`/`setLogFormat` 方法 | grep class + method | `include/log/LogManager.h` |
+| 6.12 | `DDciFile` 类存在（dci 文件解析，来自 dtkcore） | grep `class DDciFile` | `include/dci/ddcifile.h` |
+| 6.13 | dtklog 日志宏 `dDebug`/`dInfo`/`dWarning`/`dError`/`dFatal` 存在 | grep 宏定义 | `dtklog/include/dloggerdefs.h` |
+| 6.14 | dtklog `Logger` 类存在，`LogLevel` 枚举 `Trace`/`Debug`/`Info`/`Warning`/`Error`/`Fatal` | grep class + enum | `dtklog/include/Logger.h` |
 
 ---
 
-## 模块 7：log（日志系统）— 来源 dtklog
+## 模块 7：log（已合并到模块 6 core）
 
-**参考文档：** `references/log/index.md`
-
-**源码位置：** `~/dtk/dtklog/include/`
-
-| # | 验证项 | 验证方法 | 对应源码文件 |
-|---|--------|----------|-------------|
-| 7.1 | `Logger` 类存在，`globalInstance()` 静态方法 | grep class + method | `include/Logger.h` |
-| 7.2 | `Logger::LogLevel` 枚举有 `Trace`/`Debug`/`Info`/`Warning`/`Error`/`Fatal` | grep enum + 逐个值 | 同上 |
-| 7.3 | `Logger` 方法：`registerAppender`/`registerCategoryAppender`/`unregisterAppender`/`levelToString`/`levelFromString` | 逐个核对 | 同上 |
-| 7.4 | `AbstractAppender` 类存在（基类） | grep class | `include/AbstractAppender.h` |
-| 7.5 | `ConsoleAppender` 类存在，无参构造函数 | grep class + ctor | `include/ConsoleAppender.h` |
-| 7.6 | `FileAppender` 类存在，构造函数接受文件路径 `QString` | grep class + ctor | `include/FileAppender.h` |
-| 7.7 | `RollingFileAppender` 类存在，构造函数接受文件路径，继承 `FileAppender` | grep class + ctor + inherits | `include/RollingFileAppender.h` |
-| 7.8 | 日志宏 `dDebug`/`dInfo`/`dWarning`/`dError`/`dFatal` 存在 | grep 宏定义 | `include/dloggerdefs.h` |
-| 7.9 | CMake `find_package(DtkLog)` + `Dtk::Log` target | 检查 cmake | `dtklog/CMakeLists.txt` 或 `cmake/` |
-| 7.10 | 头文件名 `#include <Logger>`/`<FileAppender>`/`<ConsoleAppender>`/`<RollingFileAppender>` 可用（无 `.h` 后缀的转发头文件） | glob 检查 | `include/` |
+日志文档已合并到 `references/core/index.md`，原 `references/log/` 目录已删除。模块 7 的验证项已合并到模块 6（6.11-6.14）。
 
 ---
 
@@ -372,9 +360,8 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | Group D | 模块 3（widgets，3.6-3.10） | ~20 |
 | Group E | 模块 4（declarative） | 19 |
 | Group F | 模块 5（config） | 15 |
-| Group G | 模块 6（core） | 11 |
-| Group H | 模块 7（log） | 10 |
-| Group I | 模块 8（平台集成）+ 模块 9（跨文档一致性） | 10 |
+| Group G | 模块 6（core，含日志） | 14 |
+| Group H | 模块 8（平台集成）+ 模块 9（跨文档一致性） | 10 |
 | Group J | 模块 10（architecture）+ 模块 11（platform-abstraction） | 23 |
 
 ### 执行方式
