@@ -42,7 +42,7 @@
 cskills/
 ├── AGENTS.md              # 本文件，agent 工作流
 ├── dtk-development/        # DTK 开发指南 skill
-├── dde-shell-plugin-creator/  # DDE Shell 插件开发 skill
+├── dde-shell-development/  # DDE Shell 开发 skill
 ├── dde-tray-development/   # DDE 托盘开发 skill
 ├── dde-control-center-development/  # DDE 控制中心开发 skill
 └── .opencode/             # opencode 配置

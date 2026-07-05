@@ -1,8 +1,0 @@
-{
-    "Plugin": {
-        "Version": "1.0",
-        "Id": "{{PLUGIN_ID}}",
-        "Url": "main.qml",
-        "ContainmentType": "Panel"
-    }
-}
