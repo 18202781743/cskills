@@ -1,91 +1,40 @@
-# 核心工具与日志
+# 核心工具
 
-## 1. 日志系统
+## 1. 日志（DLogManager）
 
-DTK 日志系统由 dtklog 提供底层 Logger 框架，dtkcore 通过 `DLogManager` 提供便捷初始化。
-
-### 1.1 日志宏（dtklog）
-
-```cpp
-#include <dloggerdefs.h>
-
-dTrace() << "代码追踪";
-dDebug() << "调试信息";
-dInfo() << "普通信息";
-dWarning() << "警告信息";
-dError() << "错误信息";
-dFatal() << "致命错误";  // 会 abort
-```
-
-| 宏 | 级别 | 说明 |
-|----|------|------|
-| `dTrace()` | `Logger::Trace` | 代码追踪 |
-| `dDebug()` | `Logger::Debug` | 调试信息 |
-| `dInfo()` | `Logger::Info` | 普通信息 |
-| `dWarning()` | `Logger::Warning` | 警告 |
-| `dError()` | `Logger::Error` | 错误 |
-| `dFatal()` | `Logger::Fatal` | 致命错误（会 abort） |
-
-### 1.2 快速初始化（dtkcore）
-
-大多数应用通过 `DLogManager` 一行初始化即可：
+dtkcore 通过 `DLogManager` 提供便捷的日志初始化。直接使用 Qt 的 `qDebug()`/`qInfo()`/`qWarning()`/`qCritical()` 宏输出日志即可。
 
 ```cpp
 #include <DLog>
 
+// 一行初始化
 DLogManager::registerConsoleAppender();   // 输出到控制台
 DLogManager::registerFileAppender();      // 输出到文件（自动路径）
 DLogManager::registerJournalAppender();   // 输出到 systemd journal
 
-// 自定义日志文件路径
+// 自定义路径和格式
 DLogManager::setlogFilePath("/var/log/myapp.log");
-DLogManager::registerFileAppender();
-
-// 自定义格式
 DLogManager::setLogFormat("%{time}{yyyy-MM-dd HH:mm:ss.zzz} [%{type}] %{message}");
 ```
 
-### 1.3 CMake 依赖
+CMake 依赖（DtkCore 自动引入 dtklog）：
 
 ```cmake
 find_package(DtkCore REQUIRED)
 target_link_libraries(your_target Dtk::Core)
 ```
 
-DtkCore 自动引入 dtklog 依赖，无需单独 `find_package(DtkLog)`。
-
-### 1.4 高级日志配置（dtklog，按需使用）
-
-需要自定义 Appender 或分类日志时直接使用 dtklog：
-
-```cpp
-#include <Logger.h>
-#include <ConsoleAppender.h>
-#include <FileAppender.h>
-#include <RollingFileAppender.h>
-
-// 注册多个 Appender
-Logger::globalInstance()->registerAppender(new ConsoleAppender);
-Logger::globalInstance()->registerAppender(new RollingFileAppender("/var/log/myapp.log"));
-
-// 分类日志
-Logger::globalInstance()->registerCategoryAppender("network",
-    new FileAppender("/var/log/myapp-network.log"));
-```
-
-## 2. 文件系统工具
+## 2. 文件系统
 
 ### 2.1 DStandardPaths — 标准路径
 
 ```cpp
 #include <DStandardPaths>
 
-QString configPath = DStandardPaths::writableLocation(
-    QStandardPaths::AppConfigLocation);
-QString cachePath = DStandardPaths::writableLocation(
-    QStandardPaths::CacheLocation);
-QString dataPath = DStandardPaths::writableLocation(
-    QStandardPaths::AppDataLocation);
+QString config = DStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+QString data = DStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+QString cache = DStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+QString temp = DStandardPaths::writableLocation(QStandardPaths::TempLocation);
 ```
 
 ### 2.2 DFileWatcher — 文件监听
@@ -94,56 +43,127 @@ QString dataPath = DStandardPaths::writableLocation(
 #include <DFileWatcher>
 
 auto *watcher = new DFileWatcher("/path/to/file", this);
-
 connect(watcher, &DFileWatcher::fileModified, [](const QUrl &url) {
     qInfo() << "File modified:" << url;
 });
 ```
 
+### 2.3 DTrashManager — 回收站
+
+```cpp
+#include <DTrashManager>
+
+DTrashManager::instance()->moveToTrash("/path/to/file");
+DTrashManager::instance()->cleanTrash();
+```
+
 ## 3. DBus 辅助
 
-### 3.1 DDBusInterface — DBus 接口调用
+### 3.1 DDBusInterface — 接口代理
+
+继承 `QDBusAbstractInterface`，支持方法调用、属性读写、服务有效性监听。
 
 ```cpp
 #include <DDBusInterface>
 
-DDBusInterface iface("org.example.Service",
-                     "/org/example/Object",
-                     "org.example.Interface",
+DDBusInterface iface("org.deepin.dde.Dock1",
+                     "/org/deepin/dde/Dock1",
+                     "org.deepin.dde.Dock1",
                      QDBusConnection::sessionBus());
 
-QDBusReply<QString> reply = iface.call("GetStatus");
+// 调用方法（继承自 QDBusAbstractInterface::call）
+QDBusReply<bool> reply = iface.call("IsVisible");
+
+// 读写属性
+QVariant v = iface.property("DisplayMode");
+iface.setProperty("DisplayMode", value);
+
+// 监听服务状态
+connect(&iface, &DDBusInterface::serviceValidChanged, [](bool valid) {
+    qInfo() << "Service valid:" << valid;
+});
 ```
 
-### 3.2 DDBusSender — 发送 DBus 信号
+### 3.2 DDBusSender — 链式调用
+
+builder 模式，适合单次方法调用和信号发送。
 
 ```cpp
 #include <DDBusSender>
 
+// 调用方法
 DDBusSender()
     .service("org.example.Service")
     .path("/org/example/Object")
     .interface("org.example.Interface")
-    .signal("StatusChanged")
-    .arg("active")
-    .publish();
+    .method("SetValue")
+    .arg(42)
+    .call();
+
+// 读写属性
+DDBusSender()
+    .service("org.example.Service")
+    .path("/org/example/Object")
+    .interface("org.example.Interface")
+    .property("DisplayMode")
+    .get();
+
+// 通过系统总线
+DDBusSender::system()
+    .service("org.freedesktop.login1")
+    .path("/org/freedesktop/login1")
+    .interface("org.freedesktop.login1.Manager")
+    .method("CanReboot")
+    .call();
 ```
 
 ## 4. 通知系统
 
+`DNotifySender` 采用链式构建器模式，位于 `DUtil` 命名空间。
+
 ```cpp
 #include <DNotifySender>
 
-DNotifySender("提示")
-    .appBody("操作已完成")
-    .appIcon("myapp")
-    .timeOut(5000)       // 超时毫秒
-    .replaceId(1)        // 替换同 ID 的通知
+using namespace Dtk::Core::DUtil;
+
+// 简单通知
+DNotifySender("下载完成")
+    .appBody("文件已保存到 /home/user/Downloads")
+    .call();
+
+// 带图标和超时
+DNotifySender("操作完成")
+    .appIcon("dialog-ok")
+    .appBody("所有文件已同步")
+    .timeOut(5000)
+    .call();
+
+// 带动作按钮
+DNotifySender("确认删除")
+    .appBody("确定要删除此文件吗？")
+    .appIcon("dialog-warning")
+    .actions({"open", "打开", "cancel", "取消"})
+    .call();
+
+// 更新已有通知
+DNotifySender("下载进度")
+    .appBody("50%")
+    .replaceId(1)
     .call();
 ```
 
+| 链式方法 | 说明 |
+|----------|------|
+| `DNotifySender(summary)` | 构造，传入通知标题 |
+| `.appName(name)` | 应用名称 |
+| `.appIcon(icon)` | 图标名称 |
+| `.appBody(body)` | 通知正文 |
+| `.replaceId(id)` | 替换 ID（更新已有通知） |
+| `.timeOut(ms)` | 超时时间（毫秒） |
+| `.actions(list)` | 动作列表（成对：id, 标签） |
+| `.hints(map)` | 额外提示 |
+| `.call()` | 发送通知 |
+
 ## 5. 相关文档
 
-- [filesystem.md](filesystem.md) — 文件系统工具（标准路径、文件监听、回收站）
-- [dbus.md](dbus.md) — DBus 辅助接口详解
-- [notify.md](notify.md) — 通知系统详解
+- [config/index.md](../config/index.md) — DConfig 配置系统

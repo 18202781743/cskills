@@ -246,7 +246,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 ## 模块 6：core（核心工具）— 来源 dtkcore
 
-**参考文档：** `references/core/index.md`, `references/core/dbus.md`, `references/core/filesystem.md`, `references/core/notify.md`
+**参考文档：** `references/core/index.md`
 
 **源码位置：** `~/dtk/dtkcore/include/`
 
@@ -297,7 +297,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 
 | # | 验证项 | 不一致描述 | 涉及文档 |
 |---|--------|-----------|----------|
-| 9.1 | `DNotifySender` API 形态 | index.md（`Message` 结构体 + `instance()->sendMessage()` 单例模式）vs notify.md（构造函数 `DNotifySender("summary")` + builder 链 + `.call()`） | `core/index.md` vs `core/notify.md` |
+| 9.1 | `DNotifySender` API 形态 | index.md 描述 builder 链模式 `.call()` | `core/index.md` |
 | 9.2 | QML `StackView` vs `StackLayout` | index.md 列 `StackView`，controls.md 用 `StackLayout`（controls.md 已删除，此条已废弃） | `declarative/index.md` |
 | 9.3 | `DciIconImage` vs `DciIcon` QML 类型名 | 文档用 `DciIconImage`，源码注册名可能是 `DciIcon` | `declarative/dci-icon.md` vs 源码 |
 
