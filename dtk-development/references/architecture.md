@@ -34,7 +34,7 @@ dtkgui（基础层）  →  dtkwidget / dtkdeclarative（控件层）
   → ColorSelector 自动更新颜色属性（QML）
 ```
 
-> 详细文档：[theming/palette.md](theming/palette.md)、[declarative/color-selector.md](declarative/color-selector.md)
+> 详细文档：[theme/palette.md](theme/palette.md)、[declarative/color-selector.md](declarative/color-selector.md)
 
 ## 3. 字体系统
 
@@ -66,7 +66,7 @@ DConf/GSettings 字体配置
   → D.DTK.fontManager.t6 → QML 控件字体自动更新（QML）
 ```
 
-> 详细文档：[theming/index.md](theming/index.md)（字体部分）、[widgets/index.md](widgets/index.md)（DFontSizeManager）
+> 详细文档：[theme/index.md](theme/index.md)（字体部分）、[widgets/index.md](widgets/index.md)（DFontSizeManager）
 
 ## 4. 图标系统
 
@@ -89,7 +89,7 @@ DIconTheme::findQIcon("icon-name")
   → 3. QIcon::fromTheme()（XDG 标准）
 ```
 
-> 详细文档：[icons/index.md](icons/index.md)
+> 详细文档：[theme/index.md](theme/index.md)
 
 ## 5. 平台抽象
 
@@ -170,8 +170,5 @@ qt5platform-plugins 层（QPA 插件）
 
 ## 7. 相关文档
 
-- [theming/index.md](theming/index.md) — 主题系统
-- [theming/palette.md](theming/palette.md) — 调色板规范
-- [declarative/color-selector.md](declarative/color-selector.md) — QML ColorSelector 取色器
-- [icons/index.md](icons/index.md) — 图标系统
+- [theme/index.md](theme/index.md) — 主题系统（含图标、调色板、字体）
 - [platform-abstraction.md](platform-abstraction.md) — 平台抽象层

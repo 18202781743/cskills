@@ -363,5 +363,4 @@ DPlatformHandle (dtkgui)
 ## 8. 相关文档
 
 - [architecture.md](architecture.md) — DTK 核心架构总览
-- [theming/index.md](theming/index.md) — 主题系统
-- [theming/palette.md](theming/palette.md) — 调色板规范
+- [theme/index.md](theme/index.md) — 主题系统（含图标、调色板、字体）

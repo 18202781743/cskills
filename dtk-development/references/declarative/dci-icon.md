@@ -80,6 +80,6 @@ DciIcon {
 
 ## 5. 相关文档
 
-- [../icons/dci.md](../icons/dci.md) - dci 图标完整规范
+- [../theme/dci.md](../theme/dci.md) - dci 图标完整规范
 - [color-selector.md](color-selector.md) — ColorSelector 取色器与 Palette 调色板
 - [index.md](index.md) - QML 控件选择

@@ -238,4 +238,4 @@ public:
 - [index.md](index.md) - 图标系统决策树
 - [dci.md](dci.md) - dci 图标规范
 - [builtin.md](builtin.md) - builtin 图标规范
-- [../theming/palette.md](../theming/palette.md) - 调色板与主题配色
+- [../theme/palette.md](palette.md) - 调色板与主题配色

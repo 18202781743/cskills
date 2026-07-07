@@ -314,6 +314,6 @@ if (type == DGuiApplicationHelper::DarkType) {
 
 ## 7. 相关文档
 
-- [../icons/index.md](../icons/index.md) - 图标系统决策树
+- [index.md](index.md) - 主题系统总览（含图标）
 - [style.md](style.md) - DStyle 风格规范
 - [theme-switch.md](theme-switch.md) - 主题切换机制
