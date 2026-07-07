@@ -168,7 +168,134 @@ DNotifySender("下载进度")
 | `.hints(map)` | 额外提示 |
 | `.call()` | 发送通知 |
 
-## 4. 相关文档
+## 4. 系统信息
+
+`DSysInfo` 提供操作系统类型、版本、硬件信息等静态查询接口。
+
+### 头文件
+
+```cpp
+#include <DSysInfo>
+```
+
+### 实际分析的文件
+
+`DSysInfo` 从以下系统文件读取信息：
+
+- `/etc/os-release` — 发行版标识、版本号、产品类型
+- `/etc/deepin-version` — Deepin/UOS 版本详情（edition、major/minor/build version）
+- `/etc/uos-version` — UOS 专用版本信息
+- `/proc/cpuinfo` — CPU 型号
+- `/proc/meminfo` — 内存信息
+- `/proc/stat` — 启动时间
+- `/etc/hostname` — 主机名
+
+### 常用接口
+
+**产品类型判断：**
+
+```cpp
+#include <DSysInfo>
+
+DSysInfo::ProductType type = DSysInfo::productType();
+bool isDeepin = DSysInfo::isDeepin();
+bool isDDE = DSysInfo::isDDE();
+bool isCommunity = DSysInfo::isCommunityEdition();
+
+QString osName = DSysInfo::operatingSystemName();
+QString version = DSysInfo::productVersion();
+```
+
+**Deepin/UOS 版本信息：**
+
+```cpp
+DSysInfo::DeepinType dt = DSysInfo::deepinType(); // 桌面版/专业版/服务器版
+QString version = DSysInfo::deepinVersion();
+QString edition = DSysInfo::deepinEdition();
+
+DSysInfo::UosType ut = DSysInfo::uosType();          // 桌面/服务器/设备/智能终端
+DSysInfo::UosEdition ue = DSysInfo::uosEditionType(); // 专业版/家庭版/社区版/教育版/...
+QString productName = DSysInfo::uosProductTypeName();
+QString systemName = DSysInfo::uosSystemName();
+
+QString sp = DSysInfo::spVersion();     // 补丁版本
+QString major = DSysInfo::majorVersion();
+QString minor = DSysInfo::minorVersion();
+```
+
+**发行版组织信息：**
+
+```cpp
+QString orgName = DSysInfo::distributionOrgName(
+    DSysInfo::Distribution, QLocale::system());
+QString vendor = DSysInfo::distributionOrgName(
+    DSysInfo::Distributor, QLocale::system());
+QString logo = DSysInfo::distributionOrgLogo(
+    DSysInfo::Distribution, DSysInfo::Normal, ":/logo.svg");
+```
+
+**硬件与运行信息：**
+
+```cpp
+QString hostname = DSysInfo::computerName();
+QString cpu = DSysInfo::cpuModelName();
+qint64 memSize = DSysInfo::memoryInstalledSize();
+qint64 diskSize = DSysInfo::systemDiskSize();
+qint64 uptime = DSysInfo::uptime(); // 秒
+DSysInfo::Arch arch = DSysInfo::arch(); // X86_64 / ARM64 / LOONGARCH64 / ...
+```
+
+### 枚举速查
+
+| 枚举 | 常用值 |
+|------|--------|
+| `ProductType` | `Deepin`, `Uos`, `Ubuntu`, `Debian`, `Fedora`, `ArchLinux`, `CentOS`, `openSUSE`, `NixOS` 等 |
+| `DeepinType` | `DeepinDesktop`, `DeepinProfessional`, `DeepinServer`, `DeepinPersonal`, `DeepinMilitary` |
+| `UosType` | `UosDesktop`, `UosServer`, `UosDevice`, `UosSmart` |
+| `UosEdition` | `UosProfessional`, `UosHome`, `UosCommunity`, `UosEnterprise`, `UosEducation`, `UosMilitary`, `UosEuler` 等 |
+| `Arch` | `X86_64`, `ARM64`, `LOONGARCH64`, `MIPS64`, `SW_64`, `RISCV64` 等 |
+| `OrgType` | `Distribution`（发行版）, `Distributor`（发行商）, `Manufacturer`（制造商） |
+| `LogoType` | `Normal`, `Light`, `Symbolic`, `Transparent` |
+
+## 5. 拼音转换
+
+拼音功能为 dtkcore 中的自由函数，位于 `Dtk::Core` 命名空间。
+
+### 头文件
+
+```cpp
+#include <dpinyin.h>
+```
+
+### 基本用法
+
+```cpp
+// 无多音字支持，返回单个字符串
+QString pinyin = Dtk::Core::Chinese2Pinyin("中国");  // "zhongguo"
+
+// 多音字支持，返回所有组合
+QStringList list = Dtk::Core::pinyin("重庆");  // [ "chongqing", "zhongqing" ]
+
+// 首字母
+QStringList fl = Dtk::Core::firstLetters("中国");  // [ "zg" ]
+```
+
+### 声调控制
+
+`ToneStyle` 枚举控制输出格式：
+
+| 值 | 示例输出 |
+|----|----------|
+| `TS_NoneTone` | `"zhongguo"` |
+| `TS_Tone`（默认） | `"zhōngguó"` |
+| `TS_ToneNum` | `"zhong1guo2"` |
+
+```cpp
+Dtk::Core::pinyin("中国", Dtk::Core::TS_Tone);
+Dtk::Core::firstLetters("中国", Dtk::Core::TS_Tone);
+```
+
+## 6. 相关文档
 
 - [index.md](index.md) — 工具类索引
 - [log.md](log.md) — 日志系统

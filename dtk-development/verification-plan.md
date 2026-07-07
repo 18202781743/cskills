@@ -265,6 +265,10 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 6 个功能模块
 | 5.10 | `DDciFile` 类存在（dci 文件解析，来自 dtkcore） | grep `class DDciFile` | `include/dci/ddcifile.h` |
 | 5.11 | dtklog 日志宏 `dDebug`/`dInfo`/`dWarning`/`dError`/`dFatal` 存在 | grep 宏定义 | `dtklog/include/dloggerdefs.h` |
 | 5.12 | dtklog `Logger` 类存在，`LogLevel` 枚举 `Trace`/`Debug`/`Info`/`Warning`/`Error`/`Fatal` | grep class + enum | `dtklog/include/Logger.h` |
+| 5.13 | `DSysInfo` 类存在，枚举 `ProductType`/`DeepinType`/`UosType`/`UosEdition`/`Arch` 等 | grep class + enum | `dtkcore/include/global/dsysinfo.h` |
+| 5.14 | `DSysInfo` 静态方法：`productType()`/`isDeepin()`/`isDDE()`/`deepinVersion()`/`uosEditionType()`/`computerName()`/`cpuModelName()`/`memoryInstalledSize()`/`uptime()`/`arch()` | grep static | 同上 |
+| 5.15 | 拼音函数存在：`Chinese2Pinyin()`/`pinyin()`/`firstLetters()`（自由函数，非类成员） | grep function | `dtkcore/include/util/dpinyin.h` |
+| 5.16 | `ToneStyle` 枚举 `TS_NoneTone`/`TS_Tone`/`TS_ToneNum` | grep enum | 同上 |
 
 ---
 
@@ -362,7 +366,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 6 个功能模块
 | Group C | 模块 2（widgets，2.6-2.10） | ~20 |
 | Group D | 模块 3（declarative） | 19 |
 | Group E | 模块 4（config） | 15 |
-| Group F | 模块 5（utilities，含日志） | 14 |
+| Group F | 模块 5（utilities，含日志+系统信息+拼音） | 18 |
 | Group G | 模块 7（平台集成）+ 模块 8（跨文档一致性） | 10 |
 | Group H | 模块 9（architecture）+ 模块 10（platform-abstraction） | 27 |
 
