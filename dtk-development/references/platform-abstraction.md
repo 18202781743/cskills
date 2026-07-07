@@ -203,14 +203,17 @@ DPlatformTheme(window)
 
 ## 5. 平台实现详情
 
-### 5.1 X11 实现（dtkgui）
+### 5.1 X11 实现（dtkgui + qt5platform-plugins）
 
 | 类 | 文件 | 说明 |
 |----|------|------|
 | `DXCBPlatformWindowInterface` | `src/plugins/platform/xcb/dxcbplatformwindowinterface.h` | X11 窗口操作（圆角、阴影、模糊、无标题栏） |
 | `DXCBPlatformInterface` | `src/plugins/platform/xcb/dxcbplatforminterface.h` | X11 主题配置（通过 XSettings 原子） |
+| `DNoTitlebarWindowHelper` | `qt5platform-plugins/xcb/dnotitlebarwindowhelper.h` | 无标题栏窗口拖拽移动实现 |
 
 通过 X11 原子协议（`_DEEPIN_SCISSOR_WINDOW` 等）与合成器通信。
+
+**窗口拖拽：** X11 下由 `qt5platform-plugins` 中的 `DNoTitlebarWindowHelper` 实现。它通过 `DVtableHook` 钩入 `QWindow::event`，拦截鼠标事件后发送 `_NET_WM_MOVERESIZE_MOVE` 客户端消息至窗口管理器完成窗口移动。
 
 ### 5.2 Treeland 实现（dtkgui）
 
@@ -218,11 +221,14 @@ DPlatformTheme(window)
 |----|------|------|
 | `DTreeLandPlatformWindowInterface` | `src/plugins/platform/treeland/dtreelandplatformwindowinterface.h` | Treeland 窗口操作 |
 | `DTreelandPlatformInterface` | `src/plugins/platform/treeland/dtreelandplatforminterface.h` | Treeland 主题配置 |
+| `MoveWindowHelper` | `src/plugins/platform/treeland/dtreelandplatformwindowinterface.cpp` | 无标题栏窗口拖拽移动实现 |
 
 通过 Wayland 协议 `treeland_personalization_manager_v1` 与 Treeland 合成器通信：
 - `PersonalizationWindowContext` — 窗口级设置（titlebar、圆角、模糊）
 - `PersonalizationAppearanceContext` — 外观设置（图标主题、活跃色、窗口主题）
 - `PersonalizationFontContext` — 字体设置（font、monospace_font、font_size）
+
+**窗口拖拽：** Treeland 下由 `dtkgui` 中的 `MoveWindowHelper` 实现。它同样通过 `DVtableHook` 钩入 `QWindow::event`，拦截鼠标事件后调用 `QPlatformWindow::startSystemMove()` 由合成器接管窗口移动。
 
 ### 5.3 QPA 层（qt5platform-plugins）
 
@@ -334,9 +340,24 @@ DPlatformHandle (dtkgui)
     │      → DPlatformIntegration (QPA 插件)
     │      → DFrameWindow (阴影/边框/圆角装饰窗口)
     │
-    └──► Treeland: treeland_personalization_manager_v1 协议
-           → PersonalizationWindowContext (窗口级设置)
-           → PersonalizationAppearanceContext (外观设置)
+  └──► Treeland: treeland_personalization_manager_v1 协议
+         → PersonalizationWindowContext (窗口级设置)
+         → PersonalizationAppearanceContext (外观设置)
+
+窗口拖拽 (enableSystemMove)
+  │
+  ├─► X11: DNoTitlebarWindowHelper (qt5platform-plugins)
+  │      → vtHook QWindow::event 拦截 MousePress/Move
+  │      → Utility::startWindowSystemMove()
+  │      → _NET_WM_MOVERESIZE_MOVE X11 ClientMessage
+  │
+  ├─► dwayland: DNoTitlebarWlWindowHelper (qt5platform-plugins)
+  │      → vtHook QWindow::event 拦截 MousePress/Move
+  │      → QWaylandWindow::startSystemMove()
+  │
+  └─► Treeland: MoveWindowHelper (dtkgui)
+         → vtHook QWindow::event 拦截 MousePress/Move
+         → QPlatformWindow::startSystemMove()
 ```
 
 ## 8. 相关文档

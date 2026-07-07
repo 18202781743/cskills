@@ -211,6 +211,11 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | 4.12 | `ColorSelector::controlState` 枚举值 `NormalState`/`HoveredState`/`PressedState`/`DisabledState`/`InactiveState` | grep `ControlState` | `dqmlglobalobject_p.h` |
 | 4.13 | `Palette` 类型可创建，属性 `enabled`/`normal`/`normalDark`/`hovered`/`hoveredDark`/`pressed`/`pressedDark`/`disabled`/`disabledDark` 存在 | 核对 Q_PROPERTY | `dquickcontrolpalette_p.h` |
 | 4.14 | `Palette::ColorFamily` 枚举 `CommonColor`/`CrystalColor`，`DQuickControlColor` 有 `common`/`crystal` | grep enum + Q_PROPERTY | `dquickcontrolpalette_p.h` |
+| 4.15 | `DciIcon` QML 类型注册存在，类型名为 `DciIcon`（非 `DciIconImage`） | 核对 `qmlRegisterType`/`QML_NAMED_ELEMENT` | `qmlplugin_plugin.cpp` |
+| 4.16 | `DciIcon` 属性 `name`(QString)/`mode`(ControlState)/`theme`(ColorType)/`palette`(DDciIconPalette)/`sourceSize`(QSize)/`mirror`(bool)/`fallbackToQIcon`(bool)/`asynchronous`(bool)/`cache`(bool)/`fillMode`(QQuickImage::FillMode) 全部存在 | 核对 Q_PROPERTY | `dquickdciiconimage_p.h` |
+| 4.17 | `DciIcon` 属性 `retainWhileLoading`(bool) 存在（Qt >= 6.8.0） | grep Q_PROPERTY | `dquickdciiconimage_p.h` |
+| 4.18 | `D.DTK.makeIconPalette()` 函数在 QML 全局对象中存在，接收 `palette` 参数（Qt5: QPalette，Qt6: QQuickPalette*） | grep `makeIconPalette` | `dqmlglobalobject_p.h` + `dqmlglobalobject.cpp` |
+| 4.19 | `makeIconPalette` 实现正确映射：foreground←WindowText, background←Window, highlight←Highlight, highlightForeground←HighlightedText | 核对实现 | `dqmlglobalobject.cpp` |
 
 ---
 
@@ -297,7 +302,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 |---|--------|-----------|----------|
 | 9.1 | `DNotifySender` API 形态 | index.md 描述 builder 链模式 `.call()` | `utilities/index.md` |
 | 9.2 | QML `StackView` vs `StackLayout` | index.md 列 `StackView`，controls.md 用 `StackLayout`（controls.md 已删除，此条已废弃） | `declarative/index.md` |
-| 9.3 | `DciIconImage` vs `DciIcon` QML 类型名 | 文档用 `DciIconImage`，源码注册名可能是 `DciIcon` | `declarative/dci-icon.md` vs 源码 |
+| 9.3 | `DciIcon` 属性完整性和 `ColorSelector` 配合使用方式 | 文档 `dci-icon.md` 需包含所有 Q_PROPERTY 属性及 `ColorSelector` 配合示例 | `declarative/dci-icon.md` vs 源码 `dquickdciiconimage_p.h` |
 
 ---
 
@@ -341,6 +346,10 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 7 个功能模块
 | 11.9 | `DPlatformWindowInterface` 抽象基类虚函数完整 | grep virtual | `dplatformwindowinterface_p.h` |
 | 11.10 | Treeland 实现通过 `treeland_personalization_manager_v1` Wayland 协议通信 | grep protocol | `dtkgui/src/plugins/platform/treeland/personalizationwaylandclientextension.h` |
 | 11.11 | `qt5platform-plugins` 包含 `xcb/` 和 `wayland/` 两个 QPA 插件目录 | ls 目录结构 | `qt5platform-plugins/` |
+| 11.12 | 窗口拖拽 X11 实现：`DNoTitlebarWindowHelper` 类存在，`windowEvent()`/`startMoveWindow()`/`updateMoveWindow()` 方法 | grep class + methods | `qt5platform-plugins/xcb/dnotitlebarwindowhelper.h` |
+| 11.13 | 窗口拖拽 X11 底层：`Utility::startWindowSystemMove()` 发送 `_NET_WM_MOVERESIZE_MOVE`，`updateMousePointForWindowMove()` 发送 `_DEEPIN_MOVE_UPDATE` | grep methods | `qt5platform-plugins/xcb/utility_x11.cpp` |
+| 11.14 | 窗口拖拽 Treeland 实现：`MoveWindowHelper` 类存在（dtkgui 内），`windowEvent()` 拦截鼠标事件并调用 `QPlatformWindow::startSystemMove()` | grep class + method | `dtkgui/src/plugins/platform/treeland/dtreelandplatformwindowinterface.cpp` |
+| 11.15 | 窗口拖拽 dwayland 实现：`DNoTitlebarWlWindowHelper` 类存在，`startMoveWindow()` 调用 `QWaylandWindow::startSystemMove()` | grep class + method | `qt5platform-plugins/wayland/dwayland/dnotitlebarwindowhelper_wl.h` |
 
 ---
 
