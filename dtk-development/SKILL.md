@@ -39,6 +39,7 @@ DTK 是深度桌面环境的核心开发框架。按场景快速定位：
 - **修改 DTK 源码并编译调试** → [dtksrc-compile-debug.md](references/dtksrc-compile-debug.md)
 - **创建新的 DTK 项目** → [app-dev-with-dtk.md](references/app-dev-with-dtk.md)
 - **自定义控件使用主题图标** → [theme/index.md](references/theme/index.md) + [theme/palette.md](references/theme/palette.md)
+- **设置控件颜色样式（避免 QSS）** → [theme/palette.md](references/theme/palette.md)
 - **QML 中显示 dci 图标** → [declarative/dci-icon.md](references/declarative/dci-icon.md)
 - **控件内嵌入消息提示** → [widgets/message.md](references/widgets/message.md)
 

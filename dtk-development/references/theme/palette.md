@@ -312,7 +312,23 @@ if (type == DGuiApplicationHelper::DarkType) {
 }
 ```
 
-## 7. 相关文档
+## 7. QSS 注意事项
+
+DTK 应用**不要使用 QSS（Qt Style Sheets）** 设置颜色样式。QSS 会绕过 DTK
+主题系统，硬编码的颜色无法跟随系统亮暗主题切换。
+
+```cpp
+// ❌ 错误：QSS 硬编码颜色，不响应主题切换
+widget->setStyleSheet("background-color: #f0f0f0; color: #1a1a1a;");
+
+// ✅ 正确：使用 DPalette 语义化颜色
+DPalette dp = widget->palette();
+dp.setColor(DPalette::ItemBackground, QColor("#f0f0f0"));
+dp.setColor(DPalette::TextTitle, QColor("#1a1a1a"));
+widget->setPalette(dp);
+```
+
+## 8. 相关文档
 
 - [index.md](index.md) - 主题系统总览（含图标）
 - [style.md](style.md) - DStyle 风格规范

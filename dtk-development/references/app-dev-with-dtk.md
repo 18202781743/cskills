@@ -212,13 +212,17 @@ int main(int argc, char *argv[])
 
 CMake 依赖：`Dtk::Core`（DTK5）或 `Dtk6::Core`（DTK6）。
 
-### 3.2 带图标的窗口双版本
+### 3.2 QWidget 应用（DApplication + DMainWindow）
+
+QWidget 应用**强烈建议**使用 `DApplication` 而非 `QApplication` 初始化，前者在
+`QApplication` 基础上额外处理了 DTK 主题、字体、单实例等特性。
 
 ```cpp
 #include <DApplication>
 #include <DMainWindow>
 #include <DTitlebar>
-#include <DIconTheme>
+#include <DPalette>
+#include <DGuiApplicationHelper>
 
 int main(int argc, char *argv[])
 {
