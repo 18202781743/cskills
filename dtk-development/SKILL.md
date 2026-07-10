@@ -1,5 +1,5 @@
 --- 
-name: dtk
+name: dtk-development
 description: |
   DTK (Deepin Tool Kit) 开发指南，覆盖 dtkcore/dtkgui/dtkwidget/dtkdeclarative/dtklog。
   触发场景：
