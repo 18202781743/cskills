@@ -254,5 +254,5 @@ backgroundColor: Palette {
 - [color-selector.md](color-selector.md) - ColorSelector 取色器
 - [dwindow.md](dwindow.md) - DWindow 窗口附加属性
 - [dci-icon.md](dci-icon.md) - QML 中使用 dci 图标
-- [../core/gui-helper.md](../core/gui-helper.md) - DGuiApplicationHelper
-- [../core/font-manager.md](../core/font-manager.md) - 字体管理器
+- [../utilities/gui-helper.md](../utilities/gui-helper.md) - DGuiApplicationHelper
+- [../utilities/font-manager.md](../utilities/font-manager.md) - 字体管理器

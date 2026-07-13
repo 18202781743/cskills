@@ -201,5 +201,5 @@ w.show();
 ## 13. 相关文档
 
 - [window.md](window.md) - 窗口规范
-- [../core/gui-helper.md](../core/gui-helper.md) - DGuiApplicationHelper
+- [../utilities/gui-helper.md](../utilities/gui-helper.md) - DGuiApplicationHelper
 - [../utilities/log.md](../utilities/log.md) - 日志系统

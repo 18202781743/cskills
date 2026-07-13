@@ -180,5 +180,5 @@ blur->setBlurRectYRadius(8);
 ## 8. 相关文档
 
 - [window.md](window.md) - 窗口规范
-- [../core/window-manager.md](../core/window-manager.md) - 窗口管理助手
+- [../utilities/window-manager.md](../utilities/window-manager.md) - 窗口管理助手
 - [../platform-abstraction.md](../platform-abstraction.md) - 平台抽象层

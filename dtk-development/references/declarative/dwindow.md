@@ -225,4 +225,4 @@ DWindow.translucentBackground: true
 - [dtk-global.md](dtk-global.md) - D.DTK 全局对象
 - [dialogs.md](dialogs.md) - QML 对话框与窗口
 - [effects.md](effects.md) - QML 视觉效果
-- [../core/window-manager.md](../core/window-manager.md) - 窗口管理助手
+- [../utilities/window-manager.md](../utilities/window-manager.md) - 窗口管理助手

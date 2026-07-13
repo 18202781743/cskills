@@ -181,5 +181,5 @@ DDBusSender::system().service("org.freedesktop.login1")...
 
 ## 7. 相关文档
 
-- [log.md](../utilities/log.md) - 日志系统
+- [log.md](log.md) - 日志系统
 - [sysinfo.md](sysinfo.md) - 系统信息

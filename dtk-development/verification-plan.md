@@ -353,9 +353,9 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 6 个功能模块
 
 ---
 
-## 模块 11：core（核心类）— 来源 dtkcore/dtkgui/dtkwidget
+## 模块 11：核心类（已合并至 utilities）— 来源 dtkcore/dtkgui/dtkwidget
 
-**参考文档：** `references/core/index.md`, `references/core/gui-helper.md`, `references/core/font-manager.md`, `references/core/sysinfo.md`, `references/core/dbus.md`, `references/core/window-manager.md`, `references/core/desktop-services.md`, `references/widgets/application.md`, `references/widgets/blur-effect.md`, `references/declarative/dtk-global.md`, `references/declarative/dwindow.md`
+**参考文档：** `references/utilities/index.md`, `references/utilities/gui-helper.md`, `references/utilities/font-manager.md`, `references/utilities/sysinfo.md`, `references/utilities/dbus.md`, `references/utilities/window-manager.md`, `references/utilities/desktop-services.md`, `references/widgets/application.md`, `references/widgets/blur-effect.md`, `references/declarative/dtk-global.md`, `references/declarative/dwindow.md`
 
 **源码位置：** `~/dtk/dtkgui/include/kernel/` + `~/dtk/dtkcore/include/` + `~/dtk/dtkwidget/include/widgets/` + `~/dtk/dtkdeclarative/src/`
 

@@ -86,5 +86,5 @@ label->setForegroundRole(DPalette::TextWarning);
 
 - [button.md](button.md) - 按钮规范
 - [input.md](input.md) - 输入控件
-- [../core/font-manager.md](../core/font-manager.md) - 字体管理器
+- [../utilities/font-manager.md](../utilities/font-manager.md) - 字体管理器
 - [../theme/palette.md](../theme/palette.md) - 调色板规范

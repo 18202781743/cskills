@@ -75,4 +75,4 @@ class MyWidget : public QWidget {
 ## 5. 相关文档
 
 - [../theme/palette.md](../theme/palette.md) - DPalette 调色板规范
-- [../core/gui-helper.md](../core/gui-helper.md) - DGuiApplicationHelper
+- [../utilities/gui-helper.md](../utilities/gui-helper.md) - DGuiApplicationHelper
