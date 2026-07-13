@@ -61,6 +61,8 @@ target_link_libraries(your_target Dtk::Widget)
 |------|--------|------|
 | `DMainWindow` | `#include <DMainWindow>` | 主窗口（含标题栏、侧边栏） |
 | `DTitlebar` | `#include <DTitlebar>` | 标题栏（菜单、按钮） |
+| `DBlurEffectWidget` | `#include <DBlureffectWidget>` | 模糊效果控件 |
+| `DApplication` | `#include <DApplication>` | 应用入口（替代 QApplication） |
 
 ### 2.3 按钮
 
@@ -233,3 +235,10 @@ if (dialog->exec() == okIdx) { /* 点击了确定 */ }
 - [progress.md](progress.md) — 进度与状态
 - [message.md](message.md) — 消息与通知
 - [view.md](view.md) — 视图控件
+- [application.md](application.md) — DApplication 应用入口
+- [blur-effect.md](blur-effect.md) — DBlurEffectWidget 模糊效果
+- [label.md](label.md) — DLabel 标签控件（227 次）
+- [palette-helper.md](palette-helper.md) — DPaletteHelper 调色板助手
+- [tooltip.md](tooltip.md) — DToolTip 工具提示
+- [slider.md](slider.md) — DSlider 滑动条
+- [item-delegate.md](item-delegate.md) — DStyledItemDelegate 列表项委托

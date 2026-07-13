@@ -30,6 +30,11 @@ DTK 是深度桌面环境的核心开发框架。按场景快速定位：
 | 选择 QML 控件 | [references/declarative/index.md](references/declarative/index.md) |
 | 应用配置持久化 | [references/config/index.md](references/config/index.md) |
 | 日志/DBus/通知/单实例 | [references/utilities/index.md](references/utilities/index.md) |
+| 主题系统/字体/平台判断 | [references/core/index.md](references/core/index.md) |
+| DApplication 应用入口 | [references/widgets/application.md](references/widgets/application.md) |
+| 窗口模糊效果 | [references/widgets/blur-effect.md](references/widgets/blur-effect.md) |
+| QML DTK 全局对象 | [references/declarative/dtk-global.md](references/declarative/dtk-global.md) |
+| QML 窗口附加属性 | [references/declarative/dwindow.md](references/declarative/dwindow.md) |
 
 ## 高频跨域场景
 
@@ -42,15 +47,31 @@ DTK 是深度桌面环境的核心开发框架。按场景快速定位：
 - **设置控件颜色样式（避免 QSS）** → [theme/palette.md](references/theme/palette.md)
 - **QML 中显示 dci 图标** → [declarative/dci-icon.md](references/declarative/dci-icon.md)
 - **控件内嵌入消息提示** → [widgets/message.md](references/widgets/message.md)
+- **DApplication 应用入口/单实例/翻译** → [widgets/application.md](references/widgets/application.md)
+- **DGuiApplicationHelper 主题/调色板/平台** → [core/gui-helper.md](references/core/gui-helper.md)
+- **DFontSizeManager 字体管理** → [core/font-manager.md](references/core/font-manager.md)
+- **DSysInfo 系统版本判断** → [core/sysinfo.md](references/core/sysinfo.md)
+- **DDBusSender DBus 通信** → [core/dbus.md](references/core/dbus.md)
+- **DWindowManagerHelper 窗口管理** → [core/window-manager.md](references/core/window-manager.md)
+- **DDesktopServices 桌面服务** → [core/desktop-services.md](references/core/desktop-services.md)
+- **QML D.DTK 全局对象/字体/主题** → [declarative/dtk-global.md](references/declarative/dtk-global.md)
+- **QML D.DWindow 窗口效果** → [declarative/dwindow.md](references/declarative/dwindow.md)
+- **DBlurEffectWidget 模糊效果** → [widgets/blur-effect.md](references/widgets/blur-effect.md)
+- **DLabel 标签控件（前景色/文本省略）** → [widgets/label.md](references/widgets/label.md)
+- **DPaletteHelper 控件调色板** → [widgets/palette-helper.md](references/widgets/palette-helper.md)
+- **DToolTip 工具提示** → [widgets/tooltip.md](references/widgets/tooltip.md)
+- **DSlider 滑动条** → [widgets/slider.md](references/widgets/slider.md)
+- **DStyledItemDelegate 列表项委托** → [widgets/item-delegate.md](references/widgets/item-delegate.md)
 
 ## 核心模块速览
 
 | 模块 | 基础层（dtkcore/dtkgui） | QWidget 层（dtkwidget/qt5integration） | QML 层（dtkdeclarative） | 入口文档 |
 |------|--------------------------|----------------------------------------|--------------------------|----------|
 | 架构与依赖 | 全部 8 个项目 | — | — | [architecture.md](references/architecture.md) |
+| 核心类 | DGuiApplicationHelper/DFontSizeManager/DSysInfo/DDBusSender/DWindowManagerHelper/DDesktopServices | DApplication | D.DTK/D.DWindow/ApplicationHelper | [core/index.md](references/core/index.md) |
 | 图标 | DDciIcon/DIconTheme (dtkgui), DDciFile (dtkcore) | DStyle::standardIcon, DIcon | DciIcon, IconLabel | [theme/index.md](references/theme/index.md) |
 | 主题/调色板 | DPalette/DGuiApplicationHelper (dtkgui), QDeepinTheme (qt5integration) | DStyle/DStyleHelper | Palette, ColorSelector | [theme/index.md](references/theme/index.md) |
-| 字体 | DFontManager/DPlatformTheme (dtkgui) | DFontSizeManager | D.DTK.fontManager | [theme/index.md](references/theme/index.md) |
+| 字体 | DFontManager/DPlatformTheme (dtkgui) | DFontSizeManager | D.DTK.fontManager | [core/font-manager.md](references/core/font-manager.md) |
 | 平台抽象 | DPlatformHandle/DPlatformTheme (dtkgui) | — | — | [platform-abstraction.md](references/platform-abstraction.md) |
 | QWidget 控件 | — | 55+ 控件 | — | [widgets/index.md](references/widgets/index.md) |
 | QML 控件 | — | — | 60+ 控件 | [declarative/index.md](references/declarative/index.md) |

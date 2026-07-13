@@ -6,7 +6,7 @@
 
 ## 验证范围
 
-Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 6 个功能模块 + 1 个平台集成模块 + 1 个跨文档一致性模块，共 **8 个验证模块**。
+Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 6 个功能模块 + 1 个平台集成模块 + 1 个跨文档一致性模块 + 1 个核心类模块 + 1 个高频接口模块，共 **10 个验证模块**。
 
 ## 验证方法
 
@@ -353,6 +353,114 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 6 个功能模块
 
 ---
 
+## 模块 11：core（核心类）— 来源 dtkcore/dtkgui/dtkwidget
+
+**参考文档：** `references/core/index.md`, `references/core/gui-helper.md`, `references/core/font-manager.md`, `references/core/sysinfo.md`, `references/core/dbus.md`, `references/core/window-manager.md`, `references/core/desktop-services.md`, `references/widgets/application.md`, `references/widgets/blur-effect.md`, `references/declarative/dtk-global.md`, `references/declarative/dwindow.md`
+
+**源码位置：** `~/dtk/dtkgui/include/kernel/` + `~/dtk/dtkcore/include/` + `~/dtk/dtkwidget/include/widgets/` + `~/dtk/dtkdeclarative/src/`
+
+### 11.1 DGuiApplicationHelper（gui-helper.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.1.1 | `ColorType` 枚举有 `UnknownType`/`LightType`/`DarkType` | grep enum | `dguiapplicationhelper.h` |
+| 11.1.2 | `SizeMode` 枚举有 `NormalMode`/`CompactMode` | grep enum | `dguiapplicationhelper.h` |
+| 11.1.3 | `Attribute` 枚举有 `UseInactiveColorGroup`/`ColorCompositing`/`DontSaveApplicationTheme`/`IsWaylandPlatform`/`HasAnimations`/`HasInWindowBlur` | grep enum | `dguiapplicationhelper.h` |
+| 11.1.4 | `instance()` 静态方法存在 | grep | `dguiapplicationhelper.h` |
+| 11.1.5 | `themeTypeChanged`/`paletteTypeChanged`/`newProcessInstance`/`fontChanged`/`applicationPaletteChanged`/`sizeModeChanged` 信号 | grep Q_SIGNALS | `dguiapplicationhelper.h` |
+| 11.1.6 | `adjustColor`/`blendColor`/`toColorType`/`standardPalette`/`generatePaletteColor`/`generatePalette` 静态方法 | 逐个核对 | `dguiapplicationhelper.h` |
+| 11.1.7 | `setSingleInstance`/`setSingleInstanceInterval` 静态方法 | grep | `dguiapplicationhelper.h` |
+| 11.1.8 | `isCompactMode()` 内联静态方法 | grep | `dguiapplicationhelper.h` |
+
+### 11.2 DFontSizeManager/DFontManager（font-manager.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.2.1 | `DFontSizeManager::instance()` 存在 | grep | `dstyleoption.h` |
+| 11.2.2 | `SizeType` 枚举有 `T1`~`T11`/`NSizeTypes` | grep enum | `dstyleoption.h` + `dfontmanager.h` |
+| 11.2.3 | `bind(QWidget*, SizeType)`/`unbind(QWidget*)` 方法 | grep | `dstyleoption.h` |
+| 11.2.4 | `get(SizeType)`/`t1()`~`t10()` 便捷方法 | grep | `dstyleoption.h` |
+| 11.2.5 | `DFontManager` 通过 `DGuiApplicationHelper::instance()->fontManager()` 访问 | grep fontManager | `dguiapplicationhelper.h` |
+| 11.2.6 | 像素大小数组 `{40,30,24,20,16,14,13,12,11,10,8}` | 核对 dtkgui 和 dtkwidget 的私有实现 | `dfontmanager_p.h` + `dstyleoption.cpp` |
+
+### 11.3 DSysInfo（sysinfo.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.3.1 | `ProductType` 枚举有 `Deepin`/`Uos`/`ArchLinux` 等 14 值 | grep enum | `dsysinfo.h` |
+| 11.3.2 | `DeepinType` 枚举有 `DeepinDesktop`/`DeepinProfessional`/`DeepinServer` 等 | grep enum | `dsysinfo.h` |
+| 11.3.3 | `UosType` 枚举有 `UosDesktop`/`UosServer`/`UosDevice`/`UosSmart` | grep enum | `dsysinfo.h` |
+| 11.3.4 | `UosEdition` 枚举有 `UosProfessional`/`UosHome`/`UosCommunity` 等 12 值 | grep enum | `dsysinfo.h` |
+| 11.3.5 | `isDeepin()`/`isDDE()`/`isCommunityEdition()` 静态方法 | grep | `dsysinfo.h` |
+| 11.3.6 | `uosEditionType()`/`uosType()`/`majorVersion()`/`minorVersion()` 静态方法 | grep | `dsysinfo.h` |
+
+### 11.4 DDBusSender（dbus.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.4.1 | `DDBusSender` 类存在，流畅构建器模式 `service()`/`path()`/`interface()`/`method()`/`call()` | grep class + methods | `ddbussender.h` |
+| 11.4.2 | `DDBusSender::system()` 静态工厂方法 | grep | `ddbussender.h` |
+| 11.4.3 | `DDBusProperty` 的 `get()`/`set()` 方法 | grep | `ddbussender.h` |
+| 11.4.4 | `DDBusInterface` 继承 `QDBusAbstractInterface`，有 `serviceValid()`/`serviceValidChanged` | grep | `ddbusinterface.h` |
+
+### 11.5 DWindowManagerHelper（window-manager.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.5.1 | `MotifFunction` 枚举有 `FUNC_RESIZE`/`FUNC_MOVE`/`FUNC_MINIMIZE`/`FUNC_MAXIMIZE`/`FUNC_CLOSE`/`FUNC_ALL` | grep enum | `dwindowmanagerhelper.h` |
+| 11.5.2 | `MotifDecoration` 枚举有 `DECOR_BORDER`/`DECOR_TITLE`/`DECOR_ALL` 等 | grep enum | `dwindowmanagerhelper.h` |
+| 11.5.3 | `WMName` 枚举有 `OtherWM`/`DeepinWM`/`KWinWM` | grep enum | `dwindowmanagerhelper.h` |
+| 11.5.4 | `instance()`/`hasBlurWindow()`/`hasComposite()`/`setMotifFunctions()`/`setMotifDecorations()` | 逐个核对 | `dwindowmanagerhelper.h` |
+
+### 11.6 DDesktopServices（desktop-services.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.6.1 | `SystemSoundEffect` 枚举有 `SSE_Notifications`/`SEE_Screenshot`（拼写错误）/`SSE_Error` 等 | grep enum | `ddesktopservices.h` |
+| 11.6.2 | `showFolder()`/`showFileItem()`/`showFileItemProperty()`/`trash()` 静态方法 | grep | `ddesktopservices.h` |
+| 11.6.3 | `playSystemSoundEffect()`/`previewSystemSoundEffect()` 静态方法 | grep | `ddesktopservices.h` |
+
+### 11.7 DApplication（application.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.7.1 | `DApplication` 继承 `QApplication`，`qApp` 宏重定义 | grep class + macro | `dapplication.h` |
+| 11.7.2 | `setSingleInstance()`/`loadTranslator()` 方法 | grep | `dapplication.h` |
+| 11.7.3 | `productName()`/`productIcon()`/`applicationDescription()`/`applicationHomePage()`/`applicationLicense()` | grep | `dapplication.h` |
+| 11.7.4 | `newInstanceStarted`/`iconThemeChanged`/`screenDevicePixelRatioChanged` 信号 | grep Q_SIGNALS | `dapplication.h` |
+| 11.7.5 | `buildDtkVersion()`/`runtimeDtkVersion()`/`buildVersion()` 静态方法 | grep | `dapplication.h` |
+
+### 11.8 DBlurEffectWidget（blur-effect.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.8.1 | `BlendMode` 枚举有 `InWindowBlend`/`BehindWindowBlend`/`InWidgetBlend` | grep enum | `dblureffectwidget.h` |
+| 11.8.2 | `MaskColorType` 枚举有 `DarkColor`/`LightColor`/`AutoColor`/`CustomColor` | grep enum | `dblureffectwidget.h` |
+| 11.8.3 | `radius`/`blendMode`/`maskColor`/`maskAlpha`/`blurEnabled` 属性 | grep Q_PROPERTY | `dblureffectwidget.h` |
+| 11.8.4 | `setMaskPath()`/`setSourceImage()` 方法 | grep | `dblureffectwidget.h` |
+
+### 11.9 D.DTK QML 全局对象（dtk-global.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.9.1 | `DTK` QML 单例注册（`QML_NAMED_ELEMENT(DTK)` + `QML_SINGLETON`） | grep | `dqmlglobalobject_p.h` |
+| 11.9.2 | `fontManager`/`themeType`/`hasBlurWindow`/`hasComposite`/`hasAnimation` 属性 | grep Q_PROPERTY | `dqmlglobalobject_p.h` |
+| 11.9.3 | `makeIconPalette()`/`makeColor()`/`blendColor()`/`toColorType()`/`selectColor()` Q_INVOKABLE 方法 | grep | `dqmlglobalobject_p.h` |
+| 11.9.4 | `ControlState` 枚举有 `NormalState`/`HoveredState`/`PressedState`/`DisabledState`/`InactiveState` | grep enum | `dqmlglobalobject_p.h` |
+| 11.9.5 | `DColor` 值类型有 `Type` 枚举（`Invalid`/`Highlight`/`HighlightedText`）+ `lightness()`/`opacity()`/`saturation()`/`hue()` 方法 | grep | `dqmlglobalobject_p.h` |
+
+### 11.10 D.DWindow QML 附加属性（dwindow.md）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 11.10.1 | `DWindow` QML 附加属性注册（`QML_ATTACHED(DQuickWindowAttached)`） | grep | `dquickwindow.h` |
+| 11.10.2 | `enabled`/`windowRadius`/`borderWidth`/`borderColor`/`shadowRadius`/`shadowOffset`/`shadowColor` 属性 | grep Q_PROPERTY | `dquickwindow.h` |
+| 11.10.3 | `enableBlurWindow`/`enableSystemResize`/`enableSystemMove`/`translucentBackground` 属性 | grep Q_PROPERTY | `dquickwindow.h` |
+| 11.10.4 | `themeType` 属性（Qt6 only）+ `windowEffect`/`windowStartUpEffect` 属性 | grep Q_PROPERTY | `dquickwindow.h` |
+| 11.10.5 | `popupSystemWindowMenu()`/`showMinimized()`/`showMaximized()`/`showFullScreen()`/`showNormal()` slots | grep | `dquickwindow.h` |
+
+---
+
 ## 执行策略
 
 ### 并行分组
@@ -369,6 +477,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为 6 个功能模块
 | Group F | 模块 5（utilities，含日志+系统信息+拼音） | 18 |
 | Group G | 模块 7（平台集成）+ 模块 8（跨文档一致性） | 10 |
 | Group H | 模块 9（architecture）+ 模块 10（platform-abstraction） | 27 |
+| Group I | 模块 11（core，核心类+高频接口） | ~40 |
 
 ### 执行方式
 

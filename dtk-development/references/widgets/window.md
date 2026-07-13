@@ -227,3 +227,5 @@ if (isDXcbWindow()) {
 
 - [index.md](index.md) - 控件选择决策树
 - [dialog.md](dialog.md) - 对话框规范
+- [application.md](application.md) - DApplication 应用入口
+- [blur-effect.md](blur-effect.md) - DBlurEffectWidget 模糊效果
