@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DWindow` 是 dtkdeclarative 提供的 QML 附加属性类型。。用于在 QML 窗口上设置 DTK 特有的窗口效果（圆角、阴影、模糊、边框等）。
+`DWindow` 是 dtkdeclarative 提供的 QML 附加属性类型。用于在 QML 窗口上设置 DTK 特有的窗口效果（圆角、阴影、模糊、边框等）。
 
 **适用场景：**
 - 设置窗口圆角

@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DDesktopServices`（dtkgui）提供桌面环境集成功能。。包括文件管理器操作、系统音效播放等。
+`DDesktopServices`（dtkgui）提供桌面环境集成功能。包括文件管理器操作、系统音效播放等。
 
 > 注意：dtkwidget 中也有同名类但已废弃，请使用 `Dtk::Gui::DDesktopServices`。
 

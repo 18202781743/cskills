@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DApplication`（dtkwidget）是 DTK 应用的入口类，替代 `QApplication`。。它提供单实例控制、翻译加载、关于对话框、产品信息等 DDE 应用标准功能。
+`DApplication`（dtkwidget）是 DTK 应用的入口类，替代 `QApplication`。它提供单实例控制、翻译加载、关于对话框、产品信息等 DDE 应用标准功能。
 
 **适用场景：**
 - 所有 DDE 应用的 main 函数入口

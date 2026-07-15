@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DStyledItemDelegate`（dtkwidget）提供 DTK 风格的列表项绘制。。配合 DListView/DTreeView 使用，提供圆角背景、间距、统一项大小等 DTK 样式。
+`DStyledItemDelegate`（dtkwidget）提供 DTK 风格的列表项绘制。配合 DListView/DTreeView 使用，提供圆角背景、间距、统一项大小等 DTK 样式。
 
 `DStandardItem` 和 `DViewItemAction` 提供列表项的 DTK 扩展数据模型。
 
