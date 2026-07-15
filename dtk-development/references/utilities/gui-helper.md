@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DGuiApplicationHelper`（dtkgui）和 `DApplicationHelper`（dtkgui，QML 绑定）是 DTK 主题系统的核心入口，**使用频率排名第一**（580 次）。所有主题感知操作都通过它完成。
+`DGuiApplicationHelper`（dtkgui）和 `DApplicationHelper`（dtkgui，QML 绑定）是 DTK 主题系统的核心入口。所有主题感知操作都通过它完成。
 
 **适用场景：**
 - 获取/切换亮暗主题
@@ -88,7 +88,7 @@ helper->setPaletteType(DGuiApplicationHelper::DarkType);
 helper->setPaletteType(DGuiApplicationHelper::LightType);
 ```
 
-### 6.2 监听主题变化（使用频率 165 次）
+### 6.2 监听主题变化
 
 ```cpp
 connect(DGuiApplicationHelper::instance(),
@@ -105,7 +105,7 @@ void MyWidget::onThemeChanged(DGuiApplicationHelper::ColorType type) {
 }
 ```
 
-### 6.3 调色板操作（使用频率 35 次）
+### 6.3 调色板操作
 
 ```cpp
 // 获取应用调色板
@@ -125,7 +125,7 @@ DGuiApplicationHelper::generatePaletteColor(palette, DPalette::TextTitle, DGuiAp
 DGuiApplicationHelper::generatePalette(palette, DGuiApplicationHelper::DarkType);
 ```
 
-### 6.4 颜色工具（使用频率 21 次）
+### 6.4 颜色工具
 
 ```cpp
 // 调整颜色（偏移量 -128 ~ 127）
@@ -144,7 +144,7 @@ QColor blended = DGuiApplicationHelper::blendColor(QColor("#FF0000"), QColor("#0
 DGuiApplicationHelper::ColorType type = DGuiApplicationHelper::toColorType(someColor);
 ```
 
-### 6.5 平台判断（使用频率 21 次）
+### 6.5 平台判断
 
 ```cpp
 // 判断平台

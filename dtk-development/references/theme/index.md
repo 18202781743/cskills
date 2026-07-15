@@ -76,10 +76,11 @@ connect(DGuiApplicationHelper::instance(),
 | icon theme 图标 | `QIcon::fromTheme()` | `#include <QIcon>` | XDG 标准、系统主题集成 |
 | 通用辅助 | `DIconTheme` | `#include <DIconTheme>` | 图标查找、缓存管理 |
 
-**CMake 依赖：**
+**CMake 依赖：** 详见 [app-dev-with-dtk.md](../app-dev-with-dtk.md)
+
 ```cmake
-find_package(DtkGui REQUIRED)
-target_link_libraries(your_target Dtk::Gui)
+find_package(Dtk6Gui REQUIRED)
+target_link_libraries(your_target Dtk6::Gui)
 ```
 
 ### 图标代码模板

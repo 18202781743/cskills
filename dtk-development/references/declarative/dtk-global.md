@@ -2,14 +2,14 @@
 
 ## 1. 概述与适用场景
 
-`DTK` 是 dtkdeclarative 提供的 QML 全局单例对象，**使用频率 453 次**，是 QML 应用访问 DTK 核心功能的主要入口。
+`DTK` 是 dtkdeclarative 提供的 QML 全局单例对象，是 QML 应用访问 DTK 核心功能的主要入口。
 
 **适用场景：**
-- 获取字体管理器（使用频率 238 次）
-- 判断/监听主题类型（使用频率 74 次）
-- 创建图标调色板（使用频率 52 次）
-- 创建语义化颜色（使用频率 37 次）
-- 访问平台主题（使用频率 19 次）
+- 获取字体管理器
+- 判断/监听主题类型
+- 创建图标调色板
+- 创建语义化颜色
+- 访问平台主题
 
 ## 2. 枚举
 
@@ -35,27 +35,27 @@
 
 ## 3. 属性
 
-| 属性 | 类型 | 使用频率 | 说明 |
-|------|------|---------|------|
-| `fontManager` | `DFontManager*` | 238 | 字体管理器 |
-| `themeType` | `ColorType` | 74 | 当前主题类型 |
-| `hasBlurWindow` | `bool` | — | 是否支持模糊窗口 |
-| `hasComposite` | `bool` | — | 是否有合成器 |
-| `hasNoTitlebar` | `bool` | — | 是否无标题栏模式 |
-| `hasAnimation` | `bool` | — | 是否有动画 |
-| `hasInWindowBlur` | `bool` | — | 是否支持窗口内模糊 |
-| `isSoftwareRender` | `bool` | — | 是否软件渲染 |
-| `windowManagerName` | `WMName` | — | 窗口管理器名称 |
-| `platformTheme` | `DPlatformThemeProxy*` | 19 | 平台主题代理 |
-| `palette` | `QPalette/QQuickPalette*` | 14 | 应用调色板 |
-| `inactivePalette` | `QPalette/QQuickPalette*` | — | 非活跃调色板 |
-| `deepinDistributionOrgLogo` | `QString` | — | 发行版 Logo 路径 |
-| `deepinWebsiteName` | `QString` | — | 发行版网站名 |
-| `deepinWebsiteLink` | `QString` | — | 发行版网站链接 |
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `fontManager` | `DFontManager*` | 字体管理器 |
+| `themeType` | `ColorType` | 当前主题类型 |
+| `hasBlurWindow` | `bool` | 是否支持模糊窗口 |
+| `hasComposite` | `bool` | 是否有合成器 |
+| `hasNoTitlebar` | `bool` | 是否无标题栏模式 |
+| `hasAnimation` | `bool` | 是否有动画 |
+| `hasInWindowBlur` | `bool` | 是否支持窗口内模糊 |
+| `isSoftwareRender` | `bool` | 是否软件渲染 |
+| `windowManagerName` | `WMName` | 窗口管理器名称 |
+| `platformTheme` | `DPlatformThemeProxy*` | 平台主题代理 |
+| `palette` | `QPalette/QQuickPalette*` | 应用调色板 |
+| `inactivePalette` | `QPalette/QQuickPalette*` | 非活跃调色板 |
+| `deepinDistributionOrgLogo` | `QString` | 发行版 Logo 路径 |
+| `deepinWebsiteName` | `QString` | 发行版网站名 |
+| `deepinWebsiteLink` | `QString` | 发行版网站链接 |
 
 ## 4. 方法
 
-### 4.1 makeIconPalette（使用频率 52 次）
+### 4.1 makeIconPalette
 
 创建图标调色板，用于 `DciIcon` 的主题感知着色：
 
@@ -68,7 +68,7 @@ DciIcon {
 }
 ```
 
-### 4.2 makeColor（使用频率 37 次）
+### 4.2 makeColor
 
 创建语义化颜色，支持 HSL 调整：
 
@@ -156,7 +156,7 @@ D.DTK.sendSystemMessage("标题", "内容", "app-icon", [], {}, 3000)
 var pos = D.DTK.cursorPosition()
 ```
 
-## 5. fontManager 用法（使用频率 238 次）
+## 5. fontManager 用法
 
 ```qml
 import org.deepin.dtk 1.0
@@ -174,22 +174,9 @@ Text {
 }
 ```
 
-字体大小对照：
+字体大小完整对照表见 [font-manager.md](../utilities/font-manager.md)。
 
-| 属性 | 像素大小 | 语义 |
-|------|---------|------|
-| `t1` | 40 px | 超大标题 |
-| `t2` | 30 px | 大标题 |
-| `t3` | 24 px | 中标题 |
-| `t4` | 20 px | 小标题 |
-| `t5` | 16 px | 强调文本 |
-| `t6` | 14 px | 正文 |
-| `t7` | 13 px | 辅助文本 |
-| `t8` | 12 px | 小号文本 |
-| `t9` | 11 px | 提示文本 |
-| `t10` | 10 px | 极小文本 |
-
-## 6. themeType 用法（使用频率 74 次）
+## 6. themeType 用法
 
 ```qml
 import org.deepin.dtk 1.0

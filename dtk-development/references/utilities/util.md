@@ -35,91 +35,10 @@ DTrashManager::instance()->cleanTrash();
 
 ## 2. DBus 辅助
 
-### 2.1 DDBusInterface — 接口代理
-
-继承 `QDBusAbstractInterface`，核心增强：
-
-**自动服务监听：** 构造时异步检查服务是否存在，不存在时监听 `NameOwnerChanged` 信号，服务上线后自动建立连接。
-
-```cpp
-#include <DDBusInterface>
-
-DDBusInterface iface("org.deepin.dde.Dock1",
-                     "/org/deepin/dde/Dock1",
-                     "org.deepin.dde.Dock1",
-                     QDBusConnection::sessionBus());
-
-// 方法调用（继承自 QDBusAbstractInterface::call）
-QDBusReply<bool> reply = iface.call("IsVisible");
-
-// 服务有效性
-bool valid = iface.serviceValid();
-connect(&iface, &DDBusInterface::serviceValidChanged, [](bool valid) {
-    qInfo() << "Service valid:" << valid;
-});
-```
-
-**属性读写：** 通过 `org.freedesktop.DBus.Properties` 接口，自动适配类型。
-
-```cpp
-// 读取属性
-QVariant v = iface.property("DisplayMode");
-
-// 设置属性
-iface.setProperty("DisplayMode", value);
-```
-
-**Suffix 机制：** 当同一个 parent 对象上连接多个 `DDBusInterface` 实例时，通过 suffix 区分同名属性。
-
-```cpp
-DDBusInterface iface1("com.example.Svc", "/", "com.example.Iface1", QDBusConnection::sessionBus(), parent);
-iface1.setSuffix("-iface1");
-
-DDBusInterface iface2("com.example.Svc", "/", "com.example.Iface2", QDBusConnection::sessionBus(), parent);
-iface2.setSuffix("-iface2");
-```
-
-**自动信号转发：** 传入 `parent` 对象后，`DDBusInterface` 会内省远程接口的信号签名，自动将匹配的远程信号转发到 parent 上对应的 `Q_SIGNAL`。无需手动 `QObject::connect`。
-
-### 2.2 DDBusSender — 链式调用
-
-builder 模式，适合单次调用。
-
-```cpp
-#include <DDBusSender>
-
-// 调用方法
-DDBusSender()
-    .service("org.example.Service")
-    .path("/org/example/Object")
-    .interface("org.example.Interface")
-    .method("SetValue")
-    .arg(42)
-    .call();
-
-// 读写属性
-DDBusSender()
-    .service("org.example.Service")
-    .path("/org/example/Object")
-    .interface("org.example.Interface")
-    .property("DisplayMode")
-    .get();
-
-DDBusSender()
-    .service("org.example.Service")
-    .path("/org/example/Object")
-    .interface("org.example.Interface")
-    .property("DisplayMode")
-    .set(1);
-
-// 系统总线
-DDBusSender::system()
-    .service("org.freedesktop.login1")
-    .path("/org/freedesktop/login1")
-    .interface("org.freedesktop.login1.Manager")
-    .method("CanReboot")
-    .call();
-```
+| 类 | 用途 | 详见 |
+|----|------|------|
+| `DDBusSender` | 链式构建器模式，适合单次 DBus 调用 | [dbus.md](dbus.md) |
+| `DDBusInterface` | 继承 `QDBusAbstractInterface`，支持自动服务监听、属性同步、信号转发 | [dbus.md](dbus.md) |
 
 ## 3. 通知系统
 
@@ -170,92 +89,7 @@ DNotifySender("下载进度")
 
 ## 4. 系统信息
 
-`DSysInfo` 提供操作系统类型、版本、硬件信息等静态查询接口。
-
-### 头文件
-
-```cpp
-#include <DSysInfo>
-```
-
-### 实际分析的文件
-
-`DSysInfo` 从以下系统文件读取信息：
-
-- `/etc/os-release` — 发行版标识、版本号、产品类型
-- `/etc/deepin-version` — Deepin/UOS 版本详情（edition、major/minor/build version）
-- `/etc/uos-version` — UOS 专用版本信息
-- `/proc/cpuinfo` — CPU 型号
-- `/proc/meminfo` — 内存信息
-- `/proc/stat` — 启动时间
-- `/etc/hostname` — 主机名
-
-### 常用接口
-
-**产品类型判断：**
-
-```cpp
-#include <DSysInfo>
-
-DSysInfo::ProductType type = DSysInfo::productType();
-bool isDeepin = DSysInfo::isDeepin();
-bool isDDE = DSysInfo::isDDE();
-bool isCommunity = DSysInfo::isCommunityEdition();
-
-QString osName = DSysInfo::operatingSystemName();
-QString version = DSysInfo::productVersion();
-```
-
-**Deepin/UOS 版本信息：**
-
-```cpp
-DSysInfo::DeepinType dt = DSysInfo::deepinType(); // 桌面版/专业版/服务器版
-QString version = DSysInfo::deepinVersion();
-QString edition = DSysInfo::deepinEdition();
-
-DSysInfo::UosType ut = DSysInfo::uosType();          // 桌面/服务器/设备/智能终端
-DSysInfo::UosEdition ue = DSysInfo::uosEditionType(); // 专业版/家庭版/社区版/教育版/...
-QString productName = DSysInfo::uosProductTypeName();
-QString systemName = DSysInfo::uosSystemName();
-
-QString sp = DSysInfo::spVersion();     // 补丁版本
-QString major = DSysInfo::majorVersion();
-QString minor = DSysInfo::minorVersion();
-```
-
-**发行版组织信息：**
-
-```cpp
-QString orgName = DSysInfo::distributionOrgName(
-    DSysInfo::Distribution, QLocale::system());
-QString vendor = DSysInfo::distributionOrgName(
-    DSysInfo::Distributor, QLocale::system());
-QString logo = DSysInfo::distributionOrgLogo(
-    DSysInfo::Distribution, DSysInfo::Normal, ":/logo.svg");
-```
-
-**硬件与运行信息：**
-
-```cpp
-QString hostname = DSysInfo::computerName();
-QString cpu = DSysInfo::cpuModelName();
-qint64 memSize = DSysInfo::memoryInstalledSize();
-qint64 diskSize = DSysInfo::systemDiskSize();
-qint64 uptime = DSysInfo::uptime(); // 秒
-DSysInfo::Arch arch = DSysInfo::arch(); // X86_64 / ARM64 / LOONGARCH64 / ...
-```
-
-### 枚举速查
-
-| 枚举 | 常用值 |
-|------|--------|
-| `ProductType` | `Deepin`, `Uos`, `Ubuntu`, `Debian`, `Fedora`, `ArchLinux`, `CentOS`, `openSUSE`, `NixOS` 等 |
-| `DeepinType` | `DeepinDesktop`, `DeepinProfessional`, `DeepinServer`, `DeepinPersonal`, `DeepinMilitary` |
-| `UosType` | `UosDesktop`, `UosServer`, `UosDevice`, `UosSmart` |
-| `UosEdition` | `UosProfessional`, `UosHome`, `UosCommunity`, `UosEnterprise`, `UosEducation`, `UosMilitary`, `UosEuler` 等 |
-| `Arch` | `X86_64`, `ARM64`, `LOONGARCH64`, `MIPS64`, `SW_64`, `RISCV64` 等 |
-| `OrgType` | `Distribution`（发行版）, `Distributor`（发行商）, `Manufacturer`（制造商） |
-| `LogoType` | `Normal`, `Light`, `Symbolic`, `Transparent` |
+`DSysInfo` 提供操作系统类型、版本、硬件信息等静态查询接口。完整 API 和枚举参考 → [sysinfo.md](sysinfo.md)
 
 ## 5. 拼音转换
 

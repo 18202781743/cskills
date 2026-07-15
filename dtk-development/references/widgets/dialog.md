@@ -153,10 +153,10 @@ public:
 #include <DSettingsOption>
 #include <DSettingsGroup>
 
-// CMake
-find_package(DtkCore REQUIRED)
-find_package(DtkWidget REQUIRED)
-target_link_libraries(your_target Dtk::Core Dtk::Widget)
+// CMake（详见 [app-dev-with-dtk.md](../app-dev-with-dtk.md)）
+find_package(Dtk6Core REQUIRED)
+find_package(Dtk6Widget REQUIRED)
+target_link_libraries(your_target Dtk6::Core Dtk6::Widget)
 ```
 
 ### 6.3 JSON 配置格式

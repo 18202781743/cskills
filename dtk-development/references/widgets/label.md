@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DLabel`（dtkwidget）是 QLabel 的 DTK 扩展，**使用频率 227 次**（头文件引用排名第三）。在 QLabel 基础上增加了前景色主题感知和文本省略功能。
+`DLabel`（dtkwidget）是 QLabel 的 DTK 扩展。在 QLabel 基础上增加了前景色主题感知和文本省略功能。
 
 **适用场景：**
 - 所有需要显示文本/图标的标签

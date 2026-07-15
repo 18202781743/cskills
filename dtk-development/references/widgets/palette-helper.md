@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DPaletteHelper`（dtkwidget）是 DPalette 的 QWidget 端辅助类，**使用频率 59 次**。用于获取和设置 QWidget 的 DTK 调色板。
+`DPaletteHelper`（dtkwidget）是 DPalette 的 QWidget 端辅助类。。用于获取和设置 QWidget 的 DTK 调色板。
 
 **适用场景：**
 - 获取控件的 DPalette（含 DTK 扩展色）

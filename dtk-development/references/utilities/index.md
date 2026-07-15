@@ -2,19 +2,19 @@
 
 DTK 工具类与核心类提供主题系统、字体管理、系统信息、DBus 通信、窗口管理、日志、单实例等跨项目通用功能，主要来自 dtkcore/dtkgui/dtkwidget。
 
-## 按使用频率排序
+## 类索引
 
-| 类名 | 使用频率 | 所属模块 | 文档 |
-|------|---------|---------|------|
-| DGuiApplicationHelper | 580 | dtkgui | [gui-helper.md](gui-helper.md) |
-| DFontSizeManager | 522 | dtkgui/dtkwidget | [font-manager.md](font-manager.md) |
-| DSysInfo | 93 | dtkcore | [sysinfo.md](sysinfo.md) |
-| DDBusSender | 80 | dtkcore | [dbus.md](dbus.md) |
-| DPaletteHelper | 59 | dtkwidget | [../widgets/palette-helper.md](../widgets/palette-helper.md) |
-| DWindowManagerHelper | 49 | dtkgui | [window-manager.md](window-manager.md) |
-| DDesktopServices | 27 | dtkcore/dtkgui | [desktop-services.md](desktop-services.md) |
-| DLogManager | 72 | dtkcore | [log.md](log.md) |
-| DSingleton | 18 | dtkcore | [singleton.md](singleton.md) |
+| 类名 | 所属模块 | 文档 |
+|------|---------|------|
+| DGuiApplicationHelper | dtkgui | [gui-helper.md](gui-helper.md) |
+| DFontSizeManager | dtkgui/dtkwidget | [font-manager.md](font-manager.md) |
+| DSysInfo | dtkcore | [sysinfo.md](sysinfo.md) |
+| DDBusSender | dtkcore | [dbus.md](dbus.md) |
+| DPaletteHelper | dtkwidget | [../widgets/palette-helper.md](../widgets/palette-helper.md) |
+| DWindowManagerHelper | dtkgui | [window-manager.md](window-manager.md) |
+| DDesktopServices | dtkcore/dtkgui | [desktop-services.md](desktop-services.md) |
+| DLogManager | dtkcore | [log.md](log.md) |
+| DSingleton | dtkcore | [singleton.md](singleton.md) |
 
 ## 快速决策树
 

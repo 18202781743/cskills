@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DSysInfo`（dtkcore）提供运行时系统信息查询，**使用频率 93 次**。主要用于判断 UOS 版本和系统类型，实现差异化功能。
+`DSysInfo`（dtkcore）提供运行时系统信息查询。。主要用于判断 UOS 版本和系统类型，实现差异化功能。
 
 **适用场景：**
 - 根据 UOS 版本启用/禁用功能
@@ -52,7 +52,7 @@
 | 3 | `UosDevice` | 设备 |
 | 4 | `UosSmart` | 智能终端 |
 
-### 2.4 UosEdition（使用频率 30 次）
+### 2.4 UosEdition
 
 | 值 | 名称 | 说明 |
 |----|------|------|
@@ -103,7 +103,7 @@ bool dde = DSysInfo::isDDE();
 bool community = DSysInfo::isCommunityEdition();
 ```
 
-### 3.2 版本查询（使用频率 55 次）
+### 3.2 版本查询
 
 ```cpp
 // Deepin 类型

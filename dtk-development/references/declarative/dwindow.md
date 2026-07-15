@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DWindow` 是 dtkdeclarative 提供的 QML 附加属性类型，**使用频率 49 次**。用于在 QML 窗口上设置 DTK 特有的窗口效果（圆角、阴影、模糊、边框等）。
+`DWindow` 是 dtkdeclarative 提供的 QML 附加属性类型。。用于在 QML 窗口上设置 DTK 特有的窗口效果（圆角、阴影、模糊、边框等）。
 
 **适用场景：**
 - 设置窗口圆角
@@ -33,46 +33,46 @@ ApplicationWindow {
 
 ### 3.1 基础属性
 
-| 属性 | 类型 | 使用频率 | 说明 |
-|------|------|---------|------|
-| `enabled` | `bool` | 8 | 是否启用 DTK 窗口样式 |
-| `windowRadius` | `int` | 6 | 窗口圆角半径 |
-| `borderWidth` | `int` | 2 | 边框宽度 |
-| `borderColor` | `QColor` | 4 | 边框颜色 |
-| `translucentBackground` | `bool` | — | 是否半透明背景 |
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `enabled` | `bool` | 是否启用 DTK 窗口样式 |
+| `windowRadius` | `int` | 窗口圆角半径 |
+| `borderWidth` | `int` | 边框宽度 |
+| `borderColor` | `QColor` | 边框颜色 |
+| `translucentBackground` | `bool` | 是否半透明背景 |
 
 ### 3.2 阴影属性
 
-| 属性 | 类型 | 使用频率 | 说明 |
-|------|------|---------|------|
-| `shadowRadius` | `int` | 1 | 阴影半径 |
-| `shadowOffset` | `QPoint` | 3 | 阴影偏移 |
-| `shadowColor` | `QColor` | 5 | 阴影颜色 |
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `shadowRadius` | `int` | 阴影半径 |
+| `shadowOffset` | `QPoint` | 阴影偏移 |
+| `shadowColor` | `QColor` | 阴影颜色 |
 
 ### 3.3 模糊与系统控制
 
-| 属性 | 类型 | 使用频率 | 说明 |
-|------|------|---------|------|
-| `enableBlurWindow` | `bool` | 6 | 启用窗口模糊 |
-| `enableSystemResize` | `bool` | 2 | 允许系统调整窗口大小 |
-| `enableSystemMove` | `bool` | 3 | 允许系统移动窗口 |
-| `alphaBufferSize` | `int` | — | Alpha 缓冲区大小 |
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `enableBlurWindow` | `bool` | 启用窗口模糊 |
+| `enableSystemResize` | `bool` | 允许系统调整窗口大小 |
+| `enableSystemMove` | `bool` | 允许系统移动窗口 |
+| `alphaBufferSize` | `int` | Alpha 缓冲区大小 |
 
 ### 3.4 窗口类型与装饰
 
-| 属性 | 类型 | 使用频率 | 说明 |
-|------|------|---------|------|
-| `wmWindowTypes` | `WmWindowTypes` | — | 窗口管理器类型标志 |
-| `motifFunctions` | `MotifFunctions` | — | Motif 功能标志 |
-| `motifDecorations` | `MotifDecorations` | — | Motif 装饰标志 |
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `wmWindowTypes` | `WmWindowTypes` | 窗口管理器类型标志 |
+| `motifFunctions` | `MotifFunctions` | Motif 功能标志 |
+| `motifDecorations` | `MotifDecorations` | Motif 装饰标志 |
 
 ### 3.5 主题与效果
 
-| 属性 | 类型 | 使用频率 | 说明 |
-|------|------|---------|------|
-| `themeType` | `ColorType` | 6 | 窗口级主题覆盖（Qt6） |
-| `windowEffect` | `EffectScenes` | 2 | 窗口场景效果 |
-| `windowStartUpEffect` | `EffectTypes` | — | 窗口启动效果 |
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `themeType` | `ColorType` | 窗口级主题覆盖（Qt6） |
+| `windowEffect` | `EffectScenes` | 窗口场景效果 |
+| `windowStartUpEffect` | `EffectTypes` | 窗口启动效果 |
 
 ### 3.6 其他
 

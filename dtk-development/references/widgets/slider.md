@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DSlider`（dtkwidget）提供 DTK 风格的滑动条，**使用频率 20 次**。在 QSlider 基础上增加了图标和刻度标签功能。
+`DSlider`（dtkwidget）提供 DTK 风格的滑动条。。在 QSlider 基础上增加了图标和刻度标签功能。
 
 **适用场景：**
 - 数值范围选择

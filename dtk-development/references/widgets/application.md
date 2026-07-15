@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DApplication`（dtkwidget）是 DTK 应用的入口类，替代 `QApplication`，**使用频率 214 次**。它提供单实例控制、翻译加载、关于对话框、产品信息等 DDE 应用标准功能。
+`DApplication`（dtkwidget）是 DTK 应用的入口类，替代 `QApplication`。。它提供单实例控制、翻译加载、关于对话框、产品信息等 DDE 应用标准功能。
 
 **适用场景：**
 - 所有 DDE 应用的 main 函数入口
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 
 > DTK 重定义了 `qApp` 宏为 `DApplication*`，可直接使用 `qApp->xxx()` 访问 DTK 扩展方法。
 
-## 3. 单实例控制（使用频率 20 次）
+## 3. 单实例控制
 
 ```cpp
 DApplication a(argc, argv);
@@ -62,7 +62,7 @@ connect(&a, &DApplication::newInstanceStarted, this, [this]() {
 });
 ```
 
-## 4. 翻译加载（使用频率 187 次）
+## 4. 翻译加载
 
 ```cpp
 // 加载翻译（自动查找应用名对应的翻译文件）
@@ -72,7 +72,7 @@ a.loadTranslator();
 a.loadTranslator(QList<QLocale>() << QLocale::Chinese << QLocale::English);
 ```
 
-`DApplication::translate()` 使用频率 187 次，是 DTK 中使用最频繁的方法之一：
+`DApplication::translate()` 是 DTK 中使用最频繁的方法之一：
 
 ```cpp
 QString text = DApplication::translate("Context", "Source Text");

@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DDBusSender`（dtkcore）提供流畅构建器模式的 DBus 方法调用，**使用频率 80 次**。与 `QDBusInterface` 相比，它不需要 introspection 开销，适合简单的 DBus 调用。
+`DDBusSender`（dtkcore）提供流畅构建器模式的 DBus 方法调用。。与 `QDBusInterface` 相比，它不需要 introspection 开销，适合简单的 DBus 调用。
 
 **适用场景：**
 - 调用 DBus 方法

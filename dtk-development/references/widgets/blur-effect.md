@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DBlurEffectWidget`（dtkwidget）提供窗口模糊效果，**使用频率 58 次**。常用于实现半透明毛玻璃背景的面板、弹出框和工具窗口。
+`DBlurEffectWidget`（dtkwidget）提供窗口模糊效果。。常用于实现半透明毛玻璃背景的面板、弹出框和工具窗口。
 
 **适用场景：**
 - 面板/弹出框的毛玻璃背景
@@ -50,7 +50,7 @@ blurWidget->setBlurRectYRadius(8);
 blurWidget->resize(300, 200);
 ```
 
-### 3.2 BehindWindowBlend（使用频率 9 次）
+### 3.2 BehindWindowBlend
 
 模糊窗口后方桌面内容，最常用模式：
 

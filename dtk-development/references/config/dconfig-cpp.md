@@ -7,9 +7,9 @@
 ```cpp
 #include <DConfig>
 
-// CMake
-find_package(DtkCore REQUIRED)
-target_link_libraries(your_target Dtk::Core)
+// CMake（详见 [app-dev-with-dtk.md](../app-dev-with-dtk.md)）
+find_package(Dtk6Core REQUIRED)
+target_link_libraries(your_target Dtk6::Core)
 ```
 
 ### 1.2 基本用法
@@ -174,7 +174,7 @@ class MyWindow : public QWidget {
 ### 2.4 CMake 集成
 
 ```cmake
-find_package(DtkCore REQUIRED)
+find_package(Dtk6Core REQUIRED)
 
 dtk_add_config_to_cpp(GENERATED_SOURCES
     ${CMAKE_SOURCE_DIR}/configs/example.json

@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DDesktopServices`（dtkgui）提供桌面环境集成功能，**使用频率 27 次**。包括文件管理器操作、系统音效播放等。
+`DDesktopServices`（dtkgui）提供桌面环境集成功能。。包括文件管理器操作、系统音效播放等。
 
 > 注意：dtkwidget 中也有同名类但已废弃，请使用 `Dtk::Gui::DDesktopServices`。
 
@@ -12,7 +12,7 @@
 - 移动文件到回收站
 - 显示文件属性对话框
 
-## 2. SystemSoundEffect 枚举（使用频率 45 次）
+## 2. SystemSoundEffect 枚举
 
 | 值 | 名称 | 说明 |
 |----|------|------|
@@ -78,7 +78,7 @@ DDesktopServices::trash("/home/user/unwanted.txt");
 DDesktopServices::trash(QUrl("file:///home/user/unwanted.txt"));
 ```
 
-## 4. 系统音效（使用频率 45 次）
+## 4. 系统音效
 
 ```cpp
 #include <DDesktopServices>

@@ -2,7 +2,7 @@
 
 ## 1. 概述与适用场景
 
-`DWindowManagerHelper`（dtkgui）提供窗口管理器相关功能查询和控制，**使用频率 52 次**。主要用于控制窗口装饰、检测合成器能力。
+`DWindowManagerHelper`（dtkgui）提供窗口管理器相关功能查询和控制。。主要用于控制窗口装饰、检测合成器能力。
 
 **适用场景：**
 - 检查窗口管理器能力（模糊/合成/无边框）
@@ -11,7 +11,7 @@
 
 ## 2. 枚举
 
-### 2.1 MotifFunction（使用频率 23 次）
+### 2.1 MotifFunction
 
 | 值 | 名称 | 说明 |
 |----|------|------|
@@ -77,7 +77,7 @@ DWindowManagerHelper::WMName name = wm->windowManagerName();
 QString nameStr = wm->windowManagerNameString();
 ```
 
-### 3.2 窗口功能控制（使用频率 23 次）
+### 3.2 窗口功能控制
 
 ```cpp
 // 禁用关闭按钮
