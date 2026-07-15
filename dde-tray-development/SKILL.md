@@ -1,7 +1,6 @@
 ---
 name: dde-tray-development
-description: >
-  为 DDE 任务栏编写新的托盘插件、修改现有托盘插件、或理解托盘插件接口。
+description: DDE 托盘插件开发指南，面向任务栏托盘与快捷面板插件的开发和维护，覆盖插件接口、界面与交互、消息与菜单、工程构建及问题排查，并支持插件类型与实现方式选择和加载、显示问题定位。
 ---
 
 # dde-tray-development

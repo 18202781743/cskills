@@ -1,13 +1,6 @@
 ---
 name: dde-shell-development
-description: |
-  dde-shell 开发指南，涵盖插件开发、设计原理、导出 API 参考、LayerShell 独立使用。
-  触发场景：
-  - 创建 dde-shell 插件（Applet/Containment/Panel）
-  - 使用 dde-shell API（DApplet/DContainment/DPanel/DAppletBridge 等）
-  - 理解 dde-shell 架构设计
-  - 查询 dde-shell 导出 API 接口
-  - 独立使用 LayerShell 窗口功能
+description: dde-shell 开发指南，面向 DDE Shell 插件与 LayerShell 窗口的开发和维护，覆盖插件体系、架构设计、界面与窗口集成、工程构建及问题排查，并支持插件类型与实现方式选择、框架接口使用和加载问题定位。
 ---
 
 # dde-shell 开发指南
