@@ -48,7 +48,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 
 ## 模块 1：theme（主题系统）— 来源 dtkgui/dtkwidget
 
-**参考文档：** `references/theme/index.md`, `references/theme/palette.md`, `references/theme/style.md`, `references/theme/theme-switch.md`, `references/theme/dci.md`, `references/theme/builtin.md`, `references/theme/icontheme.md`
+**参考文档：** `references/theme/index.md`, `references/theme/palette.md`, `references/theme/style.md`, `references/theme/chameleon-style.md`, `references/theme/theme-switch.md`, `references/theme/dci.md`, `references/theme/builtin.md`, `references/theme/icontheme.md`
 
 **源码位置：** `~/dtk/dtkgui/include/kernel/` + `~/dtk/dtkgui/include/util/` + `~/dtk/dtkwidget/include/widgets/`
 
@@ -90,6 +90,21 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 | 1.2.12 | `DStyleHelper` 类存在，方法 `getColor`/`generatedBrush`/`drawPrimitive` | grep class + 方法 | 同上 |
 | 1.2.13 | `DStyle::SS_HoverState`/`SS_FocusFlag` 状态标志存在 | grep `SS_HoverState` | 同上 |
 | 1.2.14 | `DPlatformTheme` 类存在（`fetchPalette` 参数类型） | grep `class DPlatformTheme` | `dtkgui/include/kernel/dplatformtheme.h` |
+
+### 1.3 QWidget 变色龙风格实现（来源 dtkwidget/qt5integration）
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 1.3.1 | `DStyle` 继承 `QCommonStyle`，`ChameleonStyle` 继承 `DStyle` | 核对类声明 | `dtkwidget/include/widgets/dstyle.h`、`qt5integration/styleplugins/chameleon/chameleonstyle.h` |
+| 1.3.2 | `ChameleonStylePlugin` 继承 `QStylePlugin`，插件 IID 为 `org.qt-project.Qt.QStyleFactoryInterface`，键名为 `chameleon` | 核对插件入口和 JSON 元数据 | `qt5integration/styleplugins/chameleon/main.cpp`、`chameleon.json` |
+| 1.3.3 | 插件依赖 `Dtk::Widget` 并安装到 Qt styles 插件目录 | 核对构建目标、链接依赖和安装目录 | `qt5integration/styleplugins/chameleon/CMakeLists.txt` |
+| 1.3.4 | Deepin 平台主题提供 `chameleon`、`fusion` 风格候选，`DApplication` 在非 Deepin 平台主题环境设置 `chameleon` | 核对 `StyleNames` 和 `setStyle` 分支 | `qt5integration/platformthemeplugin/qdeepintheme.cpp`、`dtkwidget/src/widgets/dapplication.cpp` |
+| 1.3.5 | `DStyleHelper` 对 `DStyle` 子类和普通 `QStyle` 分别采用虚函数与静态辅助实现 | 核对 `setStyle` 及绘制分发 | `dtkwidget/src/widgets/dstyle.cpp` |
+| 1.3.6 | `DStyle` 将 Qt 状态转换为 hover/press/check/select/focus 状态，并为 `QPalette` 与 `DPalette` 生成状态画刷 | 核对 `getState`、`getFlags`、`generatedBrush` | `dtkwidget/src/widgets/dstyle.cpp` |
+| 1.3.7 | `ChameleonStyle` 重写绘制、布局、命中测试、尺寸、度量、提示及 polish/unpolish 核心虚函数，未处理元素回落到 `DStyle` | 核对声明和各 switch 默认分支 | `qt5integration/styleplugins/chameleon/chameleonstyle.h`、`chameleonstyle.cpp` |
+| 1.3.8 | 标准调色板角色和 DTK 语义色分别经 `QPalette` 与 `DPaletteHelper` 进入 `DStyle::generatedBrush` | 核对 `getColor` 重载 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.9 | 菜单移动及进度、数值、混合、滚动条动画类型存在并由风格管理 | 核对动画类和动画哈希表 | `qt5integration/styleplugins/chameleon/dstyleanimation.h`、`chameleonstyle.h`、`chameleonstyle.cpp` |
+| 1.3.10 | `polish/unpolish` 管理 hover 属性、弹出窗口效果及日历专用初始化 | 核对控件类型分支和平台 API 调用 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
 
 ---
 

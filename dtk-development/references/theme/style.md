@@ -39,5 +39,6 @@ helper.drawPrimitive(DStyle::PE_ItemBackground, option, painter, widget);
 
 ## 5. 相关文档
 
+- [chameleon-style.md](chameleon-style.md) - DStyle 与 ChameleonStyle 实现
 - [palette.md](palette.md) - 调色板规范
 - [theme-switch.md](theme-switch.md) - 主题切换机制

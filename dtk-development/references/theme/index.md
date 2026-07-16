@@ -17,7 +17,8 @@ DTK 主题系统涵盖视觉表现的各个方面：
 | builtin 图标列表与用法 | [builtin.md](builtin.md) |
 | icon theme 图标（XDG） | [icontheme.md](icontheme.md) |
 | 调色板（DPalette） | [palette.md](palette.md) |
-| 控件风格定制 | [style.md](style.md) |
+| 控件风格 API 与定制 | [style.md](style.md) |
+| QWidget 变色龙风格实现 | [chameleon-style.md](chameleon-style.md) |
 | 监听亮暗主题切换 | [theme-switch.md](theme-switch.md) |
 
 ## 3. 主题类型
