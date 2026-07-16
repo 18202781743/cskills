@@ -1,0 +1,59 @@
+{
+  "skill_name": "remote-dev-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我有两台机器，本机做开发，远程机器 192.168.1.50 (用户名 devuser) 做编译。我的项目在 /home/devuser/work/dde-file-manager，远程机器上同样的路径。帮我配好远程编译环境，然后同步代码过去用 cmake 编译一下。cmake 要加 -DCMAKE_BUILD_TYPE=Debug 参数，用 8 个线程编译。",
+      "expected_output": "创建 ~/.config/remote-dev/ 配置，执行 rsync 同步代码，在远程机器上执行 cmake 配置和编译",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "改了几个文件，帮我同步到远程重新编译。项目路径这些上次配过了，~/.config/remote-dev/ 里有配置。",
+      "expected_output": "读取已有配置，rsync 增量同步变更文件，远程执行 make 增量编译",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "远程编译报错了，好像是 CMakeLists.txt 里有个依赖找不到。远程机器是 192.168.1.50，SSH 用户是 devuser，帮我看看远程的编译日志。",
+      "expected_output": "SSH 到远程机器查看编译输出/错误日志，分析 cmake 错误原因",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "远程机器好像挂了，ssh 连不上。帮我等它恢复，恢复后重新同步编译。配置在 ~/.config/remote-dev/ 里。",
+      "expected_output": "进入重试循环检测远程连接，恢复后自动 rsync 同步 + cmake 编译",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "我现在在 dde-shell 的一个 git worktree 目录里开发，目录是 ~/worktrees/dde-shell/feature-a。主项目之前已经配过 remote-dev 了。帮我直接把这个 worktree 同步到远程并重新编译。",
+      "expected_output": "在未显式传项目名时，自动将当前 worktree 目录识别为已配置项目，使用该 worktree 作为本地同步源执行 rsync 和远程编译",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "给 dde-shell 这个项目开了个 worktree：~/worktrees/dde-shell/fix-crash。请用这个目录做同步源，不要用之前配置里的主目录，直接同步到远程并监控自动编译。",
+      "expected_output": "使用 --project-dir 或等效方式显式指定 worktree 目录作为本地同步源，并启动 watch/自动同步编译",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "我有个新项目在 ~/work/new-project，远程机器是 devuser@10.0.0.5，远程路径是 ~/work/new-project。没有配置过 remote-dev，帮我直接同步过去用 cmake 编译。",
+      "expected_output": "使用 ad-hoc 模式，通过 -H 和 -r 参数直接指定远程信息，无需预配置即可同步编译",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "帮我同步当前目录到 devuser@192.168.1.50:~/work/testproj，用 qmake 编译，4 线程，不要安装也不要重启。",
+      "expected_output": "使用 ad-hoc 模式: build -H devuser@192.168.1.50 -r ~/work/testproj -t qmake -j 4 --no-install --no-restart",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "同步编译这个目录到远程，但编译如果失败的话不要继续安装和重启。",
+      "expected_output": "构建失败处理：使用 and 短路逻辑，编译失败时自动跳过 install 和 restart 步骤",
+      "files": []
+    }
+  ]
+}

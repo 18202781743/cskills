@@ -546,3 +546,174 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 ### 汇总
 
 所有组完成后，汇总生成一份验证报告，列出所有 FAIL（不一致）和 NOT FOUND（缺失）项，作为 skill 文档修正的依据。
+
+---
+
+## 典型问题验证清单
+
+以下问题用于验证 skill 的文档路由能力。每个问题应能通过 `SKILL.md` 的"文档路由"或"高频跨域场景"定位到对应文档。
+
+### 控件与交互问题
+
+| # | 问题 | 期望路由文档 | 验证要点 |
+|---|------|--------------|----------|
+| Q1 | 如何创建带警告样式的对话框？ | widgets/dialog.md | DDialog::addButton(ButtonWarning) |
+| Q2 | 如何创建带输入框的对话框？ | widgets/dialog.md | DInputDialog::getText() |
+| Q3 | 如何在对话框中添加自定义内容？ | widgets/dialog.md | DDialog::addContent() |
+| Q4 | 如何创建推荐按钮（蓝色高亮）？ | widgets/button.md | DSuggestButton |
+| Q5 | 如何创建警告按钮（红色）？ | widgets/button.md | DWarningButton |
+| Q6 | 如何创建仅显示图标的按钮？ | widgets/button.md | DIconButton |
+| Q7 | 如何在按钮上使用 dci 图标？ | widgets/button.md | DIconButton::setIcon(DDciIcon) |
+| Q8 | 如何创建滑动开关？ | widgets/button.md | DSwitchButton |
+| Q9 | 如何创建对话框底部的按钮组？ | widgets/button.md | DButtonBox |
+| Q10 | 如何创建浮动操作按钮？ | widgets/button.md | DFloatingButton |
+| Q11 | 如何创建带清除按钮的搜索输入框？ | widgets/input.md | DSearchEdit |
+| Q12 | 如何创建密码输入框？ | widgets/input.md | DPasswordEdit |
+| Q13 | 如何在输入框显示警告状态？ | widgets/input.md | DLineEdit::setAlert() |
+| Q14 | 如何创建带增减按钮的数值输入？ | widgets/input.md | DSpinBox |
+| Q15 | 如何创建主窗口并设置标题栏？ | widgets/window.md | DMainWindow + DTitlebar |
+| Q16 | 如何给窗口添加模糊背景？ | widgets/blur-effect.md | DBlurEffectWidget |
+| Q17 | 如何显示进度指示器？ | widgets/progress.md | DProgressBar / DWaterProgress |
+| Q18 | 如何在控件内嵌入消息提示？ | widgets/message.md | DMessageManager |
+| Q19 | 如何创建列表视图？ | widgets/view.md | DListView |
+| Q20 | 如何自定义列表项绘制？ | widgets/item-delegate.md | DStyledItemDelegate |
+
+### 主题与视觉问题
+
+| # | 问题 | 期望路由文档 | 验证要点 |
+|---|------|--------------|----------|
+| Q21 | 如何让控件颜色跟随暗亮主题切换？ | theme/palette.md | DPalette + DGuiApplicationHelper |
+| Q22 | 如何获取当前主题类型（亮/暗）？ | theme/theme-switch.md | DGuiApplicationHelper::themeType() |
+| Q23 | 如何监听主题切换事件？ | theme/theme-switch.md | themeTypeChanged 信号 |
+| Q24 | 如何设置控件的自定义颜色？ | widgets/palette-helper.md | DPaletteHelper::setPalette() |
+| Q25 | 如何使用 dci 图标？ | theme/dci.md | DDciIcon 加载与渲染 |
+| Q26 | 如何播放 dci 图标动画？ | theme/dci.md | DDciIconPlayer |
+| Q27 | 如何使用内置图标？ | theme/builtin.md | DIconTheme::findQIcon() |
+| Q28 | 如何使用 XDG 标准图标？ | theme/icontheme.md | QIcon::fromTheme() |
+| Q29 | 如何判断图标是否为内置图标？ | theme/icontheme.md | DIconTheme::isBuiltinIcon() |
+| Q30 | 如何获取字体大小层级（T1-T11）？ | utilities/font-manager.md | DFontManager |
+
+### QML 控件问题
+
+| # | 问题 | 期望路由文档 | 验证要点 |
+|---|------|--------------|----------|
+| Q31 | QML 中如何显示 dci 图标？ | declarative/dci-icon.md | DciIcon 组件 |
+| Q32 | QML 中如何创建对话框？ | declarative/dialogs.md | DialogWindow |
+| Q33 | QML 中如何创建菜单？ | declarative/menus.md | Menu / MenuItem |
+| Q34 | QML 中如何创建滑动条？ | declarative/progress.md | Slider |
+| Q35 | QML 中如何创建进度条？ | declarative/progress.md | ProgressBar |
+| Q36 | QML 中如何获取当前主题？ | declarative/dtk-global.md | D.DTK.themeType |
+| Q37 | QML 中如何获取字体大小？ | declarative/dtk-global.md | D.DTK.fontManager |
+| Q38 | QML 中如何设置窗口效果？ | declarative/dwindow.md | D.DWindow 附加属性 |
+| Q39 | QML 中如何创建浮动面板？ | declarative/panels.md | FloatingPanel |
+| Q40 | QML 中如何创建列表项？ | declarative/lists.md | ItemDelegate |
+
+### 配置与系统集成问题
+
+| # | 问题 | 期望路由文档 | 验证要点 |
+|---|------|--------------|----------|
+| Q41 | 如何使用 DConfig 存储应用配置？ | config/dconfig-cpp.md | DConfig 类用法 |
+| Q42 | DConfig 的 meta 文件如何编写？ | config/concepts.md | JSON meta 文件结构 |
+| Q43 | 如何实现配置的热加载？ | config/dconfig-debug.md | 环境变量和缓存 |
+| Q44 | 如何通过 DBus 操作 DConfig？ | config/dconfig-dbus.md | dde-dconfig 命令 |
+| Q45 | 如何发送 DBus 消息？ | utilities/dbus.md | DDBusSender |
+| Q46 | 如何发送系统通知？ | utilities/desktop-services.md | DDesktopServices |
+| Q47 | 如何获取系统版本信息？ | utilities/sysinfo.md | DSysInfo |
+| Q48 | 如何实现单实例应用？ | widgets/application.md | DApplication 单实例 |
+| Q49 | 如何管理窗口效果？ | utilities/window-manager.md | DWindowManagerHelper |
+| Q50 | 如何记录应用日志？ | utilities/log.md | DLogManager |
+
+### 工程构建问题
+
+| # | 问题 | 期望路由文档 | 验证要点 |
+|---|------|--------------|----------|
+| Q51 | CMakeLists.txt 如何配置 DTK6 依赖？ | app-dev-with-dtk.md | find_package + target_link_libraries |
+| Q52 | 如何兼容 DTK5 和 DTK6？ | app-dev-with-dtk.md | Qt 版本检测 + DTK 后缀 |
+| Q53 | debian/control 如何编写依赖？ | app-dev-with-dtk.md | Build-Depends + Depends |
+| Q54 | 头文件如何引用？ | app-dev-with-dtk.md | 无 .h 后缀转发头 |
+| Q55 | 如何运行 DTK 示例程序？ | examples.md | collections / dtk-exhibition |
+| Q56 | 如何编译调试 DTK 源码？ | dtksrc-compile-debug.md | 构建步骤 |
+| Q57 | 如何理解 DTK 架构？ | architecture.md | 四大系统 + 依赖关系 |
+| Q58 | 如何处理平台兼容问题？ | platform-abstraction.md | DPlatformHandle |
+
+### 高级场景问题
+
+| # | 问题 | 期望路由文档 | 验证要点 |
+|---|------|--------------|----------|
+| Q59 | 自定义控件如何使用主题颜色？ | widgets/palette-helper.md | DPaletteHelper |
+| Q60 | 如何避免使用 QSS 设置颜色？ | theme/palette.md | 使用调色板而非样式表 |
+| Q61 | 如何设置标签的前景色？ | widgets/label.md | DLabel 前景色设置 |
+| Q62 | 如何显示工具提示？ | widgets/tooltip.md | DToolTip |
+| Q63 | 如何创建滑动条？ | widgets/slider.md | DSlider |
+| Q64 | 如何处理深浅色主题图标切换？ | theme/dci.md | DDciIcon::Theme |
+| Q65 | QML 中如何使用 ColorSelector？ | declarative/color-selector.md | ColorSelector 组件 |
+| Q66 | 如何理解 Chameleon 风格？ | theme/chameleon-style.md | QWidget/QML 风格实现 |
+| Q67 | 控件状态颜色如何计算？ | widgets/style.md | DStyleHelper |
+| Q68 | 如何设置窗口圆角阴影？ | widgets/window.md | DMainWindow 属性 |
+
+---
+
+## 验证执行命令参考
+
+### 文档准确性验证
+
+```bash
+# 验证类存在
+grep -r "class DDialog" /home/work/dtkwidget/include/
+
+# 验证枚举值
+grep -A 20 "enum.*ColorType" /home/work/dtkgui/include/kernel/dpalette.h
+
+# 验证方法签名
+grep "addButton" /home/work/dtkwidget/include/widgets/ddialog.h
+
+# 验证 QML 类型
+grep "Button" /home/work/dtkdeclarative/build6/plugins/org/deepin/dtk/qmldir
+```
+
+### 技能可用性验证流程
+
+1. 阅读 `SKILL.md` 的"文档路由"表
+2. 确认问题能路由到正确的文档
+3. 阅读目标文档，确认包含解决方案
+4. 标记 PASS/FAIL
+
+### 验证结果三态输出
+
+- **PASS** — 文档与源码一致，或问题可正确路由
+- **FAIL** — 文档与源码不一致，或问题无法路由
+- **NOT FOUND** — 源码中未找到对应 API
+
+---
+
+## 验证报告模板
+
+```markdown
+# DTK Skill 验证报告
+
+**验证时间：** YYYY-MM-DD  
+**验证目标：** 验证 dtk-development skill 的文档准确性和技能可用性  
+**源码位置：** /home/work/ 下的 dtkgui, dtkwidget, dtkcore, dtkdeclarative, dtklog
+
+## 验证结果汇总
+
+- 验证项总数：XX
+- PASS：XX
+- FAIL：XX
+- NOT FOUND：XX
+
+## 典型问题验证结果
+
+| # | 问题 | 结果 | 备注 |
+|---|------|------|------|
+| Q1 | 如何创建带警告样式的对话框？ | PASS | DDialog::addButton 参数 ButtonWarning |
+| ... | ... | ... | ... |
+
+## 文档准确性验证结果
+
+（按模块填写）
+
+## 结论
+
+（总结验证结果）
+```

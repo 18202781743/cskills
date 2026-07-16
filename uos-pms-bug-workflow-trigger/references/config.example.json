@@ -1,0 +1,39 @@
+{
+  "base_url": "https://pms.uniontech.com",
+  "request": {
+    "timeout": 15,
+    "verify_tls": true
+  },
+  "actions": {
+    "resolve": {
+      "defaults": {
+        "resolution": "fixed",
+        "duplicateBug": "",
+        "buildProject": "",
+        "resolvedBuild": "trunk",
+        "buildName": "",
+        "resolvedDate": "__NOW__",
+        "repair": "代码",
+        "exttype": "功能/类/对象",
+        "symbol": "错误",
+        "age": "当前版本新增引入",
+        "analysis": "当前版本需求新增引入",
+        "source": "内部开发",
+        "assignedTo": "ut000965",
+        "status": "resolved",
+        "labels[]": "",
+        "comment": "【版本号】：见备注\n【自测环境镜像版本】：见备注\n【代码地址】：见备注\n【根因分析（Bug）】：见备注\n【影响范围】：见备注\n【自测结果截图/视频】：见备注\n【自测架构】：x86"
+      }
+    },
+    "activate": {
+      "defaults": {
+        "status": "active"
+      }
+    },
+    "close": {
+      "defaults": {
+        "comment": "脚本自动触发关闭流程"
+      }
+    }
+  }
+}
