@@ -135,10 +135,17 @@
 
 ## 模块 5：调试（debugging.md）
 
-| # | 验证项 |
-|---|--------|
-| 5.1 | --spec 参数在 main.cpp 中处理 |
-| 5.2 | 线程安全描述与源码行为一致 |
+| # | 验证项 | 对应源码文件 |
+|---|--------|-------------|
+| 5.1 | --spec 参数在 main.cpp 中处理 | `main.cpp` |
+| 5.2 | 线程安全描述与源码行为一致 | `dccpluginloader.cpp` |
+| 5.3 | --spec 路径歧义说明：文档区分了不同工作目录下的路径写法 | `main.cpp` (parser.values(pluginDir)) |
+| 5.4 | --spec 只替换插件搜索路径，不影响框架库加载 | `main.cpp` (loadModules vs defaultpath) |
+| 5.5 | 修改框架时需设置 LD_LIBRARY_PATH 指向构建目录 lib/ | `CMakeLists.txt` (CMAKE_LIBRARY_OUTPUT_DIRECTORY) |
+| 5.6 | 修改框架时需设置 QT_PLUGIN_PATH 和 QML2_IMPORT_PATH | `plugin/CMakeLists.txt` (qt_add_qml_module) |
+| 5.7 | killall 先关闭单实例的说明 | `main.cpp` (setSingleInstance) |
+| 5.8 | 清除 QML 缓存命令与 refreshQmlCache 行为一致 | `main.cpp` (refreshQmlCache) |
+| 5.9 | 验证加载路径的 ldd/proc maps 方法正确 | — |
 
 ---
 
@@ -162,4 +169,4 @@
 | Group B | 模块 2（插件开发） | 24 |
 | Group C | 模块 3（C++ API） | 19 |
 | Group D | 模块 4（QML API） | 23 |
-| Group E | 模块 5+6（调试+一致性） | 7 |
+| Group E | 模块 5+6（调试+一致性） | 14 |

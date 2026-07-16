@@ -1,12 +1,76 @@
 # 调试技巧与常见问题
 
-## 单插件调试（--spec）
+## 本地运行与调试
 
-最常用的调试手段，加载构建目录中的单个插件，无需安装：
+`--spec` 参数指定插件搜索目录，跳过系统默认路径，直接加载构建产物。始终通过系统的 `dde-control-center` wrapper 启动（非构建目录下的同名二进制），以确保 security loader 提供 D-Bus 授权：
 
 ```bash
-dde-control-center --spec ./build/lib/plugins_v1.1/
+dde-control-center --spec /path/to/build/lib/plugins_v1.1/
 ```
+
+**路径说明**：`--spec` 接受绝对路径或相对于当前工作目录的路径。假设项目源码在 `~/dde-control-center`，构建目录为 `~/dde-control-center/build`，则：
+
+| 工作目录 | --spec 参数 |
+|----------|-------------|
+| `~/dde-control-center` | `--spec ./build/lib/plugins_v1.1/` |
+| `~/dde-control-center/build` | `--spec ./lib/plugins_v1.1/` |
+| 任意目录 | `--spec ~/dde-control-center/build/lib/plugins_v1.1/` |
+
+> **注意**：`--spec` 只替换插件搜索路径，不影响框架库（`libdde-control-center.so`）和 QML 引擎插件的加载。如果修改了框架代码，需要额外设置环境变量，见下文。
+
+### 仅修改插件
+
+只修改了插件 QML 或 C++ 代码，框架未改动：
+
+```bash
+# 1. 先关闭已运行的控制中心实例（单实例限制）
+killall dde-control-center 2>/dev/null
+
+# 2. 通过系统 wrapper 启动，指定构建目录的插件路径
+#    wrapper 会通过 security loader 启动，确保 D-Bus 授权正常
+dde-control-center --spec /path/to/build/lib/plugins_v1.1/
+```
+
+> **安全加载说明**：`/usr/bin/dde-control-center` 是 shell 包装脚本，内部通过 `deepin-security-loader` 启动真正的二进制（`/usr/libexec/deepin/dde-control-center`）。直接运行构建目录的 `./bin/dde-control-center` 会绕过安全加载，导致需要授权的系统 D-Bus 调用失败。调试插件时始终使用系统 wrapper + `--spec` 即可正常工作。
+
+### 修改了框架代码
+
+修改了 `libdde-control-center.so`、QML 框架组件（`org.deepin.dcc` 模块）或 `dde-control-center` 可执行文件本身时，需要设置环境变量确保加载构建产物而非系统安装版本，但仍通过系统 wrapper 启动以保证 D-Bus 授权：
+
+```bash
+# 1. 先关闭已运行的控制中心实例
+killall dde-control-center 2>/dev/null
+
+# 2. 设置环境变量，指向构建目录的库
+export LD_LIBRARY_PATH=/path/to/build/lib:${LD_LIBRARY_PATH}
+export QT_PLUGIN_PATH=/path/to/build/lib:${QT_PLUGIN_PATH}
+export QML2_IMPORT_PATH=/path/to/build/lib:${QML2_IMPORT_PATH}
+
+# 3. 通过系统 wrapper 启动
+dde-control-center --spec /path/to/build/lib/plugins_v1.1/
+```
+
+> **注意**：`LD_LIBRARY_PATH` 和 `QML2_IMPORT_PATH` 只影响动态库和 QML 模块的搜索路径。二进制本身仍由 wrapper 中的路径（`/usr/libexec/deepin/dde-control-center`）决定，如需替换二进制则需先安装到系统路径。
+
+**环境变量说明**：
+
+| 变量 | 作用 |
+|------|------|
+| `LD_LIBRARY_PATH` | 让插件 `.so` 加载构建目录的 `libdde-control-center.so`，而非 `/usr/lib/` 下的系统版本 |
+| `QT_PLUGIN_PATH` | 让 Qt 找到构建目录中的 QML 插件 |
+| `QML2_IMPORT_PATH` | 让 QML 引擎从构建目录加载 `org.deepin.dcc` 模块 |
+
+### 验证加载路径
+
+```bash
+# 检查插件 .so 实际链接的框架库路径
+ldd ~/dde-control-center/build/lib/plugins_v1.1/accounts/accounts.so | grep dde-control-center
+
+# 检查运行时进程的库映射
+cat /proc/$(pidof dde-control-center)/maps | grep dde-control-center
+```
+
+如果输出包含 `/usr/lib/` 路径而非 `build/lib/`，说明 `LD_LIBRARY_PATH` 未生效。
 
 ## 不能混用 ASAN
 

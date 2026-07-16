@@ -247,9 +247,17 @@ QML 中使用 `qsTr()`，C++ 中使用 `tr()`（需类继承 `QObject` 并使用
 ```bash
 mkdir build && cd build && cmake .. && make -j$(nproc)
 
-# 单插件调试，无需安装
-dde-control-center --spec ./lib/plugins_v1.1/
+# 仅修改插件时，指定插件路径即可
+./bin/dde-control-center --spec ./lib/plugins_v1.1/
+
+# 修改了框架代码时，需要设置环境变量确保加载构建产物
+# export LD_LIBRARY_PATH=$(pwd)/lib:${LD_LIBRARY_PATH}
+# export QT_PLUGIN_PATH=$(pwd)/lib:${QT_PLUGIN_PATH}
+# export QML2_IMPORT_PATH=$(pwd)/lib:${QML2_IMPORT_PATH}
+# ./bin/dde-control-center --spec ./lib/plugins_v1.1/
 ```
+
+> **注意**：`--spec` 只替换插件搜索路径。如果修改了框架库（`libdde-control-center.so`）或 QML 引擎组件，必须设置 `LD_LIBRARY_PATH`、`QT_PLUGIN_PATH`、`QML2_IMPORT_PATH` 指向构建目录的 `lib/`，否则运行时仍会加载系统安装的版本。详见 [debugging.md](debugging.md)。
 
 不能混用 ASAN：控制中心无 ASAN 时，不能加载使用 ASAN 编译的插件。
 
