@@ -163,9 +163,77 @@ connect(fab, &DFloatingButton::clicked, this, &MyClass::addItem);
 | `SP_ArrowEnter` | 进入箭头 |
 | `SP_ArrowLeave` | 离开箭头 |
 
-## 5. 常见错误与避坑
+## 5. 颜色、字体和图标定制
 
-### 错误 1：使用废弃的 DImageButton
+修改前应通过 `DPaletteHelper::palette()` 取得控件当前的 `DPalette`，以保留未覆盖的主题角色。
+
+### 5.1 修改普通按钮的背景和文字
+
+```cpp
+#include <DPushButton>
+#include <DPalette>
+#include <DPaletteHelper>
+
+DPushButton *button = new DPushButton(tr("保存"), this);
+DPalette palette = DPaletteHelper::instance()->palette(button);
+palette.setColor(QPalette::Active, QPalette::Button, QColor("#2F6BFF"));
+palette.setColor(QPalette::Active, QPalette::ButtonText, Qt::white);
+palette.setColor(QPalette::Inactive, QPalette::Button, QColor("#2F6BFF"));
+palette.setColor(QPalette::Inactive, QPalette::ButtonText, Qt::white);
+palette.setColor(QPalette::Disabled, QPalette::Button, QColor("#AAB7D8"));
+palette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor("#EEF2FF"));
+DPaletteHelper::instance()->setPalette(button, palette);
+```
+
+`Button` 是普通背景，`ButtonText` 是普通前景。ChameleonStyle 会以 `Button` 为基础生成 hover 和 pressed 状态色，无需监听鼠标事件自行换色。
+
+推荐按钮、checked 按钮等强调路径使用 `Highlight` 和 `HighlightedText`：
+
+```cpp
+DPalette palette = DPaletteHelper::instance()->palette(button);
+palette.setColor(QPalette::Highlight, QColor("#7A4DFF"));
+palette.setColor(QPalette::HighlightedText, Qt::white);
+DPaletteHelper::instance()->setPalette(button, palette);
+```
+
+局部 `Highlight` 也可能影响该按钮的焦点颜色。仅修改普通按钮时应设置 `Button`，不要误改整个应用的 `Highlight`。
+
+### 5.2 修改复选框、单选框和开关的选中色
+
+```cpp
+#include <DCheckBox>
+#include <DPaletteHelper>
+
+DCheckBox *checkBox = new DCheckBox(tr("启用同步"), this);
+DPalette palette = DPaletteHelper::instance()->palette(checkBox);
+palette.setColor(QPalette::Highlight, QColor("#00A870"));
+palette.setColor(QPalette::WindowText, QColor("#24332D"));
+DPaletteHelper::instance()->setPalette(checkBox, palette);
+```
+
+`Highlight` 影响 checked indicator，`WindowText` 影响标签文字和未选中 indicator。启用 DCI 动画时，palette 会转换成 `DDciIconPalette`；最终是否换色还取决于图标资源是否具有可换色图层。
+
+### 5.3 修改字体和主题图标
+
+```cpp
+#include <DIconTheme>
+
+QFont font = button->font();
+font.setPointSize(font.pointSize() + 1);
+font.setWeight(QFont::DemiBold);
+button->setFont(font);
+button->setIcon(DIconTheme::findQIcon("document-save"));
+button->setIconSize(QSize(16, 16));
+
+// 取消局部颜色，恢复从父控件或应用主题继承。
+DPaletteHelper::instance()->resetPalette(button);
+```
+
+优先使用主题图标或 DCI 图标。固定 `QPixmap` 不会自动切换 Light/Dark 和 Hover/Pressed/Disabled 资源。
+
+## 6. 常见错误与避坑
+
+### 6.1 使用废弃的 DImageButton
 
 ```cpp
 // ❌ 错误：DImageButton 已废弃
@@ -176,7 +244,7 @@ auto *btn = new DIconButton(this);
 btn->setIcon(QIcon(":/icon.png"));
 ```
 
-### 错误 2：在 DIconButton 上设置文字
+### 6.2 在 DIconButton 上设置文字
 
 ```cpp
 // ❌ 错误：DIconButton 不支持文字
@@ -188,7 +256,7 @@ btn->setText("文字");
 btn->setIcon(QIcon(":/icon.png"));
 ```
 
-## 6. 相关文档
+## 7. 相关文档
 
 - [index.md](index.md) - 控件选择决策树
 - [dialog.md](dialog.md) - 对话框规范（DButtonBox 用法）

@@ -46,11 +46,11 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 
 ---
 
-## 模块 1：theme（主题系统）— 来源 dtkgui/dtkwidget
+## 模块 1：theme（主题系统）— 来源 dtkgui/dtkwidget/qt5integration/dtkdeclarative
 
-**参考文档：** `references/theme/index.md`, `references/theme/palette.md`, `references/theme/style.md`, `references/theme/chameleon-style.md`, `references/theme/theme-switch.md`, `references/theme/dci.md`, `references/theme/builtin.md`, `references/theme/icontheme.md`
+**参考文档：** `references/theme/index.md`, `references/theme/palette.md`, `references/widgets/style.md`, `references/theme/chameleon-style.md`, `references/theme/theme-switch.md`, `references/theme/dci.md`, `references/theme/builtin.md`, `references/theme/icontheme.md`
 
-**源码位置：** `~/dtk/dtkgui/include/kernel/` + `~/dtk/dtkgui/include/util/` + `~/dtk/dtkwidget/include/widgets/`
+**源码位置：** `~/dtk/dtkgui/include/kernel/` + `~/dtk/dtkgui/include/util/` + `~/dtk/dtkwidget/include/widgets/` + `~/dtk/qt5integration/styleplugins/chameleon/` + `~/dtk/dtkdeclarative/chameleon/`
 
 ### 1.1 图标（来源 dtkgui）
 
@@ -105,12 +105,28 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 | 1.3.8 | 标准调色板角色和 DTK 语义色分别经 `QPalette` 与 `DPaletteHelper` 进入 `DStyle::generatedBrush` | 核对 `getColor` 重载 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
 | 1.3.9 | 菜单移动及进度、数值、混合、滚动条动画类型存在并由风格管理 | 核对动画类和动画哈希表 | `qt5integration/styleplugins/chameleon/dstyleanimation.h`、`chameleonstyle.h`、`chameleonstyle.cpp` |
 | 1.3.10 | `polish/unpolish` 管理 hover 属性、弹出窗口效果及日历专用初始化 | 核对控件类型分支和平台 API 调用 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.11 | `references/widgets/style.md` 按使用频率覆盖按钮、输入、选择、item view、菜单、标签、滚动条、滑块、进度条，逐项说明背景、前景、状态组合和子区域 | 对照 `drawPrimitive`/`drawControl`/`drawComplexControl` 的 case 与布局函数 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.12 | 文档所述状态优先级覆盖 disabled、hover、sunken、on/off/nochange、selected、focus、active、orientation，且说明状态可组合 | 核对 `QStyleOption::state` 判断与 `DStyle::generatedBrush` | `dtkwidget/src/widgets/dstyle.cpp`、`qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.13 | 文档所述亮暗色逻辑区分 palette 间接适配与 DCI/单选框/标签页显式主题分支 | 核对 `getColor`、`getThemTypeColor`、`DDciIconPlayer::setTheme` 与 `adjustColor` | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.14 | 文档中的控件区域对应 `subElementRect`、`subControlRect`、`tabLayout`、item-view layout，且提醒 RTL/方向/DPI | 逐项核对布局和绘制调用使用的 rect | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.15 | 自定义按钮示例使用 `QStyleOptionButton` 和当前 `style()->drawControl()`，状态与 widget 参数完整 | 对照 Qt/ChameleonStyle 绘制入口检查示例 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.16 | `widgets/style.md` 说明 palette/font/icon 定制原则，具体示例分别位于 `button.md`、`input.md`、`view.md`、`progress.md` | 核对文档交叉职责、`getColor` 角色和 `DPaletteHelper` API | `dpalettehelper.h`、`chameleonstyle.cpp` |
+
+### 1.4 QWidget/QML Chameleon 共用概览
+
+| # | 验证项 | 验证方法 | 对应源码文件 |
+|---|--------|----------|-------------|
+| 1.4.1 | `theme/chameleon-style.md` 明确 QWidget 和 QML 分别拥有独立 Chameleon 插件，共用设计语义而非绘制实现 | 对照两个插件入口、类型和安装目录 | `qt5integration/styleplugins/chameleon/`、`dtkdeclarative/chameleon/` |
+| 1.4.2 | QWidget 插件是 `QStylePlugin`，键名为 `chameleon`；QML 插件是 Qt Quick Controls 2 style，名称为 `Chameleon` | 核对插件类、元数据、`name()` 和 qmldir | `main.cpp`、`chameleon.json`、`qtquickcontrols2chameleonstyleplugin.cpp`、`qmldir.in` |
+| 1.4.3 | QML Chameleon 文件将 Qt Quick Controls 类型映射到 `org.deepin.dtk` 控件，并覆盖 CMake 中列出的 QML 控件 | 抽查 `Button.qml`、`Control.qml` 并核对 `QML_FILES` | `dtkdeclarative/chameleon/*.qml`、`CMakeLists.txt` |
+| 1.4.4 | 文档区分 DTK5 的 `QtQuick.Controls.Chameleon` 安装路径与非 DTK5 的 `Chameleon` QML module 构建路径 | 核对两个 CMake 条件分支和 `qmldir.in` | `dtkdeclarative/chameleon/CMakeLists.txt`、`qmldir.in` |
+| 1.4.5 | 文档提供 QWidget/QML 动态指定 Chameleon/对照风格的方法，包含 `QT_DEBUG_PLUGINS` 排查，以及 palette 在 Chameleon 与 Fusion/Basic 间的对比诊断 | 分别核对 Qt Widgets 和 Qt Quick Controls 的风格选择入口及颜色读取路径 | Qt 风格插件与 Qt Quick Controls style 机制 |
 
 ---
 
 ## 模块 2：widgets（QWidget 控件）— 来源 dtkwidget
 
-**参考文档：** `references/widgets/index.md` + 9 个子文档（`button.md`/`container.md`/`dialog.md`/`input.md`/`message.md`/`navigation.md`/`progress.md`/`view.md`/`window.md`）
+**参考文档：** `references/widgets/index.md`, `references/widgets/style.md` + 9 个子文档（`button.md`/`container.md`/`dialog.md`/`input.md`/`message.md`/`navigation.md`/`progress.md`/`view.md`/`window.md`）
 
 **源码位置：** `~/dtk/dtkwidget/include/widgets/` + `~/dtk/dtkwidget/include/DWidget/`（转发头文件）
 

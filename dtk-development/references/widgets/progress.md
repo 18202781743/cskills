@@ -78,6 +78,27 @@ progress->stop();       // 停止
         └─ DSpinner / DLoadingIndicator
 ```
 
-## 4. 相关文档
+## 4. 修改进度槽、进度颜色和文字
+
+```cpp
+#include <DProgressBar>
+#include <DPalette>
+#include <DPaletteHelper>
+
+DProgressBar *progress = new DProgressBar(this);
+progress->setRange(0, 100);
+progress->setValue(65);
+
+DPalette palette = DPaletteHelper::instance()->palette(progress);
+palette.setColor(DPalette::ObviousBackground, QColor("#DDE2EA"));
+palette.setColor(QPalette::Highlight, QColor("#00A870"));
+palette.setColor(QPalette::ButtonText, QColor("#394150"));
+palette.setColor(QPalette::HighlightedText, Qt::white);
+DPaletteHelper::instance()->setPalette(progress, palette);
+```
+
+`ObviousBackground` 控制 groove，`Highlight` 控制 contents。进度文字跨过 contents 边界时，ChameleonStyle 在 `ButtonText` 和 `HighlightedText` 之间生成渐变。该示例针对 `DProgressBar`；`DCircleProgress`、`DWaterProgress` 等自绘控件应分别核对其公开的颜色属性。
+
+## 5. 相关文档
 
 - [index.md](index.md) - 控件选择决策树

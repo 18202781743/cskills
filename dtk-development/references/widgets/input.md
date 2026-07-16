@@ -159,7 +159,29 @@ connect(keyEdit, &DKeySequenceEdit::keySequenceChanged,
 | `setTextToSpeechEnabled(bool)` | 启用语音朗读 |
 | `setTextToTranslateEnabled(bool)` | 启用翻译 |
 
-## 5. 常见错误与避坑
+## 5. 修改输入框背景、文字和边框
+
+```cpp
+#include <DLineEdit>
+#include <DPalette>
+#include <DPaletteHelper>
+
+DLineEdit *edit = new DLineEdit(this);
+edit->setPlaceholderText(tr("请输入名称"));
+
+DPalette palette = DPaletteHelper::instance()->palette(edit);
+palette.setColor(QPalette::Base, QColor("#FFF8E8"));
+palette.setColor(QPalette::Text, QColor("#3A2A10"));
+palette.setColor(DPalette::PlaceholderText, QColor("#8A7654"));
+palette.setColor(DPalette::FrameBorder, QColor("#D59A32"));
+DPaletteHelper::instance()->setPalette(edit, palette);
+```
+
+`Base` 是编辑内容区背景，`Text` 是输入文字，`PlaceholderText` 是占位文字，`FrameBorder` 是输入框边框。focus 边框通常还会使用 `Highlight`，需要统一强调色时可同时设置该角色。
+
+同一组角色也适用于 `DSearchEdit`、`DPasswordEdit`、`DSpinBox` 和可编辑 `DComboBox`；组合控件的内部编辑器若设置了独立 palette，应同步修改内部编辑器。
+
+## 6. 常见错误与避坑
 
 ### 错误 1：使用废弃的 DShortcutEdit
 
@@ -197,7 +219,7 @@ edit->lineEdit()->setPlaceholderText("提示");
 edit->setPlaceholderText("提示");
 ```
 
-## 6. 相关文档
+## 7. 相关文档
 
 - [index.md](index.md) - 控件选择决策树
 - [dialog.md](dialog.md) - 对话框规范（DInputDialog 用法）

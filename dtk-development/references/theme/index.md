@@ -17,8 +17,8 @@ DTK 主题系统涵盖视觉表现的各个方面：
 | builtin 图标列表与用法 | [builtin.md](builtin.md) |
 | icon theme 图标（XDG） | [icontheme.md](icontheme.md) |
 | 调色板（DPalette） | [palette.md](palette.md) |
-| 控件风格 API 与定制 | [style.md](style.md) |
-| QWidget 变色龙风格实现 | [chameleon-style.md](chameleon-style.md) |
+| 控件风格 API 与定制 | [Widget 控件风格](../widgets/style.md) |
+| QWidget/QML 共用的 Chameleon 风格概览 | [chameleon-style.md](chameleon-style.md) |
 | 监听亮暗主题切换 | [theme-switch.md](theme-switch.md) |
 
 ## 3. 主题类型
@@ -122,7 +122,7 @@ bool isXdg = DIconTheme::isXdgIcon(icon);
 ## 6. 相关文档
 
 - [palette.md](palette.md) — 调色板规范
-- [style.md](style.md) — 控件风格规范
+- [Widget 控件风格](../widgets/style.md) — 控件风格规范
 - [theme-switch.md](theme-switch.md) — 主题切换机制
 - [dci.md](dci.md) — dci 图标完整规范
 - [builtin.md](builtin.md) — builtin 图标列表与用法

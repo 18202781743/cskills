@@ -331,5 +331,5 @@ widget->setPalette(dp);
 ## 8. 相关文档
 
 - [index.md](index.md) - 主题系统总览（含图标）
-- [style.md](style.md) - DStyle 风格规范
+- [Widget 控件风格](../widgets/style.md) - DStyle 风格规范
 - [theme-switch.md](theme-switch.md) - 主题切换机制

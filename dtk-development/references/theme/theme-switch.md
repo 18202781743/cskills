@@ -45,4 +45,4 @@ DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightTy
 ## 4. 相关文档
 
 - [palette.md](palette.md) - 调色板规范
-- [style.md](style.md) - 风格规范
+- [Widget 控件风格](../widgets/style.md) - 风格规范

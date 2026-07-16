@@ -1,93 +1,201 @@
-# QWidget 变色龙风格实现
+# Chameleon 风格：QWidget 与 QML 共用概览
 
-## 1. 定位与分层
+## 1. Chameleon 是什么
 
-DTK 的 QWidget 风格由基础实现和 Qt 风格插件两层组成：
+Chameleon（变色龙）是 DTK 为两套 Qt UI 技术栈提供的统一视觉风格名称。DTK 同时实现了两个独立插件：
+
+| 技术栈 | 插件类型 | 实现项目 | 主要职责 |
+|---|---|---|---|
+| QWidget | Qt `QStylePlugin` | `qt5integration/styleplugins/chameleon/` | 通过 `DStyle`/`ChameleonStyle` 绘制 QWidget，计算尺寸、子区域和命中区域 |
+| QML | Qt Quick Controls 2 Style 插件 | `dtkdeclarative/chameleon/` | 把 Qt Quick Controls 的控件类型映射到 DTK QML 控件实现 |
+
+二者名称和设计语言相同，但不是同一份绘制代码，也不能相互替代。QWidget 使用 `QPainter` 和 `QStyleOption`；QML 使用 Qt Quick 的 Item、属性绑定、状态和场景图。
+
+```text
+                         DTK 主题与设计语义
+                    palette / DPalette / DCI / 字体
+                              │
+              ┌───────────────┴────────────────┐
+              │                                │
+    QWidget Chameleon                  QML Chameleon
+    QStylePlugin                       Qt Quick Controls 2 Style
+    DStyle → ChameleonStyle            *.qml → org.deepin.dtk 控件
+              │                                │
+         QWidget 应用                       QML 应用
+```
+
+## 2. 两套实现共用什么
+
+两套插件共同遵循 DTK 的视觉语义：
+
+- 使用主题调色板，而不是在应用中硬编码亮色和暗色；
+- 以 normal、hover、pressed、checked、disabled、focus 等状态选择背景和前景；
+- 使用 DTK 的圆角、间距、字体和图标规范；
+- DCI 图标可按 Light/Dark 主题和 Normal/Hover/Pressed/Disabled 模式切换；
+- 主题或 palette 更新后，控件应重新解析颜色并刷新。
+
+“共用”指设计语义、颜色体系、图标资源和用户体验保持一致，不表示 QWidget 与 QML 共用同一个插件 ABI 或同一个 paint 函数。
+
+## 3. 动态指定风格并进行对比调试
+
+调试风格问题时，优先在启动命令中临时指定插件。这样不需要修改代码，也能用同一份程序快速比较 Chameleon 与 Qt 内置风格。
+
+### 3.1 QWidget
+
+Qt 的通用 `-style` 参数可在本次运行中指定 `QStyle`：
+
+```bash
+./my-widget-app -style chameleon
+./my-widget-app -style fusion
+```
+
+也可以通过环境变量覆盖本次进程的 QWidget 风格：
+
+```bash
+QT_STYLE_OVERRIDE=chameleon ./my-widget-app
+QT_STYLE_OVERRIDE=fusion ./my-widget-app
+```
+
+代码中仍可使用 `QApplication::setStyle("chameleon")`，但应在创建普通控件前调用。对比调试更推荐命令行或环境变量，因为不会把诊断设置提交到业务代码。
+
+可以输出实际加载结果和可用键名：
+
+```cpp
+qInfo() << "current style:" << QApplication::style()->objectName();
+qInfo() << "available styles:" << QStyleFactory::keys();
+```
+
+### 3.2 QML / Qt Quick Controls 2
+
+QML 风格可通过环境变量动态指定：
+
+```bash
+QT_QUICK_CONTROLS_STYLE=Chameleon ./my-qml-app
+QT_QUICK_CONTROLS_STYLE=Basic ./my-qml-app
+QT_QUICK_CONTROLS_STYLE=Fusion ./my-qml-app
+```
+
+Qt Quick Controls 也支持启动参数，可用于临时对比：
+
+```bash
+./my-qml-app -style Chameleon
+./my-qml-app -style Basic
+```
+
+代码方式为 `QQuickStyle::setStyle("Chameleon")`。必须在加载 QML、创建第一个 Qt Quick Controls 控件之前调用；风格一旦完成初始化，就不适合在同一进程中切换。需要对比时应分别启动进程。
+
+### 3.3 插件未加载时
+
+先打开 Qt 插件诊断：
+
+```bash
+QT_DEBUG_PLUGINS=1 ./my-widget-app -style chameleon
+QT_DEBUG_PLUGINS=1 QT_QUICK_CONTROLS_STYLE=Chameleon ./my-qml-app
+```
+
+重点检查：
+
+- QWidget：输出中是否扫描到包含 Chameleon 的 Qt `styles` 插件目录；
+- QML：QML import path 中是否存在 Chameleon 模块和 `qmldir`；
+- 应用使用的 Qt 主版本、架构和构建配置是否与插件一致；
+- 对比测试时是否被代码中的 `setStyle()` 或其他启动脚本再次覆盖。
+
+### 3.4 修改 palette 不生效时的对比方法
+
+如果应用已经调用 `setPalette()` 或 `DPaletteHelper::setPalette()`，但控件背景、前景或状态色没有变化，可用同一程序临时切换到非 Chameleon 风格：
+
+```bash
+# QWidget：保持业务代码和 palette 设置不变，只替换风格
+./my-widget-app -style chameleon
+./my-widget-app -style fusion
+```
+
+如果 palette 在 Fusion 等风格下生效、在 Chameleon 下不生效，通常说明该控件的 Chameleon 绘制分支没有读取这个 palette role、使用了另一个 `DPalette::ColorType`，或者被 DCI/专用绘制逻辑覆盖。此时应对照 `chameleonstyle.cpp` 中对应的 `drawPrimitive()`、`drawControl()` 或 `drawComplexControl()` 分支确认实际颜色来源，而不是继续在应用层重复设置同一角色。
+
+反之，如果切换到 Fusion 后仍不生效，应优先检查：palette 是否设置到了真正参与绘制的内部控件、是否被 model/delegate 或 Style Sheet 覆盖，以及 Active/Inactive/Disabled 颜色组是否正确。
+
+QML 也可以保持 palette 绑定不变，分别以 `QT_QUICK_CONTROLS_STYLE=Chameleon` 和 `QT_QUICK_CONTROLS_STYLE=Basic` 启动两个进程对比。由于两种风格的控件实现可能读取不同属性，对比结果用于定位问题层级，不代表所有 palette role 必须在不同风格中产生完全相同的视觉效果。
+
+若测试未安装的本地构建，可临时设置精确的 `QT_PLUGIN_PATH` 或 `QML2_IMPORT_PATH`。不要把整个系统目录永久加入这些变量，否则可能加载到另一 Qt 版本的插件。
+
+## 4. QWidget Chameleon
+
+### 4.1 实现结构
 
 ```text
 QCommonStyle
-└── DStyle                         dtkwidget：DTK 扩展协议与公共实现
-    └── ChameleonStyle             qt5integration：DDE 控件外观与交互实现
+└── DStyle                         dtkwidget
+    └── ChameleonStyle             qt5integration
 
 QStylePlugin
 └── ChameleonStylePlugin
     └── create("chameleon") → ChameleonStyle
 ```
 
-`DStyle` 不负责注册 Qt 插件。它扩展 `QStyle` 的元素、度量、图标和状态颜色，并为 DTK 控件提供统一绘制接口。`ChameleonStyle` 继承 `DStyle`，实现标准 QWidget 和 DTK 控件在 DDE 中的具体外观、布局、动画及平台窗口效果。
+`ChameleonStylePlugin` 的键名为小写 `chameleon`，安装在 Qt styles 插件目录。Deepin 平台主题把它作为 QWidget 首选风格，`DApplication` 在需要时也会主动选择该风格。
 
-## 2. 插件注册与启用
+`DStyle` 提供 DTK 扩展元素、度量、标准图标和状态画刷；`ChameleonStyle` 实现 `drawPrimitive()`、`drawControl()`、`drawComplexControl()`、布局、命中测试、动画以及 widget polish。
 
-`qt5integration/styleplugins/chameleon/main.cpp` 中的 `ChameleonStylePlugin` 继承 `QStylePlugin`，使用 Qt 的 `QStyleFactoryInterface` 插件接口。`chameleon.json` 声明键名 `chameleon`，插件仅在 `create()` 收到该键名时创建 `ChameleonStyle`。
+### 4.2 详细文档
 
-插件通过 `dtk_add_plugin` 构建，依赖 `Dtk::Widget` 以及 Qt Core、Gui、Widgets 的私有接口，并安装到 Qt 的 `styles` 插件目录。Qt 因而可以通过 `QStyleFactory` 或 `QApplication::setStyle("chameleon")` 加载它。
+Widget 控件的背景、前景、hover/pressed/checked 状态组合以及图标、文字、箭头等绘制区域，统一放在：
 
-Deepin 平台主题的 `QDeepinTheme::themeHint(QPlatformTheme::StyleNames)` 按 `chameleon`、`fusion` 的顺序提供候选风格。未运行在 Deepin 平台主题环境时，`DApplication` 主动设置 `chameleon`，使 DTK 应用仍使用相同的 QWidget 风格。
+- [Widget ChameleonStyle 控件绘制指南](../widgets/style.md)
 
-## 3. DStyle 基础层
+## 5. QML Chameleon
 
-### 3.1 DTK 风格协议
+### 5.1 插件结构
 
-`DStyle` 继承 `QCommonStyle`，在 Qt 标准风格枚举之外定义 DTK 专用的：
+`dtkdeclarative/chameleon/` 是 Qt Quick Controls 2 style 模块。它包含插件类 `QtQuickControls2ChameleonStylePlugin`、`qmldir` 和一组与 Qt Quick Controls 同名的 QML 文件，例如：
 
-- 绘制元素，例如项目背景、图标按钮、开关按钮和浮动控件；
-- 像素度量，例如圆角、阴影和焦点边框宽度；
-- 标准图标，例如窗口按钮、增减按钮和状态指示图标；
-- 子元素、内容类型及控件状态标志。
+- `Button.qml`、`CheckBox.qml`、`RadioButton.qml`、`Switch.qml`；
+- `TextField.qml`、`TextArea.qml`、`ComboBox.qml`、`SpinBox.qml`；
+- `Slider.qml`、`ProgressBar.qml`、`ScrollBar.qml`；
+- `Menu.qml`、`MenuItem.qml`、`Popup.qml`、`ToolTip.qml`；
+- `ApplicationWindow.qml`、`Control.qml`、`Pane.qml`、`Frame.qml`。
 
-DTK 控件通过 `DStylePainter`、`DStyleHelper` 或 `DStyle` 静态辅助函数请求绘制、颜色、图标和尺寸，不直接依赖 `ChameleonStyle`。例如 `DIconButton`、`DSwitchButton` 和 `DFloatingWidget` 分别请求对应的 DTK `ControlElement`，具体绘制由当前应用风格完成。
+这些文件不是把 QWidget 的 ChameleonStyle 包装到 QML。例如 `Button.qml` 直接实例化 `org.deepin.dtk` 模块中的 `D.Button`，`Control.qml` 直接实例化 `D.Control`。实际背景、contentItem、indicator、状态绑定和 palette 逻辑由 dtkdeclarative 的 DTK QML 控件实现。
 
-### 3.2 兼容普通 QStyle
+### 5.2 模块名称与 Qt 版本差异
 
-`DStyleHelper::setStyle()` 尝试把当前风格转换为 `DStyle`：
+源码体现了两种构建路径：
 
-- 当前风格是 `DStyle` 子类时，分发到该对象的虚函数；
-- 当前风格是普通 `QStyle` 时，使用 `DStyle` 的静态公共实现，并把该 `QStyle` 作为标准绘制后端。
+- DTK5 路径安装到 `QtQuick/Controls.2/Chameleon`，`qmldir.in` 声明 `module QtQuick.Controls.Chameleon`；
+- 非 DTK5 路径使用 `qt_add_qml_module()` 构建 URI 为 `Chameleon` 的模块；
+- 启用 `QQuickStylePlugin` 私有接口时，插件的 `name()` 返回大小写敏感的 `Chameleon`。
 
-这一层隔离使 DTK 控件可以使用扩展风格能力，同时保留与其他 Qt 风格的兼容路径。
+因此不要把 QWidget 的键名 `chameleon` 与 QML 风格名 `Chameleon` 混淆。
 
-### 3.3 状态与颜色生成
+### 5.3 启用方式
 
-`DStyle` 把 `QStyleOption::state` 转换为普通、悬停、按下等基础状态，并附加选中、勾选和焦点标志。禁用状态主要由调色板的颜色组表达；控件未启用 `WA_Hover` 时，不采用悬停状态。
+QML 应用应在加载第一个 Qt Quick Controls 之前选择风格，例如通过 Qt Quick Controls 支持的环境变量或 `QQuickStyle::setStyle("Chameleon")`。具体可用模块路径取决于 Qt/DTK 构建版本及安装位置。
 
-颜色计算同时支持 Qt 的 `QPalette::ColorRole` 和 DTK 的 `DPalette::ColorType`。`generatedBrush()` 根据颜色组与控件状态生成最终画刷，对悬停、按下等状态进行亮度、透明度或高亮色混合处理。完整链路为：
+选择 Chameleon 后，应用仍使用标准 Qt Quick Controls 类型，style 模块负责解析到对应的 QML 文件。直接使用 `org.deepin.dtk` 控件时，则已经进入 DTK QML 控件实现，不需要借助 QWidget 的 `QApplication::setStyle()`。
 
-```text
-主题或应用调色板
-→ QPalette / DPalette
-→ QStyleOption 状态
-→ DStyle::generatedBrush()
-→ 风格绘制
-```
+## 6. 不能混用的 API
 
-## 4. ChameleonStyle 具体实现
+| QWidget | QML |
+|---|---|
+| `QApplication::setStyle("chameleon")` | `QQuickStyle::setStyle("Chameleon")` |
+| `QStyleOption::state` | QML 控件的 `hovered`、`pressed`、`checked`、`enabled`、`visualFocus` 等属性 |
+| `QPalette` / `DPaletteHelper` | QML Palette、颜色选择器和属性绑定 |
+| `drawControl()` / `QPainter` | `background`、`contentItem`、`indicator`、场景图节点 |
+| `subControlRect()` | anchors、implicit size、padding/inset 和布局绑定 |
 
-`ChameleonStyle` 重写 `drawPrimitive()`、`drawControl()`、`drawComplexControl()`、`subElementRect()`、`subControlRect()`、`hitTestComplexControl()`、`sizeFromContents()`、`pixelMetric()`、`styleHint()`、`polish()` 和 `unpolish()`，统一处理绘制、布局、命中测试、尺寸、度量和控件初始化。
+QML 页面不能调用 `QStyle::drawControl()` 获得 QML Chameleon 外观；QWidget 也不能导入 QML style 文件替代 `QStylePlugin`。
 
-其覆盖范围包括按钮、复选框、单选框、输入框、组合框、SpinBox、滑块、滚动条、菜单、标签页、项目视图、进度条、工具按钮、表头、工具提示、日历和分组框等标准 QWidget。未专门处理的元素回落到 `DStyle`，再由 `QCommonStyle` 完成标准兜底。
+## 7. 排查顺序
 
-`ChameleonStyle::getColor()` 根据传入角色选择颜色来源：Qt 标准角色直接读取 `QStyleOption` 的 `QPalette`；DTK 语义色通过 `DPaletteHelper` 获取控件对应的 `DPalette`。两条路径最终都交给 `DStyle` 的状态画刷生成逻辑，因此标准控件与 DTK 控件共享主题状态规则。
+1. 先确认应用是 QWidget 还是 Qt Quick Controls；
+2. QWidget 检查 `QApplication::style()->objectName()`、Qt styles 插件目录和平台主题；
+3. QML 检查风格是否在创建控件前设置、QML import path 中是否存在 Chameleon 模块；
+4. 仅颜色不一致时，检查应用 palette、主题类型和控件局部 palette 覆盖；
+5. 仅某一技术栈异常时，到对应插件源码排查，不要在另一套 Chameleon 实现中修复。
 
-## 5. 动画与平台窗口效果
+## 8. 相关文档
 
-风格维护以控件对象为键的动画实例。菜单选中项使用 `ChameleonMovementAnimation` 在矩形位置间过渡；进度、数值、混合和滚动条效果分别由 `DProgressStyleAnimation`、`DNumberStyleAnimation`、`DBlendStyleAnimation` 和 `DScrollbarStyleAnimation` 实现。
-
-`polish(QWidget *)` 为需要状态反馈的按钮、组合框、滚动条、SpinBox、TabBar 和项目视图视口启用悬停属性，平板环境下关闭悬停行为。它还为菜单、组合框弹出窗口和工具提示配置透明、圆角、模糊与边框等平台属性，并对日历进行专门的布局和视觉初始化。相关窗口能力通过 `DPlatformWindowHandle`、`DPlatformTheme`、`DWindowManagerHelper` 和 `DGuiApplicationHelper` 接入；`unpolish()` 负责恢复风格设置的属性。
-
-## 6. 源码入口
-
-| 职责 | 源码 |
-|------|------|
-| DTK 风格协议、公共绘制与颜色生成 | `dtkwidget/include/widgets/dstyle.h`、`dtkwidget/src/widgets/dstyle.cpp` |
-| 变色龙风格声明与实现 | `qt5integration/styleplugins/chameleon/chameleonstyle.h`、`chameleonstyle.cpp` |
-| 动画实现 | `qt5integration/styleplugins/chameleon/dstyleanimation.h`、`dstyleanimation.cpp` |
-| 插件入口与元数据 | `qt5integration/styleplugins/chameleon/main.cpp`、`chameleon.json` |
-| 插件构建安装 | `qt5integration/styleplugins/chameleon/CMakeLists.txt` |
-| 平台主题风格候选 | `qt5integration/platformthemeplugin/qdeepintheme.cpp` |
-| 非 Deepin 平台主题下的启用逻辑 | `dtkwidget/src/widgets/dapplication.cpp` |
-
-## 7. 相关文档
-
-- [style.md](style.md) - DStyle API 与控件风格用法
-- [palette.md](palette.md) - DPalette 语义色与状态配色
-- [../platform-abstraction.md](../platform-abstraction.md) - 窗口效果与平台抽象
+- [Widget ChameleonStyle 控件绘制指南](../widgets/style.md)
+- [palette.md](palette.md) — DTK 语义色和 palette
+- [theme-switch.md](theme-switch.md) — 主题切换
+- [dci.md](dci.md) — DCI 图标主题与状态
+- [QML 控件索引](../declarative/index.md)
