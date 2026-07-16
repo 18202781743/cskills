@@ -238,7 +238,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 
 ## 模块 3：declarative（QML 控件）— 来源 dtkdeclarative
 
-**参考文档：** `references/declarative/index.md`, `references/declarative/buttons.md`, `references/declarative/inputs.md`, `references/declarative/menus.md`, `references/declarative/dialogs.md`, `references/declarative/panels.md`, `references/declarative/lists.md`, `references/declarative/progress.md`, `references/declarative/color-selector.md`, `references/declarative/dci-icon.md`, `references/declarative/effects.md`
+**参考文档：** `references/declarative/index.md`, `references/declarative/buttons.md`, `references/declarative/inputs.md`, `references/declarative/menus.md`, `references/declarative/dialogs.md`, `references/declarative/panels.md`, `references/declarative/lists.md`, `references/declarative/progress.md`, `references/declarative/color-selector.md`, `references/declarative/dci-icon.md`, `references/declarative/effects.md`, `references/declarative/style.md`
 
 **源码位置：** `~/dtk/dtkdeclarative/qmlplugin/`（Qt5）+ `~/dtk/dtkdeclarative/qt6/`（Qt6）+ `~/dtk/dtkdeclarative/src/qml/`
 
@@ -263,6 +263,10 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 | 3.17 | `DciIcon` 属性 `retainWhileLoading`(bool) 存在（Qt >= 6.8.0） | grep Q_PROPERTY | `dquickdciiconimage_p.h` |
 | 3.18 | `D.DTK.makeIconPalette()` 函数在 QML 全局对象中存在，接收 `palette` 参数（Qt5: QPalette，Qt6: QQuickPalette*） | grep `makeIconPalette` | `dqmlglobalobject_p.h` + `dqmlglobalobject.cpp` |
 | 3.19 | `makeIconPalette` 实现正确映射：foreground←WindowText, background←Window, highlight←Highlight, highlightForeground←HighlightedText | 核对实现 | `dqmlglobalobject.cpp` |
+| 3.20 | 样式子模块 URI 由主 URI 派生为 `org.deepin.dtk.style`，`Style` 以 1.0 单例注册 | 核对 `registerTypes()` 与 `dtkStyleRegisterSingletonType()` | `qmlplugin/qmlplugin_plugin.cpp` |
+| 3.21 | `Style.qml` 使用 `pragma Singleton`，默认根对象为 `FlowStyle {}` | 对照文件内容 | `src/qml/style/Style.qml` |
+| 3.22 | DTK 控件通过 `import org.deepin.dtk.style 1.0 as DS` 和 `DS.Style.*` 消费样式 | 抽查高频控件 | `src/qml/Button.qml`, `TextField.qml`, `ComboBox.qml` |
+| 3.23 | 应用覆盖说明与固定资源 URL `qrc:/dtk/declarative/qml/style/Style.qml` 一致 | 核对注册函数及 qrc 前缀 | `qmlplugin/qmlplugin_plugin.cpp`, `src/dtkdeclarative_qml.qrc` |
 
 ---
 

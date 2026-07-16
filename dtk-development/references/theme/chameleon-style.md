@@ -172,7 +172,11 @@ QML 应用应在加载第一个 Qt Quick Controls 之前选择风格，例如通
 
 选择 Chameleon 后，应用仍使用标准 Qt Quick Controls 类型，style 模块负责解析到对应的 QML 文件。直接使用 `org.deepin.dtk` 控件时，则已经进入 DTK QML 控件实现，不需要借助 QWidget 的 `QApplication::setStyle()`。
 
-## 6. 不能混用的 API
+## 6. QML 样式数据定制
+
+QML Chameleon 插件负责控件类型映射；DTK 控件内部还通过 `org.deepin.dtk.style` URI 的 `Style` 单例读取尺寸和状态调色板。默认数据由 `FlowStyle.qml` 提供，应用覆盖 `Style.qml` 的资源路径、示例及调试方法见 [QML Style 单例与应用级样式覆盖](../declarative/style.md)。
+
+## 7. 不能混用的 API
 
 | QWidget | QML |
 |---|---|
@@ -184,7 +188,7 @@ QML 应用应在加载第一个 Qt Quick Controls 之前选择风格，例如通
 
 QML 页面不能调用 `QStyle::drawControl()` 获得 QML Chameleon 外观；QWidget 也不能导入 QML style 文件替代 `QStylePlugin`。
 
-## 7. 排查顺序
+## 8. 排查顺序
 
 1. 先确认应用是 QWidget 还是 Qt Quick Controls；
 2. QWidget 检查 `QApplication::style()->objectName()`、Qt styles 插件目录和平台主题；
@@ -192,7 +196,7 @@ QML 页面不能调用 `QStyle::drawControl()` 获得 QML Chameleon 外观；QWi
 4. 仅颜色不一致时，检查应用 palette、主题类型和控件局部 palette 覆盖；
 5. 仅某一技术栈异常时，到对应插件源码排查，不要在另一套 Chameleon 实现中修复。
 
-## 8. 相关文档
+## 9. 相关文档
 
 - [Widget ChameleonStyle 控件绘制指南](../widgets/style.md)
 - [palette.md](palette.md) — DTK 语义色和 palette

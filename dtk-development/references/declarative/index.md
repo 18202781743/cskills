@@ -85,6 +85,7 @@ ApplicationWindow {
 
 ## 5. 相关文档
 
+- [style.md](style.md) — Style 单例、FlowStyle 默认实现与应用级覆盖
 - [color-selector.md](color-selector.md) — ColorSelector 取色器与 Palette 调色板
 - [dci-icon.md](dci-icon.md) — QML 中使用 dci 图标
 - [effects.md](effects.md) — QML 视觉效果（模糊/光晕/叠加/遮罩）
