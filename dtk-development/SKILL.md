@@ -48,3 +48,20 @@ DTK 是深度桌面环境的核心开发框架，覆盖应用界面与交互、�
 - **DStyledItemDelegate 列表项** → [widgets/item-delegate.md](references/widgets/item-delegate.md)
 - **DProgressBar 进度条** → [widgets/progress.md](references/widgets/progress.md)
 - **DInputDialog 输入对话框** → [widgets/dialog.md](references/widgets/dialog.md)
+
+## Evals 测试用例
+
+验证 skill 有效性的测试用例，共 77 个，按 references 目录分类组织。详见 [evals/README.md](evals/README.md)。
+
+| 前缀 | 目录 | 覆盖范围 | 数量 |
+|------|------|----------|------|
+| W- | evals/widgets/ | QWidget 控件 | 29 |
+| Q- | evals/declarative/ | QML 控件 | 12 |
+| T- | evals/theme/ | 主题系统 | 7 |
+| C- | evals/config/ | DConfig 配置 | 4 |
+| U- | evals/utilities/ | 工具类 | 6 |
+| D- | evals/debugging/ | 调试场景 | 5 |
+| X- | evals/custom-controls/ | 自定义控件 | 6 |
+| P- | evals/project-setup/ | 工程配置 | 1 |
+| A- | evals/architecture/ | 架构理解 | 4 |
+| L- | evals/platform/ | 平台抽象 | 3 |
