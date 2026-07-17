@@ -5,7 +5,7 @@
 dtkcore 通过 `DLogManager` 提供便捷的日志初始化。直接使用 Qt 的 `qDebug()`/`qInfo()`/`qWarning()`/`qCritical()` 宏即可。
 
 ```cpp
-#include <DLogManager>
+#include <DLog>
 
 // 一行初始化
 DLogManager::registerConsoleAppender();   // 输出到控制台
@@ -49,7 +49,7 @@ DLogManager 构造
 ### 使用 qDebug 示例
 
 ```cpp
-#include <DLogManager>
+#include <DLog>
 #include <QDebug>
 
 int main(int argc, char *argv[]) {
