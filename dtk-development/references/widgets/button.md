@@ -34,7 +34,8 @@ connect(saveBtn, &DSuggestButton::clicked, this, &MyClass::save);
 ```cpp
 #include <DWarningButton>
 
-auto *deleteBtn = new DWarningButton("删除", this);
+auto *deleteBtn = new DWarningButton(this);
+deleteBtn->setText("删除");
 connect(deleteBtn, &DWarningButton::clicked, this, &MyClass::remove);
 ```
 
