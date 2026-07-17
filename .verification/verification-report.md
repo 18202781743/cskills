@@ -595,7 +595,7 @@
 
 ### U-005: 日志管理 ✅ PASS
 **验证要点**:
-- [x] `#include <DLogManager>`
+- [x] `#include <DLog>`
 - [x] `registerConsoleAppender()`
 - [x] `registerFileAppender()`
 

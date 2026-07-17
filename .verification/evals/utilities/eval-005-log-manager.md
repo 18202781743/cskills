@@ -9,6 +9,6 @@
 
 ## 验证要点
 
-- [ ] #include <DLogManager>
+- [ ] #include <DLog>
 - [ ] registerConsoleAppender()
 - [ ] registerFileAppender()
