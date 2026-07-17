@@ -18,7 +18,7 @@
 ```cpp
 #include <DDBusSender>
 
-// Session Bus 调用
+// Session Bus 调用（无参数）
 DDBusSender()
     .service("org.deepin.dde.Launcher1")
     .path("/org/deepin/dde/Launcher1")
@@ -26,20 +26,20 @@ DDBusSender()
     .method("Show")
     .call();
 
-// 带参数调用
+// 发送系统通知（Notify 方法完整示例）
 DDBusSender()
     .service("org.freedesktop.Notifications")
     .path("/org/freedesktop/Notifications")
     .interface("org.freedesktop.Notifications")
     .method("Notify")
-    .arg(appName)
-    .arg(replaceId)
-    .arg(appIcon)
-    .arg(summary)
-    .arg(body)
-    .arg(actions)
-    .arg(hints)
-    .arg(timeout)
+    .arg(QString("MyApp"))           // app_name
+    .arg(0U)                          // replaces_id
+    .arg(QString("dialog-information")) // app_icon
+    .arg(QString("通知标题"))          // summary
+    .arg(QString("通知内容"))          // body
+    .arg(QStringList())               // actions
+    .arg(QVariantMap())               // hints
+    .arg(5000)                        // expire_timeout
     .call();
 
 // System Bus 调用
@@ -177,6 +177,16 @@ DDBusSender().service("org.freedesktop.login1")... // 默认 session bus
 
 // ✅ 正确
 DDBusSender::system().service("org.freedesktop.login1")...
+```
+
+### 错误 3：arg() 使用 C 字符串
+
+```cpp
+// ❌ 错误：C 字符串会被推导为 const char*
+.arg("标题")
+
+// ✅ 正确：显式使用 QString
+.arg(QString("标题"))
 ```
 
 ## 7. 相关文档
