@@ -16,17 +16,6 @@ dde-shell 是 DDE 桌面环境的 Shell 核心，负责 Dock、顶栏、侧栏�
 | 使用 LayerShell 锚定窗口 | [layershell.md](layershell.md) |
 | 查找 C++ 和 QML API | [api/index.md](api/index.md) |
 
-## Evals 测试
+## Evals 测试用例
 
-验证 skill 有效性的测试用例，按 references 目录分类组织，见 [evals/README.md](evals/README.md)。
-
-### 测试分类
-
-| 目录 | 覆盖范围 | 数量 |
-|------|----------|------|
-| plugin-development/ | 插件开发流程 | 6 |
-| api/ | C++ API 使用 | 4 |
-| qml-api/ | QML API 使用 | 4 |
-| layershell/ | LayerShell 窗口 | 5 |
-
-**总计**: 19 个 evals
+验证 skill 有效性的测试用例，共 19 个，按功能模块分类组织。详见 [evals/README.md](evals/README.md)。
