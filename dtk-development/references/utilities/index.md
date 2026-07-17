@@ -1,5 +1,25 @@
 # 工具类与核心类
 
+## 触发关键词
+
+本文档适用于以下任务场景：
+
+**自然语言描述：**
+- 获取系统信息/系统版本
+- DBus通信/进程间通信
+- 窗口管理器特性
+- 打开文件/打开URL
+- 日志管理/单实例
+- 拼音转换/文件系统工具
+
+**API 接口描述：**
+- DSysInfo / DDBusSender / DWindowManagerHelper
+- DDesktopServices / DLogManager / DSingleton
+
+---
+
+## 概述
+
 DTK 工具类与核心类提供主题系统、字体管理、系统信息、DBus 通信、窗口管理、日志、单实例等跨项目通用功能，主要来自 dtkcore/dtkgui/dtkwidget。
 
 ## 类索引
@@ -42,11 +62,8 @@ DTK 工具类与核心类提供主题系统、字体管理、系统信息、DBus
     ├─ 日志？
     │   └─ DLogManager → [log.md](log.md)
     │
-    ├─ 单实例/进程间通信？
-    │   └─ DSingleton → [singleton.md](singleton.md)
-    │
-    └─ 拼音/文件系统/通知？
-        └─ DUtil → [util.md](util.md)
+    └─ 单实例/进程间通信？
+        └─ DSingleton → [singleton.md](singleton.md)
 ```
 
 ## 相关文档

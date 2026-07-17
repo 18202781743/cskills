@@ -1,22 +1,5 @@
 # DStyledItemDelegate 列表项委托
 
-## 触发关键词
-
-本文档适用于以下任务场景：
-
-**自然语言描述：**
-- 自定义列表项外观/样式
-- 列表项圆角背景
-- 列表项添加操作按钮
-- 列表项嵌入自定义控件
-- 列表项特殊背景色/文字颜色
-
-**API 接口描述：**
-- DStyledItemDelegate
-- DStandardItem
-- DViewItemAction
-- 列表项委托/delegate
-
 ## 1. 概述与适用场景
 
 `DStyledItemDelegate`（dtkwidget）提供 DTK 风格的列表项绘制。配合 DListView/DTreeView 使用，提供圆角背景、间距、统一项大小等 DTK 样式。
