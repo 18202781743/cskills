@@ -23,13 +23,12 @@ DTK 是深度桌面环境的核心开发框架，覆盖应用界面与交互、�
 
 ## 高频场景直达
 
-- **自定义控件使用主题图标** → [theme/palette.md](references/theme/palette.md)
-- **QML 中显示 dci 图标** → [declarative/dci-icon.md](references/declarative/dci-icon.md)
-- **DGuiApplicationHelper 主题/调色板** → [utilities.md](references/utilities.md)
-- **DBlurEffectWidget 模糊效果** → [widgets/blur-effect.md](references/widgets/blur-effect.md)
-- **DStyledItemDelegate 列表项** → [widgets/item-delegate.md](references/widgets/item-delegate.md)
-- **QML D.DTK 全局对象** → [declarative/dtk-global.md](references/declarative/dtk-global.md)
+- **自定义控件绘制** → [widgets/style.md](references/widgets/style.md)
 - **QML ColorSelector 取色器** → [declarative/color-selector.md](references/declarative/color-selector.md)
+- **DPalette 调色板** → [theme/palette.md](references/theme/palette.md)
+- **DCI 图标** → [theme/dci.md](references/theme/dci.md)
+- **QWidget Chameleon 风格** → [widgets/chameleon.md](references/widgets/chameleon.md)
+- **QML Chameleon 风格** → [declarative/chameleon.md](references/declarative/chameleon.md)
 
 ## Evals 测试用例
 

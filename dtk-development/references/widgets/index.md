@@ -1,34 +1,21 @@
-# QWidget 控件概览
-
-DTK 提供丰富的 QWidget 控件，本文档提供控件选择决策和核心 API 速查。
+# QWidget 控件选择决策树
 
 ## 触发关键词
 
 创建对话框/主窗口/按钮、控件选择、输入框/下拉框/开关按钮、列表视图/树形视图、进度条/滑动条/消息提示
 
-## 控件选择决策树
+## 快速决策树
 
 ```
 需要什么类型的控件？
     │
-    ├─ 对话框 → DDialog（简单交互）、DInputDialog（输入）、DFileDialog（文件选择）
-    │
-    ├─ 窗口 → DMainWindow（主窗口）、DTitlebar（标题栏）
-    │
-    ├─ 按钮 → 推荐样式？→ DSuggestButton
-    │         警告样式？→ DWarningButton
-    │         仅图标？→ DIconButton
-    │         开关？→ DSwitchButton
-    │         按钮组？→ DButtonBox
-    │
-    ├─ 输入 → DLineEdit（单行）、DSearchEdit（搜索）、DPasswordEdit（密码）
-    │         DTextEdit（多行）、DSpinBox（数值）、DComboBox（下拉）
-    │
-    ├─ 视图 → DListView（列表）、DTreeView（树形）、DStyledItemDelegate（项委托）
-    │
-    └─ 其他 → DProgressBar（进度）、DSlider（滑动）、DMessageManager（消息）
+    ├─ 对话框 → DDialog / DInputDialog / DFileDialog
+    ├─ 窗口 → DMainWindow / DTitlebar
+    ├─ 按钮 → DSuggestButton / DWarningButton / DIconButton / DSwitchButton
+    ├─ 输入 → DLineEdit / DSearchEdit / DPasswordEdit / DSpinBox
+    ├─ 视图 → DListView / DTreeView / DStyledItemDelegate
+    └─ 其他 → DProgressBar / DSlider / DMessageManager
 ```
-
 
 ## 详细文档
 
@@ -40,4 +27,5 @@ DTK 提供丰富的 QWidget 控件，本文档提供控件选择决策和核心 
 | [window.md](window.md) | DMainWindow/DTitlebar |
 | [item-delegate.md](item-delegate.md) | DStyledItemDelegate 列表项 |
 | [blur-effect.md](blur-effect.md) | DBlurEffectWidget |
-| [style.md](style.md) | DStyle/ChameleonStyle 自定义绘制 |
+| [style.md](style.md) | DStyle 控件绘制指南 |
+| [chameleon.md](chameleon.md) | QWidget Chameleon 风格 |
