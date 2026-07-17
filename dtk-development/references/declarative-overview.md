@@ -202,3 +202,14 @@ D.Button {
 
 - [widgets-overview.md](widgets-overview.md) — QWidget 控件
 - [theme-system.md](theme-system.md) — 主题系统
+
+---
+
+## 详细参考
+
+| 文档 | 内容 |
+|------|------|
+| [declarative-color-selector.md](declarative-color-selector.md) | Palette/ColorSelector 取色器 |
+| [declarative-dci-icon.md](declarative-dci-icon.md) | QML 中使用 dci 图标 |
+| [declarative-dtk-global.md](declarative-dtk-global.md) | D.DTK 全局对象 |
+| [declarative-dialogs.md](declarative-dialogs.md) | DialogWindow/AboutDialog |

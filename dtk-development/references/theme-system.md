@@ -218,3 +218,13 @@ DStyle::SP_ArrowEnter
 
 - [widgets-overview.md](widgets-overview.md) — 控件颜色定制
 - [declarative-overview.md](declarative-overview.md) — QML ColorSelector
+
+---
+
+## 详细参考
+
+| 文档 | 内容 |
+|------|------|
+| [theme-palette.md](theme-palette.md) | DPalette/DPaletteHelper 完整 API |
+| [theme-dci.md](theme-dci.md) | DDciIcon 图标格式与动画 |
+| [theme-chameleon.md](theme-chameleon.md) | QWidget/QML Chameleon 风格 |

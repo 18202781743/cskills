@@ -188,3 +188,17 @@ DMessageManager::instance()->sendMessage(widget, DFloatingMessage::ResidentType,
 
 - [theme-system.md](theme-system.md) — 主题、调色板、DCI 图标
 - [platform-integration.md](platform-integration.md) — 窗口装饰
+
+---
+
+## 详细参考
+
+| 文档 | 内容 |
+|------|------|
+| [widgets-button.md](widgets-button.md) | 按钮类型、DCI 图标、颜色定制 |
+| [widgets-dialog.md](widgets-dialog.md) | DDialog/DInputDialog/DFileDialog |
+| [widgets-input.md](widgets-input.md) | DLineEdit/DSearchEdit/DPasswordEdit |
+| [widgets-window.md](widgets-window.md) | DMainWindow/DTitlebar |
+| [widgets-item-delegate.md](widgets-item-delegate.md) | DStyledItemDelegate 列表项 |
+| [widgets-blur-effect.md](widgets-blur-effect.md) | DBlurEffectWidget |
+| [widgets-style.md](widgets-style.md) | DStyle/ChameleonStyle 自定义绘制 |
