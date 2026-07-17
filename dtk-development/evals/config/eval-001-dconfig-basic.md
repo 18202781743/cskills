@@ -2,7 +2,7 @@
 
 ## 任务
 
-使用 DConfig 存储应用配置，要求：
+使用配置系统存储应用设置，要求：
 1. appId 为 "com.example.myapp"
 2. 读取键值 "window-width"，默认值 800
 3. 写入新值 1024

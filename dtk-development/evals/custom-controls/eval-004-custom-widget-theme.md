@@ -12,3 +12,7 @@
 - [ ] 连接 DGuiApplicationHelper::themeTypeChanged 信号
 - [ ] 使用 DPalette::ColorType 获取语义颜色
 - [ ] 在 paintEvent 中使用 DStyleHelper 或 DPaletteHelper
+
+## 参考
+
+参见 [调色板规范](../../../references/theme/palette.md) 了解主题感知的实现方式。

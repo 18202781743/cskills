@@ -12,3 +12,7 @@
 - [ ] #include <DListView>
 - [ ] 使用 DStandardItem 设置项
 - [ ] setSelectionMode(QAbstractItemView::SingleSelection)
+
+## 参考
+
+参见 [视图控件](../../../references/widgets/view.md) 了解 DListView 的用法。

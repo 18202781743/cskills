@@ -2,7 +2,7 @@
 
 ## 任务
 
-使用 DPlatformHandle 设置窗口圆角：
+为窗口设置圆角效果：
 1. 为 QWindow 设置 10px 圆角
 2. 同时设置边框宽度和颜色
 3. 确保在 X11 和 Wayland 上都能工作

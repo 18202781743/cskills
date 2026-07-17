@@ -2,7 +2,7 @@
 
 ## 任务
 
-使用 DSettingsDialog 创建设置界面：
+创建应用设置界面：
 1. 加载 JSON 配置
 2. 使用 DConfig 后端
 3. 处理设置变更

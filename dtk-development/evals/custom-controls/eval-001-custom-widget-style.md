@@ -13,3 +13,7 @@
 - [ ] 使用 style()->drawPrimitive() 绘制背景
 - [ ] 使用 DStyle::PE_ItemBackground 图元
 - [ ] 使用 DPaletteHelper 获取主题感知颜色
+
+## 参考
+
+参见 [样式系统](../../../references/widgets/style.md) 了解自定义绘制的正确方式。

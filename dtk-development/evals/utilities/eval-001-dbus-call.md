@@ -2,7 +2,7 @@
 
 ## 任务
 
-使用 DDBusSender 调用 DBus 方法，要求：
+调用 DBus 方法实现进程间通信，要求：
 1. 服务名 "com.deepin.SessionManager"
 2. 路径 "/com/deepin/SessionManager"
 3. 接口 "com.deepin.SessionManager"

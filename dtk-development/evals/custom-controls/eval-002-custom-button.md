@@ -14,3 +14,7 @@
 - [ ] 重写 paintEvent 使用 style()->drawControl()
 - [ ] 处理 QStyle::State_MouseOver 状态
 - [ ] 处理 QStyle::State_Sunken 状态
+
+## 参考
+
+参见 [按钮规范](../../../references/widgets/button.md) 了解 DTK 按钮的正确实现方式。

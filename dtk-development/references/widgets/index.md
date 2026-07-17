@@ -1,5 +1,24 @@
 # QWidget 控件选择决策树
 
+## 触发关键词
+
+本文档适用于以下任务场景：
+
+**自然语言描述：**
+- 创建对话框/主窗口/按钮
+- 控件选择/使用什么控件
+- 输入框/下拉框/开关按钮
+- 列表视图/树形视图
+- 进度条/滑动条/消息提示
+
+**API 接口描述：**
+- DDialog / DMainWindow / DButton
+- DLineEdit / DComboBox / DSpinBox
+- DListView / DTreeView / DStyledItemDelegate
+- DProgressBar / DSlider / DMessageManager
+
+---
+
 ## 1. 概述与适用场景
 
 DTK 提供丰富的 QWidget 控件，本文档帮助您快速选择正确的控件。
