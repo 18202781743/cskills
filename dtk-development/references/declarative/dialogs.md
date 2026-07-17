@@ -1,6 +1,20 @@
 # 对话框与窗口控件
 
-## 1. ApplicationWindow
+## 1. 概述与适用场景
+
+DTK QML 提供窗口和对话框组件，支持 DTK 风格的标题栏、边框和视觉效果。
+
+**适用场景：**
+- 应用主窗口 → `ApplicationWindow`
+- 对话框窗口 → `DialogWindow`
+- 内嵌对话框 → `Dialog`
+
+**相关组件：**
+- `ApplicationWindow` — 应用主窗口
+- `DialogWindow` — 对话框窗口
+- `Dialog` — 内嵌对话框
+
+## 2. ApplicationWindow
 
 应用主窗口，继承 `T.ApplicationWindow`。自动设置 DTK 调色板和默认字体（`D.DTK.fontManager.t6`），根据窗口激活状态切换 palette。
 

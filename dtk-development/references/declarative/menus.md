@@ -1,6 +1,20 @@
 # 菜单类控件
 
-## 1. Menu
+## 1. 概述与适用场景
+
+DTK QML 提供菜单组件，支持右键菜单、下拉菜单、子菜单等场景。
+
+**适用场景：**
+- 右键菜单 → `Menu`
+- 菜单项 → `MenuItem`
+- 分隔线 → `MenuSeparator`
+
+**相关组件：**
+- `Menu` — 菜单
+- `MenuItem` — 菜单项
+- `MenuSeparator` — 分隔线
+
+## 2. Menu
 
 菜单，继承 `T.Menu`。使用 `FloatingPanel` 背景，`ArrowListView` 内容滚动，支持 `header`/`footer` 自定义组件。当父窗口失去激活时自动关闭。
 

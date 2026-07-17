@@ -1,14 +1,14 @@
-# Eval: DConfig 调试
+# DConfig 调试
 
 ## 任务
 
-调试 DConfig 配置问题：
+调试应用配置问题，要求：
 1. 查看当前配置值
 2. 检查配置文件路径
 3. 热加载配置
 
-## 鵆证要点
+## 验证要点
 
-- [ ] 使用 dde-dconfig 命令查看
-- [ ] 检查 /var/lib/dde-daemon/config/ 路径
-- [ ] 使用 DCONFIG_DEBUG 环境变量
+- [ ] 使用 dde-dconfig 命令查看配置
+- [ ] 检查配置文件路径
+- [ ] 使用 DCONFIG_DEBUG 环境变量调试

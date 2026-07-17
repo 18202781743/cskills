@@ -1,6 +1,16 @@
 # 核心概念
 
-## appId
+## 1. 概述
+
+DConfig 涉及几个核心概念：appId、配置 id、meta 文件、override 文件等。理解这些概念是正确使用 DConfig 的基础。
+
+**核心概念：**
+- `appId` — 应用唯一标识
+- 配置 id（name）— 配置描述文件标识
+- meta 文件 — 配置元信息文件
+- override 文件 — OEM 覆盖值文件
+
+## 2. appId
 
 应用程序唯一 ID。meta 文件安装到 `/usr/share/dsg/configs/{appId}/` 子目录下。
 

@@ -1,14 +1,16 @@
-# Eval: 自定义列表委托
+# 自定义列表委托
 
 ## 任务
 
-创建一个自定义列表项委托：
-1. 继承 DStyledItemDelegate
-2. 自定义绘制内容
-3. 支持主题感知颜色
+创建自定义列表项样式，要求：
+1. 列表项有圆角背景
+2. 选中时有高亮效果
+3. hover 时有视觉反馈
+4. 颜色随主题变化
 
 ## 验证要点
 
-- [ ] 重写 paint() 方法
-- [ ] 使用 DStyleHelper::getColor()
-- [ ] 使用 DPaletteHelper 获取颜色
+- [ ] 继承 DStyledItemDelegate
+- [ ] 使用 DStyleHelper::getColor() 获取颜色
+- [ ] 使用 DPaletteHelper 获取主题感知颜色
+- [ ] 或使用 DStandardItem 属性接口而非重写 paint()

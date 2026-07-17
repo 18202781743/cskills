@@ -1,15 +1,15 @@
-# Eval: 控件调色板助手
+# 控件调色板助手
 
 ## 任务
 
-使用 DPaletteHelper 设置控件颜色：
-1. 设置按钮背景色为 #FF6600
-2. 设置按钮前景色为白色
-3. 确保主题切换时颜色正确
+为控件设置自定义调色板颜色，要求：
+1. 设置按钮背景色为指定颜色
+2. 设置按钮文字颜色
+3. 确保主题切换时颜色仍然正确
 
 ## 验证要点
 
 - [ ] #include <DPaletteHelper>
-- [ ] DPaletteHelper::instance()->palette(widget)
-- [ ] palette.setColor(QPalette::Button, QColor("#FF6600"))
-- [ ] DPaletteHelper::instance()->setPalette(widget, palette)
+- [ ] DPaletteHelper::instance()->palette(widget) 获取调色板
+- [ ] palette.setColor() 设置颜色
+- [ ] DPaletteHelper::instance()->setPalette(widget, palette) 应用调色板

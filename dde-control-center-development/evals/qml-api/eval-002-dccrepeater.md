@@ -1,11 +1,11 @@
-# Eval: DccRepeater 使用
+# DccRepeater 使用
 
 ## 任务
 
-在 QML 中使用 DccRepeater 重复组件：
-1. 创建模型数据
-2. 使用 DccRepeater
-3. 生成多个控件
+在控制中心 QML 中动态生成多个设置项，要求：
+1. 定义数据模型
+2. 使用重复器生成控件
+3. 每个控件显示不同的数据
 
 ## 验证要点
 

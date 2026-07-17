@@ -1,6 +1,18 @@
 # QWidget 控件选择决策树
 
+## 1. 概述与适用场景
+
 DTK 提供丰富的 QWidget 控件，本文档帮助您快速选择正确的控件。
+
+**适用场景：**
+- 需要选择合适的 DTK 控件
+- 了解控件之间的区别
+
+**相关文档：**
+- [style.md](style.md) — 控件绘制机制
+- 各控件详细文档见下方分类
+
+## 2. 控件分类
 
 控件的 ChameleonStyle 绘制实现、状态颜色和内部区域见 [Widget ChameleonStyle 控件绘制指南](style.md)。
 

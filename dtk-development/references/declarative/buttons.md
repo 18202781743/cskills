@@ -1,6 +1,22 @@
 # 按钮类控件
 
-## 1. Button
+## 1. 概述与适用场景
+
+DTK QML 提供多种按钮控件，用于不同的交互场景。
+
+**适用场景：**
+- 普通按钮操作 → `Button`
+- 主要推荐操作 → `RecommandButton`
+- 危险警告操作 → `WarningButton`
+- 图标按钮 → `IconButton`
+
+**相关组件：**
+- `Button` — 标准按钮
+- `RecommandButton` — 推荐按钮
+- `WarningButton` — 警告按钮
+- `IconButton` — 图标按钮
+
+## 2. Button
 
 标准按钮，继承 `T.Button`，带渐变背景（`BoxPanel`）、内外阴影、通过 `ColorSelector` 自动跟随主题和状态。
 

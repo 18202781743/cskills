@@ -1,14 +1,16 @@
-# Eval: 自定义按钮
+# 自定义按钮
 
 ## 任务
 
-创建一个自定义按钮控件：
-1. 继承 QAbstractButton
-2. 使用 DStyle 绘制背景
-3. 支持 hover/pressed 状态
+创建一个自定义按钮控件，要求：
+1. 按钮外观随主题变化
+2. hover 时有高亮效果
+3. pressed 时有按下效果
+4. 支持键盘焦点
 
 ## 验证要点
 
-- [ ] 重写 paintEvent
-- [ ] 使用 style()->drawControl()
+- [ ] 继承 QAbstractButton
+- [ ] 重写 paintEvent 使用 style()->drawControl()
 - [ ] 处理 QStyle::State_MouseOver 状态
+- [ ] 处理 QStyle::State_Sunken 状态

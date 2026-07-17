@@ -1,6 +1,20 @@
 # DConfig 调试
 
-## 1. dde-dconfig-daemon 服务管理
+## 1. 概述与适用场景
+
+DConfig 调试包括服务管理、日志查看、配置文件检查等，用于排查配置相关问题。
+
+**适用场景：**
+- 配置不生效问题排查
+- 配置服务状态检查
+- 配置文件路径确认
+
+**相关工具：**
+- `dde-dconfig` CLI 命令
+- `dde-dconfig-daemon` 服务
+- `DCONFIG_DEBUG` 环境变量
+
+## 2. dde-dconfig-daemon 服务管理
 
 ```bash
 # 重启服务

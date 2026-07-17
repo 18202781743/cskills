@@ -1,6 +1,20 @@
 # DConfig DBus 方式
 
-通过 `org.desktopspec.ConfigManager` 系统 DBus 服务操作配置。
+## 1. 概述与适用场景
+
+通过 DBus 接口操作配置，适用于非 C++ 环境（如脚本、其他语言）或需要直接访问配置服务的场景。
+
+**适用场景：**
+- Shell 脚本读写配置
+- 非 DTK 应用访问配置
+- 调试和测试配置
+
+**相关接口：**
+- `org.desktopspec.ConfigManager` — DBus 服务名
+- `acquireManager` / `acquireManagerV2` — 获取配置管理器
+- `get` / `set` — 读写配置值
+
+## 2. 获取资源路径
 
 ## 1. 获取资源路径
 

@@ -1,6 +1,20 @@
 # 面板与视觉效果控件
 
-## 1. BoxPanel
+## 1. 概述与适用场景
+
+DTK QML 提供面板和视觉效果组件，用于构建容器背景、浮动面板等。
+
+**适用场景：**
+- 控件背景面板 → `BoxPanel`
+- 浮动面板 → `FloatingPanel`
+- 高亮面板 → `HighlightPanel`
+
+**相关组件：**
+- `BoxPanel` — 盒模型背景面板
+- `FloatingPanel` — 浮动面板
+- `HighlightPanel` — 高亮面板
+
+## 2. BoxPanel
 
 盒模型背景面板，DTK 按钮/面板的核心背景组件。组合了：
 - 渐变背景（`color1` → `color2`）

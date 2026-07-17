@@ -1,16 +1,16 @@
-# Eval: QML 输入控件
+# QML 输入控件
 
 ## 任务
 
-在 QML 中创建输入控件：
-1. LineEdit 文本输入
-2. SearchEdit 搜索框
-3. PasswordEdit 密码输入
-4. SpinBox 数值输入
+在 QML 中创建各种输入控件：
+1. 普通文本输入框
+2. 搜索框（带清除按钮）
+3. 密码输入框（带显示/隐藏切换）
+4. 数值调节框
 
 ## 验证要点
 
-- [ ] LineEdit 组件
-- [ ] SearchEdit 组件
-- [ ] PasswordEdit 组件
-- [ ] SpinBox 组件
+- [ ] LineEdit 文本输入
+- [ ] SearchEdit 搜索框
+- [ ] PasswordEdit 密码输入
+- [ ] SpinBox 数值输入

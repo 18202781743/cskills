@@ -1,6 +1,22 @@
 # 进度与滑动控件
 
-## 1. ProgressBar
+## 1. 概述与适用场景
+
+DTK QML 提供进度指示和滑动控件，用于显示进度和数值调节。
+
+**适用场景：**
+- 进度条 → `ProgressBar`
+- 水波进度 → `WaterProgress`
+- 滑动条 → `Slider`
+- 忙碌指示 → `BusyIndicator`
+
+**相关组件：**
+- `ProgressBar` — 进度条
+- `WaterProgress` — 水波进度
+- `Slider` — 滑动条
+- `BusyIndicator` — 忙碌指示器
+
+## 2. ProgressBar
 
 进度条，继承 `T.ProgressBar`。使用内部 `ProgressBarImpl` 和 `ProgressBarPanel` 渲染。
 

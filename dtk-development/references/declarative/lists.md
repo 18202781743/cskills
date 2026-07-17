@@ -1,6 +1,20 @@
 # 列表类控件
 
-## 1. ItemDelegate
+## 1. 概述与适用场景
+
+DTK QML 提供列表项组件，支持选中、勾选、箭头指示等交互。
+
+**适用场景：**
+- 普通列表项 → `ItemDelegate`
+- 可勾选项 → `CheckDelegate`
+- 带箭头列表 → `ArrowListView`
+
+**相关组件：**
+- `ItemDelegate` — 列表项委托
+- `CheckDelegate` — 可勾选项
+- `ArrowListView` — 箭头列表
+
+## 2. ItemDelegate
 
 列表项委托，继承 `T.ItemDelegate`。支持：
 - 选中高亮（`HighlightPanel`）

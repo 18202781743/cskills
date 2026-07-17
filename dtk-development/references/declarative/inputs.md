@@ -1,6 +1,22 @@
 # 输入类控件
 
-## 1. TextField
+## 1. 概述与适用场景
+
+DTK QML 提供多种输入控件，支持文本输入、搜索、密码、数值调节等场景。
+
+**适用场景：**
+- 普通文本输入 → `TextField`
+- 搜索输入 → `SearchEdit`
+- 密码输入 → `PasswordField`
+- 数值调节 → `SpinBox`
+
+**相关组件：**
+- `TextField` — 文本输入框
+- `SearchEdit` — 搜索框
+- `PasswordField` — 密码输入框
+- `SpinBox` — 数值调节框
+
+## 2. TextField
 
 文本输入框，继承 `T.TextField`。使用 `EditPanel` 背景，支持 alert 状态，内置右键菜单（复制/粘贴/全选/撤销/重做）。
 
