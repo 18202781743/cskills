@@ -565,15 +565,19 @@ def crp_pack(cfg: Dict[str, Any], topic: Optional[str] = None,
     print(f"  版本/tag: {version or '(默认)'}")
     print(f"  项目    : {', '.join(DTK_PROJECTS)}\n")
 
+    _log("认证 CRP...")
+    crp = _ensure_crp_auth()
+    _log("CRP 认证成功")
+
     if dry_run:
-        _log("DRY RUN — 不会实际提交", "WARN")
+        _log("DRY RUN — 不会实际提交打包", "WARN")
+        _log(f"  将搜索 topic: {topic}")
+        _log(f"  将为 {len(DTK_PROJECTS)} 个项目创建打包实例")
         return True
 
     if not _input_confirm(f"确认对 {len(DTK_PROJECTS)} 个项目执行 CRP 打包?"):
         _log("用户取消", "WARN")
         return False
-
-    crp = _ensure_crp_auth()
     failed = []
     for proj in DTK_PROJECTS:
         _log(f"打包 {proj}...")
@@ -602,20 +606,25 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
 
     if repo_id is None:
         repo_id = input("仓库标识 (默认当天日期): ").strip()
-        if not param:
-            param = datetime.now().strftime("%Y%m%d")
+        if not repo_id:
+            repo_id = datetime.now().strftime("%Y%m%d")
 
     print(f"\n  标识: {repo_id}\n")
 
+    _log("认证 Jenkins...")
     creds = _ensure_jenkins_auth()
+    _log("Jenkins 认证成功")
+
+    if dry_run:
+        _log(f"DRY RUN — 将触发参数: repo_id={repo_id}", "WARN")
+        return f"{REPO_URL_PREFIX}{repo_id}/"
+
     jc = JenkinsClient(creds["user"], creds["password"])
     if not jc.job_exists(JENKINS_REPO_UPDATE_JOB):
         _log(f"Job 不存在: {JENKINS_REPO_UPDATE_JOB}", "ERROR")
         return None
 
-    if dry_run:
-        _log(f"DRY RUN — 将触发参数: repo_id={repo_id}", "WARN")
-        return f"{REPO_URL_PREFIX}{repo_id}/"
+
 
     _log(f"触发: {JENKINS_REPO_UPDATE_JOB}")
     build_num = jc.trigger_build(JENKINS_REPO_UPDATE_JOB, {"param": repo_id})
@@ -661,15 +670,21 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
     print(f"\n  版本号  : {version}")
     print(f"  deb 仓库: {deb_repo}\n")
 
+    _log("检查 gh 认证...")
     if not _check_gh_auth():
         _log("gh CLI 未认证，请先执行: gh auth login", "ERROR")
         return False
+    _log("gh 认证通过")
 
+    _log("检查仓库...")
     if not _ensure_repos_ready(cfg):
         return False
+    _log("仓库就绪")
 
     if dry_run:
-        _log("DRY RUN — 不会实际提交", "WARN")
+        _log("DRY RUN — 不会实际修改仓库", "WARN")
+        _log(f"  将修改 linglong.yaml 版本为 {version}")
+        _log(f"  将修改 linglong.yaml 仓库地址为 {deb_repo}")
         return True
 
     if not _update_single_repo("org.deepin.runtime", cfg["runtime_repo_path"],
@@ -879,25 +894,36 @@ def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
     _log("构建玲珑 Layer")
     _log("=" * 60)
 
-    creds = _ensure_jenkins_auth()
-    jc = JenkinsClient(creds["user"], creds["password"])
-    if not jc.job_exists(JENKINS_BUILD_JOB):
-        _log(f"Job 不存在: {JENKINS_BUILD_JOB}", "ERROR")
-        return False
-
-    if repo_url is None:
-        repo_url = input("REPO_URL [github.com/linglongdev/org.deepin.runtime]: ").strip()
-        if not repo_url:
+    if dry_run:
+        if repo_url is None:
             repo_url = "github.com/linglongdev/org.deepin.runtime"
-    if repo_branch is None:
-        repo_branch = input("REPO_BRANCH [main]: ").strip() or "main"
+        if repo_branch is None:
+            repo_branch = "main"
+    else:
+        if repo_url is None:
+            repo_url = input("REPO_URL [github.com/linglongdev/org.deepin.runtime]: ").strip()
+            if not repo_url:
+                repo_url = "github.com/linglongdev/org.deepin.runtime"
+        if repo_branch is None:
+            repo_branch = input("REPO_BRANCH [main]: ").strip() or "main"
 
     print(f"\n  REPO_URL    : {repo_url}")
     print(f"  REPO_BRANCH : {repo_branch}\n")
 
+    _log("认证 Jenkins...")
+    creds = _ensure_jenkins_auth()
+    _log("Jenkins 认证成功")
+
     if dry_run:
-        _log("DRY RUN", "WARN")
+        _log("DRY RUN — 不会实际触发构建", "WARN")
+        _log(f"  将触发: {JENKINS_BUILD_JOB}")
+        _log(f"  参数: REPO_URL={repo_url}, REPO_BRANCH={repo_branch}")
         return True
+
+    jc = JenkinsClient(creds["user"], creds["password"])
+    if not jc.job_exists(JENKINS_BUILD_JOB):
+        _log(f"Job 不存在: {JENKINS_BUILD_JOB}", "ERROR")
+        return False
 
     params = {"REPO_URL": repo_url, "REPO_BRANCH": repo_branch}
     _log(f"触发: {JENKINS_BUILD_JOB} params={params}")
@@ -928,17 +954,24 @@ def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
     _log("N8N 推送 Layer")
     _log("=" * 60)
 
-    creds = _ensure_jenkins_auth()
-    jc = JenkinsClient(creds["user"], creds["password"])
-
-    if layer_url is None:
-        layer_url = input("LAYER_URL (如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/): ").strip()
+    if dry_run:
+        if layer_url is None:
+            layer_url = "http://10.20.64.92:8080/crimson_runtime/stable_test/"
+    else:
+        if layer_url is None:
+            layer_url = input("LAYER_URL (如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/): ").strip()
 
     print(f"\n  LAYER_URL: {layer_url}")
     print(f"  N8N 表单 : {N8N_FORM_URL}\n")
 
+    _log("认证 Jenkins...")
+    creds = _ensure_jenkins_auth()
+    _log("Jenkins 认证成功")
+
     if dry_run:
-        _log("DRY RUN", "WARN")
+        _log("DRY RUN — 不会实际触发推送", "WARN")
+        _log(f"  将触发: {JENKINS_PUSH_OLD_JOB} 和 {JENKINS_PUSH_TEST_JOB}")
+        _log(f"  参数: LAYER_URL={layer_url}")
         return True
 
     print("请手动提交 N8N 表单后，脚本将自动触发 Jenkins push job。")
