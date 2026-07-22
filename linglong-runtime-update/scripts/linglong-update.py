@@ -12,6 +12,7 @@
   python3 linglong-update.py build-layer
   python3 linglong-update.py push-layer
   python3 linglong-update.py config
+  python3 linglong-update.py status
 """
 
 from __future__ import annotations
@@ -46,21 +47,25 @@ REPO_URL_PREFIX = "http://10.20.64.92:8080/crimson_runtime/stable_"
 RUNTIME_REPO_URL = "https://github.com/linuxdeepin/org.deepin.runtime.git"
 WEBENGINE_REPO_URL = "https://github.com/linuxdeepin/org.deepin.runtime.webengine.git"
 
+# CRP 外部工具路径
+_CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp_pack.py")
+
 CACHE_DIR = Path.home() / ".cache" / "linglong-update" / "repos"
 
 DEFAULT_CONFIG: Dict[str, Any] = {
     "crp_topic": "玲珑runtime dtk版本更新",
-    "crp_branch": "crimson-testing",
-    "archs": ["arm64", "loong64", "mips64", "riscv64", "sw64"],
-    "crp_branch_id": 123,
+    "crp_platform_branch": "crimson-testing",
+    "crp_branch": "upstream/master",
+    "crp_branch_id": 129,
+    "archs": ["amd64", "arm64", "loong64"],
     "runtime_repo_path": str(CACHE_DIR / "org.deepin.runtime"),
     "webengine_repo_path": str(CACHE_DIR / "org.deepin.runtime.webengine"),
 }
 
 # DTK 项目列表（与 github-workflow-autotag 保持一致）
 DTK_PROJECTS = [
-    "dtkcommon", "dtklog", "dtkcore", "dtkgui", "dtkwidget",
-    "dtkdeclarative", "qt5integration", "qt5platform-plugins",
+    "dtkcommon-v25", "dtklog-v25", "dtkcore-v25", "dtkgui-v25", "dtkwidget-v25",
+    "dtkdeclarative-v25", "qt5integration-v25", "qt5platform-plugins-v25",
 ]
 
 STATE_FILE = Path.home() / ".config" / "linglong-update" / "state.json"
@@ -158,201 +163,46 @@ def _ensure_jenkins_auth(force: bool = False) -> Dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
-# CRP 打包（内置，不依赖外部 crp_pack.py）
+# CRP 打包（调用外部 crp_pack.py）
 # ---------------------------------------------------------------------------
 
-CRP_BASE_URL = "https://crp.uniontech.com"
-_CRP_RSA_PUBKEY = b"""-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkA9WqirWQII3D8/M9UG8X8ybQ
-Ou+cPSNTgR9b4HenJ7A5zSfkXZnetb5q6MmKTJLGCl9MSsHveQPHmLGDG+xw2MlB
-w3Yefd/jJ1Cg8pP69wlHRX+wiyh5p8KY55ehFNsQLm3kDGXgVJdtrZn/MiBOlCtE
-fe9YvvT0lqy2BtBpaQIDAQAB
------END PUBLIC KEY-----"""
+def _run_crp(args: List[str], check: bool = True) -> subprocess.CompletedProcess:
+    """调用外部 crp_pack.py，自动清理代理环境变量。"""
+    cmd = [sys.executable, _CRP_PACK_SCRIPT] + args
+    _log(f"执行: {' '.join(cmd)}")
+    env = {k: v for k, v in os.environ.items()
+           if not k.lower().endswith("_proxy")}
+    result = subprocess.run(cmd, capture_output=True, text=True, env=env)
+    if check and result.returncode != 0:
+        err = result.stderr.strip() or result.stdout.strip()
+        if "EOF when reading a line" in err:
+            _log("CRP 认证失败，请先执行: python3 " + _CRP_PACK_SCRIPT + " auth", "ERROR")
+        else:
+            _log(f"crp_pack.py 错误: {err[:500]}", "ERROR")
+        raise RuntimeError(f"crp_pack.py 退出码 {result.returncode}")
+    return result
 
-
-def _crp_cred_file() -> Path:
-    return _config_dir() / "crp_creds.json"
-
-
-def _load_crp_creds() -> Optional[Dict[str, str]]:
-    cf = _crp_cred_file()
-    if not cf.exists():
-        return None
+def _get_crp_instances(topic: str, branch_id: Optional[int] = None) -> List[Dict[str, Any]]:
+    """获取 CRP 指定 topic 下的所有打包实例（委托给外部 crp_pack.py，解析 JSON 输出）。"""
     try:
-        import base64 as _b64
-        data = json.loads(cf.read_text())
-        return {
-            "loginid": _b64.b64decode(data["u"].encode()).decode(),
-            "password": _b64.b64decode(data["p"].encode()).decode(),
-        }
-    except Exception:
-        return None
+        args_list = ["instances", "--topic", topic]
+        if branch_id:
+            args_list.extend(["--branch-id", str(branch_id)])
+        result = _run_crp(args_list, check=False)
+        if result.returncode != 0:
+            err = result.stderr.strip() or result.stdout.strip()
+            _log(f"获取 CRP 实例失败: {err[:200]}", "WARN")
+            return []
+        data = json.loads(result.stdout)
+        return data.get("instances", []) if data.get("success") else []
+    except json.JSONDecodeError:
+        _log("CRP instances 输出不是合法 JSON，请确认 crp_pack.py 版本", "WARN")
+        return []
+    except Exception as e:
+        _log(f"获取 CRP 实例异常: {e}", "WARN")
+        return []
 
 
-def _save_crp_creds(loginid: str, password: str) -> None:
-    import base64 as _b64
-    data = {"u": _b64.b64encode(loginid.encode()).decode(),
-            "p": _b64.b64encode(password.encode()).decode()}
-    _crp_cred_file().write_text(json.dumps(data))
-    _crp_cred_file().chmod(0o600)
-
-
-def _cached_crp_token() -> Optional[str]:
-    cf = _config_dir() / "crp_token.json"
-    if cf.exists():
-        try:
-            return json.loads(cf.read_text()).get("token")
-        except Exception:
-            pass
-    return None
-
-
-def _save_crp_token(token: str) -> None:
-    (_config_dir() / "crp_token.json").write_text(json.dumps({"token": token}))
-
-
-def _fetch_crp_token(loginid: str, password: str) -> str:
-    try:
-        import rsa as _rsa
-        import base64 as _b64
-        pub = _rsa.PublicKey.load_pkcs1_openssl_pem(_CRP_RSA_PUBKEY)
-        enc = _b64.b64encode(_rsa.encrypt(password.encode(), pub)).decode()
-    except ImportError:
-        _log("rsa 模块未安装，明文发送密码", "WARN")
-        enc = password
-    resp = requests.post(
-        f"{CRP_BASE_URL}/api/login",
-        headers={"Content-Type": "application/json"},
-        json={"userName": loginid, "password": enc}, timeout=30)
-    resp.raise_for_status()
-    token = resp.json().get("Token", "")
-    if not token:
-        raise RuntimeError("CRP 登录失败: 服务器未返回 Token")
-    return token
-
-
-class _CRPClient:
-    def __init__(self, token: str):
-        self.s = requests.Session()
-        self.s.trust_env = False  # CRP 内网，不走代理
-        self.s.headers.update({"Content-Type": "application/json",
-                               "Authorization": f"Bearer {token}"})
-
-    def _get(self, path):
-        r = self.s.get(f"{CRP_BASE_URL}{path}", timeout=30)
-        r.raise_for_status()
-        return r.json()
-
-    def _post(self, path, data):
-        r = self.s.post(f"{CRP_BASE_URL}{path}", json=data, timeout=30)
-        r.raise_for_status()
-        return r.json()
-
-    def search_topics(self, keyword, branch_id=123):
-        user = self._get("/api/user").get("Name", "")
-        data = self._post("/api/topics/search",
-                          {"TopicType": "test", "UserName": user,
-                           "BranchID": branch_id})
-        return [{"id": t["ID"], "name": t["Name"]}
-                for t in (data or [])
-                if re.search(keyword, t.get("Name", ""), re.IGNORECASE)]
-
-    def search_projects(self, keyword, branch_id=123):
-        data = self._post("/api/project",
-                          {"page": 0, "perPage": 0, "projectGroupID": 0,
-                           "newCommit": False, "archived": False,
-                           "branchID": branch_id, "name": keyword})
-        return [{"id": p["ID"], "name": p["Name"],
-                 "url": p.get("RepoUrl", "")}
-                for p in data.get("Projects", [])]
-
-    def list_branches(self, pid, purl, bfilter):
-        data = self._get(f"/api/projects/{pid}/branches")
-        result = []
-        for b in data:
-            name = b.get("Name", "")
-            if bfilter and not re.search(bfilter, name, re.IGNORECASE):
-                continue
-            commit = b.get("Commit", "")
-            msg = b.get("Message", "") or self._commit_msg(purl, commit)
-            result.append({"name": name, "commit": commit, "changelog": msg})
-        return result
-
-    def _commit_msg(self, repo_url, commit):
-        try:
-            return self._post("/api/projects/getGerritCommitMessage",
-                              {"repo_url": repo_url, "commit_id": commit}
-                              ).get("message", "")
-        except Exception:
-            return ""
-
-    def list_instances(self, topic_id):
-        return [{"id": i["ID"], "project_name": i["ProjectName"],
-                 "branch": i["Branch"], "tag": i["Tag"]}
-                for i in self._get(f"/api/topics/{topic_id}/releases")]
-
-    def delete_instance(self, iid):
-        self.s.delete(f"{CRP_BASE_URL}/api/topic_releases/{iid}", timeout=30)
-
-    def create_instance(self, topic_id, proj, branch, archs, branch_id, tag=""):
-        data = {"Arches": archs, "BaseTag": None, "Branch": branch["name"],
-                "BuildID": 0, "BuildState": None,
-                "Changelog": [branch["changelog"]],
-                "Commit": branch["commit"], "History": None, "ID": 0,
-                "ProjectID": proj["id"], "ProjectName": proj["name"],
-                "ProjectRepoUrl": proj["url"], "SlaveNode": None,
-                "Tag": tag, "TagSuffix": None, "TopicID": topic_id,
-                "TopicType": "test", "ChangeLogMode": True,
-                "RepoType": "deb", "Custom": True,
-                "BranchID": str(branch_id)}
-        self._post(f"/api/topics/{topic_id}/new_release", data)
-
-
-def _ensure_crp_auth():
-    token = _cached_crp_token()
-    if token:
-        try:
-            c = _CRPClient(token)
-            c._get("/api/user")
-            return c
-        except Exception:
-            pass
-    creds = _load_crp_creds()
-    if not creds:
-        loginid = input("OA/LDAP loginid: ").strip()
-        if not loginid:
-            raise RuntimeError("loginid 不能为空")
-        password = getpass.getpass("OA/LDAP 密码: ")
-        if not password:
-            raise RuntimeError("密码不能为空")
-    else:
-        loginid, password = creds["loginid"], creds["password"]
-    token = _fetch_crp_token(loginid, password)
-    _save_crp_creds(loginid, password)
-    _save_crp_token(token)
-    return _CRPClient(token)
-
-
-def _crp_pack_one(crp, topic, proj_name, bfilter, archs, branch_id, tag=""):
-    topics = crp.search_topics(topic, branch_id)
-    if not topics:
-        raise RuntimeError(f"未找到 Topic: {topic}")
-    projects = crp.search_projects(proj_name, branch_id)
-    if not projects:
-        raise RuntimeError(f"未找到项目: {proj_name}")
-    t, p = topics[0], projects[0]
-    branches = crp.list_branches(p["id"], p["url"], bfilter)
-    if not branches:
-        raise RuntimeError(f"未找到分支: {bfilter}")
-    for b in branches:
-        for inst in crp.list_instances(t["id"]):
-            if inst["project_name"] == p["name"] and inst["branch"] == b["name"]:
-                crp.delete_instance(inst["id"])
-        crp.create_instance(t["id"], p, b, archs, branch_id, tag)
-
-
-# ---------------------------------------------------------------------------
-# 工具函数
 # ---------------------------------------------------------------------------
 
 
@@ -544,6 +394,7 @@ def crp_pack(cfg: Dict[str, Any], topic: Optional[str] = None,
                branch: Optional[str] = None, archs: Optional[str] = None,
                branch_id: Optional[int] = None, version: Optional[str] = None,
                dry_run: bool = False) -> bool:
+    """CRP 打包 — 调用外部 crp_pack.py。"""
     _log("=" * 60)
     _log("CRP 打包")
     _log("=" * 60)
@@ -555,34 +406,31 @@ def crp_pack(cfg: Dict[str, Any], topic: Optional[str] = None,
     if archs is None:
         archs = ";".join(cfg["archs"])
     if branch_id is None:
-        branch_id = cfg.get("crp_branch_id", 123)
-    if version is None:
-        version = ""
+        branch_id = cfg.get("crp_branch_id")
 
     print(f"\n  Topic   : {topic}")
     print(f"  分支    : {branch}")
     print(f"  架构    : {archs}")
-    print(f"  版本/tag: {version or '(默认)'}")
+    print(f"  版本/tag: {version or '(自动)'}")
     print(f"  项目    : {', '.join(DTK_PROJECTS)}\n")
-
-    _log("认证 CRP...")
-    crp = _ensure_crp_auth()
-    _log("CRP 认证成功")
 
     if dry_run:
         _log("DRY RUN — 不会实际提交打包", "WARN")
-        _log(f"  将搜索 topic: {topic}")
-        _log(f"  将为 {len(DTK_PROJECTS)} 个项目创建打包实例")
+        _log(f"  topic: {topic}, 分支: {branch}, 架构: {archs}")
+        _log(f"  将为 {len(DTK_PROJECTS)} 个项目创建打包实例: {', '.join(DTK_PROJECTS)}")
         return True
 
-    if not _input_confirm(f"确认对 {len(DTK_PROJECTS)} 个项目执行 CRP 打包?"):
-        _log("用户取消", "WARN")
-        return False
     failed = []
     for proj in DTK_PROJECTS:
         _log(f"打包 {proj}...")
         try:
-            _crp_pack_one(crp, topic, proj, branch, archs, branch_id, version)
+            args = ["pack", "--topic", topic, "--project", proj,
+                    "--branch", branch, "--archs", archs]
+            if branch_id:
+                args.extend(["--branch-id", str(branch_id)])
+            if version:
+                args.extend(["--tag", version])
+            _run_crp(args)
             _log(f"✓ {proj}")
         except Exception as e:
             _log(f"✗ {proj}: {e}", "ERROR")
@@ -592,7 +440,6 @@ def crp_pack(cfg: Dict[str, Any], topic: Optional[str] = None,
         _log(f"{len(failed)} 个项目失败: {failed}", "WARN")
     _log("CRP 打包完成")
     return len(failed) == 0
-
 
 # ---------------------------------------------------------------------------
 # Step 2: 制作更新仓库
@@ -611,7 +458,8 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
 
     print(f"\n  标识: {repo_id}\n")
 
-    _log("认证 Jenkins...")
+    if dry_run:
+        _log("认证 Jenkins（dry-run 仍会验证凭证）...")
     creds = _ensure_jenkins_auth()
     _log("Jenkins 认证成功")
 
@@ -670,6 +518,8 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
     print(f"\n  版本号  : {version}")
     print(f"  deb 仓库: {deb_repo}\n")
 
+    if dry_run:
+        _log("检查 gh 认证（dry-run 仍会验证)...")
     _log("检查 gh 认证...")
     if not _check_gh_auth():
         _log("gh CLI 未认证，请先执行: gh auth login", "ERROR")
@@ -700,56 +550,25 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
 
 
 def _infer_version(cfg: Dict[str, Any]) -> str:
-    """从 CRP 获取 dtkcore 打包 tag，计算玲珑 runtime 版本。
-
-    优先从 CRP 平台读取 dtkcore 在对应 topic 下的打包实例 tag，
-    若失败则回退到 GitHub dtkcore VERSION 文件。
+    """从 CRP dtkcore 打包实例 tag 计算玲珑 runtime 版本。
 
     玲珑版本格式 X.Y.0.Z，与 DTK 版本 X.Y.Z 一一对应。
-    例如 DTK 6.7.46 → 玲珑 6.7.0.46。
     """
     topic = cfg.get("crp_topic", "玲珑runtime dtk版本更新")
-    branch_id = cfg.get("crp_branch_id", 123)
-
-    try:
-        crp = _ensure_crp_auth()
-        topics = crp.search_topics(topic, branch_id)
-        if topics:
-            instances = crp.list_instances(topics[0]["id"])
-            for inst in instances:
-                if inst.get("project_name") == "dtkcore":
-                    tag = inst.get("tag", "")
-                    if tag:
-                        _log(f"CRP dtkcore tag: {tag}")
-                        parts = tag.split(".")
-                        if len(parts) >= 3 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
-                            new_ver = f"{parts[0]}.{parts[1]}.0.{parts[2]}"
-                            _log(f"玲珑推断版本: {new_ver}")
-                            return new_ver
-                        _log(f"CRP tag 格式异常: {tag}", "WARN")
-                        break
-        _log("CRP 未找到 dtkcore 实例或 tag 为空，回退到 GitHub", "WARN")
-    except Exception as e:
-        _log(f"CRP 查询失败: {e}，回退到 GitHub", "WARN")
-
-    # 回退：从 GitHub 获取
-    url = "https://raw.githubusercontent.com/linuxdeepin/dtkcore/master/VERSION"
-    try:
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
-        dtk_ver = resp.text.strip()
-    except Exception as e:
-        raise RuntimeError(f"无法获取 DTK VERSION: {e}")
-
-    _log(f"DTK 当前版本: {dtk_ver}")
-    parts = dtk_ver.split(".")
-    if len(parts) < 2 or not parts[0].isdigit() or not parts[1].isdigit():
-        raise RuntimeError(f"DTK 版本格式异常: {dtk_ver}")
-    patch = int(parts[2]) if len(parts) >= 3 and parts[2].isdigit() else 0
-    new_ver = f"{parts[0]}.{parts[1]}.0.{patch}"
-    _log(f"玲珑推断版本: {new_ver}")
-    return new_ver
-
+    instances = _get_crp_instances(topic, cfg.get("crp_branch_id"))
+    for inst in instances:
+        if "dtkcore" in inst.get("project_name", ""):
+            tag = inst.get("tag", "").strip()
+            if tag:
+                _log(f"CRP dtkcore tag: {tag}")
+                parts = tag.split(".")
+                if len(parts) >= 3 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
+                    new_ver = f"{parts[0]}.{parts[1]}.0.{parts[2]}"
+                    _log(f"玲珑推断版本: {new_ver}")
+                    return new_ver
+                _log(f"CRP dtkcore tag 格式异常: {tag}", "WARN")
+                break
+    raise RuntimeError("CRP 未找到 dtkcore 打包实例 tag，请先执行 crp-pack 或指定 --version")
 
 def _find_webengine_patch() -> Optional[str]:
     candidates = [
@@ -894,22 +713,24 @@ def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
     _log("构建玲珑 Layer")
     _log("=" * 60)
 
-    if dry_run:
-        if repo_url is None:
+    if repo_url is None:
+        if dry_run:
             repo_url = "github.com/linglongdev/org.deepin.runtime"
-        if repo_branch is None:
-            repo_branch = "main"
-    else:
-        if repo_url is None:
+        else:
             repo_url = input("REPO_URL [github.com/linglongdev/org.deepin.runtime]: ").strip()
             if not repo_url:
                 repo_url = "github.com/linglongdev/org.deepin.runtime"
-        if repo_branch is None:
+    if repo_branch is None:
+        if dry_run:
+            repo_branch = "main"
+        else:
             repo_branch = input("REPO_BRANCH [main]: ").strip() or "main"
 
     print(f"\n  REPO_URL    : {repo_url}")
     print(f"  REPO_BRANCH : {repo_branch}\n")
 
+    if dry_run:
+        _log("认证 Jenkins（dry-run 仍会验证凭证）...")
     _log("认证 Jenkins...")
     creds = _ensure_jenkins_auth()
     _log("Jenkins 认证成功")
@@ -954,16 +775,17 @@ def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
     _log("N8N 推送 Layer")
     _log("=" * 60)
 
-    if dry_run:
-        if layer_url is None:
+    if layer_url is None:
+        if dry_run:
             layer_url = "http://10.20.64.92:8080/crimson_runtime/stable_test/"
-    else:
-        if layer_url is None:
+        else:
             layer_url = input("LAYER_URL (如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/): ").strip()
 
     print(f"\n  LAYER_URL: {layer_url}")
     print(f"  N8N 表单 : {N8N_FORM_URL}\n")
 
+    if dry_run:
+        _log("认证 Jenkins（dry-run 仍会验证凭证）...")
     _log("认证 Jenkins...")
     creds = _ensure_jenkins_auth()
     _log("Jenkins 认证成功")
@@ -1108,7 +930,8 @@ def cmd_config() -> int:
 
     cfg = {
         "crp_topic": _p("crp_topic", "CRP topic"),
-        "crp_branch": _p("crp_branch", "CRP branch"),
+        "crp_branch": _p("crp_branch", "Git 分支过滤 (如 upstream/master)"),
+        "crp_branch_id": _p("crp_branch_id", "CRP BranchID (整数)"),
         "runtime_repo_path": _p("runtime_repo_path", "runtime repo path"),
         "webengine_repo_path": _p("webengine_repo_path", "webengine repo path"),
     }
@@ -1131,6 +954,97 @@ def cmd_config() -> int:
     return 0
 
 
+
+
+# ---------------------------------------------------------------------------
+# status 命令
+# ---------------------------------------------------------------------------
+
+def cmd_status(cfg: Dict[str, Any]) -> int:
+    """查询各阶段状态，包括 CRP 实例、Jenkins 最近构建、GitHub PR 和本地 state。"""
+    print("\n" + "=" * 60)
+    print("状态查询")
+    print("=" * 60)
+
+    topic = cfg.get("crp_topic", "玲珑runtime dtk版本更新")
+
+    # --- CRP 打包实例 ---
+    print("\n--- CRP 打包实例 ---")
+    try:
+        instances = _get_crp_instances(topic, cfg.get("crp_branch_id"))
+        if instances:
+            for inst in instances:
+                print(f"  {inst.get('project_name', '?'):30s} {inst.get('branch', '?'):25s} {inst.get('tag', '(无tag)')}")
+        else:
+            print("  (无打包实例或 CRP 未认证)")
+    except Exception as e:
+        print(f"  CRP 查询失败: {e}")
+
+    # --- Jenkins 最近构建 ---
+    print("\n--- Jenkins 最近构建 ---")
+    try:
+        creds = _load_jenkins_creds()
+        if not creds:
+            print("  Jenkins 未配置认证")
+        else:
+            jc = JenkinsClient(creds["user"], creds["password"])
+            jobs = [
+                (JENKINS_REPO_UPDATE_JOB, "runtime-repo-update"),
+                (JENKINS_BUILD_JOB, "linglong-runtime-build"),
+                (JENKINS_PUSH_OLD_JOB, "linglong-runtime-push-to-old"),
+                (JENKINS_PUSH_TEST_JOB, "linglong-runtime-push-to-test"),
+            ]
+            for path, name in jobs:
+                try:
+                    b = jc.get_last_build_status(path)
+                    result = b.get("result") or "BUILDING" if b.get("building") else "N/A"
+                    num = b.get("number", "?")
+                    print(f"  {name:35s} #{num:>5}  {result}")
+                except Exception:
+                    print(f"  {name:35s}  无法访问")
+    except EOFError:
+        print("  Jenkins 未配置认证")
+    except Exception as e:
+        print(f"  Jenkins 查询失败: {e}")
+
+    # --- GitHub PR ---
+    print("\n--- GitHub Open PR ---")
+    try:
+        for label, path in [("org.deepin.runtime", cfg["runtime_repo_path"]),
+                            ("org.deepin.runtime.webengine", cfg["webengine_repo_path"])]:
+            if not Path(path).is_dir():
+                print(f"  {label}: 仓库未 clone")
+                continue
+            try:
+                r = _run_gh(["pr", "list", "--state", "open", "--limit", "5",
+                            "--json", "number,title,createdAt,url"], cwd=path)
+                prs = json.loads(r.stdout)
+                if prs:
+                    for pr in prs:
+                        print(f"  {label} #{pr['number']}: {pr['title']} ({pr['createdAt']})")
+                        print(f"         {pr['url']}")
+                else:
+                    print(f"  {label}: 无 open PR")
+            except Exception as e:
+                print(f"  {label}: gh 查询失败 ({e})")
+    except EOFError:
+        print("  未配置 gh 认证")
+    except Exception as e:
+        print(f"  GitHub PR 查询失败: {e}")
+
+    # --- 本地 state ---
+    print("\n--- 本地状态 ---")
+    state = load_state()
+    if state:
+        print(f"  版本: {state.get('version', 'N/A')}")
+        print(f"  当前步骤: {state.get('current_step', 'N/A')}")
+        print(f"  仓库地址: {state.get('repo_url', 'N/A')}")
+        print(f"  开始时间: {state.get('started_at', 'N/A')}")
+    else:
+        print("  (无进行中的任务)")
+
+    print()
+    return 0
 # ---------------------------------------------------------------------------
 # 交互式菜单
 # ---------------------------------------------------------------------------
@@ -1145,6 +1059,7 @@ _MENU = """
 │  4. 构建玲珑 Layer                             │
 │  5. N8N 推送 Layer                             │
 │  6. 配置参数                                   │
+│  s. 查看状态                                   │
 │  a. 自动执行全部 (auto)                        │
 │  0. 退出                                       │
 └──────────────────────────────────────────────┘"""
@@ -1178,6 +1093,8 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
             push_layer(cfg, layer_url)
         elif choice == "6":
             cmd_config()
+        elif choice == "s":
+            cmd_status(cfg)
         elif choice == "a":
             try:
                 version = _infer_version(cfg)
@@ -1251,6 +1168,7 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--layer-url", default=None, help="LAYER_URL（build-layer 产出地址）")
 
     sub.add_parser("config", help="配置参数（含 Jenkins 凭证）")
+    sub.add_parser("status", help="查看各阶段状态（CRP/Jenkins/GitHub/本地）")
     return p
 
 
@@ -1266,6 +1184,8 @@ def main() -> int:
     try:
         if args.command == "config":
             return cmd_config()
+        elif args.command == "status":
+            return cmd_status(cfg)
         elif args.command == "auto":
             return 0 if auto_mode(cfg, args.version, args.repo_id,
                                   args.deb_repo, args.layer_url,
