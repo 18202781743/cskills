@@ -1,0 +1,51 @@
+From 93283d364289080972b6172c39a4d2e05ad2bdb5 Mon Sep 17 00:00:00 2001
+From: myml <wurongjie@deepin.org>
+Date: Fri, 11 Apr 2025 10:25:18 +0800
+Subject: [PATCH] feat: add webengine
+
+---
+ profile   |  5 +++++
+ update.go | 11 ++++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/profile b/profile
+index 782441f..4d6c359 100644
+--- a/profile
++++ b/profile
+@@ -15,3 +15,8 @@ export QML2_IMPORT_PATH=$QML_IMPORT_PATH
+ # 设置环境变量，方便在终端中使用qt工具
+ export PATH=$PATH:/runtime/lib/qt6/bin
+ export CMAKE_PREFIX_PATH=/usr:/runtime:$PREFIX
++
++# webengine process path and resources path
++export QTWEBENGINEPROCESS_PATH=/runtime/lib/qt6/libexec/QtWebEngineProcess
++export QTWEBENGINE_RESOURCES_PATH=/runtime/share/qt6/resources
++export QTWEBENGINE_LOCALES_PATH=/runtime/share/qt6/translations/qtwebengine_locales
+diff --git a/update.go b/update.go
+index d10244c..6fc1f41 100644
+--- a/update.go
++++ b/update.go
+@@ -33,6 +33,9 @@ var (
+ 		"qt6-translations",
+ 		"qt6-5compat",
+ 
++		"qt6-webengine",
++		"qt6-webchannel",
++
+ 		"dtkcore",
+ 		"dtkdeclarative",
+ 		"dtkgui",
+@@ -194,6 +197,12 @@ func updateYamlFiles(content []byte) {
+ 			newLines = append(newLines, source)
+ 		}
+ 		newContent := strings.Join(newLines, "\n") + "\n" + string(content)
+-		_ = os.WriteFile(file, []byte(newContent), 0644)
++
++		newContent = strings.Replace(newContent, "id: org.deepin.runtime.dtk", "id: org.deepin.runtime.webengine", 1)
++
++		err = os.WriteFile(file, []byte(newContent), 0644)
++		if err != nil {
++			panic(err)
++		}
+ 	}
+ }
