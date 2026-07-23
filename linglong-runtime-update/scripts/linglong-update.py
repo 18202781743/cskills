@@ -45,8 +45,11 @@ JENKINS_PUSH_TEST_JOB = "view/dtk/job/linglong-runtime-push-to-test"
 N8N_FORM_URL = "https://n8n.cicd.getdeepin.org/form/097d0087-7f34-4614-8329-82d096af7ba5"
 REPO_URL_PREFIX = "http://10.20.64.92:8080/crimson_runtime/stable_"
 
-RUNTIME_REPO_URL = "https://github.com/linuxdeepin/org.deepin.runtime.git"
-WEBENGINE_REPO_URL = "https://github.com/linuxdeepin/org.deepin.runtime.webengine.git"
+RUNTIME_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.git"
+WEBENGINE_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.webengine.git"
+
+# Fork 推送目标 GitHub ID
+FORK_OWNER = "18202781743"
 
 # CRP 外部工具路径
 _CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp_pack.py")
@@ -248,6 +251,48 @@ def _input_confirm(msg: str, default: bool = True) -> bool:
 # 仓库管理
 # ---------------------------------------------------------------------------
 
+def _get_repo_slug(repo_path: str) -> str:
+    """从 git remote origin 提取 owner/repo。"""
+    url = subprocess.run(
+        ["git", "-C", repo_path, "remote", "get-url", "origin"],
+        capture_output=True, text=True).stdout.strip()
+    m = re.search(r'github\.com[:/]([^/]+/[^/]+?)(?:\.git)?$', url)
+    if not m:
+        raise RuntimeError(f"无法解析 GitHub repo: {url}")
+    return m.group(1)
+
+
+def _ensure_fork(repo_slug: str, fork_owner: Optional[str] = None) -> str:
+    """确保 fork 存在，返回 fork 的 owner/repo。
+
+    优先级: 外部参数 > gh api user 探测 > FORK_OWNER 默认值
+    """
+    if not fork_owner:
+        # 探测当前 gh 登录用户
+        try:
+            fork_owner = subprocess.run(
+                ["gh", "api", "user", "--jq", ".login"],
+                capture_output=True, text=True).stdout.strip()
+        except Exception:
+            pass
+    if not fork_owner:
+        fork_owner = FORK_OWNER
+
+    fork_slug = f"{fork_owner}/{repo_slug.split('/')[-1]}"
+    # 检查 fork 是否已存在
+    result = subprocess.run(
+        ["gh", "repo", "view", fork_slug],
+        capture_output=True, text=True)
+    if result.returncode == 0:
+        _log(f"fork 已存在: {fork_slug}")
+        return fork_slug
+    _log(f"创建 fork: {repo_slug} -> {fork_slug} ...")
+    subprocess.run(["gh", "repo", "fork", repo_slug, "--clone=false"],
+                   check=True)
+    _log(f"fork 创建完成: {fork_slug}")
+    return fork_slug
+
+
 def _ensure_repo_cloned(repo_url: str, local_path: str, label: str) -> bool:
     p = Path(local_path)
     if p.is_dir() and (p / ".git").is_dir():
@@ -342,7 +387,6 @@ class JenkinsClient:
     def trigger_build(self, job_path: str,
                       params: Optional[Dict[str, str]] = None) -> Optional[int]:
         url = f"{JENKINS_BASE}/{job_path}/build?delay=0sec"
-        # 构建普通表单字段（有序）
         form_data = []
         if params:
             for k, v in params.items():
@@ -378,7 +422,10 @@ class JenkinsClient:
         )
         if resp.status_code in (200, 201, 302, 303):
             _log(f"构建已触发, HTTP {resp.status_code}")
-            time.sleep(3)
+            loc = resp.headers.get("Location", "")
+            m = re.search(r'/(\d+)/?$', loc)
+            if m:
+                return int(m.group(1))
             return self._get_next_build_number(job_path)
         else:
             _log(f"触发失败: {resp.status_code} {resp.text[:200]}", "ERROR")
@@ -386,8 +433,18 @@ class JenkinsClient:
 
     def _get_next_build_number(self, job_path: str) -> Optional[int]:
         try:
-            resp = self.session.get(self._api_url(job_path), timeout=30)
-            last = resp.json().get("lastBuild", {})
+            resp = self.session.get(
+                self._api_url(job_path),
+                params={"tree": "lastBuild[number],nextBuildNumber"},
+                timeout=30,
+            )
+            if resp.status_code != 200:
+                return None
+            data = resp.json()
+            nbn = data.get("nextBuildNumber")
+            if nbn:
+                return nbn
+            last = data.get("lastBuild", {})
             return last.get("number", 0)
         except Exception:
             return None
@@ -453,15 +510,26 @@ class JenkinsClient:
 
 
 def _extract_repo_url(console: str) -> Optional[str]:
+    """从 Jenkins 控制台输出提取仓库地址。
+
+    支持直接匹配实际地址，也支持 your-server 占位符替换。
+    同时尝试匹配 aptly 输出中的 deb 行。
+    """
+    # 直接匹配 10.20.64.92:8080 地址
     pattern = r'http://10\.20\.64\.92:8080/crimson_runtime/stable_[^\s"]+/'
     m = re.search(pattern, console)
     if m:
         return m.group(0)
-    # Jenkins 控制台输出可能使用 your-server 占位符，替换为实际地址
+    # 匹配 your-server 占位符地址，替换为实际服务器
     pattern2 = r'http://your-server/crimson_runtime/stable_[^\s"]+/'
     m2 = re.search(pattern2, console)
     if m2:
         return m2.group(0).replace('your-server', '10.20.64.92:8080')
+    # 匹配 deb 行中的地址（可能有缩进）
+    pattern3 = r'deb\s+(http://your-server/crimson_runtime/stable_[^\s]+/)'
+    m3 = re.search(pattern3, console)
+    if m3:
+        return m3.group(1).replace('your-server', '10.20.64.92:8080')
     return None
 
 
@@ -638,7 +706,9 @@ def check_repo(cfg, build_url):
 # ---------------------------------------------------------------------------
 
 def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
-                deb_repo: Optional[str] = None, dry_run: bool = False) -> bool:
+                deb_repo: Optional[str] = None,
+                fork_owner: Optional[str] = None,
+                dry_run: bool = False) -> bool:
     _log("=" * 60)
     _log("修改 yaml 文件并创建 PR")
     _log("=" * 60)
@@ -648,7 +718,7 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
 
     if version is None:
         try:
-            version = _infer_version(cfg)
+            version = _infer_version(deb_repo)
         except Exception as e:
             _log(f"自动推断版本失败: {e}", "WARN")
             version = input("版本号 (如 6.7.0.45): ").strip()
@@ -676,10 +746,10 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
         return True
 
     if not _update_single_repo("org.deepin.runtime", cfg["runtime_repo_path"],
-                                version, deb_repo):
+                                version, deb_repo, fork_owner):
         return False
     if not _update_single_repo("org.deepin.runtime.webengine",
-                                cfg["webengine_repo_path"], version, deb_repo,
+                                cfg["webengine_repo_path"], version, deb_repo, fork_owner,
                                 apply_patch=_find_webengine_patch()):
         return False
 
@@ -687,26 +757,24 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
     return True
 
 
-def _infer_version(cfg: Dict[str, Any]) -> str:
-    """从 CRP dtkcore 打包实例 tag 计算玲珑 runtime 版本。
+def _infer_version(deb_repo: str) -> str:
+    """从 deb 仓库解析 dtkcore 版本计算玲珑 runtime 版本。
 
     玲珑版本格式 X.Y.0.Z，与 DTK 版本 X.Y.Z 一一对应。
     """
-    topic = cfg.get("crp_topic", "玲珑runtime dtk版本更新")
-    instances = _get_crp_instances(topic, cfg.get("crp_branch_id"))
-    for inst in instances:
-        if "dtkcore" in inst.get("project_name", ""):
-            tag = inst.get("tag", "").strip()
-            if tag:
-                _log(f"CRP dtkcore tag: {tag}")
-                parts = tag.split(".")
-                if len(parts) >= 3 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
-                    new_ver = f"{parts[0]}.{parts[1]}.0.{parts[2]}"
-                    _log(f"玲珑推断版本: {new_ver}")
-                    return new_ver
-                _log(f"CRP dtkcore tag 格式异常: {tag}", "WARN")
-                break
-    raise RuntimeError("CRP 未找到 dtkcore 打包实例 tag，请先执行 crp-pack 或指定 --version")
+    pool_url = deb_repo.rstrip("/") + "/pool/main/d/dtkcore/"
+    _log(f"从 deb 仓库获取 dtkcore 版本: {pool_url}")
+    resp = requests.get(pool_url, timeout=30)
+    if resp.status_code != 200:
+        raise RuntimeError(f"无法访问 deb 仓库: {pool_url} ({resp.status_code})")
+    # 匹配 libdtk6core_X.Y.Z-N_amd64.deb，提取版本号
+    m = re.search(r'libdtk6core_(\d+\.\d+\.\d+)(?:-\d+)?_amd64\.deb', resp.text)
+    if not m:
+        raise RuntimeError(f"deb 仓库中未找到 dtkcore amd64 包: {pool_url}")
+    parts = m.group(1).split(".")
+    new_ver = f"{parts[0]}.{parts[1]}.0.{parts[2]}"
+    _log(f"从 deb 仓库推断版本: {new_ver} (dtkcore {m.group(1)})")
+    return new_ver
 
 def _find_webengine_patch() -> Optional[str]:
     candidates = [
@@ -719,24 +787,52 @@ def _find_webengine_patch() -> Optional[str]:
     _log("webengine.patch 未找到或为空，请放置到 assets/ 或 ~/.config/linglong-update/", "WARN")
     return None
 
+def _update_deepin_repo_url(repo_path: str, repo_url: str) -> None:
+    """更新 update.go 中的 deepinRepoURL 变量。"""
+    update_go = os.path.join(repo_path, "update.go")
+    if not os.path.exists(update_go):
+        _log("update.go 不存在", "WARN")
+        return
+    content = Path(update_go).read_text()
+    new_c = re.sub(r'(deepinRepoURL\s*=\s*")[^"]*(")', r'\1' + repo_url.rstrip("/") + r'\2', content)
+    if new_c != content:
+        Path(update_go).write_text(new_c)
+        _log(f"update.go 仓库地址已更新为 {repo_url}")
+
 
 def _update_single_repo(label: str, repo_path: str, version: str,
-                        deb_repo: str, apply_patch: Optional[str] = None) -> bool:
+                        deb_repo: str,
+                        fork_owner: Optional[str] = None,
+                        apply_patch: Optional[str] = None) -> bool:
     _log(f"--- {label} ---")
+    # 清理仓库状态：丢弃本地改动，删除旧分支，重置到远端最新
     _run(["git", "-C", repo_path, "fetch", "origin"])
+    _run(["git", "-C", repo_path, "checkout", "--", "."], check=False)
+    _run(["git", "-C", repo_path, "clean", "-fd"], check=False)
+    # 删除旧的 update/ 分支
+    result = subprocess.run(
+        ["git", "-C", repo_path, "branch"], capture_output=True, text=True)
+    for line in result.stdout.splitlines():
+        b = line.strip().lstrip("* ")
+        if b.startswith("update/linglong-runtime-"):
+            _run(["git", "-C", repo_path, "branch", "-D", b], check=False)
+    # 切换到 main/master
     try:
         _run(["git", "-C", repo_path, "checkout", "main"])
     except subprocess.CalledProcessError:
         _run(["git", "-C", repo_path, "checkout", "master"])
-    try:
-        _run(["git", "-C", repo_path, "pull", "origin"])
-    except subprocess.CalledProcessError:
-        _log("Pull 失败，继续...", "WARN")
+    _run(["git", "-C", repo_path, "reset", "--hard", "origin/HEAD"])
 
-    ts = datetime.now().strftime("%Y%m%d%H%M")
-    branch = f"update/linglong-runtime-{version}-{ts}"
-    _log(f"创建分支: {branch}")
-    _run(["git", "-C", repo_path, "checkout", "-b", branch])
+    branch = "update/linglong-runtime"
+    _log(f"使用固定分支: {branch}")
+    # 如果分支已存在，切过去；否则创建
+    result = subprocess.run(
+        ["git", "-C", repo_path, "branch", "--list", branch],
+        capture_output=True, text=True)
+    if result.stdout.strip():
+        _run(["git", "-C", repo_path, "checkout", branch])
+    else:
+        _run(["git", "-C", repo_path, "checkout", "-b", branch])
 
     if apply_patch:
         _log(f"应用补丁: {apply_patch}")
@@ -754,11 +850,12 @@ def _update_single_repo(label: str, repo_path: str, version: str,
 
     _update_version_in_yaml(repo_path, version)
     _update_repo_url_in_yaml(repo_path, deb_repo)
+    _update_deepin_repo_url(repo_path, deb_repo)
 
     daily = os.path.join(repo_path, "daily.bash")
     if os.path.exists(daily):
         _log("执行 daily.bash...")
-        _run(["bash", daily], cwd=repo_path)
+        _run(["bash", daily, version], cwd=repo_path)
     else:
         _log("daily.bash 不存在", "WARN")
 
@@ -767,17 +864,48 @@ def _update_single_repo(label: str, repo_path: str, version: str,
            f"Update repo URL to {deb_repo}\nVersion: {version}\n\n"
            f"Log: 更新玲珑 runtime 到 {version}\n"
            f"Influence: 更新 DTK 玲珑 runtime 依赖仓库地址和版本")
-    _run(["git", "-C", repo_path, "commit", "-m", msg])
 
-    _log("推送分支...")
-    _run(["git", "-C", repo_path, "push", "origin", branch])
+    # 尝试 amend 合并到上一次提交（如果存在），否则新建
+    result = subprocess.run(
+        ["git", "-C", repo_path, "log", "-1", "--format=%H"],
+        capture_output=True, text=True)
+    # 检查上一次提交是否是我们自己的（非 origin/main）
+    parent_check = subprocess.run(
+        ["git", "-C", repo_path, "merge-base", "--is-ancestor",
+         "HEAD", "origin/HEAD"], capture_output=True)
+    if parent_check.returncode != 0 and result.stdout.strip():
+        _run(["git", "-C", repo_path, "commit", "--amend", "-m", msg, "--allow-empty"], check=False)
+        _log("合并到上一次提交（已更新版本信息）")
+    else:
+        _run(["git", "-C", repo_path, "commit", "-m", msg])
 
-    _log("创建 PR...")
-    result = _run_gh(["pr", "create",
-                      "--title", f"chore: update linglong runtime to {version}",
-                      "--body", f"Update repo URL to {deb_repo}\nVersion: {version}",
-                      "--base", "main", "--head", branch], cwd=repo_path)
-    pr_url = result.stdout.strip()
+    # 通过 fork 推送并创建 PR（不使用 origin push，权限不足）
+    repo_slug = _get_repo_slug(repo_path)
+    fork_slug = _ensure_fork(repo_slug, fork_owner)
+    fork_remote = f"https://github.com/{fork_slug}.git"
+    _run(["git", "-C", repo_path, "remote", "remove", "fork"], check=False)
+    _run(["git", "-C", repo_path, "remote", "add", "fork", fork_remote])
+    _log(f"强推到 fork: {fork_slug}")
+    _run(["git", "-C", repo_path, "push", "-f", "fork", branch])
+
+    # 检查是否已有 PR（按 branch 名过滤，--head flag 不可靠）
+    existing_pr = subprocess.run(
+        ["gh", "pr", "list", "--repo", repo_slug,
+         "--state", "open", "--json", "headRefName,url",
+         "--jq", f'.[] | select(.headRefName == "{branch}") | .url'],
+        capture_output=True, text=True).stdout.strip()
+    if existing_pr:
+        _log(f"PR 已存在: {existing_pr}")
+        pr_url = existing_pr
+    else:
+        _log("创建 PR...")
+        result = _run_gh(["pr", "create",
+                          "--repo", repo_slug,
+                          "--title", f"chore: update linglong runtime to {version}",
+                          "--body", f"Update repo URL to {deb_repo}\nVersion: {version}",
+                          "--base", "main", "--head", f"{fork_slug.split('/')[0]}:{branch}"],
+                          cwd=repo_path)
+        pr_url = result.stdout.strip()
     print(f"\n  PR: {pr_url}\n")
 
     if _input_confirm(f"等待 {label} PR 合并?"):
@@ -791,7 +919,7 @@ def _update_version_in_yaml(repo_path: str, version: str) -> None:
         _log("linglong.yaml 不存在", "WARN")
         return
     content = Path(yp).read_text()
-    new_c = re.sub(r'(version:\s*)\S+', f'\\g<1>{version}', content)
+    new_c = re.sub(r'(version:\s*)\S+', f'\\g<1>{version}', content, count=1)
     if new_c != content:
         Path(yp).write_text(new_c)
         _log(f"版本号已更新为 {version}")
@@ -1299,6 +1427,7 @@ def _build_parser() -> argparse.ArgumentParser:
         elif name == "update-repo":
             s.add_argument("--version", default=None, help="版本号（默认自动推断）")
             s.add_argument("--deb-repo", required=True, help="deb 更新仓库地址（如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/）")
+            s.add_argument("--fork-owner", default=None, help=f"Fork 目标 GitHub 用户/组织（默认 {FORK_OWNER}）")
         elif name == "build-layer":
             s.add_argument("--repo-url", default=None, help="REPO_URL（默认 github.com/linglongdev/org.deepin.runtime）")
             s.add_argument("--repo-branch", default=None, help="REPO_BRANCH（默认 main）")
@@ -1343,7 +1472,7 @@ def main() -> int:
             return 0 if r else 1
         elif args.command == "update-repo":
             return 0 if update_repo(cfg, args.version, args.deb_repo,
-                                    args.dry_run) else 1
+                                    args.fork_owner, args.dry_run) else 1
         elif args.command == "build-layer":
             return 0 if build_layer(cfg, args.repo_url, args.repo_branch,
                                     args.dry_run) else 1
