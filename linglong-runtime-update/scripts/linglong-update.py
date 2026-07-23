@@ -43,7 +43,9 @@ JENKINS_PUSH_OLD_JOB = "view/dtk/job/linglong-runtime-push-to-old"
 JENKINS_PUSH_TEST_JOB = "view/dtk/job/linglong-runtime-push-to-test"
 
 N8N_FORM_URL = "https://n8n.cicd.getdeepin.org/form/097d0087-7f34-4614-8329-82d096af7ba5"
-REPO_URL_PREFIX = "http://10.20.64.92:8080/crimson_runtime/stable_"
+REPO_URL_HOST = "10.20.64.92:8080"
+CRIMSON_BASE = f"http://{REPO_URL_HOST}/crimson_runtime"
+REPO_URL_PREFIX = f"{CRIMSON_BASE}/stable_"
 
 RUNTIME_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.git"
 WEBENGINE_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.webengine.git"
@@ -516,7 +518,7 @@ def _extract_repo_url(console: str) -> Optional[str]:
     同时尝试匹配 aptly 输出中的 deb 行。
     """
     # 直接匹配 10.20.64.92:8080 地址
-    pattern = r'http://10\.20\.64\.92:8080/crimson_runtime/stable_[^\s"]+/'
+    pattern = re.escape(CRIMSON_BASE) + r'/stable_[^\s"]+/'
     m = re.search(pattern, console)
     if m:
         return m.group(0)
@@ -524,12 +526,12 @@ def _extract_repo_url(console: str) -> Optional[str]:
     pattern2 = r'http://your-server/crimson_runtime/stable_[^\s"]+/'
     m2 = re.search(pattern2, console)
     if m2:
-        return m2.group(0).replace('your-server', '10.20.64.92:8080')
+        return m2.group(0).replace('your-server', REPO_URL_HOST)
     # 匹配 deb 行中的地址（可能有缩进）
     pattern3 = r'deb\s+(http://your-server/crimson_runtime/stable_[^\s]+/)'
     m3 = re.search(pattern3, console)
     if m3:
-        return m3.group(1).replace('your-server', '10.20.64.92:8080')
+        return m3.group(1).replace('your-server', REPO_URL_HOST)
     return None
 
 
@@ -708,13 +710,14 @@ def check_repo(cfg, build_url):
 def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
                 deb_repo: Optional[str] = None,
                 fork_owner: Optional[str] = None,
+                repo: str = "runtime",
                 dry_run: bool = False) -> bool:
     _log("=" * 60)
     _log("修改 yaml 文件并创建 PR")
     _log("=" * 60)
 
     if deb_repo is None:
-        deb_repo = input("deb 更新仓库地址 (如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/): ").strip()
+        deb_repo = input(f"deb 更新仓库地址 (如 {CRIMSON_BASE}/stable_xxx/): ").strip()
 
     if version is None:
         try:
@@ -745,13 +748,15 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
         _log(f"  将修改 linglong.yaml 仓库地址为 {deb_repo}")
         return True
 
-    if not _update_single_repo("org.deepin.runtime", cfg["runtime_repo_path"],
-                                version, deb_repo, fork_owner):
-        return False
-    if not _update_single_repo("org.deepin.runtime.webengine",
-                                cfg["webengine_repo_path"], version, deb_repo, fork_owner,
-                                apply_patch=_find_webengine_patch()):
-        return False
+    if repo == "webengine":
+        if not _update_webengine_repo("org.deepin.runtime.webengine",
+                                       cfg["webengine_repo_path"], version, deb_repo,
+                                       cfg["runtime_repo_path"]):
+            return False
+    else:
+        if not _update_runtime_repo("org.deepin.runtime", cfg["runtime_repo_path"],
+                                     version, deb_repo, fork_owner):
+            return False
 
     _log("仓库更新完成")
     return True
@@ -799,55 +804,42 @@ def _update_deepin_repo_url(repo_path: str, repo_url: str) -> None:
         Path(update_go).write_text(new_c)
         _log(f"update.go 仓库地址已更新为 {repo_url}")
 
-
-def _update_single_repo(label: str, repo_path: str, version: str,
-                        deb_repo: str,
-                        fork_owner: Optional[str] = None,
-                        apply_patch: Optional[str] = None) -> bool:
+def _update_runtime_repo(label: str, repo_path: str, version: str,
+                         deb_repo: str,
+                         fork_owner: Optional[str] = None) -> bool:
+    """更新 org.deepin.runtime 仓库：新分支 → 脚本 → amend → fork → PR。"""
     _log(f"--- {label} ---")
-    # 清理仓库状态：丢弃本地改动，删除旧分支，重置到远端最新
+    # 1. 清理：fetch origin，reset 到最新
     _run(["git", "-C", repo_path, "fetch", "origin"])
     _run(["git", "-C", repo_path, "checkout", "--", "."], check=False)
     _run(["git", "-C", repo_path, "clean", "-fd"], check=False)
-    # 删除旧的 update/ 分支
+    # 删除旧的 update/linglong-runtime-* 分支
     result = subprocess.run(
         ["git", "-C", repo_path, "branch"], capture_output=True, text=True)
     for line in result.stdout.splitlines():
         b = line.strip().lstrip("* ")
         if b.startswith("update/linglong-runtime-"):
             _run(["git", "-C", repo_path, "branch", "-D", b], check=False)
-    # 切换到 main/master
+    # 切换到 main/master 并 reset
     try:
         _run(["git", "-C", repo_path, "checkout", "main"])
     except subprocess.CalledProcessError:
         _run(["git", "-C", repo_path, "checkout", "master"])
     _run(["git", "-C", repo_path, "reset", "--hard", "origin/HEAD"])
 
+    # 2. 固定分支，存在则切过去，否则新建
     branch = "update/linglong-runtime"
     _log(f"使用固定分支: {branch}")
-    # 如果分支已存在，切过去；否则创建
     result = subprocess.run(
         ["git", "-C", repo_path, "branch", "--list", branch],
         capture_output=True, text=True)
-    if result.stdout.strip():
+    branch_existed = bool(result.stdout.strip())
+    if branch_existed:
         _run(["git", "-C", repo_path, "checkout", branch])
     else:
         _run(["git", "-C", repo_path, "checkout", "-b", branch])
 
-    if apply_patch:
-        _log(f"应用补丁: {apply_patch}")
-        try:
-            _run(["git", "-C", repo_path, "apply", apply_patch])
-            _log("补丁应用成功")
-        except subprocess.CalledProcessError:
-            _log("git apply 失败，尝试三路合并...", "WARN")
-            try:
-                _run(["git", "-C", repo_path, "apply", "--3way", apply_patch])
-                _log("三路合并成功")
-            except subprocess.CalledProcessError:
-                _log("补丁应用彻底失败，检查冲突", "ERROR")
-                return False
-
+    # 3. 修改 yaml + 执行 daily.bash
     _update_version_in_yaml(repo_path, version)
     _update_repo_url_in_yaml(repo_path, deb_repo)
     _update_deepin_repo_url(repo_path, deb_repo)
@@ -859,27 +851,19 @@ def _update_single_repo(label: str, repo_path: str, version: str,
     else:
         _log("daily.bash 不存在", "WARN")
 
+    # 4. 提交：分支已存在则 amend，否则新建
     _run(["git", "-C", repo_path, "add", "-A"])
     msg = (f"chore: update linglong runtime to {version}\n\n"
            f"Update repo URL to {deb_repo}\nVersion: {version}\n\n"
            f"Log: 更新玲珑 runtime 到 {version}\n"
            f"Influence: 更新 DTK 玲珑 runtime 依赖仓库地址和版本")
-
-    # 尝试 amend 合并到上一次提交（如果存在），否则新建
-    result = subprocess.run(
-        ["git", "-C", repo_path, "log", "-1", "--format=%H"],
-        capture_output=True, text=True)
-    # 检查上一次提交是否是我们自己的（非 origin/main）
-    parent_check = subprocess.run(
-        ["git", "-C", repo_path, "merge-base", "--is-ancestor",
-         "HEAD", "origin/HEAD"], capture_output=True)
-    if parent_check.returncode != 0 and result.stdout.strip():
+    if branch_existed:
         _run(["git", "-C", repo_path, "commit", "--amend", "-m", msg, "--allow-empty"], check=False)
-        _log("合并到上一次提交（已更新版本信息）")
+        _log(f"合并到上一次提交")
     else:
         _run(["git", "-C", repo_path, "commit", "-m", msg])
 
-    # 通过 fork 推送并创建 PR（不使用 origin push，权限不足）
+    # 5. 通过 fork 推送
     repo_slug = _get_repo_slug(repo_path)
     fork_slug = _ensure_fork(repo_slug, fork_owner)
     fork_remote = f"https://github.com/{fork_slug}.git"
@@ -888,7 +872,7 @@ def _update_single_repo(label: str, repo_path: str, version: str,
     _log(f"强推到 fork: {fork_slug}")
     _run(["git", "-C", repo_path, "push", "-f", "fork", branch])
 
-    # 检查是否已有 PR（按 branch 名过滤，--head flag 不可靠）
+    # 6. 创建或复用 PR
     existing_pr = subprocess.run(
         ["gh", "pr", "list", "--repo", repo_slug,
          "--state", "open", "--json", "headRefName,url",
@@ -911,6 +895,76 @@ def _update_single_repo(label: str, repo_path: str, version: str,
     if _input_confirm(f"等待 {label} PR 合并?"):
         _wait_for_pr_merge(label, repo_path, pr_url)
     return True
+def _update_webengine_repo(label: str, repo_path: str, version: str,
+                           deb_repo: str,
+                           runtime_repo_path: str) -> bool:
+    """更新 org.deepin.runtime.webengine 仓库：以 runtime 为基准，补丁 + 脚本各一 commit，强推 main。"""
+    _log(f"--- {label} ---")
+    # 1. 以 runtime 最新代码为基准
+    _run(["git", "-C", repo_path, "remote", "remove", "runtime-base"], check=False)
+    _run(["git", "-C", repo_path, "remote", "add", "runtime-base", runtime_repo_path])
+    _run(["git", "-C", repo_path, "fetch", "runtime-base"])
+    _run(["git", "-C", repo_path, "checkout", "--", "."], check=False)
+    _run(["git", "-C", repo_path, "clean", "-fd"], check=False)
+    # 切到 main
+    try:
+        _run(["git", "-C", repo_path, "checkout", "main"])
+    except subprocess.CalledProcessError:
+        _run(["git", "-C", repo_path, "checkout", "master"])
+    _run(["git", "-C", repo_path, "reset", "--hard", "runtime-base/HEAD"])
+
+    # 2. 应用 webengine 补丁 → commit 1
+    patch_path = _find_webengine_patch()
+    if patch_path:
+        # 检查是否已应用
+        reverse_check = subprocess.run(
+            ["git", "-C", repo_path, "apply", "--check", "--reverse", patch_path],
+            capture_output=True)
+        if reverse_check.returncode == 0:
+            _log(f"补丁已应用，跳过: {patch_path}")
+        else:
+            _log(f"应用补丁: {patch_path}")
+            try:
+                _run(["git", "-C", repo_path, "apply", patch_path])
+                _log("补丁应用成功")
+            except subprocess.CalledProcessError:
+                _log("git apply 失败，尝试三路合并...", "WARN")
+                try:
+                    _run(["git", "-C", repo_path, "apply", "--3way", patch_path])
+                    _log("三路合并成功")
+                except subprocess.CalledProcessError:
+                    _log("补丁应用彻底失败，检查冲突", "ERROR")
+                    return False
+            _run(["git", "-C", repo_path, "add", "-A"])
+            _run(["git", "-C", repo_path, "commit", "-m",
+                  f"feat: apply webengine patch\n\n{os.path.basename(patch_path)}"])
+    else:
+        _log("未找到 webengine 补丁，跳过", "WARN")
+
+    # 3. 修改 yaml + 执行 daily.bash → commit 2
+    _update_version_in_yaml(repo_path, version)
+    _update_repo_url_in_yaml(repo_path, deb_repo)
+    _update_deepin_repo_url(repo_path, deb_repo)
+
+    daily = os.path.join(repo_path, "daily.bash")
+    if os.path.exists(daily):
+        _log("执行 daily.bash...")
+        _run(["bash", daily, version], cwd=repo_path)
+    else:
+        _log("daily.bash 不存在", "WARN")
+
+    _run(["git", "-C", repo_path, "add", "-A"])
+    msg = (f"chore: update linglong runtime to {version}\n\n"
+           f"Update repo URL to {deb_repo}\nVersion: {version}\n\n"
+           f"Log: 更新玲珑 runtime 到 {version}\n"
+           f"Influence: 更新 DTK 玲珑 runtime 依赖仓库地址和版本")
+    _run(["git", "-C", repo_path, "commit", "-m", msg])
+
+    # 4. 强推到 origin/main
+    _log(f"强制推送到 origin ({label})")
+    _run(["git", "-C", repo_path, "push", "-f", "origin", "HEAD:main"])
+    _log(f"{label} 已强推到 origin/main")
+    return True
 
 
 def _update_version_in_yaml(repo_path: str, version: str) -> None:
@@ -931,7 +985,7 @@ def _update_repo_url_in_yaml(repo_path: str, repo_url: str) -> None:
         _log("linglong.yaml 不存在", "WARN")
         return
     content = Path(yp).read_text()
-    pat = r'http://10\.20\.64\.92:8080/crimson_runtime/stable_[^\s"\']+/'
+    pat = re.escape(CRIMSON_BASE) + r'/stable_[^\s"\']+/'
     new_c = re.sub(pat, repo_url, content)
     if new_c != content:
         Path(yp).write_text(new_c)
@@ -1043,9 +1097,9 @@ def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
 
     if layer_url is None:
         if dry_run:
-            layer_url = "http://10.20.64.92:8080/crimson_runtime/stable_test/"
+            layer_url = f"{CRIMSON_BASE}/stable_test/"
         else:
-            layer_url = input("LAYER_URL (如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/): ").strip()
+            layer_url = input(f"LAYER_URL (如 {CRIMSON_BASE}/stable_xxx/): ").strip()
 
     print(f"\n  LAYER_URL: {layer_url}")
     print(f"  N8N 表单 : {N8N_FORM_URL}\n")
@@ -1349,13 +1403,13 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
                 state["repo_url"] = repo_url
         elif choice == "3":
             if not state.get("repo_url"):
-                state["repo_url"] = input("仓库地址 (如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/): ").strip()
+                state["repo_url"] = input(f"仓库地址 (如 {CRIMSON_BASE}/stable_xxx/): ").strip()
             version = input("版本号 (如 1.1.1.1): ").strip()
             update_repo(cfg, version, state.get("repo_url"))
         elif choice == "4":
             build_layer(cfg)
         elif choice == "5":
-            layer_url = input("LAYER_URL (可选，如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/): ").strip() or None
+            layer_url = input(f"LAYER_URL (可选，如 {CRIMSON_BASE}/stable_xxx/): ").strip() or None
             push_layer(cfg, layer_url)
         elif choice == "6":
             cmd_config()
@@ -1426,8 +1480,10 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--repo-id", default=None, help="仓库标识（如日期 20260722）")
         elif name == "update-repo":
             s.add_argument("--version", default=None, help="版本号（默认自动推断）")
-            s.add_argument("--deb-repo", required=True, help="deb 更新仓库地址（如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/）")
+            s.add_argument("--deb-repo", required=True, help=f"deb 更新仓库地址（如 {CRIMSON_BASE}/stable_xxx/）")
             s.add_argument("--fork-owner", default=None, help=f"Fork 目标 GitHub 用户/组织（默认 {FORK_OWNER}）")
+            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],
+                           help="目标仓库: runtime (org.deepin.runtime, 默认), webengine (org.deepin.runtime.webengine)")
         elif name == "build-layer":
             s.add_argument("--repo-url", default=None, help="REPO_URL（默认 github.com/linglongdev/org.deepin.runtime）")
             s.add_argument("--repo-branch", default=None, help="REPO_BRANCH（默认 main）")
@@ -1472,7 +1528,7 @@ def main() -> int:
             return 0 if r else 1
         elif args.command == "update-repo":
             return 0 if update_repo(cfg, args.version, args.deb_repo,
-                                    args.fork_owner, args.dry_run) else 1
+                                    args.fork_owner, args.repo, args.dry_run) else 1
         elif args.command == "build-layer":
             return 0 if build_layer(cfg, args.repo_url, args.repo_branch,
                                     args.dry_run) else 1
