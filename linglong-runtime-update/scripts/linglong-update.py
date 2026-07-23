@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import requests
+import urllib.parse
 
 # ---------------------------------------------------------------------------
 # 常量
@@ -286,6 +287,48 @@ class JenkinsClient:
         self.session.auth = (user, password)
         self.session.trust_env = False  # Jenkins 内网，不走代理
         self.session.headers.update({"User-Agent": "linglong-update/1.0"})
+        self._fetch_csrf()
+
+    def _fetch_csrf(self) -> None:
+        try:
+            resp = self.session.get(
+                f"{JENKINS_BASE}/crumbIssuer/api/json", timeout=30
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                field = data.get("crumbRequestField", "Jenkins-Crumb")
+                crumb = data.get("crumb", "")
+                self.session.headers[field] = crumb
+                self._crumb_field = field
+                self._crumb = crumb
+                _log(f"CSRF crumb 已获取")
+            else:
+                self._crumb_field = "Jenkins-Crumb"
+                self._crumb = ""
+                _log(f"crumbIssuer API 返回 {resp.status_code}，尝试从页面提取")
+                self._fetch_csrf_from_html()
+        except Exception:
+            _log("无法通过 API 获取 CSRF crumb，尝试从页面提取", "WARN")
+            self._fetch_csrf_from_html()
+
+    def _fetch_csrf_from_html(self) -> None:
+        try:
+            resp = self.session.get(f"{JENKINS_BASE}/", timeout=30)
+            m = re.search(r'data-crumb-value="([^"]+)"', resp.text)
+            if m:
+                self._crumb = m.group(1)
+                m2 = re.search(r'data-crumb-header="([^"]+)"', resp.text)
+                self._crumb_field = m2.group(1) if m2 else "Jenkins-Crumb"
+                self.session.headers[self._crumb_field] = self._crumb
+                _log(f"从页面提取 CSRF crumb 成功")
+            else:
+                self._crumb_field = "Jenkins-Crumb"
+                self._crumb = ""
+                _log("页面中未找到 crumb，POST 请求可能被拒", "WARN")
+        except Exception:
+            self._crumb_field = "Jenkins-Crumb"
+            self._crumb = ""
+            _log("无法从页面提取 crumb，POST 请求可能被拒", "WARN")
 
     def _api_url(self, job_path: str) -> str:
         return f"{JENKINS_BASE}/{job_path}/api/json"
@@ -298,13 +341,42 @@ class JenkinsClient:
 
     def trigger_build(self, job_path: str,
                       params: Optional[Dict[str, str]] = None) -> Optional[int]:
+        url = f"{JENKINS_BASE}/{job_path}/build?delay=0sec"
+        # 构建普通表单字段（有序）
+        form_data = []
         if params:
-            url = self._build_params_url(job_path)
-            resp = self.session.post(url, data=params, timeout=60)
-        else:
-            url = self._build_url(job_path)
-            resp = self.session.post(url, timeout=60)
-        if resp.status_code in (200, 201, 302):
+            for k, v in params.items():
+                form_data.append(("name", k))
+                form_data.append(("value", v))
+        form_data.append(("statusCode", "303"))
+        form_data.append(("redirectTo", "."))
+        if self._crumb:
+            form_data.append((self._crumb_field, self._crumb))
+
+        # 构建 json 字段：JSON 序列化整个表单（Jenkins 表单提交特有格式）
+        json_obj = {"parameter": {}}
+        if params:
+            for k, v in params.items():
+                json_obj["parameter"]["name"] = k
+                json_obj["parameter"]["value"] = v
+        json_obj["statusCode"] = "303"
+        json_obj["redirectTo"] = "."
+        json_obj[""] = ""
+        if self._crumb:
+            json_obj[self._crumb_field] = self._crumb
+        form_data.append(("json", json.dumps(json_obj, separators=(",", ":"))))
+
+        # 显式 URL-encode，确保 Content-Type 为 application/x-www-form-urlencoded
+        body = urllib.parse.urlencode(form_data)
+
+        resp = self.session.post(
+            url,
+            data=body,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            timeout=60,
+            allow_redirects=False,
+        )
+        if resp.status_code in (200, 201, 302, 303):
             _log(f"构建已触发, HTTP {resp.status_code}")
             time.sleep(3)
             return self._get_next_build_number(job_path)
@@ -316,7 +388,7 @@ class JenkinsClient:
         try:
             resp = self.session.get(self._api_url(job_path), timeout=30)
             last = resp.json().get("lastBuild", {})
-            return last.get("number", 0) + 1
+            return last.get("number", 0)
         except Exception:
             return None
 
@@ -383,7 +455,14 @@ class JenkinsClient:
 def _extract_repo_url(console: str) -> Optional[str]:
     pattern = r'http://10\.20\.64\.92:8080/crimson_runtime/stable_[^\s"]+/'
     m = re.search(pattern, console)
-    return m.group(0) if m else None
+    if m:
+        return m.group(0)
+    # Jenkins 控制台输出可能使用 your-server 占位符，替换为实际地址
+    pattern2 = r'http://your-server/crimson_runtime/stable_[^\s"]+/'
+    m2 = re.search(pattern2, console)
+    if m2:
+        return m2.group(0).replace('your-server', '10.20.64.92:8080')
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -465,7 +544,7 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
 
     if dry_run:
         _log(f"DRY RUN — 将触发参数: repo_id={repo_id}", "WARN")
-        return f"{REPO_URL_PREFIX}{repo_id}/"
+        return f"{REPO_URL_PREFIX}{datetime.now().strftime("%Y%m%d")}_{repo_id}/"
 
     jc = JenkinsClient(creds["user"], creds["password"])
     if not jc.job_exists(JENKINS_REPO_UPDATE_JOB):
@@ -475,7 +554,7 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
 
 
     _log(f"触发: {JENKINS_REPO_UPDATE_JOB}")
-    build_num = jc.trigger_build(JENKINS_REPO_UPDATE_JOB, {"param": repo_id})
+    build_num = jc.trigger_build(JENKINS_REPO_UPDATE_JOB, {"SUFFIX": repo_id})
     if not build_num:
         _log("未能获取构建编号", "ERROR")
         return None
@@ -490,10 +569,69 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
     if repo_url:
         print(f"\n  仓库地址: {repo_url}\n")
     else:
-        repo_url = f"{REPO_URL_PREFIX}{repo_id}/"
+        repo_url = f"{REPO_URL_PREFIX}{datetime.now().strftime("%Y%m%d")}_{repo_id}/"
         _log(f"推测仓库地址: {repo_url}")
     return repo_url
 
+
+
+
+def check_repo(cfg, build_url):
+    """查询构建状态并提取仓库地址，不轮询等待。"""
+    _log("=" * 60)
+    _log("查询构建状态")
+    _log("=" * 60)
+
+    base = JENKINS_BASE.rstrip("/")
+    if not build_url.startswith(base):
+        _log(f"URL 必须以 {base} 开头", "ERROR")
+        return None
+
+    path = build_url[len(base):].strip("/")
+    parts = [p for p in path.split("/") if p]
+    if not parts:
+        _log("无法解析 URL 中的 job 路径和构建编号", "ERROR")
+        return None
+
+    try:
+        build_number = int(parts[-1])
+    except ValueError:
+        _log(f"构建编号无效: {parts[-1]}", "ERROR")
+        return None
+
+    job_path = "/".join(parts[:-1])
+
+    print(f"\n  Job: {job_path}\n  构建: #{build_number}\n")
+    _log(f"Jenkins URL: {JENKINS_BASE}/{job_path}/{build_number}/")
+
+    creds = _ensure_jenkins_auth()
+    _log("Jenkins 认证成功")
+
+    jc = JenkinsClient(creds["user"], creds["password"])
+    try:
+        status = jc.get_build_status(job_path, build_number)
+    except Exception as e:
+        _log(f"获取构建状态失败: {e}", "ERROR")
+        return None
+
+    if status["building"]:
+        _log(f"构建 #{build_number} 仍在进行中 (result={status.get('result', 'N/A')})")
+        return None
+
+    if status.get("result") == "SUCCESS":
+        _log(f"构建 #{build_number} 成功!")
+        console = jc.get_console_output(job_path, build_number)
+        repo_url = _extract_repo_url(console)
+        if repo_url:
+            print(f"\n  仓库地址: {repo_url}\n")
+        else:
+            today = datetime.now().strftime("%Y%m%d")
+            _log("未能从控制台输出提取仓库地址", "WARN")
+        return repo_url
+    else:
+        result = status.get("result", "UNKNOWN")
+        _log(f"构建 #{build_number}: {result}", "ERROR")
+        return None
 
 # ---------------------------------------------------------------------------
 # Step 3: 仓库更新与 PR
@@ -1167,6 +1305,10 @@ def _build_parser() -> argparse.ArgumentParser:
         elif name == "push-layer":
             s.add_argument("--layer-url", default=None, help="LAYER_URL（build-layer 产出地址）")
 
+    # check-repo — 独立子命令，不在循环中处理
+    s = sub.add_parser("check-repo", help="查询构建状态并提取仓库地址")
+    s.add_argument("--build-url", required=True, help="Jenkins 构建 URL（如 https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/）")
+
     sub.add_parser("config", help="配置参数（含 Jenkins 凭证）")
     sub.add_parser("status", help="查看各阶段状态（CRP/Jenkins/GitHub/本地）")
     return p
@@ -1207,6 +1349,9 @@ def main() -> int:
                                     args.dry_run) else 1
         elif args.command == "push-layer":
             return 0 if push_layer(cfg, args.layer_url, args.dry_run) else 1
+        elif args.command == "check-repo":
+            r = check_repo(cfg, args.build_url)
+            return 0 if r else 1
         return 1
     except KeyboardInterrupt:
         _log("用户中断", "WARN")
