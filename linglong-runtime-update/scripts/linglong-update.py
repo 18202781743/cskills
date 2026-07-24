@@ -51,6 +51,8 @@ WEBENGINE_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.webengin
 _CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp_pack.py")
 
 CACHE_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "repos"
+VENV_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "venv"
+REQUIREMENTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requirements.txt")
 
 DEFAULT_CONFIG: Dict[str, Any] = {
     "crp_topic": "玲珑runtime dtk版本更新",
@@ -69,7 +71,23 @@ DTK_PROJECTS = [
     "dtkdeclarative-v25", "qt5integration-v25", "qt5platform-plugins-v25",
 ]
 
+# ---------------------------------------------------------------------------
+# venv 管理
+# ---------------------------------------------------------------------------
 
+def _ensure_venv() -> str:
+    """确保 venv 存在并安装依赖，返回 venv python 路径。"""
+    venv_python = VENV_DIR / "bin" / "python3"
+    if venv_python.exists():
+        return str(venv_python)
+    _log(f"创建 venv: {VENV_DIR}")
+    VENV_DIR.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run([sys.executable, "-m", "venv", str(VENV_DIR)], check=True)
+    _log("安装依赖...")
+    subprocess.run([str(venv_python), "-m", "pip", "install", "-q", "-r", REQUIREMENTS],
+                   check=True)
+    _log("venv 就绪")
+    return str(venv_python)
 
 # ---------------------------------------------------------------------------
 # 配置管理
@@ -473,29 +491,6 @@ class JenkinsClient:
                 "building": data.get("building", False),
                 "url": data.get("url", ""), "number": data.get("number", 0)}
 
-    def wait_for_build(self, job_path: str, build_number: int,
-                       poll_interval: int = 30, timeout: int = 3600) -> bool:
-        _log(f"等待构建 #{build_number} (超时 {timeout}s)...")
-        start = time.time()
-        while time.time() - start < timeout:
-            try:
-                status = self.get_build_status(job_path, build_number)
-            except Exception as e:
-                _log(f"轮询异常: {e}, 重试中...", "WARN")
-                time.sleep(poll_interval)
-                continue
-            if not status["building"]:
-                if status["result"] == "SUCCESS":
-                    _log(f"构建 #{build_number} 成功!")
-                    return True
-                else:
-                    _log(f"构建 #{build_number}: {status['result']}", "ERROR")
-                    return False
-            elapsed = int(time.time() - start)
-            _log(f"构建 #{build_number} 进行中... ({elapsed}s)")
-            time.sleep(poll_interval)
-        _log(f"构建 #{build_number} 超时", "ERROR")
-        return False
 
     def get_console_output(self, job_path: str, build_number: int) -> str:
         url = f"{JENKINS_BASE}/{job_path}/{build_number}/consoleText"
@@ -960,8 +955,7 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
         pr_url = result.stdout.strip()
     print(f"\n  PR: {pr_url}\n")
 
-    if _input_confirm(f"等待 {label} PR 合并?"):
-        _wait_for_pr_merge(label, repo_path, pr_url)
+    _log(f"PR 已创建: {pr_url}，请手动合并或使用 --check 查询状态")
     return True
 def _update_webengine_repo(label: str, repo_path: str, version: str,
                            deb_repo: str,
@@ -1058,32 +1052,6 @@ def _update_repo_url_in_yaml(repo_path: str, repo_url: str) -> None:
     if new_c != content:
         Path(yp).write_text(new_c)
         _log(f"仓库地址已更新为 {repo_url}")
-
-
-def _wait_for_pr_merge(label: str, repo_path: str, pr_url: str,
-                       timeout: int = 600) -> bool:
-    _log(f"等待 {label} PR 合并...")
-    start = time.time()
-    pr_num = pr_url.rstrip("/").split("/")[-1]
-    while time.time() - start < timeout:
-        try:
-            r = _run_gh(["pr", "view", pr_num, "--json", "state,mergedAt"],
-                        cwd=repo_path)
-            d = json.loads(r.stdout)
-            if d.get("mergedAt"):
-                _log(f"{label} PR #{pr_num} 已合并!")
-                _run(["git", "-C", repo_path, "checkout", "main"])
-                _run(["git", "-C", repo_path, "pull", "origin", "main"])
-                return True
-            if d.get("state") == "CLOSED":
-                _log(f"{label} PR #{pr_num} 已关闭 (未合并)", "WARN")
-                return False
-        except Exception:
-            pass
-        _log(f"{label} PR #{pr_num} 仍在开放，等待...")
-        time.sleep(30)
-    _log(f"等待 {label} PR 合并超时", "WARN")
-    return False
 
 
 # ---------------------------------------------------------------------------
@@ -1244,7 +1212,7 @@ def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
         build_num = jc.trigger_build(job, params)
         if build_num:
             _log(f"构建 #{build_num}: {JENKINS_BASE}/{job}/{build_num}/")
-            jc.wait_for_build(job, build_num)
+            _log(f"{label} 已触发，使用 --check 查询状态")
         else:
             _log(f"触发 {label} 失败", "ERROR")
 
@@ -1406,6 +1374,13 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
+    # 若不在 venv 内运行，自动用 venv python 重执行
+    venv_python = VENV_DIR / "bin" / "python3"
+    if not venv_python.exists():
+        _ensure_venv()
+    if sys.executable != str(venv_python) and venv_python.exists():
+        os.execv(str(venv_python), [str(venv_python)] + sys.argv)
+
     args = _build_parser().parse_args()
 
     # 无命令 → 交互式菜单

@@ -7,12 +7,23 @@ description: DTK 玲珑 Runtime 更新自动化工具。当用户需要更新 or
 
 自动化更新 org.deepin.runtime 和 org.deepin.runtime.webengine 两个玲珑 runtime 仓库的完整工作流。
 
+## ⚠ 请求频率约束
+
+CRP、Jenkins、N8N 均为内网服务，请求响应缓慢（单次 5-30 秒）。**严格遵守以下约束**：
+
+- **轮询间隔至少 5 分钟**：`--check` 等所有主动查询，间隔不得低于 300 秒（5 分钟）
+- **不要主动查询非当前步骤的状态**：除非用户明确要求，不要执行 `status` 或 `--check` 查看非当前步骤的状态
+- **触发后等待足够时间再首次查询**：Jenkins 构建触发后至少等 2 分钟再首次 `--check`，CRP 打包触发后至少等 5 分钟
+- **`auto` / goal 模式下可循环轮询**：agent 使用 goal 自动执行时，可以循环 `--check` 等待构建完成，但每次间隔至少 5 分钟
+- **单次 `--check` 显示仍在进行中**：告知用户当前状态和预计等待时间，等待至少 5 分钟后再查询
+
 ## 前置条件
 
 - CRP OA/LDAP 账号（首次运行需认证，凭证加密缓存到 `~/.config/uniontech-oa/`）
 - Jenkins 账号（首次运行交互输入用户名和密码，base64 混淆缓存到 `~/.config/linglong-runtime-update/jenkins_creds.json`）
 - GitHub Token（通过 `gh auth status` 确认已登录，git 操作用当前用户身份）
 - 本地无需预先 clone 仓库，脚本自动 clone 到 `~/.cache/linglong-runtime-update/repos/`
+- Python venv 自动管理：首次运行自动创建 `~/.cache/linglong-runtime-update/venv/` 并安装依赖，后续复用
 
 ## 快速开始
 
@@ -77,6 +88,7 @@ python3 scripts/linglong-update.py status        # 查看各阶段状态（CRP/J
 ```bash
 python3 scripts/linglong-update.py crp-pack --check
 ```
+> ⚠ CRP 打包耗时较长，触发后至少等 5 分钟再 `--check`，若仍在进行中等 5 分钟后再查。
 
 ### Step 2: 制作更新仓库
 
@@ -92,9 +104,10 @@ python3 scripts/linglong-update.py crp-pack --check
 # 触发构建
 python3 scripts/linglong-update.py build-repo --repo-id 20260722
 
-# 轮询状态，构建成功后自动提取仓库地址
+# 等待至少 2 分钟后查询状态，间隔至少 5 分钟，构建成功后自动提取仓库地址
 python3 scripts/linglong-update.py build-repo --check --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/
 ```
+> ⚠ 若仍在构建中，等 5 分钟后再查，不要短间隔反复查询。
 
 ### Step 3: 修改 yaml 文件并创建 PR
 
@@ -110,7 +123,7 @@ python3 scripts/linglong-update.py build-repo --check --build-url https://jenkin
 5. 分支已存在则 `git commit --amend`，否则新建 commit
 6. 创建 fork（如不存在），强推到 fork 分支
 7. 创建 PR 到 upstream（如 PR 已存在则复用）
-8. 可选等待 PR 合并
+8. PR 创建后返回，不等待合并（需手动合并或后续用 `--check` 查询）
 
 > `linglong.yaml` 的版本号和仓库 URL 由 `update.go` 和 `daily.bash` 自动更新，脚本不直接修改 `linglong.yaml`。
 
@@ -143,21 +156,22 @@ python3 scripts/linglong-update.py build-layer
 # 触发 webengine 构建
 python3 scripts/linglong-update.py build-layer --repo webengine
 
-# 轮询状态
+# 等待至少 2 分钟后查询状态（间隔至少 5 分钟）
 python3 scripts/linglong-update.py build-layer --check --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/
 ```
+> ⚠ 若仍在构建中，等 5 分钟后再查，不要短间隔反复查询。
 
 ### Step 5: N8N 推送 Layer
 
 **输入**: Step 4 产出的 layer 构建 URL（`--layer-url`，脚本自动解析真实 layer 地址）
 
-通过 N8N 表单推送 layer 到玲珑仓库。runtime 和 webengine 各执行一次推送（通过 `--repo` 参数切换，默认 `runtime`）。脚本提示用户手动提交 N8N 表单，确认后自动触发 `push-to-old` 和 `push-to-test` 两个 Jenkins job 并等待完成。
+通过 N8N 表单推送 layer 到玲珑仓库。runtime 和 webengine 各执行一次推送（通过 `--repo` 参数切换，默认 `runtime`）。脚本提示用户手动提交 N8N 表单，确认后触发 `push-to-old` 和 `push-to-test` 两个 Jenkins job ，不等待构建完成。
 
 - N8N 表单: https://n8n.cicd.getdeepin.org/form/097d0087-7f34-4614-8329-82d096af7ba5
 - push-to-old: https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-push-to-old/
 - push-to-test: https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-push-to-test/
 - `--layer-url` 传入 **build-layer 产出的 Jenkins 构建 URL**（如 `https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/`），脚本自动从控制台输出解析真实 layer 地址后传入 push job
-- `push-layer` 会等待两个 push job 构建完成才返回
+- `push-layer` 仅触发 push-to-old 和 push-to-test 两个 job，不等待构建完成
 
 ## 配置
 
@@ -179,6 +193,18 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
 - Fork 推送目标可通过 `config` 配置 `fork_owner`，或通过 `--fork-owner` 指定；未配置时自动探测 `gh api user`
 - Jenkins 凭证独立存储于 `~/.config/linglong-runtime-update/jenkins_creds.json`（base64 混淆，600 权限）
 - webengine 补丁存放于 skill 的 `assets/webengine.patch`，脚本通过 `_find_webengine_patch()` 自动查找
+
+## 缓存目录结构
+
+```
+~/.cache/linglong-runtime-update/
+├── venv/                    # Python venv（自动创建，持久保留）
+├── repos/
+│   ├── org.deepin.runtime/          # runtime 仓库本地 clone
+│   └── org.deepin.runtime.webengine/ # webengine 仓库本地 clone
+```
+
+首次运行时脚本自动创建 venv 并安装 `scripts/requirements.txt` 中的依赖，后续运行直接复用。
 
 ## 完整工作流
 
@@ -217,14 +243,16 @@ python3 scripts/linglong-update.py push-layer --repo webengine --layer-url <buil
 ```
 
 > 版本号在不同阶段格式不同：CRP 打包用 DTK 版本 `6.7.44`，update-repo 阶段用玲珑版本 `6.7.0.44`。
+>
+> ⚠ 轮询间隔至少 5 分钟。若 `--check` 显示仍在进行中，等 5 分钟后再查，不要短间隔反复查询。
 
 ## 依赖
 
 - Python 3.8+
-- requests
 - 需要 `gh` CLI 已认证
 - CRP 认证通过外部 `crp_pack.py` 脚本（该脚本需要 `rsa` 和 `cryptography` 模块）
 - `crp_pack.py` 使用 `Fernet` 加密缓存凭证到 `~/.config/uniontech-oa/`
+- Python 依赖（`scripts/requirements.txt`）自动安装到 `~/.cache/linglong-runtime-update/venv/`：`requests`、`cryptography`、`rsa`
 
 ## 详细参考
 
