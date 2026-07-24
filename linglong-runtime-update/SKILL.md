@@ -22,12 +22,13 @@ CRP、Jenkins、N8N 均为内网服务，请求响应缓慢（单次 5-30 秒）
 
 - CRP OA/LDAP 账号（首次运行需认证，凭证加密缓存到 `~/.config/uniontech-oa/`）
 - Jenkins 账号（首次运行交互输入用户名和密码，base64 混淆缓存到 `~/.config/linglong-runtime-update/jenkins_creds.json`）
-- GitHub Token（通过 `gh auth status` 确认已登录，git 操作用当前用户身份）
-- `ll-builder` 已安装（`daily.bash` 内部调用 `ll-builder build` 生成包列表）
-- 本地无需预先 clone 仓库，脚本自动 clone 到 `~/.cache/linglong-runtime-update/repos/`
-- Python 3.8+ 及依赖：需在 venv 中运行，手动创建 `~/.cache/linglong-runtime-update/venv/` 并安装 `scripts/requirements.txt`
-- Go 环境：系统已安装 `go`（`daily.bash` 内部 `go run update.go` 使用）
-- 网络代理：需设置 `no_proxy=.uniontech.com,.getdeepin.org,10.20.64.92`，使内网直连、外网走系统代理
+- Python 3.8+ 及 `requests`、`cryptography`、`rsa` 模块
+- Go 环境（`daily.bash` 内部 `go run update.go` 使用）
+- `ll-builder`（`daily.bash` 内部调用 `ll-builder build`）
+- `gh` CLI 已认证
+- 网络代理需配置 `no_proxy=.uniontech.com,.getdeepin.org,10.20.64.92`（内网直连、外网走系统代理）
+
+脚本启动时自动检查上述依赖，缺失会报错退出。
 
 ## 快速开始
 
@@ -184,13 +185,12 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
 
 ```
 ~/.cache/linglong-runtime-update/
-├── venv/                    # Python venv（需手动创建并安装依赖）
 ├── repos/
 │   ├── org.deepin.runtime/          # runtime 仓库本地 clone
 │   └── org.deepin.runtime.webengine/ # webengine 仓库本地 clone
 ```
 
-Python venv 需手动创建并安装依赖，脚本不自动管理。Go 使用系统环境，脚本启动时检查 `go` 和 `ll-builder` 是否可用。
+脚本启动时自动检查 `go`、`ll-builder`、`gh` 及 Python 模块依赖，缺失会报错退出。
 
 ## 完整工作流
 
@@ -234,13 +234,10 @@ python3 scripts/linglong-update.py push-layer --repo webengine --layer-url <buil
 
 ## 依赖
 
-- Python 3.8+
-- 需要 `gh` CLI 已认证
-- CRP 认证通过外部 `crp_pack.py` 脚本（该脚本需要 `rsa` 和 `cryptography` 模块）
-- `crp_pack.py` 使用 `Fernet` 加密缓存凭证到 `~/.config/uniontech-oa/`
-- Python 依赖（`scripts/requirements.txt`）：`requests`、`cryptography`、`rsa`
-- Go（系统已安装即可）
-- `ll-builder`（`daily.bash` 内部调用）
+- Python 3.8+ 及 `requests`、`cryptography`、`rsa` 模块
+- Go（系统已安装）
+- `ll-builder`、`gh` CLI
+- CRP 认证通过外部 `crp_pack.py` 脚本（`Fernet` 加密缓存凭证到 `~/.config/uniontech-oa/`）
 - 网络代理需配置 `no_proxy` 包含 `.uniontech.com`、`.getdeepin.org`、`10.20.64.92`
 
 ## 详细参考

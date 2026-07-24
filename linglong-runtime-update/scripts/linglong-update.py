@@ -77,11 +77,22 @@ DTK_PROJECTS = [
 
 def _check_deps() -> None:
     """检查运行所需的外部依赖是否可用。"""
+    # Python 模块
+    for mod in ("requests", "cryptography", "rsa"):
+        try:
+            __import__(mod)
+        except ImportError:
+            _log(f"缺少 Python 模块 {mod}，请安装: pip install {mod}", "ERROR")
+            sys.exit(1)
+    # 外部命令
     if not shutil.which("go"):
         _log("未找到 go 命令，请先安装 Go 环境", "ERROR")
         sys.exit(1)
     if not shutil.which("ll-builder"):
         _log("未找到 ll-builder 命令，请先安装 ll-builder", "ERROR")
+        sys.exit(1)
+    if not shutil.which("gh"):
+        _log("未找到 gh 命令，请先安装 GitHub CLI", "ERROR")
         sys.exit(1)
 
 # 配置管理
