@@ -52,7 +52,26 @@ _CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp
 
 CACHE_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "repos"
 VENV_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "venv"
+GOPATH_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "gopath"
 REQUIREMENTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requirements.txt")
+
+# 内网域名不走代理，外网（GitHub 等）走系统代理
+_NO_PROXY_DOMAINS = [".uniontech.com", ".getdeepin.org", "10.20.64.92"]
+
+
+def _setup_no_proxy() -> None:
+    """确保 no_proxy 包含内网域名，使 requests 对内网直连、外网走代理。"""
+    existing = os.environ.get("no_proxy", "") or os.environ.get("NO_PROXY", "")
+    parts = [p.strip() for p in existing.split(",") if p.strip()]
+    for domain in _NO_PROXY_DOMAINS:
+        if domain not in parts:
+            parts.append(domain)
+    value = ",".join(parts)
+    os.environ["no_proxy"] = value
+    os.environ["NO_PROXY"] = value
+
+# 启动时立即设置
+_setup_no_proxy()
 
 DEFAULT_CONFIG: Dict[str, Any] = {
     "crp_topic": "玲珑runtime dtk版本更新",
@@ -88,6 +107,17 @@ def _ensure_venv() -> str:
                    check=True)
     _log("venv 就绪")
     return str(venv_python)
+
+# Go 环境
+# ---------------------------------------------------------------------------
+
+def _go_env() -> Dict[str, str]:
+    """返回设置 GOPATH 到 cache 目录的环境变量，Go 依赖包安装到 cache 而非系统目录。"""
+    GOPATH_DIR.mkdir(parents=True, exist_ok=True)
+    env = os.environ.copy()
+    env["GOPATH"] = str(GOPATH_DIR)
+    env["GOBIN"] = str(GOPATH_DIR / "bin")
+    return env
 
 # ---------------------------------------------------------------------------
 # 配置管理
@@ -212,9 +242,10 @@ def _log(msg: str, level: str = "INFO") -> None:
 
 
 def _run(cmd: List[str], cwd: Optional[str] = None, check: bool = True,
-         capture: bool = False) -> subprocess.CompletedProcess:
+         capture: bool = False,
+         env: Optional[Dict[str, str]] = None) -> subprocess.CompletedProcess:
     _log(f"执行: {' '.join(cmd)}")
-    return subprocess.run(cmd, cwd=cwd, check=check,
+    return subprocess.run(cmd, cwd=cwd, check=check, env=env,
                           capture_output=capture, text=True)
 
 
@@ -329,7 +360,7 @@ class JenkinsClient:
         self.user = user
         self.session = requests.Session()
         self.session.auth = (user, password)
-        self.session.trust_env = False  # Jenkins 内网，不走代理
+        # no_proxy 已在启动时设置，Jenkins/CRP 内网域名自动绕过代理
         self.session.headers.update({"User-Agent": "linglong-update/1.0"})
         self._fetch_csrf()
 
@@ -661,7 +692,7 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
 
     if dry_run:
         _log(f"DRY RUN — 将触发参数: repo_id={repo_id}", "WARN")
-        return f"{CRIMSON_BASE + "/stable_"}{datetime.now().strftime("%Y%m%d")}_{repo_id}/"
+        return f"{CRIMSON_BASE}/stable_{repo_id}/"
 
     jc = JenkinsClient(creds["user"], creds["password"])
     if not jc.job_exists(JENKINS_REPO_UPDATE_JOB):
@@ -910,7 +941,7 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
     daily = os.path.join(repo_path, "daily.bash")
     if os.path.exists(daily):
         _log("执行 daily.bash...")
-        _run(["bash", daily, version], cwd=repo_path)
+        _run(["bash", daily, version], cwd=repo_path, env=_go_env())
     else:
         _log("daily.bash 不存在", "WARN")
 

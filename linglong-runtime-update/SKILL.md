@@ -22,6 +22,7 @@ CRP、Jenkins、N8N 均为内网服务，请求响应缓慢（单次 5-30 秒）
 - CRP OA/LDAP 账号（首次运行需认证，凭证加密缓存到 `~/.config/uniontech-oa/`）
 - Jenkins 账号（首次运行交互输入用户名和密码，base64 混淆缓存到 `~/.config/linglong-runtime-update/jenkins_creds.json`）
 - GitHub Token（通过 `gh auth status` 确认已登录，git 操作用当前用户身份）
+- `ll-builder` 已安装（`daily.bash` 内部调用 `ll-builder build` 生成包列表）
 - 本地无需预先 clone 仓库，脚本自动 clone 到 `~/.cache/linglong-runtime-update/repos/`
 - Python venv 自动管理：首次运行自动创建 `~/.cache/linglong-runtime-update/venv/` 并安装依赖，后续复用
 
@@ -199,12 +200,14 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
 ```
 ~/.cache/linglong-runtime-update/
 ├── venv/                    # Python venv（自动创建，持久保留）
+├── gopath/                  # Go 依赖包（GOPATH 指向此处，避免污染系统 ~/go/）
 ├── repos/
 │   ├── org.deepin.runtime/          # runtime 仓库本地 clone
 │   └── org.deepin.runtime.webengine/ # webengine 仓库本地 clone
 ```
 
 首次运行时脚本自动创建 venv 并安装 `scripts/requirements.txt` 中的依赖，后续运行直接复用。
+执行 `daily.bash`（内部 `go run update.go`）时，GOPATH 指向 `gopath/`，Go 依赖包安装到 cache 而非系统目录。
 
 ## 完整工作流
 
@@ -253,6 +256,7 @@ python3 scripts/linglong-update.py push-layer --repo webengine --layer-url <buil
 - CRP 认证通过外部 `crp_pack.py` 脚本（该脚本需要 `rsa` 和 `cryptography` 模块）
 - `crp_pack.py` 使用 `Fernet` 加密缓存凭证到 `~/.config/uniontech-oa/`
 - Python 依赖（`scripts/requirements.txt`）自动安装到 `~/.cache/linglong-runtime-update/venv/`：`requests`、`cryptography`、`rsa`
+- Go（系统已安装即可，依赖包通过 GOPATH 安装到 `~/.cache/linglong-runtime-update/gopath/`）
 
 ## 详细参考
 

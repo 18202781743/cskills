@@ -1,7 +1,7 @@
 ## Jenkins 交互模块
 
-Jenkins 是内网服务，HTTP 请求不经过代理。脚本通过 `session.trust_env = False`
-确保 Jenkins 和 CRP 请求直连内网，而 `gh`、`git clone/push` 仍走系统代理。
+Jenkins 是内网服务。脚本启动时自动设置 `no_proxy` 包含 `.uniontech.com`、`.getdeepin.org`、`10.20.64.92`，
+使内网请求直连、外网请求（GitHub 等）走系统代理。
 
 ### 请求频率约束
 
@@ -71,5 +71,5 @@ builds = jc.get_build_trend(job_path)
 
 ### 网络
 
-Jenkins 和 CRP 是内网服务，脚本设置 `trust_env=False` 直连。
-GitHub 操作（`gh`、`git`）走系统代理（`https_proxy` 等环境变量）。
+脚本启动时自动设置 `no_proxy`/`NO_PROXY` 包含内网域名（`.uniontech.com`、`.getdeepin.org`、`10.20.64.92`），
+`requests` 和 `git`/`gh` 均使用系统代理，内网域名自动绕过代理直连。
