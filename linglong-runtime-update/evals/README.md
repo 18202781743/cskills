@@ -80,11 +80,11 @@ python3 scripts/linglong-update.py crp-pack --version 6.7.45 --topic "玲珑runt
 1. Jenkins 认证成功（首次输入用户名密码，后续使用缓存）
 2. Job 触发成功（HTTP 200/201/302）
 3. 能正确获取构建编号
-4. 构建已触发但不等待（使用 `check-repo` 轮询）
-5. `check-repo` 构建成功后提取仓库 URL
+4. 构建已触发但不等待（使用 `build-repo --check` 轮询）
+5. `build-repo --check` 构建成功后提取仓库 URL
 6. URL 格式正确：`http://10.20.64.92:8080/crimson_runtime/stable_<repo-id>/`
 
-**预期结果**: Jenkins job 触发成功，`check-repo` 轮询后返回有效仓库 URL。
+**预期结果**: Jenkins job 触发成功，`build-repo --check` 轮询后返回有效仓库 URL。
 
 **验证命令**:
 ```bash
@@ -126,11 +126,11 @@ python3 scripts/linglong-update.py update-repo --version 6.7.0.45 --deb-repo htt
 **检验要点**:
 1. Job 触发成功，传入正确的 `REPO_URL` 和 `REPO_BRANCH` 参数
 2. 能正确获取构建编号
-3. `build-layer` 仅触发构建，使用 `check-build` 轮询
+3. `build-layer` 仅触发构建，使用 `build-layer --check` 轮询
 4. 轮询到构建成功（result == "SUCCESS"）
 5. 从控制台输出中可提取构建产物的 layer URL
 
-**预期结果**: Jenkins job 触发成功，`check-build` 轮询确认构建成功。
+**预期结果**: Jenkins job 触发成功，`build-layer --check` 轮询确认构建成功。
 
 **验证命令**:
 ```bash

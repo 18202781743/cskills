@@ -76,8 +76,8 @@ def test_step2_build_repo():
     print("  1. Jenkins 认证成功（用户名密码或缓存）")
     print("  2. Job 触发成功（HTTP 200/201/302）")
     print("  3. 能正确获取构建编号")
-    print("  4. 构建已触发但不等待（使用 check-repo 轮询）")
-    print("  5. check-repo 能提取仓库 URL")
+    print("  4. 构建已触发但不等待（使用 build-repo --check 轮询）")
+    print("  5. build-repo --check 能提取仓库 URL")
     print()
     
     if not _confirm("确认要触发 Jenkins build-repo job?"):
@@ -89,8 +89,8 @@ def test_step2_build_repo():
     
     if result is None:
         # build_repo 仅触发构建不等待，返回 None 表示已触发
-        print("PASS Step 2: Jenkins job 已触发，使用 check-repo 查询进度")
-        print(f"   check-repo --build-url <Jenkins URL>")
+        print("PASS Step 2: Jenkins job 已触发，使用 build-repo --check 查询进度")
+        print(f"   build-repo --check --build-url <Jenkins URL>")
         return True
     print(f"PASS Step 2: 仓库 URL = {result}")
     return True
@@ -134,7 +134,7 @@ def test_step4_build_layer():
     print("\n检验要点:")
     print("  1. Job 触发成功，传入正确的 REPO_URL（runtime 或 webengine）和 REPO_BRANCH")
     print("  2. 能正确获取构建编号")
-    print("  3. 构建已触发但不等待（使用 check-build 轮询）")
+    print("  3. 构建已触发但不等待（使用 build-layer --check 轮询）")
     print("  4. 轮询到 SUCCESS 后可从控制台输出提取 layer URL")
     print()
     
@@ -147,7 +147,7 @@ def test_step4_build_layer():
                         repo_branch="main", repo="runtime", dry_run=False)
     
     if ok:
-        print("PASS Step 4: Jenkins job 已触发，使用 check-build 查询进度")
+        print("PASS Step 4: Jenkins job 已触发，使用 build-layer --check 查询进度")
     else:
         print("FAIL Step 4: Job 触发失败")
     return ok

@@ -27,7 +27,7 @@
 4. 修改 `update.go` 中的 `deepinRepoURL` 为新的 deb 仓库地址
 5. 传递玲珑版本号给 `daily.bash` 脚本
 6. `git add -A` → commit → push
-7. `gh pr create` 创建 PR 到 fork 仓库（fork owner 可通过 `--fork-owner` 指定，默认探测 `gh api user`，回退到 `18202781743`）
+7. `gh pr create` 创建 PR 到 fork 仓库（fork owner 优先级: `--fork-owner` > 配置文件 `fork_owner` > `gh api user` 探测）
 8. 自动等待 PR 合并（默认超时 600s）
 
 > `linglong.yaml` 的版本号和仓库 URL 不直接修改，由 `update.go`（读取 `deepinRepoURL`）和 `daily.bash`（接收玲珑版本号参数）自动生成。

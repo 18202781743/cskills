@@ -11,7 +11,6 @@
   python3 linglong-update.py build-layer
   python3 linglong-update.py push-layer
   python3 linglong-update.py config
-  python3 linglong-update.py status
 """
 
 from __future__ import annotations
@@ -48,9 +47,6 @@ CRIMSON_BASE = f"http://{REPO_URL_HOST}/crimson_runtime"
 RUNTIME_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.git"
 WEBENGINE_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.webengine.git"
 
-# Fork 推送目标 GitHub ID
-FORK_OWNER = "18202781743"
-
 # CRP 外部工具路径
 _CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp_pack.py")
 
@@ -64,6 +60,7 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "archs": ["amd64", "arm64", "loong64"],
     "runtime_repo_path": str(CACHE_DIR / "org.deepin.runtime"),
     "webengine_repo_path": str(CACHE_DIR / "org.deepin.runtime.webengine"),
+    "fork_owner": None,
 }
 
 # DTK 项目列表（与 github-workflow-autotag 保持一致）
@@ -137,8 +134,9 @@ def _ensure_jenkins_auth(force: bool = False) -> Dict[str, str]:
         creds = _load_jenkins_creds()
         if creds:
             return creds
-    default_user = "yeshanshan"
-    user = input(f"Jenkins 用户名 [{default_user}]: ").strip() or default_user
+    user = input("Jenkins 用户名: ").strip()
+    if not user:
+        raise RuntimeError("Jenkins 用户名不能为空")
     password = getpass.getpass("Jenkins 密码: ")
     if not password:
         raise RuntimeError("Jenkins 密码不能为空")
@@ -242,11 +240,14 @@ def _get_repo_slug(repo_path: str) -> str:
     return m.group(1)
 
 
-def _ensure_fork(repo_slug: str, fork_owner: Optional[str] = None) -> str:
+def _ensure_fork(repo_slug: str, fork_owner: Optional[str] = None,
+                 cfg: Optional[Dict[str, Any]] = None) -> str:
     """确保 fork 存在，返回 fork 的 owner/repo。
 
-    优先级: 外部参数 > gh api user 探测 > FORK_OWNER 默认值
+    优先级: 外部参数 --fork-owner > 配置文件 fork_owner > gh api user 探测
     """
+    if not fork_owner and cfg:
+        fork_owner = cfg.get("fork_owner")
     if not fork_owner:
         # 探测当前 gh 登录用户
         try:
@@ -256,7 +257,7 @@ def _ensure_fork(repo_slug: str, fork_owner: Optional[str] = None) -> str:
         except Exception:
             pass
     if not fork_owner:
-        fork_owner = FORK_OWNER
+        raise RuntimeError("无法确定 fork owner，请通过 config 配置 fork_owner 或使用 --fork-owner 指定")
 
     fork_slug = f"{fork_owner}/{repo_slug.split('/')[-1]}"
     # 检查 fork 是否已存在
@@ -552,8 +553,43 @@ def _extract_repo_url(console: str) -> Optional[str]:
 def crp_pack(cfg: Dict[str, Any], topic: Optional[str] = None,
                branch: Optional[str] = None, archs: Optional[str] = None,
                branch_id: Optional[int] = None, version: Optional[str] = None,
-               dry_run: bool = False) -> bool:
-    """CRP 打包 — 调用外部 crp_pack.py。"""
+               dry_run: bool = False, check: bool = False) -> bool:
+    """CRP 打包 — 调用外部 crp_pack.py。check=True 时查询打包状态。"""
+    if check:
+        _log("=" * 60)
+        _log("CRP 打包状态查询")
+        _log("=" * 60)
+        if topic is None:
+            topic = cfg["crp_topic"]
+        if branch_id is None:
+            branch_id = cfg.get("crp_branch_id")
+
+        instances = _get_crp_instances(topic, branch_id)
+        if not instances:
+            print("  (无打包实例或 CRP 未认证)")
+            return False
+
+        print(f"\n  Topic: {topic}")
+        print(f"  共 {len(instances)} 个打包实例:\n")
+        ok_count = 0
+        for inst in instances:
+            state = inst.get("build_state", "UNKNOWN")
+            tag = inst.get("tag", "(无tag)")
+            proj = inst.get("project_name", "?")
+            branch_name = inst.get("branch", "?")
+            status_mark = "OK" if state == "UPLOAD_OK" else "FAIL"
+            if state == "UPLOAD_OK":
+                ok_count += 1
+            print(f"  {proj:30s} {branch_name:25s} {tag:15s} {status_mark:6s} ({state})")
+
+        all_ok = ok_count == len(instances)
+        print(f"\n  {ok_count}/{len(instances)} 个打包成功")
+        if all_ok:
+            _log("所有打包已完成 (UPLOAD_OK)")
+        else:
+            _log(f"{len(instances) - ok_count} 个打包未完成", "WARN")
+        return all_ok
+
     _log("=" * 60)
     _log("CRP 打包")
     _log("=" * 60)
@@ -647,7 +683,7 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
 
     _log(f"构建 #{build_num}: {JENKINS_BASE}/{JENKINS_REPO_UPDATE_JOB}/{build_num}/")
 
-    _log("构建已触发，使用 check-repo 查询进度和仓库地址")
+    _log("构建已触发，使用 build-repo --check --build-url 查询进度和仓库地址")
     return None
 
 
@@ -721,6 +757,8 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
                 fork_owner: Optional[str] = None,
                 repo: str = "runtime",
                 dry_run: bool = False) -> bool:
+    if fork_owner is None:
+        fork_owner = cfg.get("fork_owner")
     _log("=" * 60)
     _log("修改 yaml 文件并创建 PR")
     _log("=" * 60)
@@ -766,7 +804,7 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
             return False
     else:
         if not _update_runtime_repo("org.deepin.runtime", cfg["runtime_repo_path"],
-                                     version, deb_repo, fork_owner):
+                                     version, deb_repo, fork_owner, cfg):
             return False
 
     _log("仓库更新完成")
@@ -837,7 +875,8 @@ def _update_deepin_repo_url(repo_path: str, repo_url: str) -> None:
 
 def _update_runtime_repo(label: str, repo_path: str, version: str,
                          deb_repo: str,
-                         fork_owner: Optional[str] = None) -> bool:
+                         fork_owner: Optional[str] = None,
+                         cfg: Optional[Dict[str, Any]] = None) -> bool:
     """更新 org.deepin.runtime 仓库：新分支 → 脚本 → amend → fork → PR。"""
     _log(f"--- {label} ---")
     # 1. 清理：fetch origin，reset 到最新
@@ -894,7 +933,7 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
 
     # 5. 通过 fork 推送
     repo_slug = _get_repo_slug(repo_path)
-    fork_slug = _ensure_fork(repo_slug, fork_owner)
+    fork_slug = _ensure_fork(repo_slug, fork_owner, cfg)
     fork_remote = f"https://github.com/{fork_slug}.git"
     _run(["git", "-C", repo_path, "remote", "remove", "fork"], check=False)
     _run(["git", "-C", repo_path, "remote", "add", "fork", fork_remote])
@@ -1053,12 +1092,18 @@ def _wait_for_pr_merge(label: str, repo_path: str, pr_url: str,
 
 def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
                repo: str = "runtime",
-               repo_branch: Optional[str] = None, dry_run: bool = False) -> bool:
+               repo_branch: Optional[str] = None, dry_run: bool = False,
+               check: bool = False, build_url: Optional[str] = None) -> bool:
     """触发 Jenkins 构建玲珑 Layer。
 
     repo_url: REPO_URL 参数，默认 github.com/linglongdev/org.deepin.runtime
     repo_branch: REPO_BRANCH 参数，默认 main
+    check=True 时查询构建状态（与 build_url 配合使用）。
     """
+    if check or build_url:
+        url = build_url or input("Jenkins 构建 URL: ").strip()
+        return check_repo(cfg, url, extract_repo=False)
+
     _log("=" * 60)
     _log("构建玲珑 Layer")
     _log("=" * 60)
@@ -1099,7 +1144,7 @@ def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
         return False
 
     _log(f"构建 #{build_num}: {JENKINS_BASE}/{JENKINS_BUILD_JOB}/{build_num}/")
-    _log("构建已触发，使用 check-build 查询进度")
+    _log("构建已触发，使用 build-layer --check --build-url 查询进度")
     return True
 
 
@@ -1228,6 +1273,7 @@ def cmd_config() -> int:
         "crp_branch_id": _p("crp_branch_id", "CRP BranchID (整数)"),
         "runtime_repo_path": _p("runtime_repo_path", "runtime repo path"),
         "webengine_repo_path": _p("webengine_repo_path", "webengine repo path"),
+        "fork_owner": _p("fork_owner", "Fork 目标 GitHub 用户/组织"),
     }
 
     archs_str = ",".join(current.get("archs", []))
@@ -1239,7 +1285,7 @@ def cmd_config() -> int:
 
     print()
     if _input_confirm("更新 Jenkins 凭证?"):
-        user = input(f"Jenkins 用户名 [yeshanshan]: ").strip() or "yeshanshan"
+        user = input("Jenkins 用户名: ").strip()
         password = getpass.getpass("Jenkins 密码: ")
         if password:
             _save_jenkins_creds(user, password)
@@ -1248,86 +1294,6 @@ def cmd_config() -> int:
     return 0
 
 
-
-
-# ---------------------------------------------------------------------------
-# status 命令
-# ---------------------------------------------------------------------------
-
-def cmd_status(cfg: Dict[str, Any]) -> int:
-    """查询各阶段状态，包括 CRP 实例、Jenkins 最近构建、GitHub PR 和本地 state。"""
-    print("\n" + "=" * 60)
-    print("状态查询")
-    print("=" * 60)
-
-    topic = cfg.get("crp_topic", "玲珑runtime dtk版本更新")
-
-    # --- CRP 打包实例 ---
-    print("\n--- CRP 打包实例 ---")
-    try:
-        instances = _get_crp_instances(topic, cfg.get("crp_branch_id"))
-        if instances:
-            for inst in instances:
-                print(f"  {inst.get('project_name', '?'):30s} {inst.get('branch', '?'):25s} {inst.get('tag', '(无tag)')}")
-        else:
-            print("  (无打包实例或 CRP 未认证)")
-    except Exception as e:
-        print(f"  CRP 查询失败: {e}")
-
-    # --- Jenkins 最近构建 ---
-    print("\n--- Jenkins 最近构建 ---")
-    try:
-        creds = _load_jenkins_creds()
-        if not creds:
-            print("  Jenkins 未配置认证")
-        else:
-            jc = JenkinsClient(creds["user"], creds["password"])
-            jobs = [
-                (JENKINS_REPO_UPDATE_JOB, "runtime-repo-update"),
-                (JENKINS_BUILD_JOB, "linglong-runtime-build"),
-                (JENKINS_PUSH_OLD_JOB, "linglong-runtime-push-to-old"),
-                (JENKINS_PUSH_TEST_JOB, "linglong-runtime-push-to-test"),
-            ]
-            for path, name in jobs:
-                try:
-                    b = jc.get_last_build_status(path)
-                    result = b.get("result") or "BUILDING" if b.get("building") else "N/A"
-                    num = b.get("number", "?")
-                    print(f"  {name:35s} #{num:>5}  {result}")
-                except Exception:
-                    print(f"  {name:35s}  无法访问")
-    except EOFError:
-        print("  Jenkins 未配置认证")
-    except Exception as e:
-        print(f"  Jenkins 查询失败: {e}")
-
-    # --- GitHub PR ---
-    print("\n--- GitHub Open PR ---")
-    try:
-        for label, path in [("org.deepin.runtime", cfg["runtime_repo_path"]),
-                            ("org.deepin.runtime.webengine", cfg["webengine_repo_path"])]:
-            if not Path(path).is_dir():
-                print(f"  {label}: 仓库未 clone")
-                continue
-            try:
-                r = _run_gh(["pr", "list", "--state", "open", "--limit", "5",
-                            "--json", "number,title,createdAt,url"], cwd=path)
-                prs = json.loads(r.stdout)
-                if prs:
-                    for pr in prs:
-                        print(f"  {label} #{pr['number']}: {pr['title']} ({pr['createdAt']})")
-                        print(f"         {pr['url']}")
-                else:
-                    print(f"  {label}: 无 open PR")
-            except Exception as e:
-                print(f"  {label}: gh 查询失败 ({e})")
-    except EOFError:
-        print("  未配置 gh 认证")
-    except Exception as e:
-        print(f"  GitHub PR 查询失败: {e}")
-
-    print()
-    return 0
 # ---------------------------------------------------------------------------
 # 交互式菜单
 # ---------------------------------------------------------------------------
@@ -1342,7 +1308,6 @@ _MENU = """
 │  4. 构建玲珑 Layer                             │
 │  5. N8N 推送 Layer                             │
 │  6. 配置参数                                   │
-│  s. 查看状态                                   │
 │  0. 退出                                       │
 └──────────────────────────────────────────────┘"""
 
@@ -1352,7 +1317,7 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
     state: Dict[str, Any] = {}
     while True:
         print(_MENU)
-        choice = input("选择 [0-6/s]: ").strip().lower()
+        choice = input("选择 [0-6]: ").strip().lower()
 
         if choice in ("0", "q", "quit", "exit"):
             print("退出")
@@ -1376,8 +1341,6 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
             push_layer(cfg, layer_url, repo=repo_choice)
         elif choice == "6":
             cmd_config()
-        elif choice == "s":
-            cmd_status(cfg)
         else:
             print("无效选择")
 
@@ -1419,33 +1382,26 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--archs", default=None, help="架构列表（逗号分隔，如 arm64,loong64,mips64,riscv64,sw64）")
             s.add_argument("--branch-id", type=int, default=None, help="CRP BranchID")
             s.add_argument("--version", default=None, help="CRP 打包 tag/版本（如 6.7.46）")
+            s.add_argument("--check", action="store_true", help="查询当前打包状态（所有包 UPLOAD_OK 才算成功）")
         elif name == "build-repo":
             s.add_argument("--repo-id", default=None, help="仓库标识（如日期 20260722）")
             s.add_argument("--check", action="store_true", help="查询构建状态并提取仓库地址")
-            s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合使用）")
+            s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合，如 https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/）")
         elif name == "update-repo":
             s.add_argument("--version", default=None, help="玲珑版本号（如 6.7.0.44，默认从 deb 仓库自动推断）")
             s.add_argument("--deb-repo", required=True, help=f"deb 更新仓库地址（如 {CRIMSON_BASE}/stable_xxx/）")
-            s.add_argument("--fork-owner", default=None, help=f"Fork 目标 GitHub 用户/组织（默认 {FORK_OWNER}）")
+            s.add_argument("--fork-owner", default=None, help="Fork 目标 GitHub 用户/组织（默认从 config 读取或 gh api user 探测）")
             s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],
                            help="目标仓库: runtime (org.deepin.runtime, 默认), webengine (org.deepin.runtime.webengine)")
         elif name == "build-layer":
             s.add_argument("--check", action="store_true", help="查询构建状态（不提取仓库地址）")
-            s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合使用）")
+            s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合，如 https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/）")
             s.add_argument("--repo-url", default=None, help="REPO_URL（默认 github.com/linglongdev/org.deepin.runtime）")
             s.add_argument("--repo-branch", default=None, help="REPO_BRANCH（默认 main）")
         elif name == "push-layer":
             s.add_argument("--layer-url", default=None, help="LAYER_URL（build-layer 产出地址）")
 
-    # check-repo — 独立子命令，不在循环中处理
-    s = sub.add_parser("check-repo", help="查询构建状态并提取仓库地址")
-    s.add_argument("--build-url", required=True, help="Jenkins 构建 URL（如 https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/）")
-
-    bs = sub.add_parser("check-build", help="查询构建状态（不提取仓库地址）")
-    bs.add_argument("--build-url", required=True, help="Jenkins 构建 URL（如 https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/）")
-
     sub.add_parser("config", help="配置参数（含 Jenkins 凭证）")
-    sub.add_parser("status", help="查看各阶段状态（CRP/Jenkins/GitHub PR）")
     return p
 
 
@@ -1461,32 +1417,26 @@ def main() -> int:
     try:
         if args.command == "config":
             return cmd_config()
-        elif args.command == "status":
-            return cmd_status(cfg)
         elif args.command == "crp-pack":
             archs_arg = args.archs
             if archs_arg:
                 archs_arg = ";".join([a.strip() for a in archs_arg.split(",")])
             return 0 if crp_pack(cfg, args.topic, args.branch, archs_arg,
-                                    args.branch_id, args.version, args.dry_run) else 1
+                                    args.branch_id, args.version, args.dry_run,
+                                    args.check) else 1
         elif args.command == "build-repo":
-            r = build_repo(cfg, args.repo_id, args.dry_run)
+            r = build_repo(cfg, args.repo_id, args.dry_run,
+                           check=args.check, build_url=args.build_url)
             return 0 if r else 1
         elif args.command == "update-repo":
             return 0 if update_repo(cfg, args.version, args.deb_repo,
                                     args.fork_owner, args.repo, args.dry_run) else 1
         elif args.command == "build-layer":
             return 0 if build_layer(cfg, args.repo_url, args.repo_branch,
-                                    args.repo,
-                                    args.dry_run) else 1
+                                    args.repo, args.dry_run,
+                                    check=args.check, build_url=args.build_url) else 1
         elif args.command == "push-layer":
             return 0 if push_layer(cfg, args.layer_url, args.repo, args.dry_run) else 1
-        elif args.command == "check-repo":
-            r = check_repo(cfg, args.build_url)
-            return 0 if r else 1
-        elif args.command == "check-build":
-            r = check_repo(cfg, args.build_url, extract_repo=False)
-            return 0 if r else 1
         return 1
     except KeyboardInterrupt:
         _log("用户中断", "WARN")

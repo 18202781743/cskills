@@ -57,7 +57,7 @@ builds = jc.get_build_trend(job_path)
 
 首次使用 Jenkins 时交互式输入账号密码，base64 混淆后缓存到
 `~/.config/linglong-runtime-update/jenkins_creds.json`（600 权限）。
-默认用户名 `yeshanshan`，可通过 `python3 linglong-update.py config` 修改。
+首次运行交互输入用户名，可通过 `python3 linglong-update.py config` 重新配置。
 
 ### 网络
 

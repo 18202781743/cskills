@@ -10,7 +10,7 @@ description: DTK 玲珑 Runtime 更新自动化工具。当用户需要更新 or
 ## 前置条件
 
 - CRP OA/LDAP 账号（首次运行需认证，凭证加密缓存到 `~/.config/uniontech-oa/`）
-- Jenkins 账号（首次运行交互输入，base64 混淆缓存到 `~/.config/linglong-runtime-update/jenkins_creds.json`；默认 yeshanshan）
+- Jenkins 账号（首次运行交互输入用户名和密码，base64 混淆缓存到 `~/.config/linglong-runtime-update/jenkins_creds.json`）
 - GitHub Token（通过 `gh auth status` 确认已登录，git 操作用当前用户身份）
 - 本地无需预先 clone 仓库，脚本自动 clone 到 `~/.cache/linglong-runtime-update/repos/`
 
@@ -35,8 +35,9 @@ python3 scripts/linglong-update.py push-layer --repo webengine                  
 python3 scripts/linglong-update.py push-layer --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/
 
 # 状态查询
-python3 scripts/linglong-update.py check-repo --build-url <Jenkins构建URL>
-python3 scripts/linglong-update.py check-build --build-url <Jenkins构建URL>
+python3 scripts/linglong-update.py crp-pack --check                              # 查询 CRP 打包状态
+python3 scripts/linglong-update.py build-repo --check --build-url <Jenkins构建URL>   # 查询仓库构建状态
+python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>  # 查询 Layer 构建状态
 python3 scripts/linglong-update.py config        # 配置参数和 Jenkins 凭证
 python3 scripts/linglong-update.py status        # 查看各阶段状态（CRP/Jenkins/GitHub PR）
 ```
@@ -71,13 +72,19 @@ python3 scripts/linglong-update.py status        # 查看各阶段状态（CRP/J
 
 支持通过 `--topic`、`--branch`、`--archs`（逗号分隔）、`--branch-id`、`--version` 命令行参数覆盖默认配置。
 
+使用 `--check` 查询当前打包状态，显示每个项目的构建状态和版本信息，所有项目 `UPLOAD_OK` 才算成功：
+
+```bash
+python3 scripts/linglong-update.py crp-pack --check
+```
+
 ### Step 2: 制作更新仓库
 
 触发 Jenkins job `runtime-repo-update` 制作更新仓库。`build-repo` 仅触发构建、不等待完成。
 
 - Jenkins URL: https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/
 - Job 参数: `SUFFIX`（接收 `--repo-id` 传入的仓库标识，为空时使用当天日期 YYYYMMDD）
-- 输出仓库地址格式: http://10.20.64.92:8080/crimson_runtime/stable_xxx/
+- **输出**: deb 仓库地址（如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/），作为 Step 3 的 `--deb-repo` 输入
 
 触发后使用 `--check` 轮询构建状态并提取仓库地址：
 
@@ -90,6 +97,8 @@ python3 scripts/linglong-update.py build-repo --check --build-url https://jenkin
 ```
 
 ### Step 3: 修改 yaml 文件并创建 PR
+
+**输入**: Step 2 产出的 deb 仓库地址（`--deb-repo`）  **产物**: GitHub 仓库代码已更新（runtime 创建 PR 并合并，webengine 强推 origin/main）
 
 修改 org.deepin.runtime 和 org.deepin.runtime.webengine 两个仓库的 `linglong.yaml`。两个仓库的更新流程不同：
 
@@ -116,6 +125,8 @@ python3 scripts/linglong-update.py build-repo --check --build-url https://jenkin
 
 ### Step 4: 构建玲珑 Layer
 
+**隐含输入**: Step 3 已更新 GitHub 仓库代码（Jenkins 从该仓库拉取最新代码构建）  **输出**: layer 构建产物 URL
+
 触发 Jenkins job `linglong-runtime-build` 制作玲珑 layer。与 Step 3 类似，runtime 和 webengine 各触发一次构建（通过 `--repo` 参数切换，默认 `runtime`）。`build-layer` 仅触发构建、不等待完成。
 
 - Jenkins URL: https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/
@@ -138,6 +149,8 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
 
 ### Step 5: N8N 推送 Layer
 
+**输入**: Step 4 产出的 layer 构建 URL（`--layer-url`，脚本自动解析真实 layer 地址）
+
 通过 N8N 表单推送 layer 到玲珑仓库。runtime 和 webengine 各执行一次推送（通过 `--repo` 参数切换，默认 `runtime`）。脚本提示用户手动提交 N8N 表单，确认后自动触发 `push-to-old` 和 `push-to-test` 两个 Jenkins job 并等待完成。
 
 - N8N 表单: https://n8n.cicd.getdeepin.org/form/097d0087-7f34-4614-8329-82d096af7ba5
@@ -157,31 +170,43 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
   "crp_branch_id": 129,
   "archs": ["amd64", "arm64", "loong64"],
   "runtime_repo_path": "~/.cache/linglong-runtime-update/repos/org.deepin.runtime",
-  "webengine_repo_path": "~/.cache/linglong-runtime-update/repos/org.deepin.runtime.webengine"
+  "webengine_repo_path": "~/.cache/linglong-runtime-update/repos/org.deepin.runtime.webengine",
+  "fork_owner": null
 }
 ```
 
 - `crp_branch` 是 Git 分支过滤（传给 CRP 的筛选分支名），与 CRP 平台分支名（通过 BranchID `129` 映射到 `crimson-testing`）是不同概念
-- Fork 推送目标由脚本自动探测（`gh api user`），回退到常量 `FORK_OWNER`（`18202781743`），不可配置
+- Fork 推送目标可通过 `config` 配置 `fork_owner`，或通过 `--fork-owner` 指定；未配置时自动探测 `gh api user`
 - Jenkins 凭证独立存储于 `~/.config/linglong-runtime-update/jenkins_creds.json`（base64 混淆，600 权限）
 - webengine 补丁存放于 skill 的 `assets/webengine.patch`，脚本通过 `_find_webengine_patch()` 自动查找
 
 ## 完整工作流
 
-完整更新流程按顺序执行，步骤 3-5 先对 runtime 仓库执行，再对 webengine 仓库执行：
+工作流严格串行，每步的输出是下一步的输入：
+
+- **Step 2 输出** deb 仓库地址 → **Step 3 输入** `--deb-repo`
+- **Step 3 产物** GitHub 仓库代码已更新（PR 合并后 main 分支为最新）→ **Step 4 隐含输入** Jenkins 从该仓库构建 layer
+- **Step 4 输出** layer 构建产物 URL → **Step 5 输入** `--layer-url`
+
+步骤 3-5 先对 runtime 仓库执行，再对 webengine 仓库执行：
 
 ```bash
 # Step 1: CRP 打包
 python3 scripts/linglong-update.py crp-pack --version 6.7.44
+python3 scripts/linglong-update.py crp-pack --check
 
-# Step 2: 制作更新仓库
+# Step 2: 制作更新仓库 → 输出 deb 仓库地址
 python3 scripts/linglong-update.py build-repo
 python3 scripts/linglong-update.py build-repo --check --build-url <Jenkins构建URL>
+# 产出: http://10.20.64.92:8080/crimson_runtime/stable_xxx/
 
 # Runtime 仓库 (Step 3-5)
+# Step 3: 输入 deb 仓库地址 → 产物: GitHub 仓库代码已更新
 python3 scripts/linglong-update.py update-repo --version 6.7.0.44 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/
+# Step 4: 隐含输入 Step 3 的代码 → 输出 layer 构建 URL
 python3 scripts/linglong-update.py build-layer --repo runtime
 python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>
+# Step 5: 输入 Step 4 产出的 layer URL
 python3 scripts/linglong-update.py push-layer --repo runtime --layer-url <build-layer产出的Jenkins URL>
 
 # Webengine 仓库 (Step 3-5)
