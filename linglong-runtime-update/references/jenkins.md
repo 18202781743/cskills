@@ -1,6 +1,6 @@
 ## Jenkins 交互模块
 
-Jenkins 是内网服务。脚本启动时自动设置 `no_proxy` 包含 `.uniontech.com`、`.getdeepin.org`、`10.20.64.92`，
+Jenkins 是内网服务。需配置 `no_proxy` 包含 `.uniontech.com`、`.getdeepin.org`、`10.20.64.92`，
 使内网请求直连、外网请求（GitHub 等）走系统代理。
 
 ### 涉及 Job
@@ -61,5 +61,5 @@ builds = jc.get_build_trend(job_path)
 
 ### 网络
 
-脚本启动时自动设置 `no_proxy`/`NO_PROXY` 包含内网域名（`.uniontech.com`、`.getdeepin.org`、`10.20.64.92`），
-`requests` 和 `git`/`gh` 均使用系统代理，内网域名自动绕过代理直连。
+需配置 `no_proxy`/`NO_PROXY` 包含内网域名（`.uniontech.com`、`.getdeepin.org`、`10.20.64.92`），
+`requests` 和 `git`/`gh` 均使用系统代理，内网域名绕过代理直连。

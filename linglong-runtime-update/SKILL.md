@@ -25,7 +25,9 @@ CRP、Jenkins、N8N 均为内网服务，请求响应缓慢（单次 5-30 秒）
 - GitHub Token（通过 `gh auth status` 确认已登录，git 操作用当前用户身份）
 - `ll-builder` 已安装（`daily.bash` 内部调用 `ll-builder build` 生成包列表）
 - 本地无需预先 clone 仓库，脚本自动 clone 到 `~/.cache/linglong-runtime-update/repos/`
-- Python venv 自动管理：首次运行自动创建 `~/.cache/linglong-runtime-update/venv/` 并安装依赖，后续复用
+- Python 3.8+ 及依赖：需在 venv 中运行，手动创建 `~/.cache/linglong-runtime-update/venv/` 并安装 `scripts/requirements.txt`
+- Go 环境：系统已安装 `go`（`daily.bash` 内部 `go run update.go` 使用）
+- 网络代理：需设置 `no_proxy=.uniontech.com,.getdeepin.org,10.20.64.92`，使内网直连、外网走系统代理
 
 ## 快速开始
 
@@ -182,15 +184,13 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
 
 ```
 ~/.cache/linglong-runtime-update/
-├── venv/                    # Python venv（自动创建，持久保留）
-├── gopath/                  # Go 依赖包（GOPATH 指向此处，避免污染系统 ~/go/）
+├── venv/                    # Python venv（需手动创建并安装依赖）
 ├── repos/
 │   ├── org.deepin.runtime/          # runtime 仓库本地 clone
 │   └── org.deepin.runtime.webengine/ # webengine 仓库本地 clone
 ```
 
-首次运行时脚本自动创建 venv 并安装 `scripts/requirements.txt` 中的依赖，后续运行直接复用。
-执行 `daily.bash`（内部 `go run update.go`）时，GOPATH 指向 `gopath/`，Go 依赖包安装到 cache 而非系统目录。
+Python venv 需手动创建并安装依赖，脚本不自动管理。Go 使用系统环境，脚本启动时检查 `go` 和 `ll-builder` 是否可用。
 
 ## 完整工作流
 
@@ -238,8 +238,10 @@ python3 scripts/linglong-update.py push-layer --repo webengine --layer-url <buil
 - 需要 `gh` CLI 已认证
 - CRP 认证通过外部 `crp_pack.py` 脚本（该脚本需要 `rsa` 和 `cryptography` 模块）
 - `crp_pack.py` 使用 `Fernet` 加密缓存凭证到 `~/.config/uniontech-oa/`
-- Python 依赖（`scripts/requirements.txt`）自动安装到 `~/.cache/linglong-runtime-update/venv/`：`requests`、`cryptography`、`rsa`
-- Go（系统已安装即可，依赖包通过 GOPATH 安装到 `~/.cache/linglong-runtime-update/gopath/`）
+- Python 依赖（`scripts/requirements.txt`）：`requests`、`cryptography`、`rsa`
+- Go（系统已安装即可）
+- `ll-builder`（`daily.bash` 内部调用）
+- 网络代理需配置 `no_proxy` 包含 `.uniontech.com`、`.getdeepin.org`、`10.20.64.92`
 
 ## 详细参考
 

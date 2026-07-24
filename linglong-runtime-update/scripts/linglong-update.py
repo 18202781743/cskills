@@ -20,6 +20,7 @@ import getpass
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -51,27 +52,7 @@ WEBENGINE_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.webengin
 _CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp_pack.py")
 
 CACHE_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "repos"
-VENV_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "venv"
-GOPATH_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "gopath"
-REQUIREMENTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requirements.txt")
 
-# 内网域名不走代理，外网（GitHub 等）走系统代理
-_NO_PROXY_DOMAINS = [".uniontech.com", ".getdeepin.org", "10.20.64.92"]
-
-
-def _setup_no_proxy() -> None:
-    """确保 no_proxy 包含内网域名，使 requests 对内网直连、外网走代理。"""
-    existing = os.environ.get("no_proxy", "") or os.environ.get("NO_PROXY", "")
-    parts = [p.strip() for p in existing.split(",") if p.strip()]
-    for domain in _NO_PROXY_DOMAINS:
-        if domain not in parts:
-            parts.append(domain)
-    value = ",".join(parts)
-    os.environ["no_proxy"] = value
-    os.environ["NO_PROXY"] = value
-
-# 启动时立即设置
-_setup_no_proxy()
 
 DEFAULT_CONFIG: Dict[str, Any] = {
     "crp_topic": "玲珑runtime dtk版本更新",
@@ -91,35 +72,18 @@ DTK_PROJECTS = [
 ]
 
 # ---------------------------------------------------------------------------
-# venv 管理
+# 依赖检查
 # ---------------------------------------------------------------------------
 
-def _ensure_venv() -> str:
-    """确保 venv 存在并安装依赖，返回 venv python 路径。"""
-    venv_python = VENV_DIR / "bin" / "python3"
-    if venv_python.exists():
-        return str(venv_python)
-    _log(f"创建 venv: {VENV_DIR}")
-    VENV_DIR.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run([sys.executable, "-m", "venv", str(VENV_DIR)], check=True)
-    _log("安装依赖...")
-    subprocess.run([str(venv_python), "-m", "pip", "install", "-q", "-r", REQUIREMENTS],
-                   check=True)
-    _log("venv 就绪")
-    return str(venv_python)
+def _check_deps() -> None:
+    """检查运行所需的外部依赖是否可用。"""
+    if not shutil.which("go"):
+        _log("未找到 go 命令，请先安装 Go 环境", "ERROR")
+        sys.exit(1)
+    if not shutil.which("ll-builder"):
+        _log("未找到 ll-builder 命令，请先安装 ll-builder", "ERROR")
+        sys.exit(1)
 
-# Go 环境
-# ---------------------------------------------------------------------------
-
-def _go_env() -> Dict[str, str]:
-    """返回设置 GOPATH 到 cache 目录的环境变量，Go 依赖包安装到 cache 而非系统目录。"""
-    GOPATH_DIR.mkdir(parents=True, exist_ok=True)
-    env = os.environ.copy()
-    env["GOPATH"] = str(GOPATH_DIR)
-    env["GOBIN"] = str(GOPATH_DIR / "bin")
-    return env
-
-# ---------------------------------------------------------------------------
 # 配置管理
 # ---------------------------------------------------------------------------
 
@@ -941,7 +905,7 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
     daily = os.path.join(repo_path, "daily.bash")
     if os.path.exists(daily):
         _log("执行 daily.bash...")
-        _run(["bash", daily, version], cwd=repo_path, env=_go_env())
+        _run(["bash", daily, version], cwd=repo_path, env=os.environ.copy())
     else:
         _log("daily.bash 不存在", "WARN")
 
@@ -1405,12 +1369,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
-    # 若不在 venv 内运行，自动用 venv python 重执行
-    venv_python = VENV_DIR / "bin" / "python3"
-    if not venv_python.exists():
-        _ensure_venv()
-    if sys.executable != str(venv_python) and venv_python.exists():
-        os.execv(str(venv_python), [str(venv_python)] + sys.argv)
+    _check_deps()
 
     args = _build_parser().parse_args()
 
