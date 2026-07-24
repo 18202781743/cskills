@@ -5,10 +5,9 @@
 
 用法:
   python3 linglong-update.py                      # 交互式菜单
-  python3 linglong-update.py auto --version 1.1.1.1
   python3 linglong-update.py crp-pack
   python3 linglong-update.py build-repo [--param xxx]
-#  python3 linglong-update.py update-repo --version 6.7.0.45 --deb-repo http://...
+  python3 linglong-update.py update-repo --version 6.7.0.45 --deb-repo http://...
   python3 linglong-update.py build-layer
   python3 linglong-update.py push-layer
   python3 linglong-update.py config
@@ -73,7 +72,6 @@ DTK_PROJECTS = [
     "dtkdeclarative-v25", "qt5integration-v25", "qt5platform-plugins-v25",
 ]
 
-STATE_FILE = Path.home() / ".config" / "linglong-runtime-update" / "state.json"
 
 
 # ---------------------------------------------------------------------------
@@ -99,25 +97,6 @@ def load_config() -> Dict[str, Any]:
 def save_config(cfg: Dict[str, Any]) -> None:
     (_config_dir() / "config.json").write_text(
         json.dumps(cfg, ensure_ascii=False, indent=2))
-
-
-def load_state() -> Dict[str, Any]:
-    if STATE_FILE.exists():
-        try:
-            return json.loads(STATE_FILE.read_text())
-        except Exception:
-            pass
-    return {}
-
-
-def save_state(state: Dict[str, Any]) -> None:
-    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2))
-
-
-def clear_state() -> None:
-    if STATE_FILE.exists():
-        STATE_FILE.unlink()
 
 
 # ---------------------------------------------------------------------------
@@ -1228,101 +1207,6 @@ def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
     return True
 
 
-# ---------------------------------------------------------------------------
-# 全自动模式
-# ---------------------------------------------------------------------------
-
-def auto_mode(cfg: Dict[str, Any], version: Optional[str] = None,
-              repo_id: Optional[str] = None,
-              deb_repo: Optional[str] = None,
-              layer_url: Optional[str] = None,
-              dry_run: bool = False, start_from: int = 1) -> bool:
-    _log("=" * 60)
-
-    if version is None:
-        _log("auto 模式需要 --version 参数 (DTK 格式，如 6.7.44)", "ERROR")
-        return False
-    dtk_ver = version  # --version 接收的是 DTK 版本号 (X.Y.Z)
-    linglong_ver = _to_linglong_version(dtk_ver)
-    _log(f"DTK 玲珑 Runtime 更新 - 自动模式 (DTK {dtk_ver}, 玲珑 {linglong_ver})")
-    _log("=" * 60)
-
-    if start_from <= 3 and not dry_run:
-        if not _check_gh_auth():
-            _log("gh CLI 未认证，请先执行: gh auth login", "ERROR")
-            return False
-        if not _ensure_repos_ready(cfg):
-            return False
-
-    clear_state()
-    state: Dict[str, Any] = {"version": dtk_ver, "linglong_version": linglong_ver,
-                              "started_at": datetime.now().isoformat()}
-
-    steps = [
-        (1, "CRP 打包", lambda: crp_pack(cfg, version=dtk_ver, dry_run=dry_run)),
-        (2, "制作更新仓库", lambda: _auto_step2(cfg, state, repo_id, dry_run)),
-        # Runtime: steps 3-5
-        (3, "[Runtime] 修改 yaml + PR", lambda: update_repo(cfg, linglong_ver, deb_repo or state.get("repo_url"), repo="runtime", dry_run=dry_run)),
-        (4, "[Runtime] 构建玲珑 Layer", lambda: build_layer(cfg, repo="runtime", dry_run=dry_run)),
-        (5, "[Runtime] N8N 推送 Layer", lambda: push_layer(cfg, layer_url, repo="runtime", dry_run=dry_run)),
-        # Webengine: steps 3-5
-        (6, "[Webengine] 修改 yaml + PR", lambda: update_repo(cfg, linglong_ver, deb_repo or state.get("repo_url"), repo="webengine", dry_run=dry_run)),
-        (7, "[Webengine] 构建玲珑 Layer", lambda: build_layer(cfg, repo="webengine", dry_run=dry_run)),
-        (8, "[Webengine] N8N 推送 Layer", lambda: push_layer(cfg, layer_url, repo="webengine", dry_run=dry_run)),
-    ]
-
-    for snum, sname, sfn in steps:
-        if snum < start_from:
-            _log(f"跳过步骤 {snum} ({sname}) — start_from={start_from}")
-            continue
-
-        _log(f"\n>>> 步骤 {snum}: {sname}")
-        state["current_step"] = snum
-        save_state(state)
-
-        try:
-            result = sfn()
-            if result is False:
-                _log(f"步骤 {snum} 失败，状态已保存", "ERROR")
-                return False
-            state[f"step_{snum}_complete"] = True
-            save_state(state)
-        except Exception as e:
-            _log(f"步骤 {snum} 异常: {e}", "ERROR")
-            import traceback
-            traceback.print_exc()
-            save_state(state)
-            return False
-
-    _log("=" * 60)
-    _log("全部步骤完成!")
-    _log("=" * 60)
-    clear_state()
-    return True
-
-
-def _auto_step2(cfg, state, repo_id, dry_run):
-    build_repo(cfg, repo_id, dry_run)
-    return True
-
-
-def _auto_step3(cfg, state, version, deb_repo, dry_run):
-    if not deb_repo:
-        deb_repo = state.get("repo_url")
-    if not deb_repo and not dry_run:
-        _log("state 中没有 deb_repo，请先执行 build-repo", "ERROR")
-        return False
-    return update_repo(cfg, version, deb_repo or "DRY_RUN_URL", dry_run)
-
-
-def _auto_step5(cfg, state, layer_url, dry_run):
-    """auto 模式下 push-layer：优先用传入的 layer_url，否则用 state 中的 repo_url。"""
-    if not layer_url:
-        layer_url = state.get("repo_url") or state.get("layer_url")
-    if not layer_url and not dry_run:
-        layer_url = input("LAYER_URL: ").strip()
-    return push_layer(cfg, layer_url, dry_run)
-
 
 # ---------------------------------------------------------------------------
 # 配置命令
@@ -1442,17 +1326,6 @@ def cmd_status(cfg: Dict[str, Any]) -> int:
     except Exception as e:
         print(f"  GitHub PR 查询失败: {e}")
 
-    # --- 本地 state ---
-    print("\n--- 本地状态 ---")
-    state = load_state()
-    if state:
-        print(f"  版本: {state.get('version', 'N/A')}")
-        print(f"  当前步骤: {state.get('current_step', 'N/A')}")
-        print(f"  仓库地址: {state.get('repo_url', 'N/A')}")
-        print(f"  开始时间: {state.get('started_at', 'N/A')}")
-    else:
-        print("  (无进行中的任务)")
-
     print()
     return 0
 # ---------------------------------------------------------------------------
@@ -1470,7 +1343,6 @@ _MENU = """
 │  5. N8N 推送 Layer                             │
 │  6. 配置参数                                   │
 │  s. 查看状态                                   │
-│  a. 自动执行全部 (auto)                        │
 │  0. 退出                                       │
 └──────────────────────────────────────────────┘"""
 
@@ -1480,7 +1352,7 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
     state: Dict[str, Any] = {}
     while True:
         print(_MENU)
-        choice = input("选择 [0-6/a]: ").strip().lower()
+        choice = input("选择 [0-6/s]: ").strip().lower()
 
         if choice in ("0", "q", "quit", "exit"):
             print("退出")
@@ -1506,17 +1378,6 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
             cmd_config()
         elif choice == "s":
             cmd_status(cfg)
-        elif choice == "a":
-            version = input("DTK 版本号 (如 6.7.44): ").strip()
-            if not version:
-                _log("auto 模式需要版本号", "ERROR")
-                continue
-            if not _input_confirm(f"DTK 版本: {version} (玲珑: {_to_linglong_version(version)})，确认?"):
-                continue
-            repo_id = input("仓库标识 (可选，默认当天日期): ").strip() or None
-            start = input("起始步骤 [1]: ").strip()
-            start_from = int(start) if start else 1
-            auto_mode(cfg, version, repo_id, start_from=start_from)
         else:
             print("无效选择")
 
@@ -1532,8 +1393,6 @@ def _build_parser() -> argparse.ArgumentParser:
         epilog="""
 示例:
   %(prog)s                                  交互式菜单
-  %(prog)s auto --version 1.1.1.1          全自动执行
-  %(prog)s auto --version 1.1.1.1 --repo-id 20260722 --deb-repo http://... --layer-url http://...
   %(prog)s crp-pack                         CRP 打包
   %(prog)s crp-pack --topic "xxx" --branch "crimson-testing"  指定主题和分支
   %(prog)s build-repo                       制作更新仓库
@@ -1544,13 +1403,6 @@ def _build_parser() -> argparse.ArgumentParser:
   %(prog)s config                           配置参数
         """)
     sub = p.add_subparsers(dest="command")
-
-    a = sub.add_parser("auto", help="全自动执行全部 5 个步骤")
-    a.add_argument("--version", default=None, help="DTK 版本号（如 6.7.44），自动映射为玲珑版本 X.Y.0.Z")
-    a.add_argument("--repo-id", default=None, help="仓库标识（默认当天日期）")
-    a.add_argument("--start-from", type=int, default=1, choices=[1, 2, 3, 4, 5, 6, 7, 8],
-                   help="从指定步骤开始 (默认 1)")
-    a.add_argument("--dry-run", action="store_true", help="只打印不执行")
 
     for name, help_text in [
         ("crp-pack", "CRP 打包"),
@@ -1593,7 +1445,7 @@ def _build_parser() -> argparse.ArgumentParser:
     bs.add_argument("--build-url", required=True, help="Jenkins 构建 URL（如 https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/）")
 
     sub.add_parser("config", help="配置参数（含 Jenkins 凭证）")
-    sub.add_parser("status", help="查看各阶段状态（CRP/Jenkins/GitHub/本地）")
+    sub.add_parser("status", help="查看各阶段状态（CRP/Jenkins/GitHub PR）")
     return p
 
 
@@ -1611,10 +1463,6 @@ def main() -> int:
             return cmd_config()
         elif args.command == "status":
             return cmd_status(cfg)
-        elif args.command == "auto":
-            return 0 if auto_mode(cfg, args.version, args.repo_id,
-                                  args.deb_repo, args.layer_url,
-                                  args.dry_run, args.start_from) else 1
         elif args.command == "crp-pack":
             archs_arg = args.archs
             if archs_arg:

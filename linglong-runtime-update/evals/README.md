@@ -15,7 +15,6 @@ python3 evals/test_dryrun.py build-repo   # 制作更新仓库
 python3 evals/test_dryrun.py update-repo  # 修改 yaml + PR
 python3 evals/test_dryrun.py build-layer  # 构建玲珑 Layer
 python3 evals/test_dryrun.py push-layer   # N8N 推送
-python3 evals/test_dryrun.py auto         # 全自动模式
 ```
 
 ## 测试内容
@@ -26,7 +25,6 @@ python3 evals/test_dryrun.py auto         # 全自动模式
 - **update-repo**: 验证 `--version` 和 `--deb-repo` 参数
 - **build-layer**: 验证 `--repo-url` 和 `--repo-branch` 参数
 - **push-layer**: 验证 `--layer-url` 参数
-- **auto**: 验证全链路 dry-run，各步骤参数正确传递
 
 所有测试在 `--dry-run` 模式下执行，不触发实际 Jenkins/CRP/GitHub 操作。
 
@@ -116,7 +114,7 @@ python3 scripts/linglong-update.py build-repo --repo-id test20260722
 
 **验证命令**:
 ```bash
-python3 scripts/linglong-update.py update-repo --version 6.7.45 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_test20260722/
+python3 scripts/linglong-update.py update-repo --version 6.7.0.45 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_test20260722/
 ```
 
 ---
@@ -160,25 +158,4 @@ python3 scripts/linglong-update.py build-layer --repo-url github.com/linglongdev
 python3 scripts/linglong-update.py push-layer --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/
 ```
 
----
 
-## 自动化模式测试
-
-### Auto 模式
-
-**任务**: 全自动执行全部 5 个步骤。
-
-**检验要点**:
-1. `--start-from` 参数能正确跳过前面的步骤
-2. 每个步骤完成后状态正确保存到 `~/.config/linglong-runtime-update/state.json`
-3. 某步骤失败后，重新运行能从失败步骤恢复
-4. `--dry-run` 模式下不触发实际操作，但参数传递正确
-
-**验证命令**:
-```bash
-# 从 Step 3 开始执行
-python3 scripts/linglong-update.py auto --version 6.7.0.45 --start-from 3 --dry-run
-
-# 全量执行（真实环境）
-python3 scripts/linglong-update.py auto --version 6.7.0.45
-```

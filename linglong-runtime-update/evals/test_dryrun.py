@@ -4,7 +4,7 @@
 使用 DTK 版本 6.7.45（玲珑 runtime 6.7.0.45）进行 dry-run 测试，验证各命令参数传递和版本推断。
 
 用法:
-  python3 evals/test_dryrun.py [crp-pack|build-repo|update-repo|build-layer|push-layer|auto|all]
+  python3 evals/test_dryrun.py [crp-pack|build-repo|update-repo|build-layer|push-layer|version|all]
 """
 
 import sys
@@ -29,8 +29,6 @@ def _mock_auth():
     lu._ensure_repos_ready = lambda cfg: True
     lu.load_config = lambda: dict(lu.DEFAULT_CONFIG)
     lu.save_config = lambda cfg: None
-    lu.save_state = lambda state: None
-    lu.clear_state = lambda: None
     lu._config_dir = lambda: lu.Path("/tmp/linglong-test-config")
 
 
@@ -122,44 +120,6 @@ def _test_push_layer():
     assert ok, "push-layer dry-run should return True"
     print("  PASS: push-layer dry-run OK")
 
-
-def _test_auto():
-    """测试 auto dry-run"""
-    print("\n" + "=" * 60)
-    print("[TEST] auto --dry-run")
-    print("=" * 60)
-    _mock_auth()
-    cfg = lu.load_config()
-
-    orig_save = lu.save_state
-    orig_clear = lu.clear_state
-    orig_update_runtime = lu._update_runtime_repo
-    orig_update_webengine = lu._update_webengine_repo
-    def mock_save(state):
-        pass
-    def mock_clear():
-        pass
-    def mock_update(label, repo_path, version, deb_repo, fork_owner=None):
-        return True
-    def mock_update_web(label, repo_path, version, deb_repo, runtime_repo_path):
-        return True
-    lu.save_state = mock_save
-    lu.clear_state = mock_clear
-    lu._update_runtime_repo = mock_update
-    lu._update_webengine_repo = mock_update_web
-
-    # auto_mode 接收 DTK 版本号，内部调用 _to_linglong_version 映射为玲珑版本
-    ok = lu.auto_mode(cfg, version=TEST_DTK_VERSION, repo_id="test",
-                      deb_repo=TEST_DEB_REPO, layer_url=TEST_LAYER_URL,
-                      dry_run=True, start_from=1)
-    assert ok, "auto dry-run should return True"
-    print(f"  PASS: auto dry-run OK (DTK {TEST_DTK_VERSION} → 玲珑 {TEST_LINGLONG_VERSION})")
-    lu.save_state = orig_save
-    lu.clear_state = orig_clear
-    lu._update_runtime_repo = orig_update_runtime
-    lu._update_webengine_repo = orig_update_webengine
-
-
 def run_all():
     print("DTK 玲珑 Runtime 更新工具 - Eval 测试")
     print(f"测试 DTK 版本: {TEST_DTK_VERSION} (玲珑: {TEST_LINGLONG_VERSION})")
@@ -170,7 +130,6 @@ def run_all():
     _test_update_repo()
     _test_build_layer()
     _test_push_layer()
-    _test_auto()
 
     print("\n" + "=" * 60)
     print("所有测试通过!")
@@ -190,8 +149,6 @@ if __name__ == "__main__":
             _test_build_layer()
         elif cmd == "push-layer":
             _test_push_layer()
-        elif cmd == "auto":
-            _test_auto()
         elif cmd == "version":
             _test_version_infer()
         elif cmd == "all":

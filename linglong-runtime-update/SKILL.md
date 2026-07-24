@@ -1,6 +1,6 @@
 ---
 name: linglong-runtime-update
-description: DTK 玲珑 Runtime 更新自动化工具。当用户需要更新 org.deepin.runtime 和 org.deepin.runtime.webengine 的玲珑 runtime 时使用此 skill。覆盖 CRP 打包、Jenkins 仓库更新、yaml 文件修改与 PR 合并、玲珑 layer 构建、N8N 推送全流程。支持单步手动执行和全自动执行。
+description: DTK 玲珑 Runtime 更新自动化工具。当用户需要更新 org.deepin.runtime 和 org.deepin.runtime.webengine 的玲珑 runtime 时使用此 skill。覆盖 CRP 打包、Jenkins 仓库更新、yaml 文件修改与 PR 合并、玲珑 layer 构建、N8N 推送全流程。支持单步手动执行。
 ---
 
 # DTK 玲珑 Runtime 更新
@@ -34,15 +34,11 @@ python3 scripts/linglong-update.py push-layer --repo runtime                    
 python3 scripts/linglong-update.py push-layer --repo webengine                      # webengine
 python3 scripts/linglong-update.py push-layer --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/
 
-# 全自动执行
-python3 scripts/linglong-update.py auto --version 6.7.46                            # DTK 版本号，自动映射为玲珑版本
-python3 scripts/linglong-update.py auto --version 6.7.46 --repo-id 20260722 --start-from 3
-
 # 状态查询
 python3 scripts/linglong-update.py check-repo --build-url <Jenkins构建URL>
 python3 scripts/linglong-update.py check-build --build-url <Jenkins构建URL>
 python3 scripts/linglong-update.py config        # 配置参数和 Jenkins 凭证
-python3 scripts/linglong-update.py status        # 查看各阶段状态（CRP/Jenkins/GitHub/本地）
+python3 scripts/linglong-update.py status        # 查看各阶段状态（CRP/Jenkins/GitHub PR）
 ```
 
 ## 版本号规则
@@ -59,7 +55,6 @@ python3 scripts/linglong-update.py status        # 查看各阶段状态（CRP/J
 |------|---------------|------|
 | `crp-pack` | DTK 版本 `X.Y.Z` | 如 `--version 6.7.44` |
 | `update-repo` | 玲珑版本 `X.Y.0.Z` | 如 `--version 6.7.0.44`（未指定时从 deb 仓库自动推断并映射） |
-| `auto` | DTK 版本 `X.Y.Z` | 如 `--version 6.7.44`，内部自动映射为玲珑版本用于 update-repo 阶段 |
 
 ## 工作流步骤
 
@@ -171,15 +166,32 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
 - Jenkins 凭证独立存储于 `~/.config/linglong-runtime-update/jenkins_creds.json`（base64 混淆，600 权限）
 - webengine 补丁存放于 skill 的 `assets/webengine.patch`，脚本通过 `_find_webengine_patch()` 自动查找
 
-## auto 模式说明
+## 完整工作流
 
-全自动模式按顺序执行，支持断点续传。步骤 3-5 先对 runtime 仓库执行，再对 webengine 仓库执行：
+完整更新流程按顺序执行，步骤 3-5 先对 runtime 仓库执行，再对 webengine 仓库执行：
 
-- `--start-from N` 从指定步骤开始（1=CRP, 2=build-repo, 3=runtime step 3, 4=runtime step 4, 5=runtime step 5, 6=webengine step 3, 7=webengine step 4, 8=webengine step 5）
-- 每步完成后状态保存到 `~/.config/linglong-runtime-update/state.json`
-- 某步失败后重新运行，自动从失败步骤恢复
-- `--dry-run` 模式下不触发实际操作，仅打印参数
-- `--version` 接收 DTK 版本号（如 `6.7.44`），内部自动映射为玲珑版本用于 update-repo 阶段
+```bash
+# Step 1: CRP 打包
+python3 scripts/linglong-update.py crp-pack --version 6.7.44
+
+# Step 2: 制作更新仓库
+python3 scripts/linglong-update.py build-repo
+python3 scripts/linglong-update.py build-repo --check --build-url <Jenkins构建URL>
+
+# Runtime 仓库 (Step 3-5)
+python3 scripts/linglong-update.py update-repo --version 6.7.0.44 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/
+python3 scripts/linglong-update.py build-layer --repo runtime
+python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>
+python3 scripts/linglong-update.py push-layer --repo runtime --layer-url <build-layer产出的Jenkins URL>
+
+# Webengine 仓库 (Step 3-5)
+python3 scripts/linglong-update.py update-repo --version 6.7.0.44 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/ --repo webengine
+python3 scripts/linglong-update.py build-layer --repo webengine
+python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>
+python3 scripts/linglong-update.py push-layer --repo webengine --layer-url <build-layer产出的Jenkins URL>
+```
+
+> 版本号在不同阶段格式不同：CRP 打包用 DTK 版本 `6.7.44`，update-repo 阶段用玲珑版本 `6.7.0.44`。
 
 ## 依赖
 

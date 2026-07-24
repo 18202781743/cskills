@@ -6,7 +6,7 @@
 请确认环境安全后再执行。
 
 用法:
-  python3 evals/test_real.py [step1|step2|step3|step4|step5|auto|all]
+  python3 evals/test_real.py [step1|step2|step3|step4|step5|all]
 """
 
 import sys
@@ -179,37 +179,6 @@ def test_step5_push_layer():
         print("FAIL Step 5: N8N 推送失败")
     return ok
 
-
-def test_auto():
-    """Auto 模式: 全自动执行全部步骤"""
-    _log_section("Auto 模式: 全自动执行")
-    
-    print("\n检验要点:")
-    print("  1. --start-from 参数能正确跳过前面的步骤（1-8）")
-    print("  2. 每个步骤完成后状态正确保存到 state.json")
-    print("  3. 某步骤失败后，重新运行能从失败步骤恢复")
-    print("  4. --dry-run 模式下不触发实际操作")
-    print("  5. runtime 步骤 3-5 先执行，webengine 步骤 3-5 后执行")
-    print()
-    
-    if not _confirm("确认要执行全自动模式?"):
-        print("用户取消 Auto 模式")
-        return False
-    
-    cfg = lu.load_config()
-    
-    # auto_mode 接收 DTK 版本号，内部自动映射为玲珑版本
-    ok = lu.auto_mode(cfg, version=TEST_DTK_VERSION, 
-                      repo_id=TEST_REPO_ID, deb_repo=TEST_DEB_REPO,
-                      layer_url=TEST_LAYER_URL, dry_run=False, start_from=1)
-    
-    if ok:
-        print("PASS Auto 模式: 全部步骤执行成功")
-    else:
-        print("FAIL Auto 模式")
-    return ok
-
-
 def run_all():
     """运行全部真实测试"""
     print("DTK 玲珑 Runtime 更新工具 - 真实环境测试")
@@ -259,20 +228,18 @@ if __name__ == "__main__":
             ok = test_step4_build_layer()
         elif cmd == "step5":
             ok = test_step5_push_layer()
-        elif cmd == "auto":
-            ok = test_auto()
         elif cmd == "all":
             sys.exit(run_all())
         else:
             print(f"Unknown test: {cmd}")
-            print("Usage: python3 test_real.py [step1|step2|step3|step4|step5|auto|all]")
+            print("Usage: python3 test_real.py [step1|step2|step3|step4|step5|all]")
             sys.exit(1)
         sys.exit(0 if ok else 1)
     else:
         print("DTK 玲珑 Runtime 更新工具 - 真实环境测试")
         print(f"测试 DTK 版本: {TEST_DTK_VERSION}")
         print()
-        print("用法: python3 test_real.py [step1|step2|step3|step4|step5|auto|all]")
+        print("用法: python3 test_real.py [step1|step2|step3|step4|step5|all]")
         print()
         print("步骤说明:")
         print("  step1 - CRP 打包")
@@ -280,5 +247,4 @@ if __name__ == "__main__":
         print("  step3 - 修改 yaml + PR (GitHub)")
         print("  step4 - 构建玲珑 Layer (Jenkins)")
         print("  step5 - N8N 推送 Layer")
-        print("  auto  - 全自动模式")
         print("  all   - 运行全部步骤")
