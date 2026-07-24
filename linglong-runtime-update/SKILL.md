@@ -27,10 +27,10 @@ python3 scripts/linglong-update.py build-repo
 python3 scripts/linglong-update.py build-repo --repo-id 20260722
 python3 scripts/linglong-update.py update-repo --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/
 python3 scripts/linglong-update.py update-repo --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/ --repo webengine
-python3 scripts/linglong-update.py build-layer                                      # runtime
+python3 scripts/linglong-update.py build-layer --repo runtime                     # runtime
 python3 scripts/linglong-update.py build-layer --repo webengine                     # webengine
 python3 scripts/linglong-update.py build-layer --repo-url github.com/linglongdev/org.deepin.runtime --repo-branch main
-python3 scripts/linglong-update.py push-layer                                       # runtime
+python3 scripts/linglong-update.py push-layer --repo runtime                        # runtime
 python3 scripts/linglong-update.py push-layer --repo webengine                      # webengine
 python3 scripts/linglong-update.py push-layer --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/
 
@@ -84,14 +84,14 @@ python3 scripts/linglong-update.py status        # 查看各阶段状态（CRP/J
 - Job 参数: `SUFFIX`（接收 `--repo-id` 传入的仓库标识，为空时使用当天日期 YYYYMMDD）
 - 输出仓库地址格式: http://10.20.64.92:8080/crimson_runtime/stable_xxx/
 
-触发后使用 `check-repo` 轮询构建状态并提取仓库地址：
+触发后使用 `--check` 轮询构建状态并提取仓库地址：
 
 ```bash
 # 触发构建
 python3 scripts/linglong-update.py build-repo --repo-id 20260722
 
 # 轮询状态，构建成功后自动提取仓库地址
-python3 scripts/linglong-update.py check-repo --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/
+python3 scripts/linglong-update.py build-repo --check --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/
 ```
 
 ### Step 3: 修改 yaml 文件并创建 PR
@@ -101,19 +101,23 @@ python3 scripts/linglong-update.py check-repo --build-url https://jenkins.cicd.g
 **runtime 仓库**（默认）:
 1. fetch origin → checkout main → reset to origin/HEAD
 2. 创建/复用固定分支 `update/linglong-runtime`
-3. 修改 `linglong.yaml` 版本号和仓库 URL，修改 `update.go` 中的 `deepinRepoURL`
-4. 执行 `daily.bash` 脚本生成更新的 yaml 文件
+3. 修改 `update.go` 中的 `deepinRepoURL` 为新的 deb 仓库地址
+4. 将玲珑版本号传递给 `daily.bash`，由 `update.go` + `daily.bash` 自动更新 `linglong.yaml`
 5. 分支已存在则 `git commit --amend`，否则新建 commit
 6. 创建 fork（如不存在），强推到 fork 分支
 7. 创建 PR 到 upstream（如 PR 已存在则复用）
 8. 可选等待 PR 合并
 
+> `linglong.yaml` 的版本号和仓库 URL 由 `update.go` 和 `daily.bash` 自动更新，脚本不直接修改 `linglong.yaml`。
+
 **webengine 仓库**（`--repo webengine`）:
 1. 以 runtime 仓库本地副本为基准（通过 `runtime-base` remote 引用）
 2. reset 到 runtime-base/HEAD
 3. 应用 `assets/webengine.patch` 补丁（增加 QtWebEngine 支持）→ commit 1
-4. 修改 `linglong.yaml` 版本号和仓库 URL → commit 2
+4. 修改 `update.go` 中的 `deepinRepoURL`，传递玲珑版本号给 `daily.bash` → commit 2
 5. 强推到 origin/main（不创建 PR）
+
+> webengine 的 commit 2 也由 `update.go` 和 `daily.bash` 自动生成，脚本不直接修改 `linglong.yaml`。
 
 ### Step 4: 构建玲珑 Layer
 
@@ -124,7 +128,7 @@ python3 scripts/linglong-update.py check-repo --build-url https://jenkins.cicd.g
 - webengine 时 REPO_URL 为 `github.com/linglongdev/org.deepin.runtime.webengine`
 - 可通过 `--repo-url` 和 `--repo-branch` 覆盖
 
-触发后使用 `check-build` 轮询构建状态：
+触发后使用 `--check` 轮询构建状态：
 
 ```bash
 # 触发 runtime 构建
@@ -134,7 +138,7 @@ python3 scripts/linglong-update.py build-layer
 python3 scripts/linglong-update.py build-layer --repo webengine
 
 # 轮询状态
-python3 scripts/linglong-update.py check-build --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/
+python3 scripts/linglong-update.py build-layer --check --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/
 ```
 
 ### Step 5: N8N 推送 Layer
@@ -169,9 +173,9 @@ python3 scripts/linglong-update.py check-build --build-url https://jenkins.cicd.
 
 ## auto 模式说明
 
-全自动模式按顺序执行 Step 1-5，支持断点续传：
+全自动模式按顺序执行，支持断点续传。步骤 3-5 先对 runtime 仓库执行，再对 webengine 仓库执行：
 
-- `--start-from N` 从指定步骤开始（跳过前面步骤）
+- `--start-from N` 从指定步骤开始（1=CRP, 2=build-repo, 3=runtime step 3, 4=runtime step 4, 5=runtime step 5, 6=webengine step 3, 7=webengine step 4, 8=webengine step 5）
 - 每步完成后状态保存到 `~/.config/linglong-runtime-update/state.json`
 - 某步失败后重新运行，自动从失败步骤恢复
 - `--dry-run` 模式下不触发实际操作，仅打印参数

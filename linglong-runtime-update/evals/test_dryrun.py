@@ -23,10 +23,15 @@ TEST_LAYER_URL = "https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runti
 
 
 def _mock_auth():
-    """Mock 所有认证函数，避免交互式输入"""
+    """Mock 所有认证函数和文件系统函数，避免交互式输入和权限问题"""
     lu._ensure_jenkins_auth = lambda force=False: {"user": "test", "password": "test"}
     lu._check_gh_auth = lambda: True
     lu._ensure_repos_ready = lambda cfg: True
+    lu.load_config = lambda: dict(lu.DEFAULT_CONFIG)
+    lu.save_config = lambda cfg: None
+    lu.save_state = lambda state: None
+    lu.clear_state = lambda: None
+    lu._config_dir = lambda: lu.Path("/tmp/linglong-test-config")
 
 
 def _test_version_infer():
@@ -101,7 +106,7 @@ def _test_build_layer():
     _mock_auth()
     cfg = lu.load_config()
     ok = lu.build_layer(cfg, repo_url="github.com/linglongdev/org.deepin.runtime",
-                        repo_branch="main", dry_run=True)
+                        repo_branch="main", repo="runtime", dry_run=True)
     assert ok, "build-layer dry-run should return True"
     print("  PASS: build-layer dry-run OK")
 
@@ -113,7 +118,7 @@ def _test_push_layer():
     print("=" * 60)
     _mock_auth()
     cfg = lu.load_config()
-    ok = lu.push_layer(cfg, layer_url=TEST_LAYER_URL, dry_run=True)
+    ok = lu.push_layer(cfg, layer_url=TEST_LAYER_URL, repo="runtime", dry_run=True)
     assert ok, "push-layer dry-run should return True"
     print("  PASS: push-layer dry-run OK")
 

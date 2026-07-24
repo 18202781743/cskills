@@ -7,8 +7,8 @@ Jenkins 是内网服务，HTTP 请求不经过代理。脚本通过 `session.tru
 
 | Job | 命令 | 参数 | URL |
 |-----|------|------|-----|
-| runtime-repo-update | build-repo | `SUFFIX` (可选，默认日期) | `/view/dtk/job/runtime-repo-update/` |
-| linglong-runtime-build | build-layer | `REPO_URL`, `REPO_BRANCH` | `/view/dtk/job/linglong-runtime-build/` |
+| runtime-repo-update | build-repo, build-repo --check | `SUFFIX` (可选，默认日期) | `/view/dtk/job/runtime-repo-update/` |
+| linglong-runtime-build | build-layer, build-layer --check | `REPO_URL`, `REPO_BRANCH` | `/view/dtk/job/linglong-runtime-build/` |
 | linglong-runtime-push-to-old | push-layer | `LAYER_URL` | `/view/dtk/job/linglong-runtime-push-to-old/` |
 | linglong-runtime-push-to-test | push-layer | `LAYER_URL` | `/view/dtk/job/linglong-runtime-push-to-test/` |
 
@@ -41,13 +41,13 @@ builds = jc.get_build_trend(job_path)
 
 **runtime-repo-update**:
 - `SUFFIX`: 仓库标识，为空时使用日期 (YYYYMMDD)
-- `build-repo` 仅触发构建、不等待完成，使用 `check-repo` 轮询并提取仓库 URL
+- `build-repo` 仅触发构建、不等待完成，使用 `build-repo --check --build-url <URL>` 轮询并提取仓库 URL
 
 **linglong-runtime-build**:
 - `REPO_URL`: 目标仓库地址（默认 `github.com/linglongdev/org.deepin.runtime`）
 - `REPO_BRANCH`: 构建分支（默认 `main`）
 - 通过 `--repo-url` 和 `--repo-branch` 覆盖
-- `build-layer` 仅触发构建、不等待完成，使用 `check-build` 轮询构建状态
+- `build-layer` 仅触发构建、不等待完成，使用 `build-layer --check --build-url <URL>` 轮询构建状态
 
 **linglong-runtime-push-to-old / push-to-test**:
 - `LAYER_URL`: 构建产出的 layer 地址

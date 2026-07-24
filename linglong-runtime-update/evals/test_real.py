@@ -105,8 +105,8 @@ def test_step3_update_repo():
     print("  2. 自动 clone 仓库到 ~/.cache/linglong-runtime-update/repos/")
     print("  3. 创建/复用分支 update/linglong-runtime")
     print("  4. webengine 正确应用 assets/webengine.patch")
-    print("  5. linglong.yaml 版本号和仓库 URL 正确更新")
-    print("  6. daily.bash 执行成功")
+    print("  5. update.go deepinRepoURL 正确更新")
+    print("  6. daily.bash 执行成功（传递玲珑版本号）")
     print("  7. git commit 信息正确")
     print("  8. gh pr create 成功")
     print("  9. PR 标题和 body 格式正确")
@@ -132,7 +132,7 @@ def test_step4_build_layer():
     _log_section("Step 4: 构建玲珑 Layer")
     
     print("\n检验要点:")
-    print("  1. Job 触发成功，传入正确的 REPO_URL 和 REPO_BRANCH")
+    print("  1. Job 触发成功，传入正确的 REPO_URL（runtime 或 webengine）和 REPO_BRANCH")
     print("  2. 能正确获取构建编号")
     print("  3. 构建已触发但不等待（使用 check-build 轮询）")
     print("  4. 轮询到 SUCCESS 后可从控制台输出提取 layer URL")
@@ -144,7 +144,7 @@ def test_step4_build_layer():
     
     cfg = lu.load_config()
     ok = lu.build_layer(cfg, repo_url="github.com/linglongdev/org.deepin.runtime",
-                        repo_branch="main", dry_run=False)
+                        repo_branch="main", repo="runtime", dry_run=False)
     
     if ok:
         print("PASS Step 4: Jenkins job 已触发，使用 check-build 查询进度")
@@ -185,10 +185,11 @@ def test_auto():
     _log_section("Auto 模式: 全自动执行")
     
     print("\n检验要点:")
-    print("  1. --start-from 参数能正确跳过前面的步骤")
+    print("  1. --start-from 参数能正确跳过前面的步骤（1-8）")
     print("  2. 每个步骤完成后状态正确保存到 state.json")
     print("  3. 某步骤失败后，重新运行能从失败步骤恢复")
     print("  4. --dry-run 模式下不触发实际操作")
+    print("  5. runtime 步骤 3-5 先执行，webengine 步骤 3-5 后执行")
     print()
     
     if not _confirm("确认要执行全自动模式?"):

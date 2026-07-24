@@ -24,11 +24,13 @@
 1. `git fetch origin` → checkout main/master → reset to origin/HEAD
 2. 创建/复用分支 `update/linglong-runtime`（固定分支名）
 3. **webengine**: `git apply assets/webengine.patch` 应用补丁（三路合并兜底）
-4. 修改 `linglong.yaml` 中的 `version:` 和仓库 URL
-5. 执行 `daily.bash` 脚本更新 layer 对应的仓库地址
+4. 修改 `update.go` 中的 `deepinRepoURL` 为新的 deb 仓库地址
+5. 传递玲珑版本号给 `daily.bash` 脚本
 6. `git add -A` → commit → push
 7. `gh pr create` 创建 PR 到 fork 仓库（fork owner 可通过 `--fork-owner` 指定，默认探测 `gh api user`，回退到 `18202781743`）
 8. 自动等待 PR 合并（默认超时 600s）
+
+> `linglong.yaml` 的版本号和仓库 URL 不直接修改，由 `update.go`（读取 `deepinRepoURL`）和 `daily.bash`（接收玲珑版本号参数）自动生成。
 
 ### webengine 仓库
 
@@ -37,7 +39,7 @@ webengine 仓库的更新流程与 runtime 不同：
 1. 以 runtime 仓库本地副本为基准（通过 `runtime-base` remote 引用）
 2. reset 到 runtime-base/HEAD
 3. 应用 webengine 补丁（增加 QtWebEngine 支持）→ commit 1
-4. 修改 `linglong.yaml` 版本号和仓库 URL → commit 2
+4. 修改 `update.go` 中的 `deepinRepoURL`，传递玲珑版本号给 `daily.bash` → commit 2
 5. 强推到 origin/main（**不创建 PR**）
 
 #### webengine 补丁
@@ -53,12 +55,13 @@ QtWebEngine 相关的环境变量和 package 依赖。
 - 先尝试 `git apply <patch>`
 - 若失败则尝试 `git apply --3way <patch>`（三路合并）
 
-### linglong.yaml 修改规则
+### update.go 修改规则
 
-**版本号**: 正则匹配 `version:\s*\S+`，替换为指定版本。
+**仓库地址**: 修改 `update.go` 中的 `deepinRepoURL` 变量。
 
-**仓库 URL**: 正则匹配 `http://10.20.64.92:8080/crimson_runtime/stable_[^\s"']+/`，
-替换为 build-repo 生成的新 URL。
+脚本通过正则 `deepinRepoURL\s*=\s*("[^"]*"|`[^`]*`)` 匹配并替换。
+
+**linglong.yaml**: 由 `update.go`（读取 `deepinRepoURL`）和 `daily.bash`（接收玲珑版本号参数）自动更新，脚本不直接修改 `linglong.yaml`。
 
 ### daily.bash 脚本
 

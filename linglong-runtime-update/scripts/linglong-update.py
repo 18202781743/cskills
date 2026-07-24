@@ -626,7 +626,13 @@ def crp_pack(cfg: Dict[str, Any], topic: Optional[str] = None,
 # ---------------------------------------------------------------------------
 
 def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
-               dry_run: bool = False) -> Optional[str]:
+               dry_run: bool = False,
+               check: bool = False, build_url: Optional[str] = None) -> Optional[str]:
+    """触发构建或查询构建状态。check=True 时查询状态并提取仓库地址。"""
+    if check or build_url:
+        url = build_url or input("Jenkins 构建 URL: ").strip()
+        return check_repo(cfg, url, extract_repo=True)
+
     _log("=" * 60)
     _log("制作更新仓库")
     _log("=" * 60)
@@ -885,9 +891,7 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
     else:
         _run(["git", "-C", repo_path, "checkout", "-b", branch])
 
-    # 3. 修改 yaml + 执行 daily.bash
-    _update_version_in_yaml(repo_path, version)
-    _update_repo_url_in_yaml(repo_path, deb_repo)
+    # 3. 修改 update.go + 执行 daily.bash（daily.bash 内部调用 update.go 更新 linglong.yaml）
     _update_deepin_repo_url(repo_path, deb_repo)
 
     daily = os.path.join(repo_path, "daily.bash")
@@ -987,9 +991,7 @@ def _update_webengine_repo(label: str, repo_path: str, version: str,
     else:
         _log("未找到 webengine 补丁，跳过", "WARN")
 
-    # 3. 修改 yaml + 执行 daily.bash → commit 2
-    _update_version_in_yaml(repo_path, version)
-    _update_repo_url_in_yaml(repo_path, deb_repo)
+    # 3. 修改 update.go + 执行 daily.bash → commit 2（daily.bash 内部调用 update.go 更新 linglong.yaml）
     _update_deepin_repo_url(repo_path, deb_repo)
 
     daily = os.path.join(repo_path, "daily.bash")
@@ -1071,6 +1073,7 @@ def _wait_for_pr_merge(label: str, repo_path: str, pr_url: str,
 # ---------------------------------------------------------------------------
 
 def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
+               repo: str = "runtime",
                repo_branch: Optional[str] = None, dry_run: bool = False) -> bool:
     """触发 Jenkins 构建玲珑 Layer。
 
@@ -1082,7 +1085,10 @@ def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
     _log("=" * 60)
 
     if repo_url is None:
-        repo_url = "github.com/linglongdev/org.deepin.runtime"
+        if repo == "webengine":
+            repo_url = "github.com/linglongdev/org.deepin.runtime.webengine"
+        else:
+            repo_url = "github.com/linglongdev/org.deepin.runtime"
     if repo_branch is None:
         repo_branch = "main"
 
@@ -1157,6 +1163,7 @@ def _resolve_layer_url(url: str, jc: JenkinsClient) -> str:
     return url
 
 def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
+               repo: str = "runtime",
                dry_run: bool = False) -> bool:
     """N8N 推送 Layer 到玲珑仓库。
 
@@ -1254,9 +1261,14 @@ def auto_mode(cfg: Dict[str, Any], version: Optional[str] = None,
     steps = [
         (1, "CRP 打包", lambda: crp_pack(cfg, version=dtk_ver, dry_run=dry_run)),
         (2, "制作更新仓库", lambda: _auto_step2(cfg, state, repo_id, dry_run)),
-        (3, "修改 yaml + PR", lambda: _auto_step3(cfg, state, linglong_ver, deb_repo, dry_run)),
-        (4, "构建玲珑 Layer", lambda: build_layer(cfg, dry_run=dry_run)),
-        (5, "N8N 推送 Layer", lambda: _auto_step5(cfg, state, layer_url, dry_run)),
+        # Runtime: steps 3-5
+        (3, "[Runtime] 修改 yaml + PR", lambda: update_repo(cfg, linglong_ver, deb_repo or state.get("repo_url"), repo="runtime", dry_run=dry_run)),
+        (4, "[Runtime] 构建玲珑 Layer", lambda: build_layer(cfg, repo="runtime", dry_run=dry_run)),
+        (5, "[Runtime] N8N 推送 Layer", lambda: push_layer(cfg, layer_url, repo="runtime", dry_run=dry_run)),
+        # Webengine: steps 3-5
+        (6, "[Webengine] 修改 yaml + PR", lambda: update_repo(cfg, linglong_ver, deb_repo or state.get("repo_url"), repo="webengine", dry_run=dry_run)),
+        (7, "[Webengine] 构建玲珑 Layer", lambda: build_layer(cfg, repo="webengine", dry_run=dry_run)),
+        (8, "[Webengine] N8N 推送 Layer", lambda: push_layer(cfg, layer_url, repo="webengine", dry_run=dry_run)),
     ]
 
     for snum, sname, sfn in steps:
@@ -1485,10 +1497,11 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
             version = input("版本号 (如 1.1.1.1): ").strip()
             update_repo(cfg, version, state.get("repo_url"))
         elif choice == "4":
-            build_layer(cfg)
+            build_layer(cfg, repo="runtime")
         elif choice == "5":
+            repo_choice = input("repo (runtime/webengine) [runtime]: ").strip() or "runtime"
             layer_url = input(f"LAYER_URL (可选，如 {CRIMSON_BASE}/stable_xxx/): ").strip() or None
-            push_layer(cfg, layer_url)
+            push_layer(cfg, layer_url, repo=repo_choice)
         elif choice == "6":
             cmd_config()
         elif choice == "s":
@@ -1535,7 +1548,7 @@ def _build_parser() -> argparse.ArgumentParser:
     a = sub.add_parser("auto", help="全自动执行全部 5 个步骤")
     a.add_argument("--version", default=None, help="DTK 版本号（如 6.7.44），自动映射为玲珑版本 X.Y.0.Z")
     a.add_argument("--repo-id", default=None, help="仓库标识（默认当天日期）")
-    a.add_argument("--start-from", type=int, default=1, choices=[1, 2, 3, 4, 5],
+    a.add_argument("--start-from", type=int, default=1, choices=[1, 2, 3, 4, 5, 6, 7, 8],
                    help="从指定步骤开始 (默认 1)")
     a.add_argument("--dry-run", action="store_true", help="只打印不执行")
 
@@ -1556,6 +1569,8 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--version", default=None, help="CRP 打包 tag/版本（如 6.7.46）")
         elif name == "build-repo":
             s.add_argument("--repo-id", default=None, help="仓库标识（如日期 20260722）")
+            s.add_argument("--check", action="store_true", help="查询构建状态并提取仓库地址")
+            s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合使用）")
         elif name == "update-repo":
             s.add_argument("--version", default=None, help="玲珑版本号（如 6.7.0.44，默认从 deb 仓库自动推断）")
             s.add_argument("--deb-repo", required=True, help=f"deb 更新仓库地址（如 {CRIMSON_BASE}/stable_xxx/）")
@@ -1563,6 +1578,8 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],
                            help="目标仓库: runtime (org.deepin.runtime, 默认), webengine (org.deepin.runtime.webengine)")
         elif name == "build-layer":
+            s.add_argument("--check", action="store_true", help="查询构建状态（不提取仓库地址）")
+            s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合使用）")
             s.add_argument("--repo-url", default=None, help="REPO_URL（默认 github.com/linglongdev/org.deepin.runtime）")
             s.add_argument("--repo-branch", default=None, help="REPO_BRANCH（默认 main）")
         elif name == "push-layer":
@@ -1612,9 +1629,10 @@ def main() -> int:
                                     args.fork_owner, args.repo, args.dry_run) else 1
         elif args.command == "build-layer":
             return 0 if build_layer(cfg, args.repo_url, args.repo_branch,
+                                    args.repo,
                                     args.dry_run) else 1
         elif args.command == "push-layer":
-            return 0 if push_layer(cfg, args.layer_url, args.dry_run) else 1
+            return 0 if push_layer(cfg, args.layer_url, args.repo, args.dry_run) else 1
         elif args.command == "check-repo":
             r = check_repo(cfg, args.build_url)
             return 0 if r else 1
