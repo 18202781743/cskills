@@ -45,7 +45,6 @@ JENKINS_PUSH_TEST_JOB = "view/dtk/job/linglong-runtime-push-to-test"
 N8N_FORM_URL = "https://n8n.cicd.getdeepin.org/form/097d0087-7f34-4614-8329-82d096af7ba5"
 REPO_URL_HOST = "10.20.64.92:8080"
 CRIMSON_BASE = f"http://{REPO_URL_HOST}/crimson_runtime"
-REPO_URL_PREFIX = f"{CRIMSON_BASE}/stable_"
 
 RUNTIME_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.git"
 WEBENGINE_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.webengine.git"
@@ -388,32 +387,33 @@ class JenkinsClient:
 
     def trigger_build(self, job_path: str,
                       params: Optional[Dict[str, str]] = None) -> Optional[int]:
+        """触发参数化构建，从 Location 或 queue item 获取真实 build 编号。
+
+        Jenkins 参数化构建表单使用 name=PARAM&value=VAL 格式编码。
+        当已有构建在跑时，新构建进入队列，Location 重定向到 job 页面，
+        此时需要通过轮询 lastBuild 检测新构建编号。
+        """
         url = f"{JENKINS_BASE}/{job_path}/build?delay=0sec"
-        form_data = []
+
+        # 获取触发前的 lastBuild 编号，用于队列场景的增量检测
+        prev_build = self._get_last_build_number(job_path)
+
+        # 使用 Jenkins 标准表单格式: name=PARAM_NAME&value=PARAM_VALUE
+        form_parts = []
+        json_params = []
         if params:
             for k, v in params.items():
-                form_data.append(("name", k))
-                form_data.append(("value", v))
-        form_data.append(("statusCode", "303"))
-        form_data.append(("redirectTo", "."))
+                form_parts.append(f"name={urllib.parse.quote(k, safe='')}&value={urllib.parse.quote(v, safe='')}")
+                json_params.append({"name": k, "value": v})
         if self._crumb:
-            form_data.append((self._crumb_field, self._crumb))
-
-        # 构建 json 字段：JSON 序列化整个表单（Jenkins 表单提交特有格式）
-        json_obj = {"parameter": {}}
-        if params:
-            for k, v in params.items():
-                json_obj["parameter"]["name"] = k
-                json_obj["parameter"]["value"] = v
-        json_obj["statusCode"] = "303"
-        json_obj["redirectTo"] = "."
-        json_obj[""] = ""
-        if self._crumb:
-            json_obj[self._crumb_field] = self._crumb
-        form_data.append(("json", json.dumps(json_obj, separators=(",", ":"))))
-
-        # 显式 URL-encode，确保 Content-Type 为 application/x-www-form-urlencoded
-        body = urllib.parse.urlencode(form_data)
+            form_parts.append(f"{self._crumb_field}={urllib.parse.quote(self._crumb, safe='')}")
+        # 添加 statusCode/redirectTo 以触发正确的 HTTP 303 重定向
+        form_parts.append("statusCode=303")
+        form_parts.append("redirectTo=.")
+        # 构建正确的 json 参数（包含实际参数和状态信息）
+        json_obj = {"parameter": json_params, "statusCode": "303", "redirectTo": "."}
+        form_parts.append("json=" + urllib.parse.quote(json.dumps(json_obj), safe=''))
+        body = "&".join(form_parts)
 
         resp = self.session.post(
             url,
@@ -428,26 +428,51 @@ class JenkinsClient:
             m = re.search(r'/(\d+)/?$', loc)
             if m:
                 return int(m.group(1))
-            return self._get_next_build_number(job_path)
+            qm = re.search(r'/queue/item/(\d+)', loc)
+            if qm:
+                queue_id = qm.group(1)
+                build_num = self._get_build_from_queue(queue_id)
+                if build_num:
+                    return build_num
+            # 队列场景：轮询 lastBuild 直到编号变化或超时
+            _log("构建已入队，等待分配 build 编号...")
+            for _ in range(30):
+                time.sleep(2)
+                cur = self._get_last_build_number(job_path)
+                if cur is not None and (prev_build is None or cur > prev_build):
+                    return cur
+            return None
         else:
             _log(f"触发失败: {resp.status_code} {resp.text[:200]}", "ERROR")
             return None
-
-    def _get_next_build_number(self, job_path: str) -> Optional[int]:
+    def _get_last_build_number(self, job_path: str) -> Optional[int]:
+        """获取最近一次构建的编号。"""
         try:
             resp = self.session.get(
                 self._api_url(job_path),
-                params={"tree": "lastBuild[number],nextBuildNumber"},
+                params={"tree": "lastBuild[number]"},
                 timeout=30,
             )
             if resp.status_code != 200:
                 return None
             data = resp.json()
-            nbn = data.get("nextBuildNumber")
-            if nbn:
-                return nbn
             last = data.get("lastBuild", {})
-            return last.get("number", 0)
+            return last.get("number")
+        except Exception:
+            return None
+
+
+    def _get_build_from_queue(self, queue_id: str) -> Optional[int]:
+        """从 queue item API 获取对应的 build 编号。"""
+        try:
+            url = f"{JENKINS_BASE}/queue/item/{queue_id}/api/json"
+            resp = self.session.get(url, timeout=30)
+            if resp.status_code == 200:
+                data = resp.json()
+                executable = data.get("executable", {})
+                if executable:
+                    return executable.get("number")
+            return None
         except Exception:
             return None
 
@@ -515,7 +540,8 @@ def _extract_repo_url(console: str) -> Optional[str]:
     """从 Jenkins 控制台输出提取仓库地址。
 
     支持直接匹配实际地址，也支持 your-server 占位符替换。
-    同时尝试匹配 aptly 输出中的 deb 行。
+    同时尝试匹配 aptly 输出中的 deb 行，以及 linglong-runtime-build
+    下载路径中的相对路径。
     """
     # 直接匹配 10.20.64.92:8080 地址
     pattern = re.escape(CRIMSON_BASE) + r'/stable_[^\s"]+/'
@@ -532,6 +558,11 @@ def _extract_repo_url(console: str) -> Optional[str]:
     m3 = re.search(pattern3, console)
     if m3:
         return m3.group(1).replace('your-server', REPO_URL_HOST)
+    # 匹配 linglong-runtime-build 下载路径中的相对路径（无 http:// 前缀）
+    pattern4 = r'/crimson_runtime/(stable_[\w]+/)'
+    m4 = re.search(pattern4, console)
+    if m4:
+        return f"http://{REPO_URL_HOST}/crimson_runtime/{m4.group(1)}"
     return None
 
 
@@ -614,7 +645,7 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
 
     if dry_run:
         _log(f"DRY RUN — 将触发参数: repo_id={repo_id}", "WARN")
-        return f"{REPO_URL_PREFIX}{datetime.now().strftime("%Y%m%d")}_{repo_id}/"
+        return f"{CRIMSON_BASE + "/stable_"}{datetime.now().strftime("%Y%m%d")}_{repo_id}/"
 
     jc = JenkinsClient(creds["user"], creds["password"])
     if not jc.job_exists(JENKINS_REPO_UPDATE_JOB):
@@ -631,22 +662,13 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
 
     _log(f"构建 #{build_num}: {JENKINS_BASE}/{JENKINS_REPO_UPDATE_JOB}/{build_num}/")
 
-    if not jc.wait_for_build(JENKINS_REPO_UPDATE_JOB, build_num):
-        return None
-
-    console = jc.get_console_output(JENKINS_REPO_UPDATE_JOB, build_num)
-    repo_url = _extract_repo_url(console)
-    if repo_url:
-        print(f"\n  仓库地址: {repo_url}\n")
-    else:
-        repo_url = f"{REPO_URL_PREFIX}{datetime.now().strftime("%Y%m%d")}_{repo_id}/"
-        _log(f"推测仓库地址: {repo_url}")
-    return repo_url
+    _log("构建已触发，使用 check-repo 查询进度和仓库地址")
+    return None
 
 
 
 
-def check_repo(cfg, build_url):
+def check_repo(cfg, build_url, extract_repo: bool = True):
     """查询构建状态并提取仓库地址，不轮询等待。"""
     _log("=" * 60)
     _log("查询构建状态")
@@ -690,14 +712,16 @@ def check_repo(cfg, build_url):
 
     if status.get("result") == "SUCCESS":
         _log(f"构建 #{build_number} 成功!")
-        console = jc.get_console_output(job_path, build_number)
-        repo_url = _extract_repo_url(console)
-        if repo_url:
-            print(f"\n  仓库地址: {repo_url}\n")
-        else:
-            today = datetime.now().strftime("%Y%m%d")
-            _log("未能从控制台输出提取仓库地址", "WARN")
-        return repo_url
+        if extract_repo:
+            console = jc.get_console_output(job_path, build_number)
+            repo_url = _extract_repo_url(console)
+            if repo_url:
+                print(f"\n  仓库地址: {repo_url}\n")
+            else:
+                today = datetime.now().strftime("%Y%m%d")
+                _log("未能从控制台输出提取仓库地址", "WARN")
+            return repo_url
+        return True
     else:
         result = status.get("result", "UNKNOWN")
         _log(f"构建 #{build_number}: {result}", "ERROR")
@@ -765,19 +789,18 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
 def _infer_version(deb_repo: str) -> str:
     """从 deb 仓库解析 dtkcore 版本计算玲珑 runtime 版本。
 
-    玲珑版本格式 X.Y.0.Z，与 DTK 版本 X.Y.Z 一一对应。
+    以 amd64 架构为准，版本格式与 DTK 版本 X.Y.Z 一致。
     """
     pool_url = deb_repo.rstrip("/") + "/pool/main/d/dtkcore/"
     _log(f"从 deb 仓库获取 dtkcore 版本: {pool_url}")
     resp = requests.get(pool_url, timeout=30)
     if resp.status_code != 200:
         raise RuntimeError(f"无法访问 deb 仓库: {pool_url} ({resp.status_code})")
-    # 匹配 libdtk6core_X.Y.Z-N_amd64.deb，提取版本号
+    # 匹配 libdtk6core_X.Y.Z-N_amd64.deb，提取版本号（以 amd64 为准）
     m = re.search(r'libdtk6core_(\d+\.\d+\.\d+)(?:-\d+)?_amd64\.deb', resp.text)
     if not m:
         raise RuntimeError(f"deb 仓库中未找到 dtkcore amd64 包: {pool_url}")
-    parts = m.group(1).split(".")
-    new_ver = f"{parts[0]}.{parts[1]}.0.{parts[2]}"
+    new_ver = m.group(1)
     _log(f"从 deb 仓库推断版本: {new_ver} (dtkcore {m.group(1)})")
     return new_ver
 
@@ -798,9 +821,15 @@ def _update_deepin_repo_url(repo_path: str, repo_url: str) -> None:
     if not os.path.exists(update_go):
         _log("update.go 不存在", "WARN")
         return
-    content = Path(update_go).read_text()
-    new_c = re.sub(r'(deepinRepoURL\s*=\s*")[^"]*(")', r'\1' + repo_url.rstrip("/") + r'\2', content)
-    if new_c != content:
+    go_content = Path(update_go).read_text()
+    # 匹配 Go 字符串字面量，处理双引号和反引号两种形式
+    new_c = re.sub(
+        r'(deepinRepoURL\s*=\s*)("[^"]*"|`[^`]*`)',
+        f'\\g<1>"{repo_url.rstrip("/")}"',
+        go_content,
+        count=1,
+    )
+    if new_c != go_content:
         Path(update_go).write_text(new_c)
         _log(f"update.go 仓库地址已更新为 {repo_url}")
 
@@ -972,11 +1001,13 @@ def _update_version_in_yaml(repo_path: str, version: str) -> None:
     if not os.path.exists(yp):
         _log("linglong.yaml 不存在", "WARN")
         return
-    content = Path(yp).read_text()
-    new_c = re.sub(r'(version:\s*)\S+', f'\\g<1>{version}', content, count=1)
-    if new_c != content:
+    yaml_content = Path(yp).read_text()
+    new_c = re.sub(r'(version:\s*)\S*', f'\\g<1>{version}', yaml_content, count=1)
+    if new_c != yaml_content:
         Path(yp).write_text(new_c)
         _log(f"版本号已更新为 {version}")
+    else:
+        _log(f"version 字段未找到或无需更新", "WARN")
 
 
 def _update_repo_url_in_yaml(repo_path: str, repo_url: str) -> None:
@@ -1034,17 +1065,9 @@ def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
     _log("=" * 60)
 
     if repo_url is None:
-        if dry_run:
-            repo_url = "github.com/linglongdev/org.deepin.runtime"
-        else:
-            repo_url = input("REPO_URL [github.com/linglongdev/org.deepin.runtime]: ").strip()
-            if not repo_url:
-                repo_url = "github.com/linglongdev/org.deepin.runtime"
+        repo_url = "github.com/linglongdev/org.deepin.runtime"
     if repo_branch is None:
-        if dry_run:
-            repo_branch = "main"
-        else:
-            repo_branch = input("REPO_BRANCH [main]: ").strip() or "main"
+        repo_branch = "main"
 
     print(f"\n  REPO_URL    : {repo_url}")
     print(f"  REPO_BRANCH : {repo_branch}\n")
@@ -1074,15 +1097,47 @@ def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
         return False
 
     _log(f"构建 #{build_num}: {JENKINS_BASE}/{JENKINS_BUILD_JOB}/{build_num}/")
-    ok = jc.wait_for_build(JENKINS_BUILD_JOB, build_num)
-    if ok:
-        _log("Layer 构建完成")
-    return ok
+    _log("构建已触发，使用 check-build 查询进度")
+    return True
 
 
 # ---------------------------------------------------------------------------
 # Step 5: N8N 推送
 # ---------------------------------------------------------------------------
+
+
+def _resolve_layer_url(url: str, jc: JenkinsClient) -> str:
+    """如果 url 是 Jenkins 构建地址，从控制台输出提取真实 layer 地址。"""
+    base = JENKINS_BASE.rstrip("/")
+    if not url.startswith(base):
+        return url
+
+    path = url[len(base):].strip("/")
+    parts = [p for p in path.split("/") if p]
+    if not parts:
+        _log(f"无法解析 Jenkins URL: {url}", "ERROR")
+        return url
+
+    try:
+        build_number = int(parts[-1])
+    except ValueError:
+        return url
+
+    job_path = "/".join(parts[:-1])
+    _log(f"解析 Jenkins 构建: {job_path} #{build_number}")
+    try:
+        console = jc.get_console_output(job_path, build_number)
+    except Exception as e:
+        _log(f"获取控制台输出失败: {e}", "ERROR")
+        return url
+
+    repo_url = _extract_repo_url(console)
+    if repo_url:
+        _log(f"从构建输出提取地址: {repo_url}")
+        return repo_url
+
+    _log("控制台输出中未找到仓库地址，使用原始 URL", "WARN")
+    return url
 
 def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
                dry_run: bool = False) -> bool:
@@ -1110,16 +1165,26 @@ def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
     creds = _ensure_jenkins_auth()
     _log("Jenkins 认证成功")
 
+    jc = JenkinsClient(creds["user"], creds["password"])
+
+    # 如果 layer_url 是 Jenkins 构建地址，解析出真实 layer 地址
+    if layer_url and layer_url.startswith(JENKINS_BASE):
+        resolved = _resolve_layer_url(layer_url, jc)
+        if resolved != layer_url:
+            layer_url = resolved
+            print(f"\n  LAYER_URL: {layer_url}\n")
+
     if dry_run:
         _log("DRY RUN — 不会实际触发推送", "WARN")
         _log(f"  将触发: {JENKINS_PUSH_OLD_JOB} 和 {JENKINS_PUSH_TEST_JOB}")
         _log(f"  参数: LAYER_URL={layer_url}")
         return True
 
-    print("请手动提交 N8N 表单后，脚本将自动触发 Jenkins push job。")
-    if not _input_confirm("已提交 N8N 表单?"):
-        _log("用户取消", "WARN")
-        return False
+    if not layer_url:
+        print("请手动提交 N8N 表单后，脚本将自动触发 Jenkins push job。")
+        if not _input_confirm("已提交 N8N 表单?"):
+            _log("用户取消", "WARN")
+            return False
 
     params = {"LAYER_URL": layer_url}
     for label, job in [("push-to-old", JENKINS_PUSH_OLD_JOB),
@@ -1209,11 +1274,8 @@ def auto_mode(cfg: Dict[str, Any], version: Optional[str] = None,
 
 
 def _auto_step2(cfg, state, repo_id, dry_run):
-    url = build_repo(cfg, repo_id, dry_run)
-    if url:
-        state["repo_url"] = url
-        save_state(state)
-    return url
+    build_repo(cfg, repo_id, dry_run)
+    return True
 
 
 def _auto_step3(cfg, state, version, deb_repo, dry_run):
@@ -1494,6 +1556,9 @@ def _build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("check-repo", help="查询构建状态并提取仓库地址")
     s.add_argument("--build-url", required=True, help="Jenkins 构建 URL（如 https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/）")
 
+    bs = sub.add_parser("check-build", help="查询构建状态（不提取仓库地址）")
+    bs.add_argument("--build-url", required=True, help="Jenkins 构建 URL（如 https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/）")
+
     sub.add_parser("config", help="配置参数（含 Jenkins 凭证）")
     sub.add_parser("status", help="查看各阶段状态（CRP/Jenkins/GitHub/本地）")
     return p
@@ -1536,6 +1601,9 @@ def main() -> int:
             return 0 if push_layer(cfg, args.layer_url, args.dry_run) else 1
         elif args.command == "check-repo":
             r = check_repo(cfg, args.build_url)
+            return 0 if r else 1
+        elif args.command == "check-build":
+            r = check_repo(cfg, args.build_url, extract_repo=False)
             return 0 if r else 1
         return 1
     except KeyboardInterrupt:
