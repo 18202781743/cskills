@@ -1,9 +1,10 @@
 ---
 name: linglong-runtime-update
-description: DTK 玲珑 Runtime 更新自动化工具。当用户需要更新 org.deepin.runtime 和 org.deepin.runtime.webengine 的玲珑 runtime 时使用此 skill。覆盖 CRP 打包、Jenkins 仓库更新、yaml 文件修改与 PR 合并、玲珑 layer 构建、N8N 推送全流程。支持单步手动执行。
+description: |
+  DTK 玲珑 Runtime 更新自动化。当用户提到"玲珑 runtime 更新"、"linglong runtime"、"org.deepin.runtime 更新"、"玲珑 layer 构建"或需要执行玲珑相关的 CRP 打包、Jenkins 构建更新仓库、修改 linglong.yaml 并创建 PR、N8N 推送 layer 时使用此 skill。支持单步手动执行和 goal 自动执行。
 ---
-
 # DTK 玲珑 Runtime 更新
+
 
 自动化更新 org.deepin.runtime 和 org.deepin.runtime.webengine 两个玲珑 runtime 仓库的完整工作流。
 
@@ -32,26 +33,8 @@ CRP、Jenkins、N8N 均为内网服务，请求响应缓慢（单次 5-30 秒）
 # 交互式菜单（推荐，无参数启动）
 python3 scripts/linglong-update.py
 
-# 单步执行
-python3 scripts/linglong-update.py crp-pack
-python3 scripts/linglong-update.py crp-pack --topic "xxx" --branch "upstream/master" --version 6.7.46
-python3 scripts/linglong-update.py build-repo
-python3 scripts/linglong-update.py build-repo --repo-id 20260722
-python3 scripts/linglong-update.py update-repo --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/
-python3 scripts/linglong-update.py update-repo --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/ --repo webengine
-python3 scripts/linglong-update.py build-layer --repo runtime                     # runtime
-python3 scripts/linglong-update.py build-layer --repo webengine                     # webengine
-python3 scripts/linglong-update.py build-layer --repo-url github.com/linglongdev/org.deepin.runtime --repo-branch main
-python3 scripts/linglong-update.py push-layer --repo runtime                        # runtime
-python3 scripts/linglong-update.py push-layer --repo webengine                      # webengine
-python3 scripts/linglong-update.py push-layer --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/
-
-# 状态查询
-python3 scripts/linglong-update.py crp-pack --check                              # 查询 CRP 打包状态
-python3 scripts/linglong-update.py build-repo --check --build-url <Jenkins构建URL>   # 查询仓库构建状态
-python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>  # 查询 Layer 构建状态
-python3 scripts/linglong-update.py config        # 配置参数和 Jenkins 凭证
-python3 scripts/linglong-update.py status        # 查看各阶段状态（CRP/Jenkins/GitHub PR）
+# 单步执行（详见各步骤说明）
+python3 scripts/linglong-update.py <command> --help
 ```
 
 ## 版本号规则
