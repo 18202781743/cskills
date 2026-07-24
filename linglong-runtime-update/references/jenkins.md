@@ -5,12 +5,12 @@ Jenkins 是内网服务，HTTP 请求不经过代理。脚本通过 `session.tru
 
 ### 涉及 Job
 
-| Job | 命令 | URL |
-|-----|------|-----|
-| runtime-repo-update | build-repo | `/view/dtk/job/runtime-repo-update/` |
-| linglong-runtime-build | build-layer | `/view/dtk/job/linglong-runtime-build/` |
-| linglong-runtime-push-to-old | push-layer | `/view/dtk/job/linglong-runtime-push-to-old/` |
-| linglong-runtime-push-to-test | push-layer | `/view/dtk/job/linglong-runtime-push-to-test/` |
+| Job | 命令 | 参数 | URL |
+|-----|------|------|-----|
+| runtime-repo-update | build-repo | `SUFFIX` (可选，默认日期) | `/view/dtk/job/runtime-repo-update/` |
+| linglong-runtime-build | build-layer | `REPO_URL`, `REPO_BRANCH` | `/view/dtk/job/linglong-runtime-build/` |
+| linglong-runtime-push-to-old | push-layer | `LAYER_URL` | `/view/dtk/job/linglong-runtime-push-to-old/` |
+| linglong-runtime-push-to-test | push-layer | `LAYER_URL` | `/view/dtk/job/linglong-runtime-push-to-test/` |
 
 ### JenkinsClient API
 
@@ -18,11 +18,14 @@ Jenkins 是内网服务，HTTP 请求不经过代理。脚本通过 `session.tru
 jc = JenkinsClient(user, password)
 
 # 触发构建（带参数）
-build_num = jc.trigger_build(job_path, {"param": "20260721"})
+build_num = jc.trigger_build(job_path, {"REPO_URL": "github.com/..."})
 
-# 获取构建状态
+# 获取当前构建状态
 status = jc.get_build_status(job_path, build_num)
 # => {"result": "SUCCESS", "building": False, "url": "...", "number": 123}
+
+# 获取最近构建状态
+status = jc.get_last_build_status(job_path)
 
 # 等待构建完成
 ok = jc.wait_for_build(job_path, build_num, poll_interval=30, timeout=3600)
@@ -37,19 +40,23 @@ builds = jc.get_build_trend(job_path)
 ### Job 参数说明
 
 **runtime-repo-update**:
-- `param`: 仓库标识，为空时使用日期 (YYYYMMDD)
-- 输出: 仓库 URL `http://10.20.64.92:8080/crimson_runtime/stable_YYYYMMDD/`
+- `SUFFIX`: 仓库标识，为空时使用日期 (YYYYMMDD)
+- `build-repo` 仅触发构建、不等待完成，使用 `check-repo` 轮询并提取仓库 URL
 
 **linglong-runtime-build**:
-- 无参数，自动从 main 分支取代码构建
+- `REPO_URL`: 目标仓库地址（默认 `github.com/linglongdev/org.deepin.runtime`）
+- `REPO_BRANCH`: 构建分支（默认 `main`）
+- 通过 `--repo-url` 和 `--repo-branch` 覆盖
+- `build-layer` 仅触发构建、不等待完成，使用 `check-build` 轮询构建状态
 
 **linglong-runtime-push-to-old / push-to-test**:
-- 由 N8N 表单触发，不需要手动传参
+- `LAYER_URL`: 构建产出的 layer 地址
+- 由 N8N 表单流程触发，脚本在用户确认提交 N8N 后自动构建这两个 job
 
 ### 认证
 
-首次使用 Jenkins 时交互式输入账号密码，加密缓存到
-`~/.config/linglong-update/jenkins_creds.json`（base64 混淆，600 权限）。
+首次使用 Jenkins 时交互式输入账号密码，base64 混淆后缓存到
+`~/.config/linglong-runtime-update/jenkins_creds.json`（600 权限）。
 默认用户名 `yeshanshan`，可通过 `python3 linglong-update.py config` 修改。
 
 ### 网络

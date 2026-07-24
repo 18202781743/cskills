@@ -8,7 +8,7 @@
   python3 linglong-update.py auto --version 1.1.1.1
   python3 linglong-update.py crp-pack
   python3 linglong-update.py build-repo [--param xxx]
-  python3 linglong-update.py update-repo --version 1.1.1.1 --repo-url http://...
+#  python3 linglong-update.py update-repo --version 6.7.0.45 --deb-repo http://...
   python3 linglong-update.py build-layer
   python3 linglong-update.py push-layer
   python3 linglong-update.py config
@@ -55,7 +55,7 @@ FORK_OWNER = "18202781743"
 # CRP 外部工具路径
 _CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp_pack.py")
 
-CACHE_DIR = Path.home() / ".cache" / "linglong-update" / "repos"
+CACHE_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "repos"
 
 DEFAULT_CONFIG: Dict[str, Any] = {
     "crp_topic": "玲珑runtime dtk版本更新",
@@ -73,7 +73,7 @@ DTK_PROJECTS = [
     "dtkdeclarative-v25", "qt5integration-v25", "qt5platform-plugins-v25",
 ]
 
-STATE_FILE = Path.home() / ".config" / "linglong-update" / "state.json"
+STATE_FILE = Path.home() / ".config" / "linglong-runtime-update" / "state.json"
 
 
 # ---------------------------------------------------------------------------
@@ -81,7 +81,7 @@ STATE_FILE = Path.home() / ".config" / "linglong-update" / "state.json"
 # ---------------------------------------------------------------------------
 
 def _config_dir() -> Path:
-    p = Path.home() / ".config" / "linglong-update"
+    p = Path.home() / ".config" / "linglong-runtime-update"
     p.mkdir(parents=True, exist_ok=True)
     return p
 
@@ -745,10 +745,12 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
 
     if version is None:
         try:
-            version = _infer_version(deb_repo)
+            dtk_ver = _infer_version(deb_repo, cfg)
+            version = _to_linglong_version(dtk_ver)
+            _log(f"版本映射: DTK {dtk_ver} → 玲珑 {version}")
         except Exception as e:
             _log(f"自动推断版本失败: {e}", "WARN")
-            version = input("版本号 (如 6.7.0.45): ").strip()
+            version = input("版本号 (玲珑格式，如 6.7.0.45): ").strip()
 
     print(f"\n  版本号  : {version}")
     print(f"  deb 仓库: {deb_repo}\n")
@@ -786,22 +788,37 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
     return True
 
 
-def _infer_version(deb_repo: str) -> str:
-    """从 deb 仓库解析 dtkcore 版本计算玲珑 runtime 版本。
+def _to_linglong_version(dtk_ver: str) -> str:
+    """将 DTK 版本号映射为玲珑 runtime 版本号。
 
-    以 amd64 架构为准，版本格式与 DTK 版本 X.Y.Z 一致。
+    DTK X.Y.Z → 玲珑 X.Y.0.Z (将 patch 号前插入 0)
     """
+    parts = dtk_ver.split(".")
+    if len(parts) == 3:
+        return f"{parts[0]}.{parts[1]}.0.{parts[2]}"
+    _log(f"版本号 {dtk_ver} 不符合 X.Y.Z 格式，无法映射为玲珑版本", "WARN")
+    return dtk_ver
+
+
+def _infer_version(deb_repo: str, cfg: Dict[str, Any] = None) -> str:
+    """从 deb 仓库解析 dtkcore 版本，返回 DTK 版本号（X.Y.Z）。
+
+    匹配架构取自 config 的 archs[0]（默认 amd64）。
+    """
+    if cfg is None:
+        cfg = load_config()
+    arch = cfg.get("archs", ["amd64"])[0]
     pool_url = deb_repo.rstrip("/") + "/pool/main/d/dtkcore/"
     _log(f"从 deb 仓库获取 dtkcore 版本: {pool_url}")
     resp = requests.get(pool_url, timeout=30)
     if resp.status_code != 200:
         raise RuntimeError(f"无法访问 deb 仓库: {pool_url} ({resp.status_code})")
-    # 匹配 libdtk6core_X.Y.Z-N_amd64.deb，提取版本号（以 amd64 为准）
-    m = re.search(r'libdtk6core_(\d+\.\d+\.\d+)(?:-\d+)?_amd64\.deb', resp.text)
+    pattern = rf'libdtk6core_(\d+\.\d+\.\d+)(?:-\d+)?_{arch}\.deb'
+    m = re.search(pattern, resp.text)
     if not m:
-        raise RuntimeError(f"deb 仓库中未找到 dtkcore amd64 包: {pool_url}")
+        raise RuntimeError(f"deb 仓库中未找到 dtkcore {arch} 包: {pool_url}")
     new_ver = m.group(1)
-    _log(f"从 deb 仓库推断版本: {new_ver} (dtkcore {m.group(1)})")
+    _log(f"从 deb 仓库推断 DTK 版本: {new_ver} (dtkcore {m.group(1)}, arch={arch})")
     return new_ver
 
 def _find_webengine_patch() -> Optional[str]:
@@ -812,7 +829,7 @@ def _find_webengine_patch() -> Optional[str]:
     for c in candidates:
         if c.exists() and c.stat().st_size > 100:
             return str(c)
-    _log("webengine.patch 未找到或为空，请放置到 assets/ 或 ~/.config/linglong-update/", "WARN")
+    _log("webengine.patch 未找到或为空，请放置到 assets/ 或 ~/.config/linglong-runtime-update/", "WARN")
     return None
 
 def _update_deepin_repo_url(repo_path: str, repo_url: str) -> None:
@@ -1216,12 +1233,11 @@ def auto_mode(cfg: Dict[str, Any], version: Optional[str] = None,
     _log("=" * 60)
 
     if version is None:
-        try:
-            version = _infer_version(cfg)
-        except Exception as e:
-            _log(f"自动推断版本失败: {e}", "ERROR")
-            return False
-    _log(f"DTK 玲珑 Runtime 更新 - 自动模式 (v{version})")
+        _log("auto 模式需要 --version 参数 (DTK 格式，如 6.7.44)", "ERROR")
+        return False
+    dtk_ver = version  # --version 接收的是 DTK 版本号 (X.Y.Z)
+    linglong_ver = _to_linglong_version(dtk_ver)
+    _log(f"DTK 玲珑 Runtime 更新 - 自动模式 (DTK {dtk_ver}, 玲珑 {linglong_ver})")
     _log("=" * 60)
 
     if start_from <= 3 and not dry_run:
@@ -1232,13 +1248,13 @@ def auto_mode(cfg: Dict[str, Any], version: Optional[str] = None,
             return False
 
     clear_state()
-    state: Dict[str, Any] = {"version": version,
+    state: Dict[str, Any] = {"version": dtk_ver, "linglong_version": linglong_ver,
                               "started_at": datetime.now().isoformat()}
 
     steps = [
-        (1, "CRP 打包", lambda: crp_pack(cfg, version=version, dry_run=dry_run)),
+        (1, "CRP 打包", lambda: crp_pack(cfg, version=dtk_ver, dry_run=dry_run)),
         (2, "制作更新仓库", lambda: _auto_step2(cfg, state, repo_id, dry_run)),
-        (3, "修改 yaml + PR", lambda: _auto_step3(cfg, state, version, deb_repo, dry_run)),
+        (3, "修改 yaml + PR", lambda: _auto_step3(cfg, state, linglong_ver, deb_repo, dry_run)),
         (4, "构建玲珑 Layer", lambda: build_layer(cfg, dry_run=dry_run)),
         (5, "N8N 推送 Layer", lambda: _auto_step5(cfg, state, layer_url, dry_run)),
     ]
@@ -1478,12 +1494,12 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
         elif choice == "s":
             cmd_status(cfg)
         elif choice == "a":
-            try:
-                version = _infer_version(cfg)
-                if not _input_confirm(f"自动推断版本: {version}，确认?"):
-                    version = input("版本号: ").strip()
-            except Exception:
-                version = input("版本号: ").strip()
+            version = input("DTK 版本号 (如 6.7.44): ").strip()
+            if not version:
+                _log("auto 模式需要版本号", "ERROR")
+                continue
+            if not _input_confirm(f"DTK 版本: {version} (玲珑: {_to_linglong_version(version)})，确认?"):
+                continue
             repo_id = input("仓库标识 (可选，默认当天日期): ").strip() or None
             start = input("起始步骤 [1]: ").strip()
             start_from = int(start) if start else 1
@@ -1509,7 +1525,7 @@ def _build_parser() -> argparse.ArgumentParser:
   %(prog)s crp-pack --topic "xxx" --branch "crimson-testing"  指定主题和分支
   %(prog)s build-repo                       制作更新仓库
   %(prog)s build-repo --repo-id 20260722    指定仓库标识
-  %(prog)s update-repo --version 1.1.1.1 --repo-url http://...
+  %(prog)s update-repo --version 6.7.0.45 --deb-repo http://...
   %(prog)s build-layer                      构建玲珑 Layer
   %(prog)s push-layer                       N8N 推送
   %(prog)s config                           配置参数
@@ -1517,7 +1533,7 @@ def _build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command")
 
     a = sub.add_parser("auto", help="全自动执行全部 5 个步骤")
-    a.add_argument("--version", default=None, help="版本号（默认自动从 linglong.yaml 推断）")
+    a.add_argument("--version", default=None, help="DTK 版本号（如 6.7.44），自动映射为玲珑版本 X.Y.0.Z")
     a.add_argument("--repo-id", default=None, help="仓库标识（默认当天日期）")
     a.add_argument("--start-from", type=int, default=1, choices=[1, 2, 3, 4, 5],
                    help="从指定步骤开始 (默认 1)")
@@ -1541,7 +1557,7 @@ def _build_parser() -> argparse.ArgumentParser:
         elif name == "build-repo":
             s.add_argument("--repo-id", default=None, help="仓库标识（如日期 20260722）")
         elif name == "update-repo":
-            s.add_argument("--version", default=None, help="版本号（默认自动推断）")
+            s.add_argument("--version", default=None, help="玲珑版本号（如 6.7.0.44，默认从 deb 仓库自动推断）")
             s.add_argument("--deb-repo", required=True, help=f"deb 更新仓库地址（如 {CRIMSON_BASE}/stable_xxx/）")
             s.add_argument("--fork-owner", default=None, help=f"Fork 目标 GitHub 用户/组织（默认 {FORK_OWNER}）")
             s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],

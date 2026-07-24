@@ -23,10 +23,10 @@ spec.loader.exec_module(lu)
 
 # 测试参数
 TEST_DTK_VERSION = "6.7.45"
-TEST_LINGLONG_VERSION = "6.7.0.45"
+TEST_LINGLONG_VERSION = "6.7.0.45"  # 玲珑 runtime 版本格式 X.Y.0.Z
 TEST_REPO_ID = "test20260722"
 TEST_DEB_REPO = f"http://10.20.64.92:8080/crimson_runtime/stable_{TEST_REPO_ID}/"
-TEST_LAYER_URL = f"http://10.20.64.92:8080/crimson_runtime/stable_{TEST_REPO_ID}/"
+TEST_LAYER_URL = "https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/999/"
 
 
 def _confirm(msg: str) -> bool:
@@ -48,7 +48,7 @@ def test_step1_crp_pack():
     print("\n检验要点:")
     print("  1. CRP 认证成功（OA/LDAP 账号密码或缓存 token）")
     print("  2. 能搜索到主题 '玲珑runtime dtk版本更新'")
-    print("  3. 能搜索到 DTK 项目（dtkcore, dtkgui 等）")
+    print("  3. 能搜索到 DTK 项目（dtkcore-v25, dtkgui-v25 等）")
     print("  4. 能列出 crimson-testing 分支的提交信息")
     print("  5. 创建打包实例成功（HTTP 200）")
     print("  6. 重复创建时能正确删除旧实例再创建新实例")
@@ -76,9 +76,8 @@ def test_step2_build_repo():
     print("  1. Jenkins 认证成功（用户名密码或缓存）")
     print("  2. Job 触发成功（HTTP 200/201/302）")
     print("  3. 能正确获取构建编号")
-    print("  4. 能轮询构建状态直到完成")
-    print("  5. 构建成功后从控制台输出提取仓库 URL")
-    print("  6. URL 格式正确且可访问")
+    print("  4. 构建已触发但不等待（使用 check-repo 轮询）")
+    print("  5. check-repo 能提取仓库 URL")
     print()
     
     if not _confirm("确认要触发 Jenkins build-repo job?"):
@@ -86,20 +85,15 @@ def test_step2_build_repo():
         return False
     
     cfg = lu.load_config()
-    url = lu.build_repo(cfg, repo_id=TEST_REPO_ID, dry_run=False)
+    result = lu.build_repo(cfg, repo_id=TEST_REPO_ID, dry_run=False)
     
-    if url:
-        print(f"PASS Step 2: 仓库 URL = {url}")
-        # 验证 URL 可访问性
-        try:
-            import requests
-            resp = requests.get(url, timeout=10)
-            print(f"   URL 访问状态: HTTP {resp.status_code}")
-        except Exception as e:
-            print(f"   URL 访问异常: {e}")
-    else:
-        print("FAIL Step 2: 未能获取仓库 URL")
-    return url is not None
+    if result is None:
+        # build_repo 仅触发构建不等待，返回 None 表示已触发
+        print("PASS Step 2: Jenkins job 已触发，使用 check-repo 查询进度")
+        print(f"   check-repo --build-url <Jenkins URL>")
+        return True
+    print(f"PASS Step 2: 仓库 URL = {result}")
+    return True
 
 
 def test_step3_update_repo():
@@ -108,8 +102,8 @@ def test_step3_update_repo():
     
     print("\n检验要点:")
     print("  1. gh auth status 通过")
-    print("  2. 自动 clone 仓库到 ~/.cache/linglong-update/repos/")
-    print("  3. 创建新分支")
+    print("  2. 自动 clone 仓库到 ~/.cache/linglong-runtime-update/repos/")
+    print("  3. 创建/复用分支 update/linglong-runtime")
     print("  4. webengine 正确应用 assets/webengine.patch")
     print("  5. linglong.yaml 版本号和仓库 URL 正确更新")
     print("  6. daily.bash 执行成功")
@@ -140,9 +134,8 @@ def test_step4_build_layer():
     print("\n检验要点:")
     print("  1. Job 触发成功，传入正确的 REPO_URL 和 REPO_BRANCH")
     print("  2. 能正确获取构建编号")
-    print("  3. 能轮询构建状态直到完成")
-    print("  4. 构建成功（result == 'SUCCESS'）")
-    print("  5. 控制台输出中可提取 layer URL")
+    print("  3. 构建已触发但不等待（使用 check-build 轮询）")
+    print("  4. 轮询到 SUCCESS 后可从控制台输出提取 layer URL")
     print()
     
     if not _confirm("确认要触发 Jenkins build-layer job?"):
@@ -154,9 +147,9 @@ def test_step4_build_layer():
                         repo_branch="main", dry_run=False)
     
     if ok:
-        print("PASS Step 4: Layer 构建成功")
+        print("PASS Step 4: Jenkins job 已触发，使用 check-build 查询进度")
     else:
-        print("FAIL Step 4: Layer 构建失败")
+        print("FAIL Step 4: Job 触发失败")
     return ok
 
 
@@ -167,9 +160,10 @@ def test_step5_push_layer():
     print("\n检验要点:")
     print("  1. N8N 表单 URL 可访问")
     print("  2. 正确提示用户手动提交 N8N 表单")
-    print("  3. 触发 linglong-runtime-push-to-old 成功")
-    print("  4. 触发 linglong-runtime-push-to-test 成功")
-    print("  5. 两个 push job 都能正常完成")
+    print("  3. --layer-url 传入 Jenkins 构建 URL，脚本自动解析真实 layer 地址")
+    print("  4. 触发 linglong-runtime-push-to-old 成功（传入 LAYER_URL）")
+    print("  5. 触发 linglong-runtime-push-to-test 成功（传入 LAYER_URL）")
+    print("  6. 两个 push job 都能正常完成")
     print()
     
     if not _confirm("确认要执行 N8N 推送?"):
@@ -203,15 +197,10 @@ def test_auto():
     
     cfg = lu.load_config()
     
-    # Mock _infer_version to avoid actual inference
-    orig_infer = lu._infer_version
-    lu._infer_version = lambda cfg: TEST_LINGLONG_VERSION
-    
-    ok = lu.auto_mode(cfg, version=TEST_LINGLONG_VERSION, 
+    # auto_mode 接收 DTK 版本号，内部自动映射为玲珑版本
+    ok = lu.auto_mode(cfg, version=TEST_DTK_VERSION, 
                       repo_id=TEST_REPO_ID, deb_repo=TEST_DEB_REPO,
                       layer_url=TEST_LAYER_URL, dry_run=False, start_from=1)
-    
-    lu._infer_version = orig_infer
     
     if ok:
         print("PASS Auto 模式: 全部步骤执行成功")
@@ -224,7 +213,6 @@ def run_all():
     """运行全部真实测试"""
     print("DTK 玲珑 Runtime 更新工具 - 真实环境测试")
     print(f"测试 DTK 版本: {TEST_DTK_VERSION}")
-    print(f"测试玲珑版本: {TEST_LINGLONG_VERSION}")
     print("\n警告: 真实测试会触发实际的 CRP/Jenkins/GitHub 操作!")
     print("    请确认当前环境安全后再继续。\n")
     
@@ -282,7 +270,6 @@ if __name__ == "__main__":
     else:
         print("DTK 玲珑 Runtime 更新工具 - 真实环境测试")
         print(f"测试 DTK 版本: {TEST_DTK_VERSION}")
-        print(f"测试玲珑版本: {TEST_LINGLONG_VERSION}")
         print()
         print("用法: python3 test_real.py [step1|step2|step3|step4|step5|auto|all]")
         print()
