@@ -10,5 +10,5 @@
 ## 验证要点
 
 - [ ] ProgressBar 进度条
-- [ ] WaterProgress 水波进度
+- [ ] WaterProgressBar 水波进度
 - [ ] BusyIndicator 忙碌指示器

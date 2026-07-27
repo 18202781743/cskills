@@ -10,6 +10,6 @@
 ## 验证要点
 
 - [ ] JSON 格式正确
-- [ ] version 字段为 2.0
-- [ ] contents 数组包含配置项定义
-- [ ] 每个配置项有 key、type、visibility 等字段
+- [ ] version 字段为 1.0
+- [ ] contents 对象包含配置项定义
+- [ ] 每个配置项有 key、value、visibility 等字段

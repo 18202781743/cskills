@@ -6,13 +6,13 @@ DTK QML 提供进度指示和滑动控件，用于显示进度和数值调节。
 
 **适用场景：**
 - 进度条 → `ProgressBar`
-- 水波进度 → `WaterProgress`
+- 水波进度 → `WaterProgressBar`
 - 滑动条 → `Slider`
 - 忙碌指示 → `BusyIndicator`
 
 **相关组件：**
 - `ProgressBar` — 进度条
-- `WaterProgress` — 水波进度
+- `WaterProgressBar` — 水波进度
 - `Slider` — 滑动条
 - `BusyIndicator` — 忙碌指示器
 
