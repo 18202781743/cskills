@@ -158,6 +158,8 @@
 | 6.3 | 20 种 locale 数量一致 |
 | 6.4 | CMake 变量名在 architecture.md 和 plugin-development.md 中一致 |
 | 6.5 | DccDBusInterface 属性在 qml-api.md 中与源码一致 |
+| 6.6 | README.md 的主要能力和适用场景与 SKILL.md 一致 |
+| 6.7 | README.md 的文档入口和验证入口链接均存在 |
 
 ---
 

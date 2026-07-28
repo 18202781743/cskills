@@ -30,7 +30,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 
 ## 模块 0：技能触发条件与功能点覆盖
 
-**参考文档：** `SKILL.md`、`references/widgets/index.md`、`references/declarative/index.md`、`references/examples.md`、`references/theme/index.md`、`references/platform-abstraction.md`、`references/config/index.md`、`references/utilities/index.md`、`references/app-dev-with-dtk.md`、`references/dtksrc-compile-debug.md`
+**参考文档：** `README.md`、`SKILL.md`、`references/widgets/index.md`、`references/declarative/index.md`、`references/examples.md`、`references/theme/index.md`、`references/platform-abstraction.md`、`references/config/index.md`、`references/utilities/index.md`、`references/app-dev-with-dtk.md`、`references/dtksrc-compile-debug.md`
 
 **验证目标：** 检查 `SKILL.md` 是否以陈述句概括 DTK 应用开发的功能范围和适用场景，覆盖界面、视觉、配置、系统集成、工程构建与问题排查，并为未被“文档路由”直接覆盖的高频场景提供快捷入口。
 
@@ -43,6 +43,8 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 | 0.5 | 工程与问题排查覆盖 | 检查“文档路由”表是否覆盖应用创建、CMake 与依赖、DTK 源码编译调试、架构和跨应用共性问题 | PASS：能路由到应用开发、架构和 DTK 源码文档 |
 | 0.6 | 高频跨域场景 | 检查高频场景是否提供主题与调色板、QML 能力、常用控件及系统工具的直接文档入口，并排除“文档路由”已有条目 | PASS：保留高频直接入口且不重复顶层文档路由 |
 | 0.7 | 参考链接有效 | 检查“文档路由”和“高频跨域场景”中的每个链接均指向现有文件 | PASS：所有链接存在且与功能点对应 |
+| 0.8 | README 功能概述 | 对照 `SKILL.md` 检查 README 的主要能力和适用场景 | PASS：README 覆盖 skill 核心能力且没有超出实际范围 |
+| 0.9 | README 导航链接 | 检查 README 中的文档和验证入口 | PASS：所有本地链接存在并指向对应内容 |
 
 ---
 
