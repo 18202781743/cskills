@@ -12,7 +12,7 @@ dtkgui（基础层）  →  dtkwidget / dtkdeclarative（控件层）
 - **调色板系统**：dtkgui 提供 `DPalette`/`DGuiApplicationHelper`，dtkwidget 通过 `DStyle`/`DStyleHelper` 在控件中自动处理状态颜色，dtkdeclarative 通过 `Palette`/`ColorSelector` 在 QML 中实现
 - **字体系统**：dtkgui 提供 `DFontManager`，dtkwidget 通过 `DFontSizeManager` 绑定控件自动更新，dtkdeclarative 通过 QML `FontManager` 暴露
 - **图标系统**：dtkgui 提供 `DDciIcon`/`DIconTheme`/`DDciIconPlayer`，dtkwidget 和 dtkdeclarative 在控件中直接使用
-- **平台抽象**：dtkgui 提供 `DPlatformHandle`/`DPlatformTheme`/`DPlatformWindowInterface`，dde-qtplatform-plugins 提供 QPA 层实现
+- **平台抽象**：dtkgui 提供 `DPlatformHandle`/`DPlatformTheme`/`DPlatformWindowInterface`，QPA 插件提供底层实现
 
 ## 2. 调色板系统
 
@@ -57,7 +57,7 @@ dtkgui（基础层）  →  dtkwidget / dtkdeclarative（控件层）
 **数据流：**
 ```
 DConf/GSettings 字体配置
-  → DThemeSettings (dde-qtintegration)
+  → DThemeSettings
   → DPlatformTheme::fontName/fontPointSize (dtkgui)
   → QDeepinTheme::font() → QGuiApplication::setFont()
   → DGuiApplicationHelper::fontChanged
@@ -127,7 +127,7 @@ dtkgui 层（平台抽象）
     → DPlatformWindowInterface / DPlatformInterface（虚接口）
     → DXCB* / DTreeLand*（具体实现）
 
-dde-qtplatform-plugins 层（QPA 插件）
+QPA 插件层
   DPlatformIntegration（X11 QPA）
   DWaylandIntegration（Wayland QPA）
   → 提供底层窗口系统集成

@@ -29,13 +29,15 @@ builtin 图标存储在 DTK 的 Qt 资源文件中，通过图标名称引用：
 
 ### 2.1 图标命名格式
 
-builtin 图标名称格式为 `<icon-name>_<size>px`，例如：
-- `window-close_round_30px` - 窗口关闭按钮（30px）
-- `icon_fail_128px` - 失败图标（128px）
-- `icon_success_128px` - 成功图标（128px）
-- `icon_warning_32px` - 警告图标（32px）
-- `icon_ok_32px` - 确认图标（32px）
-- `icon_info_32px` - 信息图标（32px）
+资源文件名格式为 `<icon-name>_<size>px.svg`，但 `DIconTheme::findQIcon()` 的参数必须使用不含尺寸后缀的基础名称。例如：
+- `window-close_round` - 窗口关闭按钮（资源尺寸 30px）
+- `icon_fail` - 失败图标（资源尺寸 128px）
+- `icon_success` - 成功图标（资源尺寸 128px）
+- `icon_warning` - 警告图标（资源尺寸 32px）
+- `icon_ok` - 确认图标（资源尺寸 32px）
+- `icon_info` - 信息图标（资源尺寸 32px）
+
+`DBuiltinIconEngine` 通过基础名称匹配资源，并从文件名的 `_NNpx` 部分解析可用尺寸；不要将 `_NNpx` 传给 `findQIcon()`。
 
 ### 2.2 DIconTheme::findQIcon 查找链路
 
@@ -57,14 +59,14 @@ builtin 图标名称格式为 `<icon-name>_<size>px`，例如：
 #include <DIconTheme>
 
 // 方式 1：查找图标（按优先级：dci → builtin → xdg）
-QIcon icon = DIconTheme::findQIcon("window-close_round_30px");
+QIcon icon = DIconTheme::findQIcon("window-close_round");
 
 // 方式 2：指定回退图标
 QIcon fallback = QIcon(":/custom-close.png");
-QIcon icon = DIconTheme::findQIcon("window-close_round_30px", fallback);
+QIcon icon = DIconTheme::findQIcon("window-close_round", fallback);
 
 // 方式 3：带选项查找（跳过 dci，直接查找 builtin）
-QIcon icon = DIconTheme::findQIcon("icon_warning_32px", DIconTheme::IgnoreDciIcons);
+QIcon icon = DIconTheme::findQIcon("icon_warning", DIconTheme::IgnoreDciIcons);
 ```
 
 ### 3.2 检查图标类型
@@ -72,7 +74,7 @@ QIcon icon = DIconTheme::findQIcon("icon_warning_32px", DIconTheme::IgnoreDciIco
 ```cpp
 #include <DIconTheme>
 
-QIcon icon = DIconTheme::findQIcon("icon_ok_32px");
+QIcon icon = DIconTheme::findQIcon("icon_ok");
 
 // 检查是否为内置图标
 if (DIconTheme::isBuiltinIcon(icon)) {
@@ -137,10 +139,10 @@ QString dciPath = cache->findDciIconFile("my-icon", "deepin");
 
 // 创建带内置图标的按钮
 auto *btn = new DPushButton("确定", this);
-btn->setIcon(DIconTheme::findQIcon("icon_ok_32px"));
+btn->setIcon(DIconTheme::findQIcon("icon_ok"));
 
 auto *cancelBtn = new DPushButton("取消", this);
-cancelBtn->setIcon(DIconTheme::findQIcon("window-close_round_30px"));
+cancelBtn->setIcon(DIconTheme::findQIcon("window-close_round"));
 ```
 
 ### 4.2 警告对话框图标
@@ -150,7 +152,7 @@ cancelBtn->setIcon(DIconTheme::findQIcon("window-close_round_30px"));
 #include <DDialog>
 
 auto *dialog = new DDialog(this);
-dialog->setIcon(DIconTheme::findQIcon("icon_warning_32px"));
+dialog->setIcon(DIconTheme::findQIcon("icon_warning"));
 dialog->setTitle("警告");
 dialog->setMessage("确定要删除此文件吗？");
 dialog->exec();
@@ -164,10 +166,10 @@ dialog->exec();
 
 // 成功/失败状态图标
 auto *successLabel = new QLabel(this);
-successLabel->setPixmap(DIconTheme::findQIcon("icon_success_128px").pixmap(64));
+successLabel->setPixmap(DIconTheme::findQIcon("icon_success").pixmap(64));
 
 auto *failLabel = new QLabel(this);
-failLabel->setPixmap(DIconTheme::findQIcon("icon_fail_128px").pixmap(64));
+failLabel->setPixmap(DIconTheme::findQIcon("icon_fail").pixmap(64));
 ```
 
 ## 5. 常用 builtin 图标列表
@@ -176,32 +178,32 @@ failLabel->setPixmap(DIconTheme::findQIcon("icon_fail_128px").pixmap(64));
 
 | 图标名称 | 尺寸 | 用途 |
 |----------|------|------|
-| `window-close_round_30px` | 30px | 窗口关闭按钮 |
-| `icon_ok_32px` | 32px | 确认/成功 |
-| `icon_info_32px` | 32px | 信息提示 |
-| `icon_warning_32px` | 32px | 警告提示 |
-| `icon_success_128px` | 128px | 成功状态（大图标） |
-| `icon_fail_128px` | 128px | 失败状态（大图标） |
-| `button_voice_30px` | 30px | 音量按钮 |
-| `button_voice_active_30px` | 30px | 音量激活状态 |
-| `button_edit-clear_30px` | 30px | 清除按钮 |
-| `list_add_16px` | 16px | 列表添加项 |
-| `list_delete_16px` | 16px | 列表删除项 |
-| `caps_lock_16px` | 16px | 大写锁定指示 |
-| `password_show_24px` | 24px | 显示密码 |
-| `password_hide_24px` | 24px | 隐藏密码 |
-| `edit_12px` | 12px | 编辑按钮 |
-| `mark_indicator_12px` | 12px | 标记指示器 |
-| `fork_indicator_24px` | 24px | 分叉指示器 |
-| `lock_indicator_24px` | 24px | 锁定指示器 |
-| `unlock_indicator_24px` | 24px | 解锁指示器 |
-| `search_indicator_20px` | 20px | 搜索指示器 |
-| `checked_20px` | 20px | 选中状态 |
-| `unchecked_20px` | 20px | 未选中状态 |
-| `go-next_12px` | 12px | 前进箭头 |
-| `go-previous_12px` | 12px | 后退箭头 |
-| `go-up_12px` | 12px | 向上箭头 |
-| `go-down_12px` | 12px | 向下箭头 |
+| `window-close_round` | 30px | 窗口关闭按钮 |
+| `icon_ok` | 32px | 确认/成功 |
+| `icon_info` | 32px | 信息提示 |
+| `icon_warning` | 32px | 警告提示 |
+| `icon_success` | 128px | 成功状态（大图标） |
+| `icon_fail` | 128px | 失败状态（大图标） |
+| `button_voice` | 30px | 音量按钮 |
+| `button_voice_active` | 30px | 音量激活状态 |
+| `button_edit-clear` | 30px | 清除按钮 |
+| `list_add` | 16px | 列表添加项 |
+| `list_delete` | 16px | 列表删除项 |
+| `caps_lock` | 16px | 大写锁定指示 |
+| `password_show` | 24px | 显示密码 |
+| `password_hide` | 24px | 隐藏密码 |
+| `edit` | 12px | 编辑按钮 |
+| `mark_indicator` | 12px | 标记指示器 |
+| `fork_indicator` | 24px | 分叉指示器 |
+| `lock_indicator` | 24px | 锁定指示器 |
+| `unlock_indicator` | 24px | 解锁指示器 |
+| `search_indicator` | 20px | 搜索指示器 |
+| `checked` | 20px | 选中状态 |
+| `unchecked` | 20px | 未选中状态 |
+| `go-next` | 12px | 前进箭头 |
+| `go-previous` | 12px | 后退箭头 |
+| `go-up` | 12px | 向上箭头 |
+| `go-down` | 12px | 向下箭头 |
 
 **注意**：builtin 图标名称与 XDG 图标主题名称不同，必须使用上述实际名称。
 

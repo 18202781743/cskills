@@ -23,4 +23,4 @@
 
 ## 参考
 
-参见 [窗口与标题栏](../../../references/widgets/view.md) 了解主窗口和标题栏的使用。
+参见 [窗口与标题栏](../../references/widgets/view.md) 了解主窗口和标题栏的使用。

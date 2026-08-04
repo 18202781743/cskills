@@ -17,7 +17,7 @@
 
 ## 参考
 
-参见 [列表项委托](../../../references/widgets/item-delegate.md) 了解：
+参见 [列表项委托](../../references/widgets/item-delegate.md) 了解：
 - DStyledItemDelegate 继承与自定义绘制
 - DStandardItem 属性接口的使用方式
 - 两种自定义方式的适用场景

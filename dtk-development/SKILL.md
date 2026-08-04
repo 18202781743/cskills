@@ -1,6 +1,6 @@
 ---
 name: dtk-development
-description: DTK（Deepin Tool Kit）桌面应用开发指南，面向 Deepin/UOS/DDE 应用的开发与维护，覆盖界面与交互、主题与视觉、配置与系统集成、窗口与平台适配、工程构建及问题排查，并支持应用层与 DTK 层的实现选择和共性问题定位。
+description: "DTK（deepin Tool Kit）桌面应用开发指南，面向 deepin/UOS/DDE 应用的开发与维护，覆盖界面与交互、主题与视觉、配置与系统集成、窗口与平台适配、工程构建及问题排查，并支持应用层与 DTK 层的实现选择和共性问题定位。"
 ---
 
 # DTK 开发指南

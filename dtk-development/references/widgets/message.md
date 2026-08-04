@@ -33,7 +33,7 @@ DMessageManager::instance()->sendMessage(this,
 
 auto *msg = new DFloatingMessage(DFloatingMessage::ResidentType, this);
 msg->setMessage("正在同步数据...");
-msg->setIcon(DIconTheme::findQIcon("icon_info_32px"));
+msg->setIcon(DIconTheme::findQIcon("icon_info"));
 
 connect(msg, &DFloatingMessage::closeButtonClicked, []() {
     qInfo() << "User closed message";

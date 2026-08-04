@@ -16,4 +16,4 @@
 
 ## 参考
 
-参见 [调色板助手](../../../references/widgets/palette-helper.md) 了解 DPaletteHelper 的用法。
+参见 [调色板助手](../../references/widgets/palette-helper.md) 了解 DPaletteHelper 的用法。

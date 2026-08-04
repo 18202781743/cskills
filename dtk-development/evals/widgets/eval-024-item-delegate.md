@@ -17,7 +17,7 @@
 
 ## 参考
 
-参见 [列表项委托](../../../references/widgets/item-delegate.md) 了解：
+参见 [列表项委托](../../references/widgets/item-delegate.md) 了解：
 - DStandardItem 属性设置方法
 - DViewItemAction 操作按钮添加方法
 - 列表项自定义绘制与属性接口的选择

@@ -22,4 +22,4 @@
 
 ## 参考
 
-参见 [插件开发](../../../references/plugin-development.md) 了解控制中心插件开发流程。
+参见 [插件开发](../../references/plugin-development.md) 了解控制中心插件开发流程。

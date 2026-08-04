@@ -23,4 +23,4 @@
 
 ## 参考
 
-参见 [按钮控件](../../../references/widgets/button.md) 了解 DIconButton 和 DCI 图标的用法。
+参见 [按钮控件](../../references/widgets/button.md) 了解 DIconButton 和 DCI 图标的用法。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "DDE 托盘开发"
+  short_description: "开发和维护 DDE 托盘与快捷面板插件"
+  default_prompt: "使用 $dde-tray-development 开发或维护 DDE 托盘或快捷面板插件。"

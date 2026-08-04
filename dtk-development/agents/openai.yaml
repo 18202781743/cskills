@@ -1,0 +1,4 @@
+interface:
+  display_name: "DTK 开发"
+  short_description: "使用 DTK 开发 deepin/UOS 原生桌面应用"
+  default_prompt: "使用 $dtk-development 开发或维护基于 DTK 的 deepin/UOS 原生桌面应用。"

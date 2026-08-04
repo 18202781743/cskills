@@ -17,4 +17,4 @@
 
 ## 参考
 
-参见 [按钮规范](../../../references/widgets/button.md) 了解 DTK 按钮的正确实现方式。
+参见 [按钮规范](../../references/widgets/button.md) 了解 DTK 按钮的正确实现方式。

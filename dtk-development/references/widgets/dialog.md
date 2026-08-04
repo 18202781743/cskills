@@ -38,7 +38,7 @@ dialog->exec();
 #include <DIconTheme>
 
 auto *dialog = new DDialog("确认删除", "此操作不可撤销", this);
-dialog->setIcon(DIconTheme::findQIcon("icon_warning_32px"));
+dialog->setIcon(DIconTheme::findQIcon("icon_warning"));
 
 int deleteBtn = dialog->addButton("删除", false, DDialog::ButtonWarning);
 int cancelBtn = dialog->addButton("取消", true, DDialog::ButtonNormal);
@@ -265,7 +265,7 @@ dialog->setIcon(icon, expectedSize);
 // ✅ 正确：使用 setIcon(QIcon)
 dialog->setIcon(QIcon(pixmap));
 // 或直接使用 DIconTheme 查找图标
-dialog->setIcon(DIconTheme::findQIcon("icon_warning_32px"));
+dialog->setIcon(DIconTheme::findQIcon("icon_warning"));
 ```
 
 ### 错误 2：未处理关闭信号

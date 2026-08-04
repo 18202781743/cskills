@@ -19,4 +19,4 @@
 
 ## 参考
 
-参见 [按钮控件](../../../references/widgets/button.md) 了解 DTK 按钮类型的选择。
+参见 [按钮控件](../../references/widgets/button.md) 了解 DTK 按钮类型的选择。

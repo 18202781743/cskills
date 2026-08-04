@@ -24,4 +24,4 @@
 
 ## 参考
 
-参见 [LayerShell 窗口](../../../references/layershell.md) 了解 Wayland 窗口锚定的实现。
+参见 [LayerShell 窗口](../../references/layershell.md) 了解 Wayland 窗口锚定的实现。

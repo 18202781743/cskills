@@ -15,4 +15,4 @@
 
 ## 参考
 
-参见 [调色板规范](../../../references/theme/palette.md) 了解主题感知的实现方式。
+参见 [调色板规范](../../references/theme/palette.md) 了解主题感知的实现方式。

@@ -16,4 +16,4 @@
 
 ## 参考
 
-参见 [样式系统](../../../references/widgets/style.md) 了解自定义绘制的正确方式。
+参见 [样式系统](../../references/widgets/style.md) 了解自定义绘制的正确方式。

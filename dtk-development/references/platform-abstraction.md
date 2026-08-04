@@ -16,7 +16,7 @@ dtkgui 层（平台抽象，公共 API）
   DXCB* / DTreeLand*            DXCB* / DTreeland*
     （平台具体实现）                （平台具体实现）
 
-dde-qtplatform-plugins 层（QPA 插件）
+QPA 插件层
   DPlatformIntegration（X11 QPA）   DWaylandIntegration（Wayland QPA）
     → 提供底层窗口系统集成            → 提供底层窗口系统集成
 ```
@@ -203,17 +203,17 @@ DPlatformTheme(window)
 
 ## 5. 平台实现详情
 
-### 5.1 X11 实现（dtkgui + dde-qtplatform-plugins）
+### 5.1 X11 实现
 
-| 类 | 文件 | 说明 |
-|----|------|------|
-| `DXCBPlatformWindowInterface` | `src/plugins/platform/xcb/dxcbplatformwindowinterface.h` | X11 窗口操作（圆角、阴影、模糊、无标题栏） |
-| `DXCBPlatformInterface` | `src/plugins/platform/xcb/dxcbplatforminterface.h` | X11 主题配置（通过 XSettings 原子） |
-| `DNoTitlebarWindowHelper` | `dde-qtplatform-plugins/xcb/dnotitlebarwindowhelper.h` | 无标题栏窗口拖拽移动实现 |
+| 类 | 项目 | 文件 | 说明 |
+|----|------|------|------|
+| `DXCBPlatformWindowInterface` | dtkgui | `src/plugins/platform/xcb/dxcbplatformwindowinterface.h` | X11 窗口操作（圆角、阴影、模糊、无标题栏） |
+| `DXCBPlatformInterface` | dtkgui | `src/plugins/platform/xcb/dxcbplatforminterface.h` | X11 主题配置（通过 XSettings 原子） |
+| `DNoTitlebarWindowHelper` | dde-qtplatform-plugins | `xcb/dnotitlebarwindowhelper.h` | 无标题栏窗口拖拽移动实现 |
 
 通过 X11 原子协议（`_DEEPIN_SCISSOR_WINDOW` 等）与合成器通信。
 
-**窗口拖拽：** X11 下由 `dde-qtplatform-plugins` 中的 `DNoTitlebarWindowHelper` 实现。它通过 `DVtableHook` 钩入 `QWindow::event`，拦截鼠标事件后发送 `_NET_WM_MOVERESIZE_MOVE` 客户端消息至窗口管理器完成窗口移动。
+**窗口拖拽：** X11 下由 QPA 插件中的 `DNoTitlebarWindowHelper` 实现。它通过 `DVtableHook` 钩入 `QWindow::event`，拦截鼠标事件后发送 `_NET_WM_MOVERESIZE_MOVE` 客户端消息至窗口管理器完成窗口移动。
 
 ### 5.2 Treeland 实现（dtkgui）
 
@@ -232,11 +232,11 @@ DPlatformTheme(window)
 
 ### 5.3 QPA 层（dde-qtplatform-plugins）
 
-| 类 | 项目 | 说明 |
-|----|------|------|
-| `DPlatformIntegration` | `dde-qtplatform-plugins/xcb/` | 扩展 `QXcbIntegration`，提供 DFrameWindow（阴影/边框/圆角窗口装饰）、窗口事件钩子、HiDPI |
-| `DWaylandIntegration` | `dde-qtplatform-plugins/wayland/dwayland/` | 扩展 `QWaylandIntegration`，提供 deepin Wayland 集成 |
-| `DWaylandShellManager` | `dde-qtplatform-plugins/wayland/wayland-shell/` | KWayland Shell 协议管理（plasma shell、SSD、模糊、dock strut） |
+| 类 | 源码路径 | 说明 |
+|----|----------|------|
+| `DPlatformIntegration` | `xcb/` | 扩展 `QXcbIntegration`，提供 DFrameWindow（阴影/边框/圆角窗口装饰）、窗口事件钩子、HiDPI |
+| `DWaylandIntegration` | `wayland/dwayland/` | 扩展 `QWaylandIntegration`，提供 deepin Wayland 集成 |
+| `DWaylandShellManager` | `wayland/wayland-shell/` | KWayland Shell 协议管理（plasma shell、SSD、模糊、dock strut） |
 
 ## 6. 典型使用场景
 
@@ -316,7 +316,7 @@ if (helper->testAttribute(DGuiApplicationHelper::IsWaylandPlatform)) {
 系统配置 (DConf/GSettings)
     │
     ▼
-DThemeSettings (dde-qtintegration)
+DThemeSettings
     │ 读取字体/主题/颜色配置
     ▼
 DPlatformTheme (dtkgui)
@@ -346,12 +346,12 @@ DPlatformHandle (dtkgui)
 
 窗口拖拽 (enableSystemMove)
   │
-  ├─► X11: DNoTitlebarWindowHelper (dde-qtplatform-plugins)
+  ├─► X11: DNoTitlebarWindowHelper (QPA 插件)
   │      → vtHook QWindow::event 拦截 MousePress/Move
   │      → Utility::startWindowSystemMove()
   │      → _NET_WM_MOVERESIZE_MOVE X11 ClientMessage
   │
-  ├─► dwayland: DNoTitlebarWlWindowHelper (dde-qtplatform-plugins)
+  ├─► dwayland: DNoTitlebarWlWindowHelper (QPA 插件)
   │      → vtHook QWindow::event 拦截 MousePress/Move
   │      → QWaylandWindow::startSystemMove()
   │

@@ -14,4 +14,4 @@
 
 ## 参考
 
-参见 [标签控件](../../../references/widgets/input.md) 了解 DLabel 的用法。
+参见 [标签控件](../../references/widgets/input.md) 了解 DLabel 的用法。

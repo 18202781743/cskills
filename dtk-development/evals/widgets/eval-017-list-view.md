@@ -15,4 +15,4 @@
 
 ## 参考
 
-参见 [视图控件](../../../references/widgets/view.md) 了解 DListView 的用法。
+参见 [视图控件](../../references/widgets/view.md) 了解 DListView 的用法。

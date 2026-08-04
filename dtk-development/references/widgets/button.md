@@ -57,7 +57,7 @@ auto *actionBtn = new DIconButton(icon, this);
 
 // 使用 QIcon
 auto *btn = new DIconButton(this);
-btn->setIcon(DIconTheme::findQIcon("icon_ok_32px"));
+btn->setIcon(DIconTheme::findQIcon("icon_ok"));
 
 // 使用 DDciIcon（通过 setIcon 设置）
 DDciIcon dciIcon(":/icons/custom.dci");

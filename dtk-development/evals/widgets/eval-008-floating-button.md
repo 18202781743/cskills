@@ -14,4 +14,4 @@
 
 ## 参考
 
-参见 [按钮控件](../../../references/widgets/button.md) 了解 DFloatingButton 的用法。
+参见 [按钮控件](../../references/widgets/button.md) 了解 DFloatingButton 的用法。
