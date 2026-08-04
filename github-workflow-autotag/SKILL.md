@@ -66,7 +66,7 @@ Special rule:
 - When the user says `dtk`, the skill layer should expand it into these 8
   projects before calling `autotag.py`:
   `dtkcommon`, `dtklog`, `dtkcore`, `dtkgui`, `dtkwidget`,
-  `dtkdeclarative`, `qt5integration`, `qt5platform-plugins`
+  `dtkdeclarative`, `dde-qtintegration`, `dde-qtplatform-plugins`
 
 ### Step 2: Resolve Identity
 

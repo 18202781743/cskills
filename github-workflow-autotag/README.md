@@ -30,7 +30,7 @@ python /home/repo/dev-tool/skills/github-workflow-autotag/autotag.py \
   --project dtkgui \
   --project dtkwidget \
   --project dtkdeclarative \
-  --project qt5integration \
-  --project qt5platform-plugins \
+  --project dde-qtintegration \
+  --project dde-qtplatform-plugins \
   --version 6.0.12
 ```
