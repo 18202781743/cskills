@@ -65,10 +65,10 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "fork_owner": None,
 }
 
-# DTK 项目列表（与 github-workflow-autotag 保持一致）
+# CRP DTK 项目列表：CRP 仍使用原有项目名，与 GitHub 仓库名不完全一致
 DTK_PROJECTS = [
     "dtkcommon-v25", "dtklog-v25", "dtkcore-v25", "dtkgui-v25", "dtkwidget-v25",
-    "dtkdeclarative-v25", "dde-qtintegration-v25", "dde-qtplatform-plugins-v25",
+    "dtkdeclarative-v25", "qt5integration-v25", "qt5platform-plugins-v25",
 ]
 
 # ---------------------------------------------------------------------------

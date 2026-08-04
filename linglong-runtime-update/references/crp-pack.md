@@ -13,10 +13,10 @@
 
 ```
 dtkcommon-v25, dtklog-v25, dtkcore-v25, dtkgui-v25, dtkwidget-v25,
-dtkdeclarative-v25, dde-qtintegration-v25, dde-qtplatform-plugins-v25
+dtkdeclarative-v25, qt5integration-v25, qt5platform-plugins-v25
 ```
 
-与 github-workflow-autotag 的 DTK 项目列表保持一致。
+CRP 仍使用这两个项目的原有名称；github-workflow-autotag 使用更新后的 GitHub 仓库名称。
 
 ### 认证
 
