@@ -61,7 +61,7 @@ python3 scripts/linglong-update.py <command> --help
 
 在 CRP 平台上对 DTK 相关项目创建打包实例。调用外部 `crp_pack.py` 脚本（与 `linglong-update.py` 同目录），该脚本独立处理 CRP 认证和打包实例创建。
 
-打包的项目列表与 github-workflow-autotag 保持一致（`dtkcommon-v25`, `dtklog-v25`, `dtkcore-v25`, `dtkgui-v25`, `dtkwidget-v25`, `dtkdeclarative-v25`, `qt5integration-v25`, `qt5platform-plugins-v25`）。
+打包的项目列表与 github-workflow-autotag 保持一致（`dtkcommon-v25`, `dtklog-v25`, `dtkcore-v25`, `dtkgui-v25`, `dtkwidget-v25`, `dtkdeclarative-v25`, `dde-qtintegration-v25`, `dde-qtplatform-plugins-v25`）。
 
 - **主题**: `玲珑runtime dtk版本更新`（可配置 `crp_topic`）
 - **Git 分支过滤**: `upstream/master`（可配置 `crp_branch`，传给 CRP 的筛选分支名）

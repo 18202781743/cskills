@@ -19,7 +19,7 @@ Chameleon（变色龙）是 DTK 为两套 Qt UI 技术栈提供的统一视觉�
 
 | 技术栈 | 插件类型 | 实现项目 | 主要职责 |
 |---|---|---|---|
-| QWidget | Qt `QStylePlugin` | `qt5integration/styleplugins/chameleon/` | 通过 `DStyle`/`ChameleonStyle` 绘制 QWidget，计算尺寸、子区域和命中区域 |
+| QWidget | Qt `QStylePlugin` | `dde-qtintegration/styleplugins/chameleon/` | 通过 `DStyle`/`ChameleonStyle` 绘制 QWidget，计算尺寸、子区域和命中区域 |
 | QML | Qt Quick Controls 2 Style 插件 | `dtkdeclarative/chameleon/` | 把 Qt Quick Controls 的控件类型映射到 DTK QML 控件实现 |
 
 二者名称和设计语言相同，但不是同一份绘制代码，也不能相互替代。QWidget 使用 `QPainter` 和 `QStyleOption`；QML 使用 Qt Quick 的 Item、属性绑定、状态和场景图。
@@ -138,7 +138,7 @@ QML 也可以保持 palette 绑定不变，分别以 `QT_QUICK_CONTROLS_STYLE=Ch
 ```text
 QCommonStyle
 └── DStyle                         dtkwidget
-    └── ChameleonStyle             qt5integration
+    └── ChameleonStyle             dde-qtintegration
 
 QStylePlugin
 └── ChameleonStylePlugin

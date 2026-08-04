@@ -46,11 +46,11 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 
 ---
 
-## 模块 1：theme（主题系统）— 来源 dtkgui/dtkwidget/qt5integration/dtkdeclarative
+## 模块 1：theme（主题系统）— 来源 dtkgui/dtkwidget/dde-qtintegration/dtkdeclarative
 
 **参考文档：** `references/theme/index.md`, `references/theme/palette.md`, `references/widgets/style.md`, `references/theme/chameleon-style.md`, `references/theme/theme-switch.md`, `references/theme/dci.md`, `references/theme/builtin.md`, `references/theme/icontheme.md`
 
-**源码位置：** `~/dtk/dtkgui/include/kernel/` + `~/dtk/dtkgui/include/util/` + `~/dtk/dtkwidget/include/widgets/` + `~/dtk/qt5integration/styleplugins/chameleon/` + `~/dtk/dtkdeclarative/chameleon/`
+**源码位置：** `~/dtk/dtkgui/include/kernel/` + `~/dtk/dtkgui/include/util/` + `~/dtk/dtkwidget/include/widgets/` + `~/dtk/dde-qtintegration/styleplugins/chameleon/` + `~/dtk/dtkdeclarative/chameleon/`
 
 ### 1.1 图标（来源 dtkgui）
 
@@ -91,32 +91,32 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 | 1.2.13 | `DStyle::SS_HoverState`/`SS_FocusFlag` 状态标志存在 | grep `SS_HoverState` | 同上 |
 | 1.2.14 | `DPlatformTheme` 类存在（`fetchPalette` 参数类型） | grep `class DPlatformTheme` | `dtkgui/include/kernel/dplatformtheme.h` |
 
-### 1.3 QWidget 变色龙风格实现（来源 dtkwidget/qt5integration）
+### 1.3 QWidget 变色龙风格实现（来源 dtkwidget/dde-qtintegration）
 
 | # | 验证项 | 验证方法 | 对应源码文件 |
 |---|--------|----------|-------------|
-| 1.3.1 | `DStyle` 继承 `QCommonStyle`，`ChameleonStyle` 继承 `DStyle` | 核对类声明 | `dtkwidget/include/widgets/dstyle.h`、`qt5integration/styleplugins/chameleon/chameleonstyle.h` |
-| 1.3.2 | `ChameleonStylePlugin` 继承 `QStylePlugin`，插件 IID 为 `org.qt-project.Qt.QStyleFactoryInterface`，键名为 `chameleon` | 核对插件入口和 JSON 元数据 | `qt5integration/styleplugins/chameleon/main.cpp`、`chameleon.json` |
-| 1.3.3 | 插件依赖 `Dtk::Widget` 并安装到 Qt styles 插件目录 | 核对构建目标、链接依赖和安装目录 | `qt5integration/styleplugins/chameleon/CMakeLists.txt` |
-| 1.3.4 | Deepin 平台主题提供 `chameleon`、`fusion` 风格候选，`DApplication` 在非 Deepin 平台主题环境设置 `chameleon` | 核对 `StyleNames` 和 `setStyle` 分支 | `qt5integration/platformthemeplugin/qdeepintheme.cpp`、`dtkwidget/src/widgets/dapplication.cpp` |
+| 1.3.1 | `DStyle` 继承 `QCommonStyle`，`ChameleonStyle` 继承 `DStyle` | 核对类声明 | `dtkwidget/include/widgets/dstyle.h`、`dde-qtintegration/styleplugins/chameleon/chameleonstyle.h` |
+| 1.3.2 | `ChameleonStylePlugin` 继承 `QStylePlugin`，插件 IID 为 `org.qt-project.Qt.QStyleFactoryInterface`，键名为 `chameleon` | 核对插件入口和 JSON 元数据 | `dde-qtintegration/styleplugins/chameleon/main.cpp`、`chameleon.json` |
+| 1.3.3 | 插件依赖 `Dtk::Widget` 并安装到 Qt styles 插件目录 | 核对构建目标、链接依赖和安装目录 | `dde-qtintegration/styleplugins/chameleon/CMakeLists.txt` |
+| 1.3.4 | Deepin 平台主题提供 `chameleon`、`fusion` 风格候选，`DApplication` 在非 Deepin 平台主题环境设置 `chameleon` | 核对 `StyleNames` 和 `setStyle` 分支 | `dde-qtintegration/platformthemeplugin/qdeepintheme.cpp`、`dtkwidget/src/widgets/dapplication.cpp` |
 | 1.3.5 | `DStyleHelper` 对 `DStyle` 子类和普通 `QStyle` 分别采用虚函数与静态辅助实现 | 核对 `setStyle` 及绘制分发 | `dtkwidget/src/widgets/dstyle.cpp` |
 | 1.3.6 | `DStyle` 将 Qt 状态转换为 hover/press/check/select/focus 状态，并为 `QPalette` 与 `DPalette` 生成状态画刷 | 核对 `getState`、`getFlags`、`generatedBrush` | `dtkwidget/src/widgets/dstyle.cpp` |
-| 1.3.7 | `ChameleonStyle` 重写绘制、布局、命中测试、尺寸、度量、提示及 polish/unpolish 核心虚函数，未处理元素回落到 `DStyle` | 核对声明和各 switch 默认分支 | `qt5integration/styleplugins/chameleon/chameleonstyle.h`、`chameleonstyle.cpp` |
-| 1.3.8 | 标准调色板角色和 DTK 语义色分别经 `QPalette` 与 `DPaletteHelper` 进入 `DStyle::generatedBrush` | 核对 `getColor` 重载 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
-| 1.3.9 | 菜单移动及进度、数值、混合、滚动条动画类型存在并由风格管理 | 核对动画类和动画哈希表 | `qt5integration/styleplugins/chameleon/dstyleanimation.h`、`chameleonstyle.h`、`chameleonstyle.cpp` |
-| 1.3.10 | `polish/unpolish` 管理 hover 属性、弹出窗口效果及日历专用初始化 | 核对控件类型分支和平台 API 调用 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
-| 1.3.11 | `references/widgets/style.md` 按使用频率覆盖按钮、输入、选择、item view、菜单、标签、滚动条、滑块、进度条，逐项说明背景、前景、状态组合和子区域 | 对照 `drawPrimitive`/`drawControl`/`drawComplexControl` 的 case 与布局函数 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
-| 1.3.12 | 文档所述状态优先级覆盖 disabled、hover、sunken、on/off/nochange、selected、focus、active、orientation，且说明状态可组合 | 核对 `QStyleOption::state` 判断与 `DStyle::generatedBrush` | `dtkwidget/src/widgets/dstyle.cpp`、`qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
-| 1.3.13 | 文档所述亮暗色逻辑区分 palette 间接适配与 DCI/单选框/标签页显式主题分支 | 核对 `getColor`、`getThemTypeColor`、`DDciIconPlayer::setTheme` 与 `adjustColor` | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
-| 1.3.14 | 文档中的控件区域对应 `subElementRect`、`subControlRect`、`tabLayout`、item-view layout，且提醒 RTL/方向/DPI | 逐项核对布局和绘制调用使用的 rect | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
-| 1.3.15 | 自定义按钮示例使用 `QStyleOptionButton` 和当前 `style()->drawControl()`，状态与 widget 参数完整 | 对照 Qt/ChameleonStyle 绘制入口检查示例 | `qt5integration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.7 | `ChameleonStyle` 重写绘制、布局、命中测试、尺寸、度量、提示及 polish/unpolish 核心虚函数，未处理元素回落到 `DStyle` | 核对声明和各 switch 默认分支 | `dde-qtintegration/styleplugins/chameleon/chameleonstyle.h`、`chameleonstyle.cpp` |
+| 1.3.8 | 标准调色板角色和 DTK 语义色分别经 `QPalette` 与 `DPaletteHelper` 进入 `DStyle::generatedBrush` | 核对 `getColor` 重载 | `dde-qtintegration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.9 | 菜单移动及进度、数值、混合、滚动条动画类型存在并由风格管理 | 核对动画类和动画哈希表 | `dde-qtintegration/styleplugins/chameleon/dstyleanimation.h`、`chameleonstyle.h`、`chameleonstyle.cpp` |
+| 1.3.10 | `polish/unpolish` 管理 hover 属性、弹出窗口效果及日历专用初始化 | 核对控件类型分支和平台 API 调用 | `dde-qtintegration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.11 | `references/widgets/style.md` 按使用频率覆盖按钮、输入、选择、item view、菜单、标签、滚动条、滑块、进度条，逐项说明背景、前景、状态组合和子区域 | 对照 `drawPrimitive`/`drawControl`/`drawComplexControl` 的 case 与布局函数 | `dde-qtintegration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.12 | 文档所述状态优先级覆盖 disabled、hover、sunken、on/off/nochange、selected、focus、active、orientation，且说明状态可组合 | 核对 `QStyleOption::state` 判断与 `DStyle::generatedBrush` | `dtkwidget/src/widgets/dstyle.cpp`、`dde-qtintegration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.13 | 文档所述亮暗色逻辑区分 palette 间接适配与 DCI/单选框/标签页显式主题分支 | 核对 `getColor`、`getThemTypeColor`、`DDciIconPlayer::setTheme` 与 `adjustColor` | `dde-qtintegration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.14 | 文档中的控件区域对应 `subElementRect`、`subControlRect`、`tabLayout`、item-view layout，且提醒 RTL/方向/DPI | 逐项核对布局和绘制调用使用的 rect | `dde-qtintegration/styleplugins/chameleon/chameleonstyle.cpp` |
+| 1.3.15 | 自定义按钮示例使用 `QStyleOptionButton` 和当前 `style()->drawControl()`，状态与 widget 参数完整 | 对照 Qt/ChameleonStyle 绘制入口检查示例 | `dde-qtintegration/styleplugins/chameleon/chameleonstyle.cpp` |
 | 1.3.16 | `widgets/style.md` 说明 palette/font/icon 定制原则，具体示例分别位于 `button.md`、`input.md`、`view.md`、`progress.md` | 核对文档交叉职责、`getColor` 角色和 `DPaletteHelper` API | `dpalettehelper.h`、`chameleonstyle.cpp` |
 
 ### 1.4 QWidget/QML Chameleon 共用概览
 
 | # | 验证项 | 验证方法 | 对应源码文件 |
 |---|--------|----------|-------------|
-| 1.4.1 | `theme/chameleon-style.md` 明确 QWidget 和 QML 分别拥有独立 Chameleon 插件，共用设计语义而非绘制实现 | 对照两个插件入口、类型和安装目录 | `qt5integration/styleplugins/chameleon/`、`dtkdeclarative/chameleon/` |
+| 1.4.1 | `theme/chameleon-style.md` 明确 QWidget 和 QML 分别拥有独立 Chameleon 插件，共用设计语义而非绘制实现 | 对照两个插件入口、类型和安装目录 | `dde-qtintegration/styleplugins/chameleon/`、`dtkdeclarative/chameleon/` |
 | 1.4.2 | QWidget 插件是 `QStylePlugin`，键名为 `chameleon`；QML 插件是 Qt Quick Controls 2 style，名称为 `Chameleon` | 核对插件类、元数据、`name()` 和 qmldir | `main.cpp`、`chameleon.json`、`qtquickcontrols2chameleonstyleplugin.cpp`、`qmldir.in` |
 | 1.4.3 | QML Chameleon 文件将 Qt Quick Controls 类型映射到 `org.deepin.dtk` 控件，并覆盖 CMake 中列出的 QML 控件 | 抽查 `Button.qml`、`Control.qml` 并核对 `QML_FILES` | `dtkdeclarative/chameleon/*.qml`、`CMakeLists.txt` |
 | 1.4.4 | 文档区分 DTK5 的 `QtQuick.Controls.Chameleon` 安装路径与非 DTK5 的 `Chameleon` QML module 构建路径 | 核对两个 CMake 条件分支和 `qmldir.in` | `dtkdeclarative/chameleon/CMakeLists.txt`、`qmldir.in` |
@@ -333,19 +333,19 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 
 ---
 
-## 模块 7：平台集成（qt5integration + qt5platform-plugins）
+## 模块 7：平台集成（dde-qtintegration + dde-qtplatform-plugins）
 
 **参考文档：** `SKILL.md` 中的"仓库依赖关系"和"核心库 vs 平台集成库"说明
 
-**源码位置：** `~/dtk/qt5integration/` + `~/dtk/qt5platform-plugins/`
+**源码位置：** `~/dtk/dde-qtintegration/` + `~/dtk/dde-qtplatform-plugins/`
 
 | # | 验证项 | 验证方法 | 对应源码文件 |
 |---|--------|----------|-------------|
-| 7.1 | SKILL.md 声称 dtkwidget 运行时依赖 qt5integration（Chameleon 风格） | 确认 `ChameleonStyle` 继承 `DStyle` | `qt5integration/styleplugins/chameleon/chameleonstyle.h` |
-| 7.2 | SKILL.md 声称 qt5integration 运行时依赖 qt5platform-plugins | 确认两者有关联（检查 cmake 或代码引用） | 两项目源码 |
-| 7.3 | SKILL.md 声称 dtkwidget 编译不依赖 qt5integration/qt5platform-plugins | 确认 dtkwidget 的 CMakeLists 不引用这两个项目 | `dtkwidget/CMakeLists.txt` |
+| 7.1 | SKILL.md 声称 dtkwidget 运行时依赖 dde-qtintegration（Chameleon 风格） | 确认 `ChameleonStyle` 继承 `DStyle` | `dde-qtintegration/styleplugins/chameleon/chameleonstyle.h` |
+| 7.2 | SKILL.md 声称 dde-qtintegration 运行时依赖 dde-qtplatform-plugins | 确认两者有关联（检查 cmake 或代码引用） | 两项目源码 |
+| 7.3 | SKILL.md 声称 dtkwidget 编译不依赖 dde-qtintegration/dde-qtplatform-plugins | 确认 dtkwidget 的 CMakeLists 不引用这两个项目 | `dtkwidget/CMakeLists.txt` |
 | 7.4 | SKILL.md 声称 `DDciFile` 来自 dtkcore，`DDciIcon` 来自 dtkgui | 确认类所在项目 | 已在 1.1 和 6.11 验证 |
-| 7.5 | SKILL.md 依赖图：dtkcommon→dtkcore, dtkcommon→dtkgui, dtkcore→dtklog, dtkcore→dtkgui, dtkcore→dtkwidget, dtkcore→dtkdeclarative, dtkgui→dtkdeclarative, dtkgui→qt5platform-plugins | 逐个检查 CMakeLists 中的 `find_package` | 各项目 `CMakeLists.txt` |
+| 7.5 | SKILL.md 依赖图：dtkcommon→dtkcore, dtkcommon→dtkgui, dtkcore→dtklog, dtkcore→dtkgui, dtkcore→dtkwidget, dtkcore→dtkdeclarative, dtkgui→dtkdeclarative, dtkgui→dde-qtplatform-plugins | 逐个检查 CMakeLists 中的 `find_package` | 各项目 `CMakeLists.txt` |
 
 ---
 
@@ -365,7 +365,7 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 
 **参考文档：** `references/architecture.md`
 
-**源码位置：** `~/dtk/dtkgui/`、`~/dtk/dtkwidget/`、`~/dtk/dtkdeclarative/`、`~/dtk/qt5integration/`、`~/dtk/qt5platform-plugins/`
+**源码位置：** `~/dtk/dtkgui/`、`~/dtk/dtkwidget/`、`~/dtk/dtkdeclarative/`、`~/dtk/dde-qtintegration/`、`~/dtk/dde-qtplatform-plugins/`
 
 | # | 验证项 | 验证方法 | 对应源码文件 |
 |---|--------|----------|-------------|
@@ -379,14 +379,14 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 | 9.8 | 平台抽象：`DPlatformTheme` 类存在，属性 `fontName`/`activeColor`/`iconThemeName` 等 | grep class + Q_PROPERTY | `dtkgui/include/kernel/dplatformtheme.h` |
 | 9.9 | 平台抽象：`DPlatformWindowInterface` 抽象基类存在 | grep class | `dtkgui/src/private/dplatformwindowinterface_p.h` |
 | 9.10 | 平台分发：`DXCBPlatformWindowInterface`/`DTreeLandPlatformWindowInterface` 存在 | grep class | `dtkgui/src/plugins/platform/xcb/`、`treeland/` |
-| 9.11 | QPA 层：`DPlatformIntegration`/`DWaylandIntegration` 存在 | grep class | `qt5platform-plugins/xcb/`、`wayland/` |
+| 9.11 | QPA 层：`DPlatformIntegration`/`DWaylandIntegration` 存在 | grep class | `dde-qtplatform-plugins/xcb/`、`wayland/` |
 | 9.12 | 平台检测：`DGuiApplicationHelper::IsXWindowPlatform`/`IsWaylandPlatform` 属性存在 | grep enum Attribute | `dtkgui/include/kernel/dguiapplicationhelper.h` |
 
-## 模块 10：platform-abstraction（平台抽象层）— 来源 dtkgui + qt5platform-plugins
+## 模块 10：platform-abstraction（平台抽象层）— 来源 dtkgui + dde-qtplatform-plugins
 
 **参考文档：** `references/platform-abstraction.md`
 
-**源码位置：** `~/dtk/dtkgui/` + `~/dtk/qt5platform-plugins/`
+**源码位置：** `~/dtk/dtkgui/` + `~/dtk/dde-qtplatform-plugins/`
 
 | # | 验证项 | 验证方法 | 对应源码文件 |
 |---|--------|----------|-------------|
@@ -400,11 +400,11 @@ Skill 覆盖 8 个 DTK 项目，按参考文档结构划分为主题、控件、
 | 10.8 | 平台分发：`createWindowInterface()` 函数按 `IsXWindowPlatform`/`IsWaylandPlatform` 分发 | 核对代码逻辑 | `dplatformhandle.cpp:307-328` |
 | 10.9 | `DPlatformWindowInterface` 抽象基类虚函数完整 | grep virtual | `dplatformwindowinterface_p.h` |
 | 10.10 | Treeland 实现通过 `treeland_personalization_manager_v1` Wayland 协议通信 | grep protocol | `dtkgui/src/plugins/platform/treeland/personalizationwaylandclientextension.h` |
-| 10.11 | `qt5platform-plugins` 包含 `xcb/` 和 `wayland/` 两个 QPA 插件目录 | ls 目录结构 | `qt5platform-plugins/` |
-| 10.12 | 窗口拖拽 X11 实现：`DNoTitlebarWindowHelper` 类存在，`windowEvent()`/`startMoveWindow()`/`updateMoveWindow()` 方法 | grep class + methods | `qt5platform-plugins/xcb/dnotitlebarwindowhelper.h` |
-| 10.13 | 窗口拖拽 X11 底层：`Utility::startWindowSystemMove()` 发送 `_NET_WM_MOVERESIZE_MOVE`，`updateMousePointForWindowMove()` 发送 `_DEEPIN_MOVE_UPDATE` | grep methods | `qt5platform-plugins/xcb/utility_x11.cpp` |
+| 10.11 | `dde-qtplatform-plugins` 包含 `xcb/` 和 `wayland/` 两个 QPA 插件目录 | ls 目录结构 | `dde-qtplatform-plugins/` |
+| 10.12 | 窗口拖拽 X11 实现：`DNoTitlebarWindowHelper` 类存在，`windowEvent()`/`startMoveWindow()`/`updateMoveWindow()` 方法 | grep class + methods | `dde-qtplatform-plugins/xcb/dnotitlebarwindowhelper.h` |
+| 10.13 | 窗口拖拽 X11 底层：`Utility::startWindowSystemMove()` 发送 `_NET_WM_MOVERESIZE_MOVE`，`updateMousePointForWindowMove()` 发送 `_DEEPIN_MOVE_UPDATE` | grep methods | `dde-qtplatform-plugins/xcb/utility_x11.cpp` |
 | 10.14 | 窗口拖拽 Treeland 实现：`MoveWindowHelper` 类存在（dtkgui 内），`windowEvent()` 拦截鼠标事件并调用 `QPlatformWindow::startSystemMove()` | grep class + method | `dtkgui/src/plugins/platform/treeland/dtreelandplatformwindowinterface.cpp` |
-| 10.15 | 窗口拖拽 dwayland 实现：`DNoTitlebarWlWindowHelper` 类存在，`startMoveWindow()` 调用 `QWaylandWindow::startSystemMove()` | grep class + method | `qt5platform-plugins/wayland/dwayland/dnotitlebarwindowhelper_wl.h` |
+| 10.15 | 窗口拖拽 dwayland 实现：`DNoTitlebarWlWindowHelper` 类存在，`startMoveWindow()` 调用 `QWaylandWindow::startSystemMove()` | grep class + method | `dde-qtplatform-plugins/wayland/dwayland/dnotitlebarwindowhelper_wl.h` |
 
 ---
 

@@ -12,7 +12,7 @@ dtkgui（基础层）  →  dtkwidget / dtkdeclarative（控件层）
 - **调色板系统**：dtkgui 提供 `DPalette`/`DGuiApplicationHelper`，dtkwidget 通过 `DStyle`/`DStyleHelper` 在控件中自动处理状态颜色，dtkdeclarative 通过 `Palette`/`ColorSelector` 在 QML 中实现
 - **字体系统**：dtkgui 提供 `DFontManager`，dtkwidget 通过 `DFontSizeManager` 绑定控件自动更新，dtkdeclarative 通过 QML `FontManager` 暴露
 - **图标系统**：dtkgui 提供 `DDciIcon`/`DIconTheme`/`DDciIconPlayer`，dtkwidget 和 dtkdeclarative 在控件中直接使用
-- **平台抽象**：dtkgui 提供 `DPlatformHandle`/`DPlatformTheme`/`DPlatformWindowInterface`，qt5platform-plugins 提供 QPA 层实现
+- **平台抽象**：dtkgui 提供 `DPlatformHandle`/`DPlatformTheme`/`DPlatformWindowInterface`，dde-qtplatform-plugins 提供 QPA 层实现
 
 ## 2. 调色板系统
 
@@ -44,7 +44,7 @@ dtkgui（基础层）  →  dtkwidget / dtkdeclarative（控件层）
 |------|------|----------|------|
 | 基础 | `DFontManager` | dtkgui | 管理 T1-T11 字体大小，根据 baseFont 自动计算 |
 | 基础 | `DGuiApplicationHelper` | dtkgui | 监听系统字体变化，驱动 DFontManager 更新 |
-| 配置源 | `DPlatformTheme` / `DThemeSettings` | dtkgui / qt5integration | 从 DConf/GSettings 读取系统字体配置 |
+| 配置源 | `DPlatformTheme` / `DThemeSettings` | dtkgui / dde-qtintegration | 从 DConf/GSettings 读取系统字体配置 |
 | 控件(W) | `DFontSizeManager` | dtkwidget | 单例，`bind(widget, T4)` 绑定控件到字体层级，自动更新 |
 | 控件(Q) | `D.DTK.fontManager` | dtkdeclarative | QML 暴露 `fontManager.t1`-`t11`，控件直接引用 |
 
@@ -57,7 +57,7 @@ dtkgui（基础层）  →  dtkwidget / dtkdeclarative（控件层）
 **数据流：**
 ```
 DConf/GSettings 字体配置
-  → DThemeSettings (qt5integration)
+  → DThemeSettings (dde-qtintegration)
   → DPlatformTheme::fontName/fontPointSize (dtkgui)
   → QDeepinTheme::font() → QGuiApplication::setFont()
   → DGuiApplicationHelper::fontChanged
@@ -105,9 +105,9 @@ DIconTheme::findQIcon("icon-name")
 | X11 实现 | `DXCBPlatformInterface` | dtkgui | X11 主题配置实现（XSettings） |
 | Treeland 实现 | `DTreeLandPlatformWindowInterface` | dtkgui | Treeland Wayland 窗口操作实现 |
 | Treeland 实现 | `DTreelandPlatformInterface` | dtkgui | Treeland Wayland 主题配置实现 |
-| QPA 层 | `DPlatformIntegration` | qt5platform-plugins | X11 QPA 插件（扩展 QXcbIntegration） |
-| QPA 层 | `DWaylandIntegration` | qt5platform-plugins | Wayland QPA 插件（扩展 QWaylandIntegration） |
-| QPA 层 | `DWaylandShellManager` | qt5platform-plugins | KWayland Shell 协议管理 |
+| QPA 层 | `DPlatformIntegration` | dde-qtplatform-plugins | X11 QPA 插件（扩展 QXcbIntegration） |
+| QPA 层 | `DWaylandIntegration` | dde-qtplatform-plugins | Wayland QPA 插件（扩展 QWaylandIntegration） |
+| QPA 层 | `DWaylandShellManager` | dde-qtplatform-plugins | KWayland Shell 协议管理 |
 
 **平台分发：**
 ```
@@ -127,7 +127,7 @@ dtkgui 层（平台抽象）
     → DPlatformWindowInterface / DPlatformInterface（虚接口）
     → DXCB* / DTreeLand*（具体实现）
 
-qt5platform-plugins 层（QPA 插件）
+dde-qtplatform-plugins 层（QPA 插件）
   DPlatformIntegration（X11 QPA）
   DWaylandIntegration（Wayland QPA）
   → 提供底层窗口系统集成
@@ -146,7 +146,7 @@ qt5platform-plugins 层（QPA 插件）
               │                            │
               │                        实线╱   实线╲
               │                         ╱         ╲
-              └──────→ dtkcore  dtkdeclarative  qt5platform-plugins
+              └──────→ dtkcore  dtkdeclarative  dde-qtplatform-plugins
                          │           │
                     实线╱    实线╱    实线╲
                      ╱        ╱         ╲
@@ -154,7 +154,7 @@ qt5platform-plugins 层（QPA 插件）
                         │
                    虚线╱   虚线╲
                       ↓       ↓
-               qt5integration qt5platform-plugins
+               dde-qtintegration dde-qtplatform-plugins
 ```
 
 | 项目 | 编译依赖 | 运行时/功能关联 |
@@ -163,10 +163,10 @@ qt5platform-plugins 层（QPA 插件）
 | dtklog | dtkcommon（DtkBuildHelper） | — |
 | dtkcore | dtkcommon, dtklog | — |
 | dtkgui | dtkcommon, dtkcore | — |
-| dtkwidget | dtkcore, dtkgui | qt5integration（Chameleon 风格渲染） |
+| dtkwidget | dtkcore, dtkgui | dde-qtintegration（Chameleon 风格渲染） |
 | dtkdeclarative | dtkcore, dtkgui | — |
-| qt5integration | dtkgui, dtkwidget | — |
-| qt5platform-plugins | dtkgui | — |
+| dde-qtintegration | dtkgui, dtkwidget | — |
+| dde-qtplatform-plugins | dtkgui | — |
 
 ## 7. 相关文档
 

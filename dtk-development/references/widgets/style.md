@@ -4,7 +4,7 @@
 
 DTK QWidget 控件外观由两层组成：
 - `DStyle`（dtkwidget）：DTK 扩展风格类，定义图元、像素度量、状态画刷
-- `ChameleonStyle`（qt5integration）：实际绘制实现
+- `ChameleonStyle`（dde-qtintegration）：实际绘制实现
 
 **适用场景**：自定义控件时复用 DTK 风格元素
 

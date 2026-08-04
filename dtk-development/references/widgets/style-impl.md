@@ -70,4 +70,4 @@
 ## 源码位置
 
 - `dtkwidget/src/widgets/dstyle.cpp`
-- `qt5integration/styleplugins/chameleon/chameleonstyle.cpp`
+- `dde-qtintegration/styleplugins/chameleon/chameleonstyle.cpp`
