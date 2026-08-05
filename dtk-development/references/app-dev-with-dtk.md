@@ -131,9 +131,17 @@ DTK 的公共头文件使用无 `.h` 后缀的转发头，与 CMake target 对�
 #include <DIconButton>      // Dtk6::Widget
 ```
 
-### 2.2 日志规范
+### 2.2 应用身份、翻译和配置约定
 
-DTK 应用使用 Qt 自带的日志宏（`qDebug` / `qCInfo` / `qCWarning` 等），不使用 dtklog 的 `dDebug` 宏。dtkcore 提供 `DLogManager` 注册 Appender，应用不需要直接依赖 dtklog。
+- `applicationName` 通常与可执行文件名一致；不要把显示名称、应用 ID 和单实例 key 混为一个值。
+- `DApplication::loadTranslator()` 必须在创建窗口、菜单和其他可翻译对象前调用。
+- 翻译文件 basename 应与 `applicationName` 一致；专业单位如 `px` 使用 `QStringLiteral("px")`，不要放入 `tr()`。
+- DConfig 优先使用通过 `DSGApplication::id()` 获取的默认 appId。只有默认 appId 无法满足需求时，才使用 `DConfig::create()` 显式指定。
+- 不使用 `QSettings` 或手动拼接 DTK 管理的配置存储路径替代 DConfig。
+
+### 2.3 日志规范
+
+DTK 应用使用 Qt 自带的日志宏（`qDebug` / `qCInfo` / `qCWarning` 等），不使用 dtklog 的 `dDebug` 宏。dtkcore 提供 `DLogManager` 注册 Appender，应用不需要直接依赖 dtklog，也不需要设置日志路径或格式。
 
 ```cpp
 #include <DLog>
@@ -143,8 +151,8 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
 
     // 通过 dtkcore 的 DLogManager 注册日志输出
-    DLogManager::instance()->registerConsoleAppender();
-    DLogManager::instance()->registerFileAppender("/var/log/myapp.log");
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
 
     // 使用 Qt 原生日志
     qInfo() << "应用启动";
@@ -169,7 +177,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    DLogManager::instance()->registerConsoleAppender();
+    DLogManager::registerConsoleAppender();
 
     qInfo() << "DTK application started";
     return 0;

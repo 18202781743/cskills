@@ -20,12 +20,7 @@
 
 ## 2. 文件格式规范
 
-builtin 图标存储在 DTK 的 Qt 资源文件中，通过图标名称引用：
-
-```
-:/icons/deepin/builtin/light/   ← 浅色主题图标
-:/icons/deepin/builtin/dark/    ← 深色主题图标
-```
+builtin 图标由 DTK 内部资源注册，通过图标名称引用。资源前缀是 DTK 的实现细节，应用代码不应拼接或直接加载它。
 
 ### 2.1 图标命名格式
 
@@ -44,9 +39,9 @@ builtin 图标存储在 DTK 的 Qt 资源文件中，通过图标名称引用：
 `DIconTheme::findQIcon(iconName)` 按以下优先级查找图标：
 
 ```
-1. dci 图标（在 dci 主题搜索路径中查找 iconName.dci）
+1. dci 图标（按 iconName 查找）
       ↓ 未找到
-2. builtin 图标（在 Qt 资源 :/icons/deepin/builtin/ 中查找）
+2. builtin 图标（由 DTK 内部资源按名称查找）
       ↓ 未找到
 3. XDG 图标主题（QIcon::fromTheme，除非指定 DontFallbackToQIconFromTheme）
 ```
@@ -62,7 +57,7 @@ builtin 图标存储在 DTK 的 Qt 资源文件中，通过图标名称引用：
 QIcon icon = DIconTheme::findQIcon("window-close_round");
 
 // 方式 2：指定回退图标
-QIcon fallback = QIcon(":/custom-close.png");
+QIcon fallback = DIconTheme::findQIcon("default");
 QIcon icon = DIconTheme::findQIcon("window-close_round", fallback);
 
 // 方式 3：带选项查找（跳过 dci，直接查找 builtin）

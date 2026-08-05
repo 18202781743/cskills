@@ -12,19 +12,20 @@ DTK 是深度桌面环境的核心开发框架，覆盖应用界面与交互、�
 | 场景 | 参考文档 |
 |------|----------|
 | 了解 DTK 架构、项目关系或定位跨应用共性问题 | [architecture.md](references/architecture.md) |
-| 创建 DTK 应用、配置 CMake 与依赖 | [app-dev-with-dtk.md](references/app-dev-with-dtk.md) |
+| 创建 DTK 应用、配置 CMake、应用身份、翻译、日志和依赖 | [app-dev-with-dtk.md](references/app-dev-with-dtk.md) |
 | 修改、编译和调试 DTK 源码 | [dtksrc-compile-debug.md](references/dtksrc-compile-debug.md) |
 | 选择和使用 QWidget 控件 | [widgets/index.md](references/widgets/index.md) |
 | 选择和使用 QML 控件 | [declarative/index.md](references/declarative/index.md) |
 | 查看 QWidget 与 QML 可运行示例 | [examples.md](references/examples.md) |
-| 处理主题、配色、图标、字体和控件风格 | [theme/index.md](references/theme/index.md) |
+| 处理主题、配色、主题图标、字体和控件风格 | [theme/index.md](references/theme/index.md) |
 | 处理窗口装饰、模糊效果和平台兼容 | [platform-abstraction.md](references/platform-abstraction.md) |
 | 管理应用配置和 DConfig | [config/index.md](references/config/index.md) |
-| 使用应用入口、日志、DBus、通知、单实例及系统服务 | [widgets/application.md](references/widgets/application.md)、[utilities/index.md](references/utilities/index.md) |
+| 使用应用入口、默认日志、DBus、通知、单实例及系统服务 | [widgets/application.md](references/widgets/application.md)、[utilities/index.md](references/utilities/index.md) |
 
 ## 高频场景直达
 
 - **自定义控件使用主题图标** → [theme/palette.md](references/theme/palette.md)
+- **应用控件使用主题图标** → [theme/icontheme.md](references/theme/icontheme.md)
 - **QML 中显示 dci 图标** → [declarative/dci-icon.md](references/declarative/dci-icon.md)
 - **DGuiApplicationHelper 主题/调色板** → [utilities/gui-helper.md](references/utilities/gui-helper.md)
 - **DSysInfo 系统版本判断** → [utilities/sysinfo.md](references/utilities/sysinfo.md)
@@ -36,6 +37,8 @@ DTK 是深度桌面环境的核心开发框架，覆盖应用界面与交互、�
 - **DProgressBar 进度条** → [widgets/progress.md](references/widgets/progress.md)
 - **DInputDialog 输入对话框** → [widgets/dialog.md](references/widgets/dialog.md)
 
+创建或维护 DTK 应用时，先确认应用身份、翻译加载时机、默认日志初始化、图标名称查找、单实例窗口恢复和 DConfig 默认 appId，再进入具体控件实现。
+
 ## Evals 测试用例
 
-验证 skill 有效性的测试用例，共 77 个，按 references 目录分类组织。详见 [evals/README.md](evals/README.md)。
+验证 skill 有效性的测试用例，共 79 个，按 references 目录分类组织。详见 [evals/README.md](evals/README.md)。

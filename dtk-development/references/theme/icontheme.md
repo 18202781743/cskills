@@ -2,14 +2,15 @@
 
 ## 1. 概述与适用场景
 
-**DIconTheme** 是 DTK 对 XDG 图标主题规范的封装，用于与系统图标主题交互。特点：
+**DIconTheme** 是 DTK 的统一主题图标查找入口，兼容 DCI、builtin 和 XDG 图标主题，并负责按名称选择可用图标。它也提供与系统 XDG 图标主题交互的能力。特点：
 
 - **XDG 兼容**：遵循 freedesktop.org 图标主题规范
 - **系统集成**：自动读取系统图标主题配置
-- **多主题支持**：可自定义 dci 主题搜索路径
+- **多主题支持**：按名称自动选择 DCI 的主题、尺寸和状态资源
 - **缓存优化**：内置图标缓存，提升查找性能
 
 **适用场景：**
+- 应用控件需要使用 DCI、builtin 或 XDG 主题图标
 - 需要兼容其他桌面环境的应用
 - 使用系统图标主题的图标
 - 跨桌面应用开发
@@ -32,21 +33,11 @@ DIconTheme 遵循 XDG 基础目录规范，在以下路径搜索图标：
 /usr/share/pixmaps/
 ```
 
-### 2.2 dci 主题搜索路径
+### 2.2 DCI 图标使用原则
 
-```cpp
-#include <DIconTheme>
+应用先按 DCI 规范组织主题、尺寸和状态资源，再通过基础名称调用 `DIconTheme::findQIcon()`。大多数应用无需调用 `setDciThemeSearchPaths()`；只有确实使用自定义 DCI 搜索根目录时才配置它，并注意该 API 会改变整个进程的查找行为。
 
-// 获取 dci 主题搜索路径
-QStringList dciPaths = DIconTheme::dciThemeSearchPaths();
-// 示例输出：["/usr/share/icons", "/usr/share/dci-icons"]
-
-// 设置自定义 dci 主题搜索路径
-DIconTheme::setDciThemeSearchPaths({
-    "/usr/share/icons",
-    "/opt/myapp/icons"
-});
-```
+DTK builtin 资源同样只传基础名称。即使内部资源位于 `/dsg/built-in-icons` 前缀，也应写成 `DIconTheme::findQIcon("default")`，不应在业务代码中展开资源路径。
 
 ## 3. API 用法
 
@@ -59,7 +50,7 @@ DIconTheme::setDciThemeSearchPaths({
 QIcon icon = DIconTheme::findQIcon("document-open");
 
 // 查找图标，带回退
-QIcon fallback(":/icons/fallback.png");
+QIcon fallback = DIconTheme::findQIcon("default");
 QIcon icon = DIconTheme::findQIcon("document-open", fallback);
 
 // 查找图标，带选项
@@ -105,13 +96,10 @@ QIcon icon(engine);
 ```cpp
 #include <DIconTheme>
 
-// 查找指定主题下的 dci 图标文件
+// 仅在调试图标发现问题时查找实际文件；普通控件不需要路径
 QString dciPath = DIconTheme::findDciIconFile("my-icon", "deepin");
-// 返回：/usr/share/icons/deepin/actions/32/my-icon.dci
 
-// 带回退路径查找
-QString dciPath = DIconTheme::findDciIconFile("my-icon", "deepin", 
-    "/fallback/path/icon.dci");
+不要在应用控件中依赖这个实际路径，也不要用它替代按名称查找；应用资源应按 DCI 规则组织并交给 DTK 查找链路处理。
 ```
 
 ### 3.4 图标类型检查

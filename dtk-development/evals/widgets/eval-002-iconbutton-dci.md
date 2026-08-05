@@ -3,8 +3,8 @@
 ## 任务
 
 创建一个图标按钮，要求：
-1. 使用 DCI 动态图标格式
-2. 图标路径为 ":/icons/action.dci"
+1. 按 DCI 规范组织动态资源
+2. 通过图标名称查找图标，不拼接资源路径
 3. 点击时输出日志
 
 ## 期望输出
@@ -18,7 +18,8 @@
 
 - [ ] #include <DIconButton>
 - [ ] #include <DDciIcon>
-- [ ] DDciIcon icon(":/icons/action.dci")
+- [ ] 使用 `DIconTheme::findQIcon("action")` 按名称查找图标
+- [ ] 常规场景未调用 `setDciThemeSearchPaths()`；如确需自定义搜索根目录，说明调用原因和影响范围
 - [ ] button->setIcon(icon)
 
 ## 参考

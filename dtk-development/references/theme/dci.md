@@ -16,68 +16,77 @@
 - DDE 应用内的自定义图标
 
 **不适用场景：**
-- 需要兼容 XDG 图标主题规范 → 使用 `DIconTheme`
-- 仅需系统标准图标 → 使用 `QIcon::fromTheme`
+- 仅需 XDG 图标主题中的标准图标 → 仍通过 `DIconTheme::findQIcon()` 统一查找
+- DTK 已提供的标准 UI 图标 → 直接使用对应的 builtin 图标名称
 
 ## 2. 文件格式规范
 
 ### 2.1 目录结构
 
-dci 图标文件在项目中的典型布局：
+dci 是一个包含主题、尺寸和状态资源的容器文件，不应把 Light/Dark 或不同尺寸拆成多个同名 `.dci` 文件。制作图标时应先按 DCI 规则组织源资源，再生成单个 `.dci`：
 
 ```
-project/
-├── icons/
-│   └── deepin/
-│       ├── light/           ← 浅色主题图标目录
-│       │   └── actions/
-│       │       ├── add.dci
-│       │       └── remove.dci
-│       └── dark/            ← 深色主题图标目录
-│           └── actions/
-│               ├── add.dci
-│               └── remove.dci
-└── CMakeLists.txt
+my-icon/
+├── light/
+│   ├── normal/
+│   ├── hover/
+│   ├── pressed/
+│   └── disabled/
+└── dark/
+    ├── normal/
+    ├── hover/
+    ├── pressed/
+    └── disabled/
+
+# 上述主题/状态及各尺寸资源最终生成：my-icon.dci
 ```
 
 ### 2.2 命名规则
 
 - 文件名使用小写字母和连字符：`my-icon-name.dci`
-- 按功能分类存放：`actions/`、`status/`、`places/`、`categories/`
-- 同一图标的 Light/Dark 版本必须保持同名
+- 一个逻辑图标生成一个 `.dci` 文件，Light/Dark、尺寸和状态均由文件内部资源表达
+- 同一图标各主题、尺寸和状态的源资源必须保持一致的语义和画布规则
+- 打开、关闭、添加等通用操作先查找 DTK 已有图标；只有应用专属图标才新增 DCI
 
-### 2.3 主题搜索路径
+### 2.3 使用原则
+
+应用应按 DCI 规范组织图标并通过名称使用。大多数应用不需要修改 DCI 搜索路径；只有确实使用自定义 DCI 搜索根目录时，才配置 `setDciThemeSearchPaths()`：
 
 ```cpp
 #include <DIconTheme>
 
-// 查看 dci 主题搜索路径
-QStringList paths = DIconTheme::dciThemeSearchPaths();
-
-// 设置自定义搜索路径
-DIconTheme::setDciThemeSearchPaths({"/usr/share/icons", ":/icons"});
+QIcon icon = DIconTheme::findQIcon("my-icon");
+button->setIcon(icon);
 ```
+
+如果确实需要使用自定义 DCI 搜索根目录，可在图标查找前配置；这不是普通应用的必需步骤：
+
+```cpp
+QStringList paths = DIconTheme::dciThemeSearchPaths();
+paths.append("/path/to/custom-dci-root");
+DIconTheme::setDciThemeSearchPaths(paths);
+```
+
+`DIconTheme::setDciThemeSearchPaths()` 会影响整个进程的图标查找行为。常规应用应先按 DCI 规范组织资源并使用默认搜索链路；不要为了修复图标名称、目录或资源组织错误而调用该 API，也不要把 `:/icons`、`/usr/share/icons` 等不符合 DCI 规则的目录当作通用配置。
 
 ## 3. API 用法
 
-### 3.1 加载图标
+### 3.1 按名称加载图标
 
 ```cpp
-#include <DDciIcon>
+#include <DIconTheme>
 
-// 方式 1：从文件路径加载
-DDciIcon icon("/path/to/icon.dci");
+// 应用控件统一按名称加载
+QIcon icon = DIconTheme::findQIcon("my-icon-name");
 
-// 方式 2：从主题名称加载（需在搜索路径中）
-DDciIcon icon = DDciIcon::fromTheme("my-icon-name");
-
-// 方式 3：从主题加载，带回退
-DDciIcon fallback(":/icons/default.dci");
-DDciIcon icon = DDciIcon::fromTheme("my-icon-name", fallback);
-
-// 方式 4：从二进制数据加载
-DDciIcon icon(QByteArray data);
+// 回退图标同样按名称加载
+QIcon fallback = DIconTheme::findQIcon("default");
+QIcon iconWithFallback = DIconTheme::findQIcon("my-icon-name", fallback);
 ```
+
+即使图标位于 DTK 的 `/dsg/built-in-icons` 资源前缀下，调用方也只传基础名称，例如 `default`。不要写成 `:/dsg/built-in-icons/default.dci` 或其他资源绝对路径。
+
+只有播放 DCI 动画、读取 DCI 属性或自行绘制时才直接使用 `DDciIcon::fromTheme("my-icon-name")`。
 
 ### 3.2 显示图标
 

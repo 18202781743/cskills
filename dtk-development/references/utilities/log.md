@@ -9,15 +9,30 @@ dtkcore 通过 `DLogManager` 提供便捷的日志初始化。直接使用 Qt �
 
 // 一行初始化
 DLogManager::registerConsoleAppender();   // 输出到控制台
-DLogManager::registerFileAppender();      // 输出到文件（自动路径 ~/.cache/<org>/<app>.log）
+DLogManager::registerFileAppender();      // 输出到文件，路径由 DTK 默认策略管理
 DLogManager::registerJournalAppender();   // 输出到 systemd journal
-
-// 自定义路径和格式
-DLogManager::setlogFilePath("/var/log/myapp.log");
-DLogManager::setLogFormat("%{time}{yyyy-MM-dd HH:mm:ss.zzz} [%{type}] %{message}");
 ```
 
-## 2. DConfig 日志规则控制
+应用默认不调用 `setlogFilePath()` 或 `setLogFormat()`。只有产品明确要求覆盖 DTK 默认行为时才配置路径或格式，不能把 `/var/log` 等固定路径作为通用示例。
+
+## 2. 日志 category
+
+category 在实际使用日志的 `.cpp` 文件中声明和定义，不为 category 单独创建源文件：
+
+```cpp
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(logEditor, "dtk.codeviewer.editor")
+
+void Editor::openFile(const QString &path)
+{
+    qCInfo(logEditor) << "Open file" << path;
+}
+```
+
+优先使用 `qCDebug`、`qCInfo`、`qCWarning` 和 `qCCritical`，使日志可按 category 控制。
+
+## 3. DConfig 日志规则控制
 
 当**没有**设置 `DTK_DISABLED_LOGGING_RULES` 或 `QT_LOGGING_RULES` 环境变量时，`DLogManager` 通过 DConfig 的 `org.deepin.dtk.preference` 配置文件的 `rules` 键来控制日志级别。
 
@@ -61,7 +76,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-## 3. 相关文档
+## 4. 相关文档
 
 - [index.md](index.md) — 工具类索引
 - [../config/index.md](../config/index.md) — DConfig 配置系统

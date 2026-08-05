@@ -18,12 +18,14 @@
 #include <DApplication>
 #include <DMainWindow>
 #include <DWidgetUtil>
+#include <DIconTheme>
 
 int main(int argc, char *argv[]) {
     DApplication a(argc, argv);
+    a.setApplicationName("my-app");
 
     a.setProductName("我的应用");
-    a.setProductIcon(QIcon(":/icon.png"));
+    a.setProductIcon(DIconTheme::findQIcon("my-app"));
     a.setApplicationDescription("这是一个示例应用");
     a.setApplicationHomePage("https://example.com");
     a.setApplicationLicense("GPLv3");
@@ -41,31 +43,39 @@ int main(int argc, char *argv[]) {
 
 ## 3. 单实例控制
 
+可执行文件名、`applicationName`、应用 ID 和单实例 key 是不同概念。通常将 `applicationName` 设置为可执行文件名，将稳定且唯一的应用 ID 用作单实例 key。DConfig 默认通过 `DSGApplication::id()` 获取 appId，只有默认值无法满足需求时才显式指定其他 appId。
+
 ```cpp
 DApplication a(argc, argv);
 
-if (!a.setSingleInstance("my-app-id")) {
+if (!a.setSingleInstance("org.deepin.dtk.myapp")) {
     qWarning() << "Another instance is running";
     return 0;
 }
 
 // 带作用域
-a.setSingleInstance("my-app-id", DApplication::UserScope);
+a.setSingleInstance("org.deepin.dtk.myapp", DApplication::UserScope);
 ```
 
 监听新实例启动：
 
 ```cpp
-connect(&a, &DApplication::newInstanceStarted, this, [this]() {
-    raise();
-    activateWindow();
+DMainWindow w;
+connect(&a, &DApplication::newInstanceStarted, &w, [&w]() {
+    if (w.isMinimized())
+        w.showNormal();
+    else
+        w.show();
+    w.raise();
+    w.activateWindow();
 });
 ```
 
 ## 4. 翻译加载
 
 ```cpp
-// 加载翻译（自动查找应用名对应的翻译文件）
+// 必须在创建任何可翻译 UI 前加载翻译。
+// QM 文件 basename 应与 applicationName 一致。
 a.loadTranslator();
 
 // 指定语言回退
@@ -78,11 +88,17 @@ a.loadTranslator(QList<QLocale>() << QLocale::Chinese << QLocale::English);
 QString text = DApplication::translate("Context", "Source Text");
 ```
 
+专业单位不应进入翻译，例如：
+
+```cpp
+const QString unit = QStringLiteral("px");
+```
+
 ## 5. 产品信息
 
 ```cpp
 a.setProductName("文件管理器");
-a.setProductIcon(QIcon::fromTheme("deepin-file-manager"));
+a.setProductIcon(DIconTheme::findQIcon("deepin-file-manager"));
 a.setApplicationDescription("深度文件管理器");
 a.setApplicationHomePage("https://www.deepin.org");
 a.setApplicationAcknowledgementPage("https://www.deepin.org/acknowledgement");

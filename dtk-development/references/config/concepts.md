@@ -14,7 +14,7 @@ DConfig 涉及几个核心概念：appId、配置 id、meta 文件、override �
 
 应用程序唯一 ID。meta 文件安装到 `/usr/share/dsg/configs/{appId}/` 子目录下。
 
-不指定 appId 时，`DConfig` 构造函数自动使用 `QCoreApplication::applicationName` 作为 appId，可能与预期不一致，**若无法使用默认的appId，可以使用 `create()` 显式指定**。
+不指定 appId 时，`DConfig` 会通过 `DSGApplication::id()` 获取 appId，通常应优先使用这个默认行为。若无法使用默认 appId，再通过 `DConfig::create(appId, name, ...)` 显式指定。
 
 ## 配置 id（name）
 
@@ -76,7 +76,7 @@ dtk_add_config_meta_files(APPID dconfigexample BASE ./configs FILES ./configs/ex
 配置文件子路径，格式以 `/` 开头，如 `"/feature/v2"`。查找 meta 文件时从子目录向上逐级查找，用于配置分层和优先级。
 
 ```cpp
-auto *config = DConfig::create("org.deepin.myapp", "example", "/feature/v2", this);
+auto *config = new DConfig("example", "/feature/v2", this);
 ```
 
 ## flags
@@ -98,6 +98,8 @@ auto *config = DConfig::create("org.deepin.myapp", "example", "/feature/v2", thi
 不指定 appId 的通用配置，所有应用共享。使用 `DConfig::createGeneric()` 访问。
 
 ## 配置文件路径
+
+以下是 DConfig 元数据和 override 的系统管理路径。应用代码不应手动拼接用户配置、缓存或持久化目录；只需要保持 appId、配置 name 和 meta 文件定义一致。
 
 | 类型 | 路径 |
 |------|------|

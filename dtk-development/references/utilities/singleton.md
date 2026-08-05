@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-使用 `DApplication`（dtkwidget）时，`setSingleInstance()` 内部转发到 `DGuiApplicationHelper::setSingleInstance()`，并额外提供 `newInstanceStarted()` 信号和 `autoActivateWindows` 自动窗口激活。
+使用 `DApplication`（dtkwidget）时，直接调用 `DApplication::setSingleInstance(key)`，并监听 `newInstanceStarted()`。第二个进程应退出，原进程负责恢复并激活自己的窗口。
 
 ## 3. 原理
 
@@ -83,8 +83,11 @@ QObject::connect(DGuiApplicationHelper::instance(),
                  [](qint64 pid, const QStringList &args) {
     for (QWidget *w : qApp->topLevelWidgets()) {
         if (auto *mainWin = qobject_cast<QMainWindow*>(w)) {
-            if (mainWin->isMinimized() || mainWin->isHidden())
+            if (mainWin->isMinimized())
                 mainWin->showNormal();
+            else
+                mainWin->show();
+            mainWin->raise();
             mainWin->activateWindow();
             break;
         }
@@ -100,6 +103,7 @@ QObject::connect(DGuiApplicationHelper::instance(),
 
 - `setSingleInstanceInterval(ms)` 必须在 `setSingleInstance()` 之前调用，控制新实例等待第一个实例响应的超时时间（默认 3000ms）
 - Linux 下 socket key 包含 uid 和 pid namespace，确保不同用户和容器隔离
+- 新实例带来的文件或命令行参数必须在通知回调中交给原进程处理，不能只激活窗口后丢弃参数
 
 ## 7. 相关文档
 

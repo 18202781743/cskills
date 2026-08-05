@@ -6,7 +6,7 @@
 
 **自然语言描述：**
 - 图标使用/主题切换/调色板
-- dci图标/builtin图标/图标主题
+- 主题图标（通过 `DIconTheme::findQIcon()` 统一查找 DCI、builtin 和 XDG 图标）
 - 字体大小/亮暗主题
 - 控件颜色/语义化颜色
 
@@ -21,7 +21,7 @@
 
 DTK 主题系统涵盖视觉表现的各个方面：
 
-- **图标**：dci 图标（主题感知+动画）、builtin 图标（内置资源）、icon theme 图标（XDG 标准）
+- **图标**：优先通过 `DIconTheme::findQIcon()` 使用 DCI、builtin 或 XDG 主题图标；需要直接播放 DCI 动画时再使用 `DDciIcon`
 - **调色板**：`DPalette` 语义化颜色、`DGuiApplicationHelper` 亮暗主题切换
 - **字体**：`DFontManager` T1-T11 层级字体体系
 - **控件风格**：`DStyle` / `DStyleHelper` 控件渲染与状态颜色

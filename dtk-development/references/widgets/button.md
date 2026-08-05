@@ -59,8 +59,8 @@ auto *actionBtn = new DIconButton(icon, this);
 auto *btn = new DIconButton(this);
 btn->setIcon(DIconTheme::findQIcon("icon_ok"));
 
-// 使用 DDciIcon（通过 setIcon 设置）
-DDciIcon dciIcon(":/icons/custom.dci");
+// 使用按名称查找的 DCI 图标；不要拼接资源路径
+DDciIcon dciIcon = DDciIcon::fromTheme("custom");
 auto *dciBtn = new DIconButton(this);
 dciBtn->setIcon(dciIcon);
 

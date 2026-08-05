@@ -8,9 +8,9 @@ Evals 按 skill 的 references 目录分类组织：
 
 ```
 evals/
-├── widgets/           # QWidget 控件测试 (W-001 ~ W-029)
+├── widgets/           # QWidget 控件测试 (W-001 ~ W-030)
 ├── declarative/       # QML 控件测试 (Q-001 ~ Q-012)
-├── theme/             # 主题系统测试 (T-001 ~ T-007)
+├── theme/             # 主题系统测试 (T-001 ~ T-008)
 ├── config/            # DConfig 配置测试 (C-001 ~ C-004)
 ├── utilities/         # 工具类测试 (U-001 ~ U-006)
 ├── debugging/         # 调试场景测试 (D-001 ~ D-005)
@@ -55,6 +55,7 @@ evals/
 | W-027 | 关于对话框 | [widgets/eval-027-about-dialog.md](widgets/eval-027-about-dialog.md) |
 | W-028 | 设置对话框 | [widgets/eval-028-settings-dialog.md](widgets/eval-028-settings-dialog.md) |
 | W-029 | 下拉选择框 | [widgets/eval-029-combobox.md](widgets/eval-029-combobox.md) |
+| W-030 | 应用身份与翻译加载 | [widgets/eval-030-application-translation.md](widgets/eval-030-application-translation.md) |
 
 ### declarative/ - QML 控件
 
@@ -84,6 +85,7 @@ evals/
 | T-005 | Chameleon 风格理解 | [theme/eval-005-chameleon-style.md](theme/eval-005-chameleon-style.md) |
 | T-006 | 控件调色板 | [theme/eval-006-palette-helper.md](theme/eval-006-palette-helper.md) |
 | T-007 | 字体大小管理 | [theme/eval-007-font-size.md](theme/eval-007-font-size.md) |
+| T-008 | DCI 图标按规范查找 | [theme/eval-008-dci-name-lookup.md](theme/eval-008-dci-name-lookup.md) |
 
 ### config/ - DConfig 配置
 

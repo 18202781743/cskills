@@ -17,7 +17,7 @@ DConfig 是 DTK 提供的跨进程配置管理方案，支持应用配置的持�
 
 ## 2. 直接使用 DConfig
 
-### 1.1 头文件与 CMake
+### 2.1 头文件与 CMake
 
 ```cpp
 #include <DConfig>
@@ -27,44 +27,50 @@ find_package(Dtk6Core REQUIRED)
 target_link_libraries(your_target Dtk6::Core)
 ```
 
-### 1.2 基本用法
+### 2.2 基本用法
 
 ```cpp
-auto *config = DConfig::create("org.deepin.myapp", "example", "", this);
+auto *config = new DConfig("example", "", this);
 if (!config->isValid()) {
-    qWarning() << "DConfig is not valid";
-    return;
+    qWarning() << "DConfig is unavailable; using application defaults";
+    // 保留默认值，应用仍应能够启动。
 }
 
 // 读取
-bool canExit = config->value("canExit", true).toBool();
+bool canExit = config->isValid()
+             ? config->value("canExit", true).toBool()
+             : true;
 
-// 写入
-config->setValue("canExit", false);
+if (config->isValid()) {
+    // 写入
+    config->setValue("canExit", false);
 
-// 监听变化
-connect(config, &DConfig::valueChanged, [](const QString &key) {
-    qInfo() << "Config changed:" << key;
-});
+    // 监听变化
+    connect(config, &DConfig::valueChanged, [](const QString &key) {
+        qInfo() << "Config changed:" << key;
+    });
+}
 
-// 重置为默认值
-config->reset("canExit");
+if (config->isValid()) {
+    // 重置为默认值
+    config->reset("canExit");
 
-// 查询是否为默认值
-config->isDefaultValue("canExit");
+    // 查询是否为默认值
+    config->isDefaultValue("canExit");
+}
 ```
 
-### 1.3 创建方式
+### 2.3 创建方式
 
 ```cpp
-// 推荐：指定 appId
+// 默认：使用 DSGApplication::id() 获取 appId
+explicit DConfig(const QString &name, const QString &subpath = QString(),
+                 QObject *parent = nullptr);
+
+// 仅在无法使用默认 appId 时显式指定
 static DConfig *create(const QString &appId, const QString &name,
                        const QString &subpath = QString(),
                        QObject *parent = nullptr);
-
-// 构造函数（无 appId，自动使用 QCoreApplication::applicationName）
-explicit DConfig(const QString &name, const QString &subpath = QString(),
-                 QObject *parent = nullptr);
 
 // 应用无关配置
 static DConfig *createGeneric(const QString &name,
@@ -76,9 +82,11 @@ static void setAppId(const QString &appId);
 static QThread *globalThread();
 ```
 
-> **注意**：不指定 appId 时自动使用 `QCoreApplication::applicationName`，可能和预期不一致，推荐使用 `create()` 显式指定。
+> **注意**：不指定 appId 时，DConfig 会通过 `DSGApplication::id()` 获取默认 appId。如果默认 appId 无法满足需求，再使用 `create()` 显式指定。
 
-### 1.4 实例方法
+应用不应自行拼接配置目录或使用 `QSettings` 替代 DConfig 的持久化职责。配置元数据不可用时使用代码中的 fallback，并通过日志记录一次原因；不要因为配置服务不可用而阻塞主窗口创建。
+
+### 2.4 实例方法
 
 ```cpp
 // 读写
@@ -99,19 +107,19 @@ QString subpath() const;
 void reset(const QString &key);
 ```
 
-### 1.5 信号
+### 2.5 信号
 
 ```cpp
 Q_SIGNALS:
     void valueChanged(const QString &key);
 ```
 
-### 1.6 带 subpath 使用
+### 2.6 带 subpath 使用
 
 ```cpp
 // subpath 用于配置分层，格式以 / 开头
-auto *configV1 = DConfig::create("org.deepin.myapp", "settings", "", this);
-auto *configV2 = DConfig::create("org.deepin.myapp", "settings", "/v2", this);
+auto *configV1 = new DConfig("settings", "", this);
+auto *configV2 = new DConfig("settings", "/v2", this);
 ```
 
 ## 2. dconfig2cpp：JSON 生成类型安全的 C++ 类
