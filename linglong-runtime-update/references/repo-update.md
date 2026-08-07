@@ -1,7 +1,8 @@
 ## 仓库更新与 PR 模块
 
-修改 org.deepin.runtime 和 org.deepin.runtime.webengine 的 linglong.yaml 文件，
-创建 PR 并等待合并。
+修改 org.deepin.runtime 和 org.deepin.runtime.webengine 的 `update.go`/`linglong.yaml`，
+推送更新分支并创建 PR。`update-repo` 是本地 Git/GitHub 操作，没有 Jenkins 构建，
+因此不支持 `update-repo --check`。
 
 ### 前置条件
 
@@ -21,14 +22,33 @@
 
 ### 更新流程
 
-1. `git fetch origin` → checkout main/master → reset to origin/HEAD
-2. 创建/复用分支 `update/linglong-runtime`（固定分支名）
+1. runtime 配置 `upstream=linglongdev`、`origin=<fork>`，从 `upstream/HEAD` 获取最新基线
+2. 每次重建分支 `update/linglong-runtime`（固定分支名）
 3. **webengine**: `git apply assets/webengine.patch` 应用补丁（三路合并兜底）
 4. 修改 `update.go` 中的 `deepinRepoURL` 为新的 deb 仓库地址
 5. 传递玲珑版本号给 `daily.bash` 脚本
-6. `git add -A` → commit → push
-7. `gh pr create` 创建 PR 到 fork 仓库（fork owner 优先级: `--fork-owner` > 配置文件 `fork_owner` > `gh api user` 探测）
-8. 自动等待 PR 合并（默认超时 600s）
+6. `git add -A` → commit → 强推到 fork 的 `origin/update/linglong-runtime`
+7. `gh pr create` 向 upstream 创建 PR（head 为 `<fork-owner>:update/linglong-runtime`）
+8. 命令返回后手动检查 GitHub PR；没有 `--check` 子命令
+
+### 命令示例
+
+```bash
+# runtime：版本号可显式传入
+python3 scripts/linglong-update.py update-repo \
+  --version 6.7.0.46 \
+  --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_20260806/ \
+  --fork-owner <GitHub用户名>
+
+# webengine：使用 --repo 切换目标仓库
+python3 scripts/linglong-update.py update-repo \
+  --version 6.7.0.46 \
+  --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_20260806/ \
+  --repo webengine \
+  --fork-owner <GitHub用户名>
+```
+
+验证方式：检查命令返回码、git push 输出、fork 分支内容和 GitHub PR；PR 合并状态使用 GitHub 页面或 `gh pr view <编号> --repo linglongdev/org.deepin.runtime` 查询。
 
 > `linglong.yaml` 的版本号和仓库 URL 不直接修改，由 `update.go`（读取 `deepinRepoURL`）和 `daily.bash`（接收玲珑版本号参数）自动生成。
 

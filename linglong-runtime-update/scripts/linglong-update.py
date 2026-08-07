@@ -42,6 +42,7 @@ JENKINS_PUSH_OLD_JOB = "view/dtk/job/linglong-runtime-push-to-old"
 JENKINS_PUSH_TEST_JOB = "view/dtk/job/linglong-runtime-push-to-test"
 
 N8N_FORM_URL = "https://n8n.cicd.getdeepin.org/form/097d0087-7f34-4614-8329-82d096af7ba5"
+LINGLONG_TEST_REPO_BASE = "https://pools.uniontech.com/linglong/repos/test/refs/heads/main"
 REPO_URL_HOST = "10.20.64.92:8080"
 CRIMSON_BASE = f"http://{REPO_URL_HOST}/crimson_runtime"
 
@@ -335,7 +336,9 @@ class JenkinsClient:
         self.user = user
         self.session = requests.Session()
         self.session.auth = (user, password)
-        # no_proxy 已在启动时设置，Jenkins/CRP 内网域名自动绕过代理
+        # Jenkins 是内网服务。显式禁用 requests 的环境代理，避免代理返回
+        # 伪 404/登录页；外部服务仍按各自调用方的代理配置执行。
+        self.session.trust_env = False
         self.session.headers.update({"User-Agent": "linglong-update/1.0"})
         self._fetch_csrf()
 
@@ -511,10 +514,17 @@ class JenkinsClient:
 
     def job_exists(self, job_path: str) -> bool:
         try:
-            return self.session.get(
-                self._api_url(job_path), timeout=30).status_code == 200
-        except Exception:
-            return False
+            resp = self.session.get(self._api_url(job_path), timeout=30)
+            if resp.status_code == 200:
+                return True
+            detail = re.sub(r"\s+", " ", resp.text[:160]).strip()
+            _log(f"Job 检查失败: HTTP {resp.status_code} ({job_path})"
+                 + (f"; {detail}" if detail else ""), "WARN")
+        except requests.RequestException as e:
+            _log(f"Job 检查请求失败 ({job_path}): {e}", "WARN")
+        except Exception as e:
+            _log(f"Job 检查异常 ({job_path}): {e}", "WARN")
+        return False
 
 
 def _extract_repo_url(console: str) -> Optional[str]:
@@ -878,10 +888,26 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
                          deb_repo: str,
                          fork_owner: Optional[str] = None,
                          cfg: Optional[Dict[str, Any]] = None) -> bool:
-    """更新 org.deepin.runtime 仓库：新分支 → 脚本 → amend → fork → PR。"""
+    """从 upstream 重建更新分支，推送到 fork 并向 upstream 创建 PR。"""
     _log(f"--- {label} ---")
-    # 1. 清理：fetch origin，reset 到最新
-    _run(["git", "-C", repo_path, "fetch", "origin"])
+    repo_slug = f"linglongdev/{label}"
+    fork_slug = _ensure_fork(repo_slug, fork_owner, cfg)
+    upstream_url = f"https://github.com/{repo_slug}.git"
+    fork_url = f"https://github.com/{fork_slug}.git"
+
+    # 标准 fork remote 布局：origin 是用户 fork，upstream 是官方仓库。
+    _run(["git", "-C", repo_path, "remote", "set-url", "origin", fork_url])
+    upstream = subprocess.run(
+        ["git", "-C", repo_path, "remote", "get-url", "upstream"],
+        capture_output=True, text=True)
+    if upstream.returncode == 0:
+        _run(["git", "-C", repo_path, "remote", "set-url", "upstream", upstream_url])
+    else:
+        _run(["git", "-C", repo_path, "remote", "add", "upstream", upstream_url])
+
+    # 1. 清理工作区并获取官方仓库最新代码。
+    _run(["git", "-C", repo_path, "fetch", "upstream"])
+    _run(["git", "-C", repo_path, "remote", "set-head", "upstream", "-a"], check=False)
     _run(["git", "-C", repo_path, "checkout", "--", "."], check=False)
     _run(["git", "-C", repo_path, "clean", "-fd"], check=False)
     # 删除旧的 update/linglong-runtime-* 分支
@@ -891,24 +917,21 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
         b = line.strip().lstrip("* ")
         if b.startswith("update/linglong-runtime-"):
             _run(["git", "-C", repo_path, "branch", "-D", b], check=False)
-    # 切换到 main/master 并 reset
-    try:
-        _run(["git", "-C", repo_path, "checkout", "main"])
-    except subprocess.CalledProcessError:
-        _run(["git", "-C", repo_path, "checkout", "master"])
-    _run(["git", "-C", repo_path, "reset", "--hard", "origin/HEAD"])
-
-    # 2. 固定分支，存在则切过去，否则新建
+    # 2. 每次都从 upstream/HEAD 强制重建固定分支，丢弃旧分支基线。
     branch = "update/linglong-runtime"
-    _log(f"使用固定分支: {branch}")
-    result = subprocess.run(
-        ["git", "-C", repo_path, "branch", "--list", branch],
-        capture_output=True, text=True)
-    branch_existed = bool(result.stdout.strip())
-    if branch_existed:
-        _run(["git", "-C", repo_path, "checkout", branch])
-    else:
-        _run(["git", "-C", repo_path, "checkout", "-b", branch])
+    _log(f"从 upstream/HEAD 重建分支: {branch}")
+    try:
+        _run(["git", "-C", repo_path, "checkout", "-B", branch, "upstream/HEAD"])
+    except subprocess.CalledProcessError:
+        # 老仓库可能没有远程 HEAD，按官方仓库惯例回退到 main/master。
+        for base in ("upstream/main", "upstream/master"):
+            try:
+                _run(["git", "-C", repo_path, "checkout", "-B", branch, base])
+                break
+            except subprocess.CalledProcessError:
+                continue
+        else:
+            raise RuntimeError("无法确定 upstream 默认分支（尝试了 main/master）")
 
     # 3. 修改 update.go + 执行 daily.bash（daily.bash 内部调用 update.go 更新 linglong.yaml）
     _update_deepin_repo_url(repo_path, deb_repo)
@@ -920,32 +943,23 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
     else:
         _log("daily.bash 不存在", "WARN")
 
-    # 4. 提交：分支已存在则 amend，否则新建
+    # 4. 基于最新 upstream 创建单个更新提交。
     _run(["git", "-C", repo_path, "add", "-A"])
     msg = (f"chore: update linglong runtime to {version}\n\n"
            f"Update repo URL to {deb_repo}\nVersion: {version}\n\n"
            f"Log: 更新玲珑 runtime 到 {version}\n"
            f"Influence: 更新 DTK 玲珑 runtime 依赖仓库地址和版本")
-    if branch_existed:
-        _run(["git", "-C", repo_path, "commit", "--amend", "-m", msg, "--allow-empty"], check=False)
-        _log(f"合并到上一次提交")
-    else:
-        _run(["git", "-C", repo_path, "commit", "-m", msg])
+    _run(["git", "-C", repo_path, "commit", "-m", msg])
 
-    # 5. 通过 fork 推送
-    repo_slug = _get_repo_slug(repo_path)
-    fork_slug = _ensure_fork(repo_slug, fork_owner, cfg)
-    fork_remote = f"https://github.com/{fork_slug}.git"
-    _run(["git", "-C", repo_path, "remote", "remove", "fork"], check=False)
-    _run(["git", "-C", repo_path, "remote", "add", "fork", fork_remote])
+    # 5. 仅推送 fork 的 origin，不直接推送 linglongdev upstream。
     _log(f"强推到 fork: {fork_slug}")
-    _run(["git", "-C", repo_path, "push", "-f", "fork", branch])
+    _run(["git", "-C", repo_path, "push", "-f", "origin", branch])
 
     # 6. 创建或复用 PR
     existing_pr = subprocess.run(
         ["gh", "pr", "list", "--repo", repo_slug,
-         "--state", "open", "--json", "headRefName,url",
-         "--jq", f'.[] | select(.headRefName == "{branch}") | .url'],
+         "--state", "open", "--head", f"{fork_slug.split('/')[0]}:{branch}",
+         "--json", "url", "--jq", ".[0].url // empty"],
         capture_output=True, text=True).stdout.strip()
     if existing_pr:
         _log(f"PR 已存在: {existing_pr}")
@@ -1127,102 +1141,120 @@ def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
 # ---------------------------------------------------------------------------
 
 
-def _resolve_layer_url(url: str, jc: JenkinsClient) -> str:
-    """如果 url 是 Jenkins 构建地址，从控制台输出提取真实 layer 地址。"""
-    base = JENKINS_BASE.rstrip("/")
-    if not url.startswith(base):
-        return url
+def _submit_n8n_form(job_url: str) -> bool:
+    """按 N8N 网页表单格式提交 Jenkins layer 构建 URL。"""
+    session = requests.Session()
+    session.trust_env = False
+    session.headers.update({"User-Agent": "linglong-update/1.0"})
+    try:
+        page = session.get(N8N_FORM_URL, timeout=30)
+        if page.status_code != 200:
+            _log(f"N8N 表单不可访问: HTTP {page.status_code}", "ERROR")
+            return False
 
-    path = url[len(base):].strip("/")
-    parts = [p for p in path.split("/") if p]
-    if not parts:
-        _log(f"无法解析 Jenkins URL: {url}", "ERROR")
-        return url
+        # 浏览器 FormData 使用 field-0，requests 的 files 参数生成相同的
+        # multipart/form-data 请求，而不附加文件名。
+        resp = session.post(
+            N8N_FORM_URL,
+            files={"field-0": (None, job_url)},
+            timeout=300,
+        )
+    except requests.RequestException as e:
+        _log(f"提交 N8N 表单失败: {e}", "ERROR")
+        return False
+
+    if resp.status_code != 200:
+        detail = re.sub(r"\s+", " ", resp.text[:200]).strip()
+        _log(f"N8N 表单提交失败: HTTP {resp.status_code}"
+             + (f"; {detail}" if detail else ""), "ERROR")
+        return False
 
     try:
-        build_number = int(parts[-1])
+        data = resp.json()
+        message = data.get("formSubmittedText") or data.get("message")
+        if message:
+            _log(f"N8N: {message}")
     except ValueError:
-        return url
+        pass
+    return True
 
-    job_path = "/".join(parts[:-1])
-    _log(f"解析 Jenkins 构建: {job_path} #{build_number}")
+
+def _published_layer_url(repo: str, version: str) -> str:
+    name = "org.deepin.runtime.webengine" if repo == "webengine" else "org.deepin.runtime"
+    return f"{LINGLONG_TEST_REPO_BASE}/{name}/{version}/"
+
+
+def _check_published_layer(url: str) -> bool:
+    """检查测试玲珑仓库中是否已有指定版本的 layer。"""
+    session = requests.Session()
+    session.trust_env = False
     try:
-        console = jc.get_console_output(job_path, build_number)
-    except Exception as e:
-        _log(f"获取控制台输出失败: {e}", "ERROR")
-        return url
-
-    repo_url = _extract_repo_url(console)
-    if repo_url:
-        _log(f"从构建输出提取地址: {repo_url}")
-        return repo_url
-
-    _log("控制台输出中未找到仓库地址，使用原始 URL", "WARN")
-    return url
+        resp = session.get(url, timeout=30)
+    except requests.RequestException as e:
+        _log(f"最终 layer 仓库检查失败: {e}", "ERROR")
+        return False
+    if resp.status_code == 200:
+        _log(f"最终 layer 已发布: {url}")
+        return True
+    _log(f"最终 layer 尚未发布: HTTP {resp.status_code} {url}", "WARN")
+    return False
 
 def push_layer(cfg: Dict[str, Any], layer_url: Optional[str] = None,
                repo: str = "runtime",
-               dry_run: bool = False) -> bool:
-    """N8N 推送 Layer 到玲珑仓库。
+               dry_run: bool = False,
+               check: bool = False,
+               build_url: Optional[str] = None,
+               version: Optional[str] = None) -> bool:
+    """通过 N8N 表单推送 Layer 到玲珑仓库。
 
-    layer_url: LAYER_URL 参数，对应 build-layer 产出的 layer 地址。
-    先提交 N8N 表单，然后触发 Jenkins push-to-old 和 push-to-test。
+    layer_url: build-layer 产出的 Jenkins 构建 URL。
+    check=True 时查询 push job 构建状态；build_url 或 layer_url 传构建 URL。
+    N8N 负责枚举 artifacts 并触发 push-to-old 和 push-to-test。
     """
+    if check or build_url or version:
+        url = build_url or layer_url
+        if version and (not url or url.startswith(LINGLONG_TEST_REPO_BASE)):
+            url = _published_layer_url(repo, version)
+        url = url or input("Jenkins 构建 URL 或最终 layer URL: ").strip()
+        if not url:
+            _log("检查 URL 不能为空", "ERROR")
+            return False
+        if url.startswith(LINGLONG_TEST_REPO_BASE):
+            return _check_published_layer(url)
+        return bool(check_repo(cfg, url, extract_repo=False))
+
     _log("=" * 60)
     _log("N8N 推送 Layer")
     _log("=" * 60)
 
     if layer_url is None:
         if dry_run:
-            layer_url = f"{CRIMSON_BASE}/stable_test/"
+            layer_url = f"{JENKINS_BASE}/{JENKINS_BUILD_JOB}/999/"
         else:
-            layer_url = input(f"LAYER_URL (如 {CRIMSON_BASE}/stable_xxx/): ").strip()
+            layer_url = input("Jenkins layer 构建 URL: ").strip()
 
     print(f"\n  LAYER_URL: {layer_url}")
     print(f"  N8N 表单 : {N8N_FORM_URL}\n")
 
     if dry_run:
-        _log("认证 Jenkins（dry-run 仍会验证凭证）...")
-    _log("认证 Jenkins...")
-    creds = _ensure_jenkins_auth()
-    _log("Jenkins 认证成功")
-
-    jc = JenkinsClient(creds["user"], creds["password"])
-
-    # 如果 layer_url 是 Jenkins 构建地址，解析出真实 layer 地址
-    if layer_url and layer_url.startswith(JENKINS_BASE):
-        resolved = _resolve_layer_url(layer_url, jc)
-        if resolved != layer_url:
-            layer_url = resolved
-            print(f"\n  LAYER_URL: {layer_url}\n")
-
-    if dry_run:
         _log("DRY RUN — 不会实际触发推送", "WARN")
-        _log(f"  将触发: {JENKINS_PUSH_OLD_JOB} 和 {JENKINS_PUSH_TEST_JOB}")
-        _log(f"  参数: LAYER_URL={layer_url}")
+        _log(f"  POST {N8N_FORM_URL}")
+        _log(f"  multipart field-0={layer_url}")
         return True
 
     if not layer_url:
-        print("请手动提交 N8N 表单后，脚本将自动触发 Jenkins push job。")
-        if not _input_confirm("已提交 N8N 表单?"):
-            _log("用户取消", "WARN")
-            return False
+        _log("Jenkins layer 构建 URL 不能为空", "ERROR")
+        return False
+    if not re.match(
+            rf"^{re.escape(JENKINS_BASE)}/(?:view/[^/]+/)?job/[^/]+/\d+/?$",
+            layer_url):
+        _log("--layer-url 必须是 Jenkins 构建 URL（如 .../job/.../214/）", "ERROR")
+        return False
 
-    params = {"LAYER_URL": layer_url}
-    for label, job in [("push-to-old", JENKINS_PUSH_OLD_JOB),
-                       ("push-to-test", JENKINS_PUSH_TEST_JOB)]:
-        _log(f"--- 触发 {label} ---")
-        if not jc.job_exists(job):
-            _log(f"Job 不可访问: {label}", "WARN")
-            continue
-        build_num = jc.trigger_build(job, params)
-        if build_num:
-            _log(f"构建 #{build_num}: {JENKINS_BASE}/{job}/{build_num}/")
-            _log(f"{label} 已触发，使用 --check 查询状态")
-        else:
-            _log(f"触发 {label} 失败", "ERROR")
-
-    _log("推送完成")
+    _log("提交 N8N 表单，由工作流枚举 layers 并触发 push jobs...")
+    if not _submit_n8n_form(layer_url):
+        return False
+    _log("N8N 表单提交成功，push jobs 已由工作流触发")
     return True
 
 
@@ -1370,9 +1402,18 @@ def _build_parser() -> argparse.ArgumentParser:
         elif name == "build-layer":
             s.add_argument("--check", action="store_true", help="查询构建状态（不提取仓库地址）")
             s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合，如 https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/）")
+            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],
+                           help="目标仓库: runtime（默认）或 webengine")
             s.add_argument("--repo-url", default=None, help="REPO_URL（默认 github.com/linglongdev/org.deepin.runtime）")
             s.add_argument("--repo-branch", default=None, help="REPO_BRANCH（默认 main）")
         elif name == "push-layer":
+            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],
+                           help="目标仓库: runtime（默认）或 webengine")
+            s.add_argument("--check", action="store_true", help="查询 push job 构建状态")
+            s.add_argument("--build-url", default=None,
+                           help="Jenkins push job 构建 URL（与 --check 配合）")
+            s.add_argument("--version", default=None,
+                           help="最终 layer 版本（与 --check 配合，如 6.7.0.46）")
             s.add_argument("--layer-url", default=None, help="LAYER_URL（build-layer 产出地址）")
 
     sub.add_parser("config", help="配置参数（含 Jenkins 凭证）")
@@ -1408,11 +1449,18 @@ def main() -> int:
             return 0 if update_repo(cfg, args.version, args.deb_repo,
                                     args.fork_owner, args.repo, args.dry_run) else 1
         elif args.command == "build-layer":
-            return 0 if build_layer(cfg, args.repo_url, args.repo_branch,
-                                    args.repo, args.dry_run,
+            return 0 if build_layer(cfg, repo_url=args.repo_url,
+                                    repo=args.repo,
+                                    repo_branch=args.repo_branch,
+                                    dry_run=args.dry_run,
                                     check=args.check, build_url=args.build_url) else 1
         elif args.command == "push-layer":
-            return 0 if push_layer(cfg, args.layer_url, args.repo, args.dry_run) else 1
+            return 0 if push_layer(cfg, layer_url=args.layer_url,
+                                   repo=args.repo,
+                                   dry_run=args.dry_run,
+                                   check=args.check,
+                                   build_url=args.build_url,
+                                   version=args.version) else 1
         return 1
     except KeyboardInterrupt:
         _log("用户中断", "WARN")

@@ -9,8 +9,8 @@ Jenkins 是内网服务。需配置 `no_proxy` 包含 `.uniontech.com`、`.getde
 |-----|------|------|-----|
 | runtime-repo-update | build-repo, build-repo --check | `SUFFIX` (可选，默认日期) | `/view/dtk/job/runtime-repo-update/` |
 | linglong-runtime-build | build-layer, build-layer --check | `REPO_URL`, `REPO_BRANCH` | `/view/dtk/job/linglong-runtime-build/` |
-| linglong-runtime-push-to-old | push-layer | `LAYER_URL` | `/view/dtk/job/linglong-runtime-push-to-old/` |
-| linglong-runtime-push-to-test | push-layer | `LAYER_URL` | `/view/dtk/job/linglong-runtime-push-to-test/` |
+| linglong-runtime-push-to-old | N8N → push-layer | `LAYER_URL`（由 N8N 工作流传给 job） | `/view/dtk/job/linglong-runtime-push-to-old/` |
+| linglong-runtime-push-to-test | N8N → push-layer | `LAYER_URL`（由 N8N 工作流传给 job） | `/view/dtk/job/linglong-runtime-push-to-test/` |
 
 ### JenkinsClient API
 
@@ -50,8 +50,39 @@ builds = jc.get_build_trend(job_path)
 - `--check` 轮询间隔至少 5 分钟；若仍在构建中，等 5 分钟后再查
 
 **linglong-runtime-push-to-old / push-to-test**:
-- `LAYER_URL`: 构建产出的 layer 地址
-- 由 N8N 表单流程触发，脚本在用户确认提交 N8N 后触发这两个 job，不等待构建完成
+- 网页显示字段标签为 `job_url`，实际 multipart 字段名为 `field-0`，值是 `build-layer` 的 Jenkins 构建 URL
+- N8N 工作流枚举构建 artifacts，并为每个 layer 触发对应 push job
+- `push-layer --check` 查询具体 push job 构建 URL，不查询原始 build-layer URL
+
+### 分阶段查询示例
+
+```bash
+# CRP：查询配置中的 topic/BranchID 下所有项目
+python3 scripts/linglong-update.py crp-pack --check
+
+# 更新仓库：传 runtime-repo-update 的构建 URL，成功后提取 deb 仓库地址
+python3 scripts/linglong-update.py build-repo --check \
+  --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/
+
+# Layer 构建：传 linglong-runtime-build 的构建 URL
+python3 scripts/linglong-update.py build-layer --check \
+  --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/214/
+
+# Layer 推送：传 N8N 已触发的具体 push-to-test/push-to-old 构建 URL
+python3 scripts/linglong-update.py push-layer --check \
+  --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-push-to-test/420/
+
+# 最终验收：按 repo/version 检查 pools 测试仓库
+python3 scripts/linglong-update.py push-layer --check \
+  --repo runtime --version 6.7.0.46
+python3 scripts/linglong-update.py push-layer --check \
+  --repo webengine --version 6.7.0.46
+```
+
+最终验收 URL 分别为：
+
+- `https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime/<版本>/`
+- `https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime.webengine/<版本>/`
 
 ### 认证
 

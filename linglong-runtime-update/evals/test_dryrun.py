@@ -120,6 +120,96 @@ def _test_push_layer():
     assert ok, "push-layer dry-run should return True"
     print("  PASS: push-layer dry-run OK")
 
+
+def _test_n8n_form_submit():
+    """验证 push-layer 按网页格式向 N8N 提交 field-0。"""
+    print("\n" + "=" * 60)
+    print("[TEST] N8N 表单提交")
+    print("=" * 60)
+    original_session = lu.requests.Session
+    captured = {}
+
+    class Response:
+        status_code = 200
+        text = '{"formSubmittedText":"accepted"}'
+
+        def json(self):
+            return {"formSubmittedText": "accepted"}
+
+    class Session:
+        def __init__(self):
+            self.trust_env = True
+            self.headers = {}
+
+        def get(self, url, timeout):
+            captured["get"] = (url, timeout)
+            return Response()
+
+        def post(self, url, files, timeout):
+            captured["post"] = (url, files, timeout)
+            return Response()
+
+    try:
+        lu.requests.Session = Session
+        cfg = lu.load_config()
+        ok = lu.push_layer(cfg, layer_url=TEST_LAYER_URL, repo="runtime")
+        assert ok
+        assert captured["get"][0] == lu.N8N_FORM_URL
+        assert captured["post"][0] == lu.N8N_FORM_URL
+        assert captured["post"][1] == {"field-0": (None, TEST_LAYER_URL)}
+        print("  PASS: N8N multipart field-0 参数正确")
+    finally:
+        lu.requests.Session = original_session
+
+
+def _test_published_layer_url():
+    """验证最终发布结果 URL 的 repo/version 映射。"""
+    runtime = lu._published_layer_url("runtime", TEST_LINGLONG_VERSION)
+    webengine = lu._published_layer_url("webengine", TEST_LINGLONG_VERSION)
+    assert runtime.endswith(f"/org.deepin.runtime/{TEST_LINGLONG_VERSION}/")
+    assert webengine.endswith(
+        f"/org.deepin.runtime.webengine/{TEST_LINGLONG_VERSION}/")
+    print("  PASS: 最终 layer URL 映射正确")
+
+
+def _test_cli_dispatch():
+    """验证 build-layer/push-layer CLI 参数定义和关键字分发。"""
+    print("\n" + "=" * 60)
+    print("[TEST] CLI 参数分发")
+    print("=" * 60)
+    original_argv = sys.argv
+    original_check_deps = lu._check_deps
+    original_load_config = lu.load_config
+    original_build_layer = lu.build_layer
+    original_push_layer = lu.push_layer
+    calls = {}
+    try:
+        lu._check_deps = lambda: None
+        lu.load_config = lambda: {}
+        lu.build_layer = lambda cfg, **kwargs: calls.update(build=kwargs) or True
+        lu.push_layer = lambda cfg, **kwargs: calls.update(push=kwargs) or True
+
+        sys.argv = ["linglong-update.py", "build-layer", "--repo", "webengine",
+                    "--repo-url", "github.com/example/runtime", "--repo-branch", "test"]
+        assert lu.main() == 0
+        assert calls["build"]["repo"] == "webengine"
+        assert calls["build"]["repo_url"] == "github.com/example/runtime"
+        assert calls["build"]["repo_branch"] == "test"
+
+        sys.argv = ["linglong-update.py", "push-layer", "--repo", "webengine",
+                    "--check", "--version", TEST_LINGLONG_VERSION]
+        assert lu.main() == 0
+        assert calls["push"]["repo"] == "webengine"
+        assert calls["push"]["check"] is True
+        assert calls["push"]["version"] == TEST_LINGLONG_VERSION
+        print("  PASS: CLI 参数分发正确")
+    finally:
+        sys.argv = original_argv
+        lu._check_deps = original_check_deps
+        lu.load_config = original_load_config
+        lu.build_layer = original_build_layer
+        lu.push_layer = original_push_layer
+
 def run_all():
     print("DTK 玲珑 Runtime 更新工具 - Eval 测试")
     print(f"测试 DTK 版本: {TEST_DTK_VERSION} (玲珑: {TEST_LINGLONG_VERSION})")
@@ -130,6 +220,9 @@ def run_all():
     _test_update_repo()
     _test_build_layer()
     _test_push_layer()
+    _test_n8n_form_submit()
+    _test_published_layer_url()
+    _test_cli_dispatch()
 
     print("\n" + "=" * 60)
     print("所有测试通过!")

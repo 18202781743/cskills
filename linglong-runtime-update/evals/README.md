@@ -28,6 +28,8 @@ python3 evals/test_dryrun.py push-layer   # N8N 推送
 
 所有测试在 `--dry-run` 模式下执行，不触发实际 Jenkins/CRP/GitHub 操作。
 
+> `update-repo` 没有 `--check` 参数。该阶段通过命令返回码、git push 输出和 GitHub PR 验证；Jenkins 状态查询只适用于 `build-repo`、`build-layer` 和 N8N 触发的 push job。
+
 ---
 
 # 真实环境测试 (Real Eval)
@@ -157,5 +159,4 @@ python3 scripts/linglong-update.py build-layer --repo-url github.com/linglongdev
 ```bash
 python3 scripts/linglong-update.py push-layer --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/
 ```
-
 

@@ -57,6 +57,23 @@ python3 scripts/linglong-update.py <command> --help
 
 ## 工作流步骤
 
+### 各阶段 `--check` 参数对照
+
+各阶段的查询对象和 URL 参数不同，不能交叉使用：
+
+| 阶段 | 查询命令 | 必需 URL/参数 | 查询结果 |
+|------|----------|---------------|----------|
+| CRP 打包 | `crp-pack --check` | `--topic`、`--branch-id`（默认从配置读取） | 各项目 CRP 实例状态，全部 `UPLOAD_OK` 才成功 |
+| 更新仓库 | `build-repo --check --build-url <URL>` | `runtime-repo-update/<编号>/` 构建 URL | Jenkins 状态，成功后提取 deb 仓库 URL |
+| 修改仓库/PR | 无 `update-repo --check` | `--version`、`--deb-repo`、可选 `--repo`/`--fork-owner` | 命令输出、git 推送结果和 GitHub PR |
+| Layer 构建 | `build-layer --check --build-url <URL>` | `linglong-runtime-build/<编号>/` 构建 URL | Jenkins 状态；成功表示 layer artifacts 已生成 |
+| Layer 推送 | `push-layer --check --layer-url <URL>` | `push-to-old/<编号>/` 或 `push-to-test/<编号>/` 构建 URL | 对应 push job 的 Jenkins 状态 |
+| 最终验收 | `push-layer --check --repo <repo> --version <版本>` | repo 为 `runtime`/`webengine`，版本为 `X.Y.0.Z` | pools 测试仓库中对应版本目录存在 |
+
+`push-layer` 正常触发时的 `--layer-url` 与查询时不同：正常触发传入 **Layer 构建 URL**，由 N8N 表单枚举并推送全部 layer；`--check` 则传入某个具体 **push job 构建 URL**。
+
+所有 Jenkins 构建首次查询前至少等待 2 分钟，后续查询间隔至少 5 分钟；CRP 打包首次查询前至少等待 5 分钟。
+
 ### Step 1: CRP 打包
 
 在 CRP 平台上对 DTK 相关项目创建打包实例。调用外部 `crp_pack.py` 脚本（与 `linglong-update.py` 同目录），该脚本独立处理 CRP 认证和打包实例创建。
@@ -70,10 +87,12 @@ CRP 打包仍使用原有项目名（与 github-workflow-autotag 的 GitHub 仓�
 
 支持通过 `--topic`、`--branch`、`--archs`（逗号分隔）、`--branch-id`、`--version` 命令行参数覆盖默认配置。
 
-使用 `--check` 查询当前打包状态，显示每个项目的构建状态和版本信息，所有项目 `UPLOAD_OK` 才算成功：
+使用 `--check` 查询当前打包状态，显示每个项目的构建状态和版本信息，所有项目 `UPLOAD_OK` 才算成功。可用 `--topic`、`--branch-id` 指定查询范围：
 
 ```bash
 python3 scripts/linglong-update.py crp-pack --check
+python3 scripts/linglong-update.py crp-pack --check \
+  --topic "玲珑runtime dtk版本更新" --branch-id 129
 ```
 > ⚠ CRP 打包耗时较长，触发后至少等 5 分钟再 `--check`，若仍在进行中等 5 分钟后再查。
 
@@ -85,7 +104,7 @@ python3 scripts/linglong-update.py crp-pack --check
 - Job 参数: `SUFFIX`（接收 `--repo-id` 传入的仓库标识，为空时使用当天日期 YYYYMMDD）
 - **输出**: deb 仓库地址（如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/），作为 Step 3 的 `--deb-repo` 输入
 
-触发后使用 `--check` 轮询构建状态并提取仓库地址：
+触发后使用该构建的 Jenkins URL 查询，不能把 `repo-id` 当作 `--check` 参数：
 
 ```bash
 # 触发构建
@@ -96,7 +115,30 @@ python3 scripts/linglong-update.py build-repo --check --build-url https://jenkin
 ```
 > ⚠ 若仍在构建中，等 5 分钟后再查，不要短间隔反复查询。
 
-### Step 3: 修改 yaml 文件并创建 PR
+### Step 3: 修改仓库并创建 PR
+
+`update-repo` 没有 Jenkins 构建，因此不提供 `--check`。它接收 Step 2 的 deb 仓库地址，更新 GitHub 仓库并输出提交/PR 结果。版本号使用玲珑格式 `X.Y.0.Z`；省略 `--version` 时，脚本从 `--deb-repo` 自动推断 DTK 版本并转换。
+
+runtime 默认使用 fork 工作流：从 `upstream` 最新代码重建 `update/linglong-runtime`，推送到 fork，再向 `linglongdev/org.deepin.runtime` 创建或复用 PR。webengine 使用 `--repo webengine`，应用 webengine 补丁并推送其 fork 的更新分支。
+
+```bash
+# runtime：版本明确时直接执行
+python3 scripts/linglong-update.py update-repo \
+  --version 6.7.0.46 \
+  --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_20260806/ \
+  --fork-owner <GitHub用户名>
+
+# webengine：从同一 deb 仓库更新 webengine 配置
+python3 scripts/linglong-update.py update-repo \
+  --version 6.7.0.46 \
+  --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_20260806/ \
+  --repo webengine \
+  --fork-owner <GitHub用户名>
+```
+
+验证该阶段请检查：命令返回成功、目标分支已推送、runtime 输出 PR URL；webengine 则检查 fork 分支和提交。PR 合并状态不由 `update-repo --check` 查询，应在 GitHub 页面或使用 `gh pr view` 检查。
+
+#### 实现细节
 
 **输入**: Step 2 产出的 deb 仓库地址（`--deb-repo`）  **产物**: GitHub 仓库代码已更新（runtime 创建 PR 并合并，webengine 强推 origin/main）
 
@@ -134,7 +176,7 @@ python3 scripts/linglong-update.py build-repo --check --build-url https://jenkin
 - webengine 时 REPO_URL 为 `github.com/linglongdev/org.deepin.runtime.webengine`
 - 可通过 `--repo-url` 和 `--repo-branch` 覆盖
 
-触发后使用 `--check` 轮询构建状态：
+触发后使用 **Layer 构建 job** 的 URL 查询（不是 push job URL）：
 
 ```bash
 # 触发 runtime 构建
@@ -150,15 +192,39 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
 
 ### Step 5: N8N 推送 Layer
 
-**输入**: Step 4 产出的 layer 构建 URL（`--layer-url`，脚本自动解析真实 layer 地址）
+**输入**: Step 4 产出的 layer 构建 URL（`--layer-url`）
 
-通过 N8N 表单推送 layer 到玲珑仓库。runtime 和 webengine 各执行一次推送（通过 `--repo` 参数切换，默认 `runtime`）。脚本提示用户手动提交 N8N 表单，确认后触发 `push-to-old` 和 `push-to-test` 两个 Jenkins job ，不等待构建完成。
+脚本按网页相同格式提交 N8N 表单（字段 `field-0`），由 N8N 枚举构建产物并批量触发 `push-to-old` 和 `push-to-test`。`--repo` 仅用于标识 runtime/webengine，N8N 根据传入的 Layer 构建 URL 处理。
 
 - N8N 表单: https://n8n.cicd.getdeepin.org/form/097d0087-7f34-4614-8329-82d096af7ba5
 - push-to-old: https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-push-to-old/
 - push-to-test: https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-push-to-test/
-- `--layer-url` 传入 **build-layer 产出的 Jenkins 构建 URL**（如 `https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/`），脚本自动从控制台输出解析真实 layer 地址后传入 push job
-- `push-layer` 仅触发 push-to-old 和 push-to-test 两个 job，不等待构建完成
+- `--layer-url` 传入 **build-layer 产出的 Jenkins 构建 URL**（如 `https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/`），不要手动改成 artifact URL
+- `push-layer` 仅提交 N8N 表单，不等待全部 push job 完成
+- 查询时传入 N8N 触发的具体 push 构建 URL，例如：
+
+```bash
+python3 scripts/linglong-update.py push-layer --check \
+  --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-push-to-test/420/
+python3 scripts/linglong-update.py push-layer --check \
+  --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-push-to-old/419/
+```
+
+全部 push job 完成后，以 pools 测试仓库中的版本目录作为整个流程的最终验收结果：
+
+```bash
+# runtime 最终结果
+python3 scripts/linglong-update.py push-layer --check \
+  --repo runtime --version 6.7.0.46
+# 对应 https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime/6.7.0.46/
+
+# webengine 最终结果
+python3 scripts/linglong-update.py push-layer --check \
+  --repo webengine --version 6.7.0.46
+# 对应 https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime.webengine/6.7.0.46/
+```
+
+两个 URL 均可访问时，runtime 与 webengine 的构建、N8N 推送和测试仓库发布流程才算全部完成。
 
 ## 配置
 
