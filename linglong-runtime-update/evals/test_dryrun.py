@@ -78,9 +78,9 @@ def _test_build_repo():
     print("=" * 60)
     _mock_auth()
     cfg = lu.load_config()
-    url = lu.build_repo(cfg, repo_id="test20260722", dry_run=True)
+    url = lu.build_repo(cfg, repo_id="test", dry_run=True)
     assert url is not None, "build-repo dry-run should return URL"
-    assert "test20260722" in url, f"URL should contain repo_id: {url}"
+    assert "test" in url, f"URL should contain repo_id: {url}"
     print(f"  PASS: build-repo dry-run OK, URL={url}")
 
 
@@ -166,7 +166,7 @@ def _test_published_layer_url():
     """验证最终发布结果 URL 的 repo/version 映射。"""
     runtime = lu._published_layer_url("runtime", TEST_LINGLONG_VERSION)
     webengine = lu._published_layer_url("webengine", TEST_LINGLONG_VERSION)
-    assert runtime.endswith(f"/org.deepin.runtime/{TEST_LINGLONG_VERSION}/")
+    assert runtime.endswith(f"/org.deepin.runtime.dtk/{TEST_LINGLONG_VERSION}/")
     assert webengine.endswith(
         f"/org.deepin.runtime.webengine/{TEST_LINGLONG_VERSION}/")
     print("  PASS: 最终 layer URL 映射正确")

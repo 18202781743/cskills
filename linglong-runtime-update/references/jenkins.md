@@ -7,7 +7,7 @@ Jenkins 是内网服务。需配置 `no_proxy` 包含 `.uniontech.com`、`.getde
 
 | Job | 命令 | 参数 | URL |
 |-----|------|------|-----|
-| runtime-repo-update | build-repo, build-repo --check | `SUFFIX` (可选，默认日期) | `/view/dtk/job/runtime-repo-update/` |
+| runtime-repo-update | build-repo, build-repo --check | `SUFFIX` (可选，有意义的标识如 test) | `/view/dtk/job/runtime-repo-update/` |
 | linglong-runtime-build | build-layer, build-layer --check | `REPO_URL`, `REPO_BRANCH` | `/view/dtk/job/linglong-runtime-build/` |
 | linglong-runtime-push-to-old | N8N → push-layer | `LAYER_URL`（由 N8N 工作流传给 job） | `/view/dtk/job/linglong-runtime-push-to-old/` |
 | linglong-runtime-push-to-test | N8N → push-layer | `LAYER_URL`（由 N8N 工作流传给 job） | `/view/dtk/job/linglong-runtime-push-to-test/` |
@@ -38,7 +38,7 @@ builds = jc.get_build_trend(job_path)
 ### Job 参数说明
 
 **runtime-repo-update**:
-- `SUFFIX`: 仓库标识，为空时使用日期 (YYYYMMDD)
+- `SUFFIX`: 仓库标识，可为空；若设置一般为有意义的标识（如 `test`），而非时间——日期已由 Jenkins 在生成仓库 URL 时体现
 - `build-repo` 仅触发构建、不等待完成，使用 `build-repo --check --build-url <URL>` 轮询并提取仓库 URL
 - `--check` 轮询间隔至少 5 分钟；若仍在构建中，等 5 分钟后再查
 

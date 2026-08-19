@@ -663,12 +663,12 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
     _log("制作更新仓库")
     _log("=" * 60)
 
+    # repo_id 可为空；若设置一般为有意义的标识（如 test），
+    # 不是时间——日期已由 Jenkins 在生成仓库 URL 时体现。
     if repo_id is None:
-        repo_id = input("仓库标识 (默认当天日期): ").strip()
-        if not repo_id:
-            repo_id = datetime.now().strftime("%Y%m%d")
+        repo_id = input("仓库标识 (可选，有意义的标识如 test，为空则不传): ").strip()
 
-    print(f"\n  标识: {repo_id}\n")
+    print(f"\n  标识: {repo_id or '(空)'}\n")
 
     if dry_run:
         _log("认证 Jenkins（dry-run 仍会验证凭证）...")
@@ -676,8 +676,8 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
     _log("Jenkins 认证成功")
 
     if dry_run:
-        _log(f"DRY RUN — 将触发参数: repo_id={repo_id}", "WARN")
-        return f"{CRIMSON_BASE}/stable_{repo_id}/"
+        _log(f"DRY RUN — 将触发参数: repo_id={repo_id or '(空)'}", "WARN")
+        return f"{CRIMSON_BASE}/stable_/" if not repo_id else f"{CRIMSON_BASE}/stable_{repo_id}/"
 
     jc = JenkinsClient(creds["user"], creds["password"])
     if not jc.job_exists(JENKINS_REPO_UPDATE_JOB):
@@ -1367,7 +1367,7 @@ def _build_parser() -> argparse.ArgumentParser:
   %(prog)s crp-pack                         CRP 打包
   %(prog)s crp-pack --topic "xxx" --branch "crimson-testing"  指定主题和分支
   %(prog)s build-repo                       制作更新仓库
-  %(prog)s build-repo --repo-id 20260722    指定仓库标识
+  %(prog)s build-repo --repo-id test    指定仓库标识
   %(prog)s update-repo --version 6.7.0.45 --deb-repo http://...
   %(prog)s build-layer                      构建玲珑 Layer
   %(prog)s push-layer                       N8N 推送
@@ -1392,7 +1392,7 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--version", default=None, help="CRP 打包 tag/版本（如 6.7.46）")
             s.add_argument("--check", action="store_true", help="查询当前打包状态（所有包 UPLOAD_OK 才算成功）")
         elif name == "build-repo":
-            s.add_argument("--repo-id", default=None, help="仓库标识（如日期 20260722）")
+            s.add_argument("--repo-id", default=None, help="仓库标识（可选，有意义的标识如 test；为空则不传）")
             s.add_argument("--check", action="store_true", help="查询构建状态并提取仓库地址")
             s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合，如 https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/）")
         elif name == "update-repo":

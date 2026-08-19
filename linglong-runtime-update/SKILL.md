@@ -101,14 +101,14 @@ python3 scripts/linglong-update.py crp-pack --check \
 触发 Jenkins job `runtime-repo-update` 制作更新仓库。`build-repo` 仅触发构建、不等待完成。
 
 - Jenkins URL: https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/
-- Job 参数: `SUFFIX`（接收 `--repo-id` 传入的仓库标识，为空时使用当天日期 YYYYMMDD）
+- Job 参数: `SUFFIX`（接收 `--repo-id` 传入的仓库标识，可为空；若设置一般为有意义的标识，如 `test`，而非时间——日期已由 Jenkins 在生成仓库 URL 时体现）
 - **输出**: deb 仓库地址（如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/），作为 Step 3 的 `--deb-repo` 输入
 
 触发后使用该构建的 Jenkins URL 查询，不能把 `repo-id` 当作 `--check` 参数：
 
 ```bash
 # 触发构建
-python3 scripts/linglong-update.py build-repo --repo-id 20260722
+python3 scripts/linglong-update.py build-repo --repo-id test
 
 # 等待至少 2 分钟后查询状态，间隔至少 5 分钟，构建成功后自动提取仓库地址
 python3 scripts/linglong-update.py build-repo --check --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/

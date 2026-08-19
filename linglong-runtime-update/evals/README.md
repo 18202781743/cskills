@@ -90,7 +90,7 @@ python3 scripts/linglong-update.py crp-pack --version 6.7.45 --topic "玲珑runt
 
 **验证命令**:
 ```bash
-python3 scripts/linglong-update.py build-repo --repo-id test20260722
+python3 scripts/linglong-update.py build-repo --repo-id test
 ```
 
 ---
