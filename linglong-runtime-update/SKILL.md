@@ -216,7 +216,7 @@ python3 scripts/linglong-update.py push-layer --check \
 # runtime 最终结果
 python3 scripts/linglong-update.py push-layer --check \
   --repo runtime --version 6.7.0.46
-# 对应 https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime/6.7.0.46/
+# 对应 https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime.dtk/6.7.0.46/
 
 # webengine 最终结果
 python3 scripts/linglong-update.py push-layer --check \

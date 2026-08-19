@@ -1180,7 +1180,9 @@ def _submit_n8n_form(job_url: str) -> bool:
 
 
 def _published_layer_url(repo: str, version: str) -> str:
-    name = "org.deepin.runtime.webengine" if repo == "webengine" else "org.deepin.runtime"
+    # runtime 层实际 appid 是 org.deepin.runtime.dtk（linglong.yaml 的 id），
+    # 不是 GitHub 仓库名 org.deepin.runtime。
+    name = "org.deepin.runtime.webengine" if repo == "webengine" else "org.deepin.runtime.dtk"
     return f"{LINGLONG_TEST_REPO_BASE}/{name}/{version}/"
 
 

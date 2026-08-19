@@ -81,7 +81,7 @@ python3 scripts/linglong-update.py push-layer --check \
 
 最终验收 URL 分别为：
 
-- `https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime/<版本>/`
+- `https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime.dtk/<版本>/`
 - `https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime.webengine/<版本>/`
 
 ### 认证
