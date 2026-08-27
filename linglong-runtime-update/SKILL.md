@@ -159,7 +159,7 @@ python3 scripts/linglong-update.py update-repo \
 **webengine 仓库**（`--repo webengine`）:
 1. 以 runtime 仓库本地副本为基准（通过 `runtime-base` remote 引用）
 2. reset 到 runtime-base/HEAD
-3. 应用 `assets/webengine.patch` 补丁（增加 QtWebEngine 支持）→ commit 1
+3. 用 `git am` 应用 `patches/org.deepin.runtime.webengine/` 下的补丁（保留原始 commit 信息）→ commit 1
 4. 修改 `update.go` 中的 `deepinRepoURL`，传递玲珑版本号给 `daily.bash` → commit 2
 5. 强推到 origin/main（不创建 PR）
 
@@ -245,7 +245,7 @@ python3 scripts/linglong-update.py push-layer --check \
 - `crp_branch` 是 Git 分支过滤（传给 CRP 的筛选分支名），与 CRP 平台分支名（通过 BranchID `129` 映射到 `crimson-testing`）是不同概念
 - Fork 推送目标可通过 `config` 配置 `fork_owner`，或通过 `--fork-owner` 指定；未配置时自动探测 `gh api user`
 - Jenkins 凭证独立存储于 `~/.config/linglong-runtime-update/jenkins_creds.json`（base64 混淆，600 权限）
-- webengine 补丁存放于 skill 的 `assets/webengine.patch`，脚本通过 `_find_webengine_patch()` 自动查找
+- webengine 补丁存放于 runtime 仓库的 `patches/org.deepin.runtime.webengine/` 目录，脚本通过 `_find_repo_patches()` 自动查找
 
 ## 缓存目录结构
 

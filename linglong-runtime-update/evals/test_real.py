@@ -104,7 +104,7 @@ def test_step3_update_repo():
     print("  1. gh auth status 通过")
     print("  2. 自动 clone 仓库到 ~/.cache/linglong-runtime-update/repos/")
     print("  3. 创建/复用分支 update/linglong-runtime")
-    print("  4. webengine 正确应用 assets/webengine.patch")
+    print("  4. webengine 正确应用 patches/org.deepin.runtime.webengine/ 下的补丁")
     print("  5. update.go deepinRepoURL 正确更新")
     print("  6. daily.bash 执行成功（传递玲珑版本号）")
     print("  7. git commit 信息正确")

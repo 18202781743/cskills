@@ -855,16 +855,17 @@ def _infer_version(deb_repo: str, cfg: Dict[str, Any] = None) -> str:
     _log(f"从 deb 仓库推断 DTK 版本: {new_ver} (dtkcore {m.group(1)}, arch={arch})")
     return new_ver
 
-def _find_webengine_patch() -> Optional[str]:
-    candidates = [
-        Path(__file__).resolve().parent.parent / "assets" / "webengine.patch",
-        _config_dir() / "webengine.patch",
-    ]
-    for c in candidates:
-        if c.exists() and c.stat().st_size > 100:
-            return str(c)
-    _log("webengine.patch 未找到或为空，请放置到 assets/ 或 ~/.config/linglong-runtime-update/", "WARN")
-    return None
+def _find_repo_patches(repo_path: str, repo_name: str) -> List[str]:
+    """从 runtime 仓库的 patches/<repo_name>/ 目录查找补丁文件，按文件名排序返回。"""
+    patches_dir = Path(repo_path) / "patches" / repo_name
+    if not patches_dir.is_dir():
+        _log(f"补丁目录不存在: {patches_dir}", "WARN")
+        return []
+    patches = sorted(patches_dir.glob("*.patch"))
+    if not patches:
+        _log(f"补丁目录为空: {patches_dir}", "WARN")
+        return []
+    return [str(p) for p in patches]
 
 def _update_deepin_repo_url(repo_path: str, repo_url: str) -> None:
     """更新 update.go 中的 deepinRepoURL 变量。"""
@@ -995,31 +996,31 @@ def _update_webengine_repo(label: str, repo_path: str, version: str,
         _run(["git", "-C", repo_path, "checkout", "master"])
     _run(["git", "-C", repo_path, "reset", "--hard", "runtime-base/HEAD"])
 
-    # 2. 应用 webengine 补丁 → commit 1
-    patch_path = _find_webengine_patch()
-    if patch_path:
-        # 检查是否已应用
-        reverse_check = subprocess.run(
-            ["git", "-C", repo_path, "apply", "--check", "--reverse", patch_path],
-            capture_output=True)
-        if reverse_check.returncode == 0:
-            _log(f"补丁已应用，跳过: {patch_path}")
-        else:
-            _log(f"应用补丁: {patch_path}")
+    # 2. 应用 webengine 补丁 -> commit 1（git am 保留原始 commit 信息）
+    patch_files = _find_repo_patches(repo_path, "org.deepin.runtime.webengine")
+    if patch_files:
+        for patch_path in patch_files:
+            # 检查是否已应用
+            reverse_check = subprocess.run(
+                ["git", "-C", repo_path, "apply", "--check", "--reverse", patch_path],
+                capture_output=True)
+            if reverse_check.returncode == 0:
+                _log(f"补丁已应用，跳过: {patch_path}")
+                continue
+            _log(f"应用补丁 (git am): {patch_path}")
             try:
-                _run(["git", "-C", repo_path, "apply", patch_path])
+                _run(["git", "-C", repo_path, "am", patch_path])
                 _log("补丁应用成功")
             except subprocess.CalledProcessError:
-                _log("git apply 失败，尝试三路合并...", "WARN")
+                _log("git am 失败，尝试三路合并...", "WARN")
+                _run(["git", "-C", repo_path, "am", "--abort"], check=False)
                 try:
-                    _run(["git", "-C", repo_path, "apply", "--3way", patch_path])
+                    _run(["git", "-C", repo_path, "am", "--3way", patch_path])
                     _log("三路合并成功")
                 except subprocess.CalledProcessError:
                     _log("补丁应用彻底失败，检查冲突", "ERROR")
+                    _run(["git", "-C", repo_path, "am", "--abort"], check=False)
                     return False
-            _run(["git", "-C", repo_path, "add", "-A"])
-            _run(["git", "-C", repo_path, "commit", "-m",
-                  f"feat: apply webengine patch\n\n{os.path.basename(patch_path)}"])
     else:
         _log("未找到 webengine 补丁，跳过", "WARN")
 

@@ -103,7 +103,7 @@ python3 scripts/linglong-update.py build-repo --repo-id test
 1. `gh auth status` 通过，GitHub 认证有效
 2. 自动 clone 两个仓库到 `~/.cache/linglong-runtime-update/repos/`
 3. 创建/复用分支 `update/linglong-runtime`
-4. webengine 仓库正确应用 `assets/webengine.patch` 补丁
+4. webengine 仓库正确应用 `patches/org.deepin.runtime.webengine/` 下的补丁
 5. `linglong.yaml` 中版本号正确更新为玲珑格式（如 `6.7.0.45`，DTK `X.Y.Z` → 玲珑 `X.Y.0.Z`）
 6. `linglong.yaml` 中仓库 URL 正确更新
 7. `daily.bash` 执行成功，yaml 文件内容被更新

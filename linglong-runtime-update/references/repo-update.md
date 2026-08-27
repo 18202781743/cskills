@@ -24,7 +24,7 @@
 
 1. runtime 配置 `upstream=linglongdev`、`origin=<fork>`，从 `upstream/HEAD` 获取最新基线
 2. 每次重建分支 `update/linglong-runtime`（固定分支名）
-3. **webengine**: `git apply assets/webengine.patch` 应用补丁（三路合并兜底）
+3. **webengine**: `git am patches/org.deepin.runtime.webengine/*.patch` 应用补丁（三路合并兜底，保留原始 commit 信息）
 4. 修改 `update.go` 中的 `deepinRepoURL` 为新的 deb 仓库地址
 5. 传递玲珑版本号给 `daily.bash` 脚本
 6. `git add -A` → commit → 强推到 fork 的 `origin/update/linglong-runtime`
@@ -64,16 +64,17 @@ webengine 仓库的更新流程与 runtime 不同：
 
 #### webengine 补丁
 
-webengine 仓库基础来自 org.deepin.runtime，额外需要应用一个补丁，增加
+webengine 仓库基础来自 org.deepin.runtime，额外需要应用补丁，增加
 QtWebEngine 相关的环境变量和 package 依赖。
 
-补丁已静态保存在 skill 的 `assets/webengine.patch` 中，脚本通过
-`_find_webengine_patch()` 自动查找。原始仓库提交历史可能被改写，因此
-以静态 patch 文件形式保存，不依赖远程 cherry-pick。
+补丁存放在 runtime 仓库的 `patches/org.deepin.runtime.webengine/` 目录下，
+脚本通过 `_find_repo_patches()` 自动查找该目录下的所有 `.patch` 文件。
+补丁随 runtime 仓库一起维护，不再依赖 skill 内静态文件。
 
 应用方式（仅对 webengine 仓库）：
-- 先尝试 `git apply <patch>`
-- 若失败则尝试 `git apply --3way <patch>`（三路合并）
+- 对目录下每个 `.patch` 文件，先 `git apply --check --reverse` 检查是否已应用
+- 未应用则用 `git am <patch>` 应用（补丁包含 commit 信息，`git am` 自动创建 commit）
+- 若失败则 `git am --abort` 后用 `git am --3way <patch>` 三路合并
 
 ### update.go 修改规则
 
