@@ -166,9 +166,12 @@ def _test_published_layer_url():
     """验证最终发布结果 URL 的 repo/version 映射。"""
     runtime = lu._published_layer_url("runtime", TEST_LINGLONG_VERSION)
     webengine = lu._published_layer_url("webengine", TEST_LINGLONG_VERSION)
+    dtk5 = lu._published_layer_url("dtk5", TEST_LINGLONG_VERSION)
     assert runtime.endswith(f"/org.deepin.runtime.dtk/{TEST_LINGLONG_VERSION}/")
     assert webengine.endswith(
         f"/org.deepin.runtime.webengine/{TEST_LINGLONG_VERSION}/")
+    assert dtk5.endswith(
+        f"/org.deepin.runtime.dtk5/{TEST_LINGLONG_VERSION}/")
     print("  PASS: 最终 layer URL 映射正确")
 
 

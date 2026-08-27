@@ -6,7 +6,7 @@ description: |
 # DTK 玲珑 Runtime 更新
 
 
-自动化更新 org.deepin.runtime 和 org.deepin.runtime.webengine 两个玲珑 runtime 仓库的完整工作流。
+自动化更新 org.deepin.runtime 和 org.deepin.runtime.webengine 三个玲珑 runtime 仓库（org.deepin.runtime、org.deepin.runtime.webengine、org.deepin.runtime.dtk5）的完整工作流。
 
 ## ⚠ 请求频率约束
 
@@ -68,7 +68,7 @@ python3 scripts/linglong-update.py <command> --help
 | 修改仓库/PR | 无 `update-repo --check` | `--version`、`--deb-repo`、可选 `--repo`/`--fork-owner` | 命令输出、git 推送结果和 GitHub PR |
 | Layer 构建 | `build-layer --check --build-url <URL>` | `linglong-runtime-build/<编号>/` 构建 URL | Jenkins 状态；成功表示 layer artifacts 已生成 |
 | Layer 推送 | `push-layer --check --layer-url <URL>` | `push-to-old/<编号>/` 或 `push-to-test/<编号>/` 构建 URL | 对应 push job 的 Jenkins 状态 |
-| 最终验收 | `push-layer --check --repo <repo> --version <版本>` | repo 为 `runtime`/`webengine`，版本为 `X.Y.0.Z` | pools 测试仓库中对应版本目录存在 |
+| 最终验收 | `push-layer --check --repo <repo> --version <版本>` | repo 为 `runtime`/`webengine`/`dtk5`，版本为 `X.Y.0.Z` | pools 测试仓库中对应版本目录存在 |
 
 `push-layer` 正常触发时的 `--layer-url` 与查询时不同：正常触发传入 **Layer 构建 URL**，由 N8N 表单枚举并推送全部 layer；`--check` 则传入某个具体 **push job 构建 URL**。
 
@@ -119,7 +119,7 @@ python3 scripts/linglong-update.py build-repo --check --build-url https://jenkin
 
 `update-repo` 没有 Jenkins 构建，因此不提供 `--check`。它接收 Step 2 的 deb 仓库地址，更新 GitHub 仓库并输出提交/PR 结果。版本号使用玲珑格式 `X.Y.0.Z`；省略 `--version` 时，脚本从 `--deb-repo` 自动推断 DTK 版本并转换。
 
-runtime 默认使用 fork 工作流：从 `upstream` 最新代码重建 `update/linglong-runtime`，推送到 fork，再向 `linglongdev/org.deepin.runtime` 创建或复用 PR。webengine 使用 `--repo webengine`，应用 webengine 补丁并推送其 fork 的更新分支。
+runtime 默认使用 fork 工作流：从 `upstream` 最新代码重建 `update/linglong-runtime`，推送到 fork，再向 `linglongdev/org.deepin.runtime` 创建或复用 PR。webengine/dtk5 使用 `--repo webengine`/`--repo dtk5`，应用对应补丁并强推 origin/main。
 
 ```bash
 # runtime：版本明确时直接执行
@@ -142,7 +142,7 @@ python3 scripts/linglong-update.py update-repo \
 
 **输入**: Step 2 产出的 deb 仓库地址（`--deb-repo`）  **产物**: GitHub 仓库代码已更新（runtime 创建 PR 并合并，webengine 强推 origin/main）
 
-修改 org.deepin.runtime 和 org.deepin.runtime.webengine 两个仓库的 `linglong.yaml`。两个仓库的更新流程不同：
+修改 org.deepin.runtime、org.deepin.runtime.webengine 和 org.deepin.runtime.dtk5 三个仓库的 `linglong.yaml`。两个仓库的更新流程不同：
 
 **runtime 仓库**（默认）:
 1. fetch origin → checkout main → reset to origin/HEAD
@@ -156,24 +156,25 @@ python3 scripts/linglong-update.py update-repo \
 
 > `linglong.yaml` 的版本号和仓库 URL 由 `update.go` 和 `daily.bash` 自动更新，脚本不直接修改 `linglong.yaml`。
 
-**webengine 仓库**（`--repo webengine`）:
+**Fork 仓库**（`--repo webengine` / `--repo dtk5`）:
 1. 以 runtime 仓库本地副本为基准（通过 `runtime-base` remote 引用）
 2. reset 到 runtime-base/HEAD
-3. 用 `git am` 应用 `patches/org.deepin.runtime.webengine/` 下的补丁（保留原始 commit 信息）→ commit 1
+3. 用 `git am` 应用 `patches/<仓库名>/（如 `patches/org.deepin.runtime.webengine/` 或 `patches/org.deepin.runtime.dtk5/`）` 下的补丁（保留原始 commit 信息）→ commit 1
 4. 修改 `update.go` 中的 `deepinRepoURL`，传递玲珑版本号给 `daily.bash` → commit 2
 5. 强推到 origin/main（不创建 PR）
 
-> webengine 的 commit 2 也由 `update.go` 和 `daily.bash` 自动生成，脚本不直接修改 `linglong.yaml`。
+> fork 仓库的 commit 2 也由 `update.go` 和 `daily.bash` 自动生成，脚本不直接修改 `linglong.yaml`。
 
 ### Step 4: 构建玲珑 Layer
 
 **隐含输入**: Step 3 已更新 GitHub 仓库代码（Jenkins 从该仓库拉取最新代码构建）  **输出**: layer 构建产物 URL
 
-触发 Jenkins job `linglong-runtime-build` 制作玲珑 layer。与 Step 3 类似，runtime 和 webengine 各触发一次构建（通过 `--repo` 参数切换，默认 `runtime`）。`build-layer` 仅触发构建、不等待完成。
+触发 Jenkins job `linglong-runtime-build` 制作玲珑 layer。与 Step 3 类似，runtime、webengine 和 dtk5 各触发一次构建（通过 `--repo` 参数切换，默认 `runtime`）。`build-layer` 仅触发构建、不等待完成。
 
 - Jenkins URL: https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/
 - 参数: `REPO_URL`（默认 `github.com/linglongdev/org.deepin.runtime`）、`REPO_BRANCH`（默认 `main`）
 - webengine 时 REPO_URL 为 `github.com/linglongdev/org.deepin.runtime.webengine`
+- dtk5 时 REPO_URL 为 `github.com/linglongdev/org.deepin.runtime.dtk5`
 - 可通过 `--repo-url` 和 `--repo-branch` 覆盖
 
 触发后使用 **Layer 构建 job** 的 URL 查询（不是 push job URL）：
@@ -183,6 +184,9 @@ python3 scripts/linglong-update.py update-repo \
 python3 scripts/linglong-update.py build-layer
 
 # 触发 webengine 构建
+
+# 触发 dtk5 构建
+python3 scripts/linglong-update.py build-layer --repo dtk5
 python3 scripts/linglong-update.py build-layer --repo webengine
 
 # 等待至少 2 分钟后查询状态（间隔至少 5 分钟）
@@ -194,7 +198,7 @@ python3 scripts/linglong-update.py build-layer --check --build-url https://jenki
 
 **输入**: Step 4 产出的 layer 构建 URL（`--layer-url`）
 
-脚本按网页相同格式提交 N8N 表单（字段 `field-0`），由 N8N 枚举构建产物并批量触发 `push-to-old` 和 `push-to-test`。`--repo` 仅用于标识 runtime/webengine，N8N 根据传入的 Layer 构建 URL 处理。
+脚本按网页相同格式提交 N8N 表单（字段 `field-0`），由 N8N 枚举构建产物并批量触发 `push-to-old` 和 `push-to-test`。`--repo` 仅用于标识 runtime/webengine/dtk5，N8N 根据传入的 Layer 构建 URL 处理。
 
 - N8N 表单: https://n8n.cicd.getdeepin.org/form/097d0087-7f34-4614-8329-82d096af7ba5
 - push-to-old: https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-push-to-old/
@@ -219,12 +223,17 @@ python3 scripts/linglong-update.py push-layer --check \
 # 对应 https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime.dtk/6.7.0.46/
 
 # webengine 最终结果
+
+# dtk5 最终结果
+python3 scripts/linglong-update.py push-layer --check \
+  --repo dtk5 --version 6.7.0.46
+# 对应 https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime.dtk5/6.7.0.46/
 python3 scripts/linglong-update.py push-layer --check \
   --repo webengine --version 6.7.0.46
 # 对应 https://pools.uniontech.com/linglong/repos/test/refs/heads/main/org.deepin.runtime.webengine/6.7.0.46/
 ```
 
-两个 URL 均可访问时，runtime 与 webengine 的构建、N8N 推送和测试仓库发布流程才算全部完成。
+三个 URL 均可访问时，runtime、webengine 与 dtk5 的构建、N8N 推送和测试仓库发布流程才算全部完成。
 
 ## 配置
 
@@ -238,6 +247,7 @@ python3 scripts/linglong-update.py push-layer --check \
   "archs": ["amd64", "arm64", "loong64"],
   "runtime_repo_path": "~/.cache/linglong-runtime-update/repos/org.deepin.runtime",
   "webengine_repo_path": "~/.cache/linglong-runtime-update/repos/org.deepin.runtime.webengine",
+  "dtk5_repo_path": "~/.cache/linglong-runtime-update/repos/org.deepin.runtime.dtk5",
   "fork_owner": null
 }
 ```
@@ -245,7 +255,7 @@ python3 scripts/linglong-update.py push-layer --check \
 - `crp_branch` 是 Git 分支过滤（传给 CRP 的筛选分支名），与 CRP 平台分支名（通过 BranchID `129` 映射到 `crimson-testing`）是不同概念
 - Fork 推送目标可通过 `config` 配置 `fork_owner`，或通过 `--fork-owner` 指定；未配置时自动探测 `gh api user`
 - Jenkins 凭证独立存储于 `~/.config/linglong-runtime-update/jenkins_creds.json`（base64 混淆，600 权限）
-- webengine 补丁存放于 runtime 仓库的 `patches/org.deepin.runtime.webengine/` 目录，脚本通过 `_find_repo_patches()` 自动查找
+- fork 仓库补丁存放于 runtime 仓库的 `patches/<仓库名>/` 目录（如 `patches/org.deepin.runtime.webengine/`、`patches/org.deepin.runtime.dtk5/`），脚本通过 `_find_repo_patches()` 自动查找
 
 ## 缓存目录结构
 
@@ -254,6 +264,7 @@ python3 scripts/linglong-update.py push-layer --check \
 ├── repos/
 │   ├── org.deepin.runtime/          # runtime 仓库本地 clone
 │   └── org.deepin.runtime.webengine/ # webengine 仓库本地 clone
+│   ├── org.deepin.runtime.dtk5/     # dtk5 仓库本地 clone
 ```
 
 脚本启动时自动检查 `go`、`ll-builder`、`gh` 及 Python 模块依赖，缺失会报错退出。
@@ -266,7 +277,7 @@ python3 scripts/linglong-update.py push-layer --check \
 - **Step 3 产物** GitHub 仓库代码已更新（PR 合并后 main 分支为最新）→ **Step 4 隐含输入** Jenkins 从该仓库构建 layer
 - **Step 4 输出** layer 构建产物 URL → **Step 5 输入** `--layer-url`
 
-步骤 3-5 先对 runtime 仓库执行，再对 webengine 仓库执行：
+步骤 3-5 先对 runtime 仓库执行，再依次对 webengine 和 dtk5 仓库执行：
 
 ```bash
 # Step 1: CRP 打包
@@ -292,6 +303,12 @@ python3 scripts/linglong-update.py update-repo --version 6.7.0.44 --deb-repo htt
 python3 scripts/linglong-update.py build-layer --repo webengine
 python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>
 python3 scripts/linglong-update.py push-layer --repo webengine --layer-url <build-layer产出的Jenkins URL>
+
+# DTK5 仓库 (Step 3-5)
+python3 scripts/linglong-update.py update-repo --version 6.7.0.44 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/ --repo dtk5
+python3 scripts/linglong-update.py build-layer --repo dtk5
+python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>
+python3 scripts/linglong-update.py push-layer --repo dtk5 --layer-url <build-layer产出的Jenkins URL>
 ```
 
 > 版本号在不同阶段格式不同：CRP 打包用 DTK 版本 `6.7.44`，update-repo 阶段用玲珑版本 `6.7.0.44`。

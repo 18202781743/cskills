@@ -97,13 +97,13 @@ python3 scripts/linglong-update.py build-repo --repo-id test
 
 ### Step 3: 修改 yaml + PR (update-repo)
 
-**任务**: 修改 org.deepin.runtime 和 org.deepin.runtime.webengine 的 linglong.yaml，创建 PR 并等待合并。
+**任务**: 修改 org.deepin.runtime、org.deepin.runtime.webengine 和 org.deepin.runtime.dtk5 的 linglong.yaml，创建 PR 并等待合并。
 
 **检验要点**:
 1. `gh auth status` 通过，GitHub 认证有效
-2. 自动 clone 两个仓库到 `~/.cache/linglong-runtime-update/repos/`
+2. 自动 clone 三个仓库到 `~/.cache/linglong-runtime-update/repos/`
 3. 创建/复用分支 `update/linglong-runtime`
-4. webengine 仓库正确应用 `patches/org.deepin.runtime.webengine/` 下的补丁
+4. webengine/dtk5 仓库正确应用 `patches/<仓库名>/` 下的补丁
 5. `linglong.yaml` 中版本号正确更新为玲珑格式（如 `6.7.0.45`，DTK `X.Y.Z` → 玲珑 `X.Y.0.Z`）
 6. `linglong.yaml` 中仓库 URL 正确更新
 7. `daily.bash` 执行成功，yaml 文件内容被更新
@@ -112,7 +112,7 @@ python3 scripts/linglong-update.py build-repo --repo-id test
 10. PR 标题和 body 格式正确
 11. （可选）PR 能被正常合并
 
-**预期结果**: 两个仓库各产生一个 PR，PR 内容正确。
+**预期结果**: 三个仓库各产生一个 PR（runtime）或强推（webengine/dtk5），PR 内容正确。
 
 **验证命令**:
 ```bash

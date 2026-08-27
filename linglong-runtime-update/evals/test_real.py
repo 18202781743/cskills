@@ -104,7 +104,7 @@ def test_step3_update_repo():
     print("  1. gh auth status 通过")
     print("  2. 自动 clone 仓库到 ~/.cache/linglong-runtime-update/repos/")
     print("  3. 创建/复用分支 update/linglong-runtime")
-    print("  4. webengine 正确应用 patches/org.deepin.runtime.webengine/ 下的补丁")
+    print("  4. webengine/dtk5 正确应用 patches/<仓库名>/ 下的补丁")
     print("  5. update.go deepinRepoURL 正确更新")
     print("  6. daily.bash 执行成功（传递玲珑版本号）")
     print("  7. git commit 信息正确")
@@ -132,7 +132,7 @@ def test_step4_build_layer():
     _log_section("Step 4: 构建玲珑 Layer")
     
     print("\n检验要点:")
-    print("  1. Job 触发成功，传入正确的 REPO_URL（runtime 或 webengine）和 REPO_BRANCH")
+    print("  1. Job 触发成功，传入正确的 REPO_URL（runtime/webengine/dtk5）和 REPO_BRANCH")
     print("  2. 能正确获取构建编号")
     print("  3. 构建已触发但不等待（使用 build-layer --check 轮询）")
     print("  4. 轮询到 SUCCESS 后可从控制台输出提取 layer URL")

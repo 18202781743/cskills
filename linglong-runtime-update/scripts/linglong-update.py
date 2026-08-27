@@ -48,6 +48,7 @@ CRIMSON_BASE = f"http://{REPO_URL_HOST}/crimson_runtime"
 
 RUNTIME_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.git"
 WEBENGINE_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.webengine.git"
+DTK5_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.dtk5.git"
 
 # CRP 外部工具路径
 _CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp_pack.py")
@@ -63,6 +64,7 @@ DEFAULT_CONFIG: Dict[str, Any] = {
     "archs": ["amd64", "arm64", "loong64"],
     "runtime_repo_path": str(CACHE_DIR / "org.deepin.runtime"),
     "webengine_repo_path": str(CACHE_DIR / "org.deepin.runtime.webengine"),
+    "dtk5_repo_path": str(CACHE_DIR / "org.deepin.runtime.dtk5"),
     "fork_owner": None,
 }
 
@@ -323,6 +325,9 @@ def _ensure_repos_ready(cfg: Dict[str, Any]) -> bool:
         ok = False
     if not _ensure_repo_cloned(WEBENGINE_REPO_URL, cfg["webengine_repo_path"],
                                 "org.deepin.runtime.webengine"):
+        ok = False
+    if not _ensure_repo_cloned(DTK5_REPO_URL, cfg["dtk5_repo_path"],
+                                "org.deepin.runtime.dtk5"):
         ok = False
     return ok
 
@@ -809,9 +814,14 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
         return True
 
     if repo == "webengine":
-        if not _update_webengine_repo("org.deepin.runtime.webengine",
-                                       cfg["webengine_repo_path"], version, deb_repo,
-                                       cfg["runtime_repo_path"]):
+        if not _update_fork_repo("org.deepin.runtime.webengine",
+                                  cfg["webengine_repo_path"], version, deb_repo,
+                                  cfg["runtime_repo_path"]):
+            return False
+    elif repo == "dtk5":
+        if not _update_fork_repo("org.deepin.runtime.dtk5",
+                                  cfg["dtk5_repo_path"], version, deb_repo,
+                                  cfg["runtime_repo_path"]):
             return False
     else:
         if not _update_runtime_repo("org.deepin.runtime", cfg["runtime_repo_path"],
@@ -978,10 +988,10 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
 
     _log(f"PR 已创建: {pr_url}，请手动合并或使用 --check 查询状态")
     return True
-def _update_webengine_repo(label: str, repo_path: str, version: str,
+def _update_fork_repo(label: str, repo_path: str, version: str,
                            deb_repo: str,
                            runtime_repo_path: str) -> bool:
-    """更新 org.deepin.runtime.webengine 仓库：以 runtime 为基准，补丁 + 脚本各一 commit，强推 main。"""
+    """更新 fork 仓库（webengine/dtk5）：以 runtime 为基准，补丁 + 脚本各一 commit，强推 main。"""
     _log(f"--- {label} ---")
     # 1. 以 runtime 最新代码为基准
     _run(["git", "-C", repo_path, "remote", "remove", "runtime-base"], check=False)
@@ -996,8 +1006,8 @@ def _update_webengine_repo(label: str, repo_path: str, version: str,
         _run(["git", "-C", repo_path, "checkout", "master"])
     _run(["git", "-C", repo_path, "reset", "--hard", "runtime-base/HEAD"])
 
-    # 2. 应用 webengine 补丁 -> commit 1（git am 保留原始 commit 信息）
-    patch_files = _find_repo_patches(repo_path, "org.deepin.runtime.webengine")
+    # 2. 应用补丁 -> commit 1（git am 保留原始 commit 信息）
+    patch_files = _find_repo_patches(repo_path, label)
     if patch_files:
         for patch_path in patch_files:
             # 检查是否已应用
@@ -1022,7 +1032,7 @@ def _update_webengine_repo(label: str, repo_path: str, version: str,
                     _run(["git", "-C", repo_path, "am", "--abort"], check=False)
                     return False
     else:
-        _log("未找到 webengine 补丁，跳过", "WARN")
+        _log("未找到补丁，跳过", "WARN")
 
     # 3. 修改 update.go + 执行 daily.bash → commit 2（daily.bash 内部调用 update.go 更新 linglong.yaml）
     _update_deepin_repo_url(repo_path, deb_repo)
@@ -1100,6 +1110,8 @@ def build_layer(cfg: Dict[str, Any], repo_url: Optional[str] = None,
     if repo_url is None:
         if repo == "webengine":
             repo_url = "github.com/linglongdev/org.deepin.runtime.webengine"
+        elif repo == "dtk5":
+            repo_url = "github.com/linglongdev/org.deepin.runtime.dtk5"
         else:
             repo_url = "github.com/linglongdev/org.deepin.runtime"
     if repo_branch is None:
@@ -1183,7 +1195,7 @@ def _submit_n8n_form(job_url: str) -> bool:
 def _published_layer_url(repo: str, version: str) -> str:
     # runtime 层实际 appid 是 org.deepin.runtime.dtk（linglong.yaml 的 id），
     # 不是 GitHub 仓库名 org.deepin.runtime。
-    name = "org.deepin.runtime.webengine" if repo == "webengine" else "org.deepin.runtime.dtk"
+    name = {"webengine": "org.deepin.runtime.webengine", "dtk5": "org.deepin.runtime.dtk5"}.get(repo, "org.deepin.runtime.dtk")
     return f"{LINGLONG_TEST_REPO_BASE}/{name}/{version}/"
 
 
@@ -1282,6 +1294,7 @@ def cmd_config() -> int:
         "crp_branch_id": _p("crp_branch_id", "CRP BranchID (整数)"),
         "runtime_repo_path": _p("runtime_repo_path", "runtime repo path"),
         "webengine_repo_path": _p("webengine_repo_path", "webengine repo path"),
+        "dtk5_repo_path": _p("dtk5_repo_path", "dtk5 repo path"),
         "fork_owner": _p("fork_owner", "Fork 目标 GitHub 用户/组织"),
     }
 
@@ -1345,7 +1358,7 @@ def _interactive_menu(cfg: Dict[str, Any]) -> int:
         elif choice == "4":
             build_layer(cfg, repo="runtime")
         elif choice == "5":
-            repo_choice = input("repo (runtime/webengine) [runtime]: ").strip() or "runtime"
+            repo_choice = input("repo (runtime/webengine/dtk5) [runtime]: ").strip() or "runtime"
             layer_url = input(f"LAYER_URL (可选，如 {CRIMSON_BASE}/stable_xxx/): ").strip() or None
             push_layer(cfg, layer_url, repo=repo_choice)
         elif choice == "6":
@@ -1400,18 +1413,18 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--version", default=None, help="玲珑版本号（如 6.7.0.44，默认从 deb 仓库自动推断）")
             s.add_argument("--deb-repo", required=True, help=f"deb 更新仓库地址（如 {CRIMSON_BASE}/stable_xxx/）")
             s.add_argument("--fork-owner", default=None, help="Fork 目标 GitHub 用户/组织（默认从 config 读取或 gh api user 探测）")
-            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],
-                           help="目标仓库: runtime (org.deepin.runtime, 默认), webengine (org.deepin.runtime.webengine)")
+            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine", "dtk5"],
+                           help="目标仓库: runtime (org.deepin.runtime, 默认), webengine (org.deepin.runtime.webengine), dtk5 (org.deepin.runtime.dtk5)")
         elif name == "build-layer":
             s.add_argument("--check", action="store_true", help="查询构建状态（不提取仓库地址）")
             s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合，如 https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/）")
-            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],
-                           help="目标仓库: runtime（默认）或 webengine")
+            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine", "dtk5"],
+                           help="目标仓库: runtime（默认）、webengine 或 dtk5")
             s.add_argument("--repo-url", default=None, help="REPO_URL（默认 github.com/linglongdev/org.deepin.runtime）")
             s.add_argument("--repo-branch", default=None, help="REPO_BRANCH（默认 main）")
         elif name == "push-layer":
-            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine"],
-                           help="目标仓库: runtime（默认）或 webengine")
+            s.add_argument("--repo", default="runtime", choices=["runtime", "webengine", "dtk5"],
+                           help="目标仓库: runtime（默认）、webengine 或 dtk5")
             s.add_argument("--check", action="store_true", help="查询 push job 构建状态")
             s.add_argument("--build-url", default=None,
                            help="Jenkins push job 构建 URL（与 --check 配合）")
