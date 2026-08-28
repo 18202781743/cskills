@@ -64,9 +64,9 @@ python3 scripts/linglong-update.py update-repo \
 
 webengine 和 dtk5 仓库的更新流程与 runtime 不同：
 
-1. 以 runtime 仓库本地副本为基准（通过 `runtime-base` remote 引用）
-2. reset 到 runtime-base/HEAD
-3. 应用 webengine 补丁（增加 QtWebEngine 支持）→ commit 1
+1. 为 runtime 本地缓存配置官方 `upstream`，执行 `fetch --prune` 并将本地 `main`/`master` 重置到最新默认分支
+2. 以同步后的 runtime 仓库为基准（通过 `runtime-base` remote 引用），reset 到 `runtime-base/HEAD`
+3. 从 **runtime 仓库** 的 `patches/<仓库名>/` 读取并应用补丁 → commit 1
 4. 修改 `update.go` 中的 `deepinRepoURL`，传递玲珑版本号给 `daily.bash` → commit 2
 5. 强推到 origin/main（**不创建 PR**）
 
@@ -76,8 +76,10 @@ webengine/dtk5 仓库基础来自 org.deepin.runtime，额外需要应用补丁�
 QtWebEngine 相关的环境变量和 package 依赖（dtk5 则是 Qt6 -> Qt5 切换）。
 
 补丁存放在 runtime 仓库的 `patches/<仓库名>/` 目录下（如 `patches/org.deepin.runtime.webengine/`、`patches/org.deepin.runtime.dtk5/`），
-脚本通过 `_find_repo_patches()` 自动查找该目录下的所有 `.patch` 文件。
-补丁随 runtime 仓库一起维护，不再依赖 skill 内静态文件。
+脚本先同步 runtime 官方仓库，再通过 `_find_repo_patches(runtime_repo_path, ...)`
+查找该目录下的所有 `.patch` 文件。不能从 webengine/dtk5 目标仓库自身查找，
+因为目标仓库 reset/clean 后不保证包含该目录。补丁缺失时命令会直接失败，避免跳过
+必需补丁后继续生成错误的 fork 仓库。
 
 应用方式（对 webengine 和 dtk5 仓库）：
 - 对目录下每个 `.patch` 文件，先 `git apply --check --reverse` 检查是否已应用

@@ -865,15 +865,71 @@ def _infer_version(deb_repo: str, cfg: Dict[str, Any] = None) -> str:
     _log(f"从 deb 仓库推断 DTK 版本: {new_ver} (dtkcore {m.group(1)}, arch={arch})")
     return new_ver
 
-def _find_repo_patches(repo_path: str, repo_name: str) -> List[str]:
-    """从 runtime 仓库的 patches/<repo_name>/ 目录查找补丁文件，按文件名排序返回。"""
-    patches_dir = Path(repo_path) / "patches" / repo_name
+def _sync_runtime_base_repo(repo_path: str) -> None:
+    """将本地 runtime 缓存同步到官方仓库的最新默认分支。
+
+    webengine/dtk5 的代码基线和补丁都来自 runtime 仓库。仅确认本地 clone
+    存在并不足够：缓存可能仍停留在旧提交，甚至 HEAD 指向上一次生成的更新
+    分支。因此这里显式 fetch 官方 upstream，并把本地 main/master 重置到最新
+    默认分支，确保后续 runtime-base/HEAD 和 patches/ 使用同一份最新代码。
+    """
+    upstream = subprocess.run(
+        ["git", "-C", repo_path, "remote", "get-url", "upstream"],
+        capture_output=True, text=True)
+    if upstream.returncode == 0:
+        _run(["git", "-C", repo_path, "remote", "set-url", "upstream",
+              RUNTIME_REPO_URL])
+    else:
+        _run(["git", "-C", repo_path, "remote", "add", "upstream",
+              RUNTIME_REPO_URL])
+
+    _log("同步 runtime 官方仓库最新代码...")
+    _run(["git", "-C", repo_path, "fetch", "upstream", "--prune"])
+    _run(["git", "-C", repo_path, "remote", "set-head", "upstream", "-a"],
+         check=False)
+
+    # 优先读取 upstream/HEAD 指向的真实分支；旧仓库没有远程 HEAD 时回退。
+    symbolic = subprocess.run(
+        ["git", "-C", repo_path, "symbolic-ref", "--short",
+         "refs/remotes/upstream/HEAD"],
+        capture_output=True, text=True)
+    candidates = []
+    if symbolic.returncode == 0 and symbolic.stdout.strip():
+        candidates.append(symbolic.stdout.strip())
+    candidates.extend(["upstream/main", "upstream/master"])
+
+    base = None
+    for candidate in dict.fromkeys(candidates):
+        verified = subprocess.run(
+            ["git", "-C", repo_path, "rev-parse", "--verify", candidate],
+            capture_output=True, text=True)
+        if verified.returncode == 0:
+            base = candidate
+            break
+    if base is None:
+        raise RuntimeError("无法确定 runtime upstream 默认分支（尝试了 main/master）")
+
+    local_branch = base.rsplit("/", 1)[-1]
+    git_dir = subprocess.run(
+        ["git", "-C", repo_path, "rev-parse", "--absolute-git-dir"],
+        capture_output=True, text=True)
+    if git_dir.returncode == 0 and (Path(git_dir.stdout.strip()) / "rebase-apply").exists():
+        _run(["git", "-C", repo_path, "am", "--abort"], check=False)
+    _run(["git", "-C", repo_path, "checkout", "--", "."], check=False)
+    _run(["git", "-C", repo_path, "clean", "-fd"], check=False)
+    _run(["git", "-C", repo_path, "checkout", "-B", local_branch, base])
+    _log(f"runtime 基线已同步到 {base}")
+
+
+def _find_repo_patches(runtime_repo_path: str, repo_name: str) -> List[str]:
+    """从 runtime 仓库的 patches/<repo_name>/ 目录查找补丁文件。"""
+    patches_dir = Path(runtime_repo_path) / "patches" / repo_name
     if not patches_dir.is_dir():
-        _log(f"补丁目录不存在: {patches_dir}", "WARN")
+        _log(f"补丁目录不存在: {patches_dir}", "ERROR")
         return []
     patches = sorted(patches_dir.glob("*.patch"))
     if not patches:
-        _log(f"补丁目录为空: {patches_dir}", "WARN")
+        _log(f"补丁目录为空: {patches_dir}", "ERROR")
         return []
     return [str(p) for p in patches]
 
@@ -986,14 +1042,15 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
         pr_url = result.stdout.strip()
     print(f"\n  PR: {pr_url}\n")
 
-    _log(f"PR 已创建: {pr_url}，请手动合并或使用 --check 查询状态")
+    _log(f"PR 已创建: {pr_url}，请手动合并或使用 gh pr view 查询状态")
     return True
 def _update_fork_repo(label: str, repo_path: str, version: str,
                            deb_repo: str,
                            runtime_repo_path: str) -> bool:
     """更新 fork 仓库（webengine/dtk5）：以 runtime 为基准，补丁 + 脚本各一 commit，强推 main。"""
     _log(f"--- {label} ---")
-    # 1. 以 runtime 最新代码为基准
+    # 1. 先同步 runtime 官方仓库；fork 的代码基线和补丁均来自该缓存。
+    _sync_runtime_base_repo(runtime_repo_path)
     _run(["git", "-C", repo_path, "remote", "remove", "runtime-base"], check=False)
     _run(["git", "-C", repo_path, "remote", "add", "runtime-base", runtime_repo_path])
     _run(["git", "-C", repo_path, "fetch", "runtime-base"])
@@ -1007,7 +1064,7 @@ def _update_fork_repo(label: str, repo_path: str, version: str,
     _run(["git", "-C", repo_path, "reset", "--hard", "runtime-base/HEAD"])
 
     # 2. 应用补丁 -> commit 1（git am 保留原始 commit 信息）
-    patch_files = _find_repo_patches(repo_path, label)
+    patch_files = _find_repo_patches(runtime_repo_path, label)
     if patch_files:
         for patch_path in patch_files:
             # 检查是否已应用
@@ -1032,7 +1089,8 @@ def _update_fork_repo(label: str, repo_path: str, version: str,
                     _run(["git", "-C", repo_path, "am", "--abort"], check=False)
                     return False
     else:
-        _log("未找到补丁，跳过", "WARN")
+        _log(f"{label} 必需补丁不存在，停止更新以避免生成错误仓库", "ERROR")
+        return False
 
     # 3. 修改 update.go + 执行 daily.bash → commit 2（daily.bash 内部调用 update.go 更新 linglong.yaml）
     _update_deepin_repo_url(repo_path, deb_repo)

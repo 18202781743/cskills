@@ -142,24 +142,23 @@ python3 scripts/linglong-update.py update-repo \
 
 **输入**: Step 2 产出的 deb 仓库地址（`--deb-repo`）  **产物**: GitHub 仓库代码已更新（runtime 创建 PR 并合并，webengine 强推 origin/main）
 
-修改 org.deepin.runtime、org.deepin.runtime.webengine 和 org.deepin.runtime.dtk5 三个仓库的 `linglong.yaml`。两个仓库的更新流程不同：
+修改 org.deepin.runtime、org.deepin.runtime.webengine 和 org.deepin.runtime.dtk5 三个仓库的 `linglong.yaml`。两类仓库的更新流程不同：
 
 **runtime 仓库**（默认）:
-1. fetch origin → checkout main → reset to origin/HEAD
-2. 创建/复用固定分支 `update/linglong-runtime`
+1. 配置 `origin=<用户 fork>`、`upstream=linglongdev`，fetch 官方 upstream 最新代码
+2. 从 `upstream/HEAD` 强制重建固定分支 `update/linglong-runtime`
 3. 修改 `update.go` 中的 `deepinRepoURL` 为新的 deb 仓库地址
 4. 将玲珑版本号传递给 `daily.bash`，由 `update.go` + `daily.bash` 自动更新 `linglong.yaml`
-5. 分支已存在则 `git commit --amend`，否则新建 commit
-6. 创建 fork（如不存在），强推到 fork 分支
-7. 创建 PR 到 upstream（如 PR 已存在则复用）
-8. PR 创建后返回，不等待合并（需手动合并或后续用 `--check` 查询）
+5. 创建单个更新 commit，强推到 fork 的固定分支
+6. 创建 PR 到 upstream（如 PR 已存在则复用）
+7. PR 创建后返回，不等待合并；该阶段没有 `update-repo --check`，使用 GitHub 页面或 `gh pr view` 查询
 
 > `linglong.yaml` 的版本号和仓库 URL 由 `update.go` 和 `daily.bash` 自动更新，脚本不直接修改 `linglong.yaml`。
 
 **Fork 仓库**（`--repo webengine` / `--repo dtk5`）:
-1. 以 runtime 仓库本地副本为基准（通过 `runtime-base` remote 引用）
-2. reset 到 runtime-base/HEAD
-3. 用 `git am` 应用 `patches/<仓库名>/（如 `patches/org.deepin.runtime.webengine/` 或 `patches/org.deepin.runtime.dtk5/`）` 下的补丁（保留原始 commit 信息）→ commit 1
+1. 先从官方 `upstream` 同步 runtime 本地缓存到最新默认分支
+2. 以同步后的 runtime 仓库为基准（通过 `runtime-base` remote 引用），reset 到 `runtime-base/HEAD`
+3. 从 runtime 仓库读取 `patches/<仓库名>/`（如 `patches/org.deepin.runtime.webengine/` 或 `patches/org.deepin.runtime.dtk5/`），用 `git am` 应用补丁（保留原始 commit 信息）→ commit 1；补丁缺失则停止
 4. 修改 `update.go` 中的 `deepinRepoURL`，传递玲珑版本号给 `daily.bash` → commit 2
 5. 强推到 origin/main（不创建 PR）
 
@@ -255,7 +254,7 @@ python3 scripts/linglong-update.py push-layer --check \
 - `crp_branch` 是 Git 分支过滤（传给 CRP 的筛选分支名），与 CRP 平台分支名（通过 BranchID `129` 映射到 `crimson-testing`）是不同概念
 - Fork 推送目标可通过 `config` 配置 `fork_owner`，或通过 `--fork-owner` 指定；未配置时自动探测 `gh api user`
 - Jenkins 凭证独立存储于 `~/.config/linglong-runtime-update/jenkins_creds.json`（base64 混淆，600 权限）
-- fork 仓库补丁存放于 runtime 仓库的 `patches/<仓库名>/` 目录（如 `patches/org.deepin.runtime.webengine/`、`patches/org.deepin.runtime.dtk5/`），脚本通过 `_find_repo_patches()` 自动查找
+- fork 仓库补丁存放于 runtime 仓库的 `patches/<仓库名>/` 目录（如 `patches/org.deepin.runtime.webengine/`、`patches/org.deepin.runtime.dtk5/`）；脚本会先同步 runtime 官方 `upstream`，再从 runtime 缓存中查找，缺失时停止更新
 
 ## 缓存目录结构
 
