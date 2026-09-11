@@ -78,10 +78,11 @@ def _test_build_repo():
     print("=" * 60)
     _mock_auth()
     cfg = lu.load_config()
-    url = lu.build_repo(cfg, repo_id="test", dry_run=True)
+    # 默认 repo_id 为 auto（表示由自动流程创建），而不是 test 之类无意义后缀
+    url = lu.build_repo(cfg, dry_run=True)
     assert url is not None, "build-repo dry-run should return URL"
-    assert "test" in url, f"URL should contain repo_id: {url}"
-    print(f"  PASS: build-repo dry-run OK, URL={url}")
+    assert "auto" in url, f"URL should contain default repo_id 'auto': {url}"
+    print(f"  PASS: build-repo dry-run OK (默认 repo_id=auto), URL={url}")
 
 
 def _test_update_repo():

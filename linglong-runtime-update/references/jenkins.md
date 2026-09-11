@@ -38,7 +38,7 @@ builds = jc.get_build_trend(job_path)
 ### Job 参数说明
 
 **runtime-repo-update**:
-- `SUFFIX`: 仓库标识，可为空；若设置一般为有意义的标识（如 `test`），而非时间——日期已由 Jenkins 在生成仓库 URL 时体现
+- `SUFFIX`: 仓库标识，可为空。不要添加 `test` 这类无意义后缀：无特殊含义时留空，或使用 `auto` 表示由 skill/自动流程创建——日期已由 Jenkins 在生成仓库 URL 时体现
 - `build-repo` 仅触发构建、不等待完成，使用 `build-repo --check --build-url <URL>` 轮询并提取仓库 URL
 - `--check` 轮询间隔至少 5 分钟；若仍在构建中，等 5 分钟后再查
 

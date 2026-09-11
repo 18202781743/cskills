@@ -101,14 +101,14 @@ python3 scripts/linglong-update.py crp-pack --check \
 触发 Jenkins job `runtime-repo-update` 制作更新仓库。`build-repo` 仅触发构建、不等待完成。
 
 - Jenkins URL: https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/
-- Job 参数: `SUFFIX`（接收 `--repo-id` 传入的仓库标识，可为空；若设置一般为有意义的标识，如 `test`，而非时间——日期已由 Jenkins 在生成仓库 URL 时体现）
+- Job 参数: `SUFFIX`（接收 `--repo-id` 传入的仓库标识，可为空。不要添加 `test` 这类无意义后缀：无特殊含义时留空，或使用 `auto` 表示由 skill/自动流程创建——日期已由 Jenkins 在生成仓库 URL 时体现）
 - **输出**: deb 仓库地址（如 http://10.20.64.92:8080/crimson_runtime/stable_xxx/），作为 Step 3 的 `--deb-repo` 输入
 
 触发后使用该构建的 Jenkins URL 查询，不能把 `repo-id` 当作 `--check` 参数：
 
 ```bash
-# 触发构建
-python3 scripts/linglong-update.py build-repo --repo-id test
+# 触发构建（repo-id 默认 auto，勿用 test 之类无意义后缀；也可 --repo-id "" 留空）
+python3 scripts/linglong-update.py build-repo
 
 # 等待至少 2 分钟后查询状态，间隔至少 5 分钟，构建成功后自动提取仓库地址
 python3 scripts/linglong-update.py build-repo --check --build-url https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/
@@ -119,7 +119,9 @@ python3 scripts/linglong-update.py build-repo --check --build-url https://jenkin
 
 `update-repo` 没有 Jenkins 构建，因此不提供 `--check`。它接收 Step 2 的 deb 仓库地址，更新 GitHub 仓库并输出提交/PR 结果。版本号使用玲珑格式 `X.Y.0.Z`；省略 `--version` 时，脚本从 `--deb-repo` 自动推断 DTK 版本并转换。
 
-runtime 默认使用 fork 工作流：从 `upstream` 最新代码重建 `update/linglong-runtime`，推送到 fork，再向 `linglongdev/org.deepin.runtime` 创建或复用 PR。webengine/dtk5 使用 `--repo webengine`/`--repo dtk5`，应用对应补丁并强推 origin/main。
+runtime 默认使用 fork 工作流：从 `upstream` 最新代码重建 `update/linglong-runtime`，推送到 fork，再向 `linglongdev/org.deepin.runtime` 创建或复用 PR。
+
+**⚠ 顺序约束（重要）**：webengine / dtk5 必须在 **runtime PR 合并后** 再执行 `update-repo --repo webengine` / `--repo dtk5`。脚本在更新 webengine/dtk5 前会校验 `linglongdev/org.deepin.runtime` 的 `main` 分支 `linglong.yaml` 是否已是目标版本；未合并时会直接报错中止，防止 runtime 更新未就绪时 webengine / dtk5 先行推送造成不一致。运行时若报“runtime PR 尚未合并”，请先合并 runtime PR 再重试。
 
 ```bash
 # runtime：版本明确时直接执行
@@ -276,7 +278,7 @@ python3 scripts/linglong-update.py push-layer --check \
 - **Step 3 产物** GitHub 仓库代码已更新（PR 合并后 main 分支为最新）→ **Step 4 隐含输入** Jenkins 从该仓库构建 layer
 - **Step 4 输出** layer 构建产物 URL → **Step 5 输入** `--layer-url`
 
-步骤 3-5 先对 runtime 仓库执行，再依次对 webengine 和 dtk5 仓库执行：
+步骤 3-5 先对 runtime 仓库执行，再依次对 webengine 和 dtk5 仓库执行。**注意**：runtime 的 PR 合并后（`gh pr view <编号> --repo linglongdev/org.deepin.runtime` 状态为 MERGED）才能继续更新 webengine / dtk5，脚本会自动校验并在未合并时中止：
 
 ```bash
 # Step 1: CRP 打包
@@ -289,21 +291,22 @@ python3 scripts/linglong-update.py build-repo --check --build-url <Jenkins构建
 # 产出: http://10.20.64.92:8080/crimson_runtime/stable_xxx/
 
 # Runtime 仓库 (Step 3-5)
-# Step 3: 输入 deb 仓库地址 → 产物: GitHub 仓库代码已更新
+# Step 3: 输入 deb 仓库地址 → 产物: GitHub 仓库代码已更新（生成 runtime PR，需先合并再继续）
 python3 scripts/linglong-update.py update-repo --version 6.7.0.44 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/
+# 等待 runtime PR 合并: gh pr view <编号> --repo linglongdev/org.deepin.runtime --json state (MERGED 后再继续 webengine/dtk5)
 # Step 4: 隐含输入 Step 3 的代码 → 输出 layer 构建 URL
 python3 scripts/linglong-update.py build-layer --repo runtime
 python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>
 # Step 5: 输入 Step 4 产出的 layer URL
 python3 scripts/linglong-update.py push-layer --repo runtime --layer-url <build-layer产出的Jenkins URL>
 
-# Webengine 仓库 (Step 3-5)
+# Webengine 仓库 (Step 3-5) —— 需 runtime PR 已合并，脚本会自动校验
 python3 scripts/linglong-update.py update-repo --version 6.7.0.44 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/ --repo webengine
 python3 scripts/linglong-update.py build-layer --repo webengine
 python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>
 python3 scripts/linglong-update.py push-layer --repo webengine --layer-url <build-layer产出的Jenkins URL>
 
-# DTK5 仓库 (Step 3-5)
+# DTK5 仓库 (Step 3-5) —— 需 runtime PR 已合并，脚本会自动校验
 python3 scripts/linglong-update.py update-repo --version 6.7.0.44 --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/ --repo dtk5
 python3 scripts/linglong-update.py build-layer --repo dtk5
 python3 scripts/linglong-update.py build-layer --check --build-url <Jenkins构建URL>

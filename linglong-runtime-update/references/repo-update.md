@@ -23,6 +23,8 @@
 
 ### 更新流程
 
+> **⚠ 顺序约束（重要）**：当一次更新覆盖 runtime / webengine / dtk5 三个仓库时，必须等 **runtime PR 合并后**再更新 webengine / dtk5。脚本在 `update-repo --repo webengine|dtk5` 时会先校验 `linglongdev/org.deepin.runtime` 的 `main` 分支 `linglong.yaml` 是否已是目标版本（即 runtime PR 已合并），未合并则直接中止并提示先合并 runtime PR，防止 runtime 更新未就绪时 webengine / dtk5 先行推送造成不一致。
+
 1. runtime 配置 `upstream=linglongdev`、`origin=<fork>`，从 `upstream/HEAD` 获取最新基线
 2. 每次重建分支 `update/linglong-runtime`（固定分支名）
 3. **webengine/dtk5**: `git am patches/<仓库名>/*.patch` 应用补丁（三路合并兜底，保留原始 commit 信息）

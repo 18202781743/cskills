@@ -24,7 +24,7 @@ spec.loader.exec_module(lu)
 # 测试参数
 TEST_DTK_VERSION = "6.7.45"
 TEST_LINGLONG_VERSION = "6.7.0.45"  # 玲珑 runtime 版本格式 X.Y.0.Z
-TEST_REPO_ID = "test"
+TEST_REPO_ID = "auto"  # 仓库标识：默认 auto（由自动流程创建），勿用 test 之类无意义后缀
 TEST_DEB_REPO = f"http://10.20.64.92:8080/crimson_runtime/stable_{TEST_REPO_ID}/"
 TEST_LAYER_URL = "https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/999/"
 

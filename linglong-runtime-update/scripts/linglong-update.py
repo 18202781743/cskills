@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import getpass
 import json
 import os
@@ -668,10 +669,10 @@ def build_repo(cfg: Dict[str, Any], repo_id: Optional[str] = None,
     _log("制作更新仓库")
     _log("=" * 60)
 
-    # repo_id 可为空；若设置一般为有意义的标识（如 test），
-    # 不是时间——日期已由 Jenkins 在生成仓库 URL 时体现。
+    # repo_id 用于标识仓库来源：无特殊含义时留空或使用 "auto"（表示由 skill/自动流程创建）；
+    # 不要添加 test 之类的无意义后缀——日期已由 Jenkins 在生成仓库 URL 时体现。
     if repo_id is None:
-        repo_id = input("仓库标识 (可选，有意义的标识如 test，为空则不传): ").strip()
+        repo_id = "auto"
 
     print(f"\n  标识: {repo_id or '(空)'}\n")
 
@@ -764,6 +765,32 @@ def check_repo(cfg, build_url, extract_repo: bool = True):
         _log(f"构建 #{build_number}: {result}", "ERROR")
         return None
 
+def _runtime_main_has_version(version: str) -> bool:
+    """检查 linglongdev/org.deepin.runtime 的 main 分支 linglong.yaml 是否已是目标玲珑版本。
+
+    用于保证 webengine / dtk5 在 runtime PR 合并后再推送：只有 runtime main 已更新到
+    目标版本，才允许同步更新 webengine / dtk5，防止 runtime 更新未就绪时先行推送造成不一致。
+    """
+    try:
+        result = subprocess.run(
+            ["gh", "api", "repos/linglongdev/org.deepin.runtime/contents/linglong.yaml",
+             "--ref", "main", "--jq", ".content"],
+            capture_output=True, text=True, timeout=60)
+        if result.returncode != 0:
+            _log("查询 runtime main linglong.yaml 失败", "WARN")
+            return False
+        content = base64.b64decode(result.stdout.strip()).decode("utf-8", "replace")
+        # 匹配模块版本（形如 X.Y.0.Z），而非 linglong spec 顶层的 version: "1"
+        m = re.search(r'^\s+version:\s*["\']?([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)',
+                      content, re.MULTILINE)
+        current = m.group(1) if m else ""
+        _log(f"runtime main linglong.yaml 当前版本: {current or '(未识别)'}")
+        return current == version
+    except Exception as e:
+        _log(f"检查 runtime PR 合并状态失败: {e}", "WARN")
+        return False
+
+
 # ---------------------------------------------------------------------------
 # Step 3: 仓库更新与 PR
 # ---------------------------------------------------------------------------
@@ -812,6 +839,16 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
         _log(f"  将修改 linglong.yaml 版本为 {version}")
         _log(f"  将修改 linglong.yaml 仓库地址为 {deb_repo}")
         return True
+
+    # 顺序约束：webengine / dtk5 必须在 runtime PR 合并后再更新/推送，
+    # 防止 runtime 更新尚未就绪时 webengine / dtk5 已先行推送造成不一致。
+    if repo in ("webengine", "dtk5") and not _runtime_main_has_version(version):
+        _log("=" * 60)
+        _log(f"runtime PR 尚未合并（runtime main 尚未更新到 {version}）", "ERROR")
+        _log("请先合并 linglongdev/org.deepin.runtime 的 runtime PR，", "ERROR")
+        _log("再执行 update-repo --repo webengine / --repo dtk5 同步推送。", "ERROR")
+        _log("=" * 60)
+        return False
 
     if repo == "webengine":
         if not _update_fork_repo("org.deepin.runtime.webengine",
@@ -1439,7 +1476,7 @@ def _build_parser() -> argparse.ArgumentParser:
   %(prog)s crp-pack                         CRP 打包
   %(prog)s crp-pack --topic "xxx" --branch "crimson-testing"  指定主题和分支
   %(prog)s build-repo                       制作更新仓库
-  %(prog)s build-repo --repo-id test    指定仓库标识
+  %(prog)s build-repo                   制作更新仓库（repo-id 默认 auto，勿用 test 之类无意义后缀）
   %(prog)s update-repo --version 6.7.0.45 --deb-repo http://...
   %(prog)s build-layer                      构建玲珑 Layer
   %(prog)s push-layer                       N8N 推送
@@ -1464,7 +1501,7 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--version", default=None, help="CRP 打包 tag/版本（如 6.7.46）")
             s.add_argument("--check", action="store_true", help="查询当前打包状态（所有包 UPLOAD_OK 才算成功）")
         elif name == "build-repo":
-            s.add_argument("--repo-id", default=None, help="仓库标识（可选，有意义的标识如 test；为空则不传）")
+            s.add_argument("--repo-id", default=None, help="仓库标识（可选：留空或 auto 表示由自动流程创建；不传时默认 auto）")
             s.add_argument("--check", action="store_true", help="查询构建状态并提取仓库地址")
             s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合，如 https://jenkins.cicd.getdeepin.org/view/dtk/job/runtime-repo-update/19/）")
         elif name == "update-repo":

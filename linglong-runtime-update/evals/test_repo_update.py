@@ -110,5 +110,64 @@ class RepoUpdateTests(unittest.TestCase):
         self.assertFalse(any("push" in cmd for cmd in commands))
 
 
+
+
+
+class RuntimePrMergeGateTests(unittest.TestCase):
+    """runtime PR 合并前置校验（webengine/dtk5 必须在 runtime PR 合并后推送）。"""
+
+    @mock.patch.object(lu, "_log")
+    def test_runtime_main_has_version_true_when_main_updated(self, log_mock):
+        yaml = (
+            'version: "1"\n'
+            "  id: org.deepin.runtime.dtk\n"
+            "  version: 6.7.0.49\n"
+            "  description: Deepin Tool Kit Widget\n"
+        )
+        import base64
+        payload = base64.b64encode(yaml.encode()).decode()
+        cp = subprocess.CompletedProcess(["gh", "api"], 0, payload, "")
+        with mock.patch.object(lu.subprocess, "run", return_value=cp) as run_mock:
+            self.assertTrue(lu._runtime_main_has_version("6.7.0.49"))
+            self.assertFalse(lu._runtime_main_has_version("6.7.0.48"))
+        # 应查询 linglongdev/org.deepin.runtime main 的 linglong.yaml
+        cmd = " ".join(run_mock.call_args.args[0])
+        self.assertIn("linglongdev/org.deepin.runtime", cmd)
+        self.assertIn("linglong.yaml", cmd)
+
+    @mock.patch.object(lu, "_log")
+    def test_runtime_main_has_version_false_on_failure(self, log_mock):
+        cp = subprocess.CompletedProcess(["gh", "api"], 1, "", "boom")
+        with mock.patch.object(lu.subprocess, "run", return_value=cp):
+            self.assertFalse(lu._runtime_main_has_version("6.7.0.49"))
+
+    @mock.patch.object(lu, "_update_fork_repo")
+    @mock.patch.object(lu, "_runtime_main_has_version", return_value=False)
+    @mock.patch.object(lu, "_ensure_repos_ready", return_value=True)
+    @mock.patch.object(lu, "_check_gh_auth", return_value=True)
+    def test_webengine_blocked_when_runtime_pr_not_merged(
+            self, gh_mock, repos_mock, version_mock, fork_mock):
+        cfg = {"webengine_repo_path": "/cache/org.deepin.runtime.webengine",
+              "runtime_repo_path": "/cache/org.deepin.runtime"}
+        ok = lu.update_repo(cfg, version="6.7.0.49",
+                            deb_repo="http://repo/stable_x/",
+                            repo="webengine", dry_run=False)
+        self.assertFalse(ok)
+        fork_mock.assert_not_called()
+
+    @mock.patch.object(lu, "_update_fork_repo", return_value=True)
+    @mock.patch.object(lu, "_runtime_main_has_version", return_value=True)
+    @mock.patch.object(lu, "_ensure_repos_ready", return_value=True)
+    @mock.patch.object(lu, "_check_gh_auth", return_value=True)
+    def test_webengine_proceeds_when_runtime_pr_merged(
+            self, gh_mock, repos_mock, version_mock, fork_mock):
+        cfg = {"webengine_repo_path": "/cache/org.deepin.runtime.webengine",
+              "runtime_repo_path": "/cache/org.deepin.runtime"}
+        ok = lu.update_repo(cfg, version="6.7.0.49",
+                            deb_repo="http://repo/stable_x/",
+                            repo="webengine", dry_run=False)
+        self.assertTrue(ok)
+        fork_mock.assert_called_once()
+
 if __name__ == "__main__":
     unittest.main()
