@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/dsg/built-in-icons">
+        <file alias="weather.svg">icons/weather.svg</file>
+        <file alias="weather-dark.svg">icons/weather-dark.svg</file>
+    </qresource>
+</RCC>
