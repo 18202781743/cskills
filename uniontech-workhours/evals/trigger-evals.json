@@ -1,0 +1,10 @@
+{
+  "skill_name": "uniontech-workhours",
+  "cases": [
+    {"prompt": "帮我写今天的周报，内容是排查 V20 更新失败。", "should_trigger": true},
+    {"prompt": "把昨天的工时补到 OA，项目任务和时长按考勤核对。", "should_trigger": true},
+    {"prompt": "本周二和周三的工时保存草稿，暂时不要提交。", "should_trigger": true},
+    {"prompt": "查一下我在统信 OA 的待办审批。", "should_trigger": false},
+    {"prompt": "帮我润色一段要发到群里的文字周报，不需要填 OA。", "should_trigger": false}
+  ]
+}
