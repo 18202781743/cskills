@@ -9,6 +9,15 @@ Categories:
 
 dde-shell 是 DDE 桌面的 Shell 组件，通过 Session 总线上的多个 D-Bus 服务提供任务栏（Dock）、通知、OSD 和任务管理能力。
 
+## CLI 命令
+
+### dde-shell
+
+DDE Shell 框架主程序，是 DDE 桌面环境面板（panel）和小程序（applet）的核心管理框架。
+
+详见 [dde-shell.md](references/cli/dde-shell.md)
+
+
 ## D-Bus 接口
 
 ### 任务栏控制
@@ -56,12 +65,3 @@ dde-shell 通过 DConfig 暴露通知和启动器相关的配置资源。
 启动器搜索行为配置。
 
 详见 [org.deepin.ds.launchpad](references/config/org.deepin.ds.launchpad.md)
-
-## CLI 命令
-
-### dde-shell
-
-DDE Shell 框架主程序，是 DDE 桌面环境面板（panel）和小程序（applet）的核心管理框架。
-
-详见 [dde-shell.md](references/cli/dde-shell.md)
-

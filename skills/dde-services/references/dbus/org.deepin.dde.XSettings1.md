@@ -1,6 +1,6 @@
 # org.deepin.dde.XSettings1 接口参考
 
-该接口提供 X 设置的读写能力，包括颜色、整数、字符串、缩放因子等。
+该接口提供 X 设置的读写能力，包括颜色、整数、字符串、缩放因子。
 
 ## 接口信息
 
@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/XSettings1` |
 | Interface | `org.deepin.dde.XSettings1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 属性读取
 
 #### GetColor
@@ -98,8 +95,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/XSettings1 \
   --method org.deepin.dde.XSettings1.ListProps
 ```
-
-
 ### 属性设置
 
 #### SetColor
@@ -171,8 +166,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/XSettings1 \
   --method org.deepin.dde.XSettings1.SetString "gtk-theme-name" "deepin"
 ```
-
-
 ### 缩放信号
 
 #### SetScaleFactorDone

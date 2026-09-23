@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/ImageBlur1` |
 | Interface | `org.deepin.dde.ImageBlur1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 图像模糊
 
 #### Get
@@ -42,8 +39,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/ImageBlur1 \
   --method org.deepin.dde.ImageBlur1.Delete "wallpaper.jpg"
 ```
-
-
 ### 模糊信号
 
 #### BlurDone

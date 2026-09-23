@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/ControlCenter1` |
 | Interface | `org.deepin.dde.ControlCenter1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 窗口显示控制
 
 #### Show
@@ -84,8 +81,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/ControlCenter1 \
   --method org.deepin.dde.ControlCenter1.ShowHome
 ```
-
-
 ### 页面跳转
 
 #### ShowPage
@@ -143,8 +138,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/ControlCenter1 \
   --method org.deepin.dde.ControlCenter1.GetAllModule
 ```
-
-
 ### 窗口属性
 
 #### Rect（属性）

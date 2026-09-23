@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/AirplaneMode1` |
 | Interface | `org.deepin.dde.AirplaneMode1` |
 | Bus | System |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 飞行模式方法
 
 #### Enable

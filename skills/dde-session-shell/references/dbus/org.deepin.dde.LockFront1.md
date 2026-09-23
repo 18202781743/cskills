@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/LockFront1` |
 | Interface | `org.deepin.dde.LockFront1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 锁屏操作
 
 #### Show
@@ -84,8 +81,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/LockFront1 \
   --method org.deepin.dde.LockFront1.Hibernate true
 ```
-
-
 ### 锁屏属性
 
 #### Visible（属性）

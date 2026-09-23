@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.SessionWatcher` |
-| Object path | `/com/deepin/daemon/SessionWatcher` |
+| Service | `org.deepin.dde.SessionWatcher1` |
+| Object path | `/org/deepin/dde/SessionWatcher1` |
 | Interface | `org.deepin.dde.SessionWatcher1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 会话监控属性
 
 #### Locked（属性）
@@ -28,8 +25,8 @@
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.SessionWatcher \
-  --object-path /com/deepin/daemon/SessionWatcher \
+  --dest org.deepin.dde.SessionWatcher1 \
+  --object-path /org/deepin/dde/SessionWatcher1 \
   --method org.freedesktop.DBus.Properties.Get \
   org.deepin.dde.SessionWatcher1 Locked
 ```
@@ -45,7 +42,7 @@ gdbus call --session \
 
 ```bash
 gdbus monitor --session \
-  --dest org.deepin.dde.SessionWatcher \
-  --object-path /com/deepin/daemon/SessionWatcher
+  --dest org.deepin.dde.SessionWatcher1 \
+  --object-path /org/deepin/dde/SessionWatcher1
 ```
 

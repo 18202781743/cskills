@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.Daemon` |
-| Object path | `/com/deepin/daemon/Daemon` |
+| Service | `org.deepin.dde.Daemon1` |
+| Object path | `/org/deepin/dde/Daemon1` |
 | Interface | `org.deepin.dde.Daemon1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 守护进程方法
 
 #### CallTrace
@@ -24,8 +21,8 @@
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Daemon \
-  --object-path /com/deepin/daemon/Daemon \
+  --dest org.deepin.dde.Daemon1 \
+  --object-path /org/deepin/dde/Daemon1 \
   --method org.deepin.dde.Daemon1.CallTrace
 ```
 
@@ -38,8 +35,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Daemon \
-  --object-path /com/deepin/daemon/Daemon \
+  --dest org.deepin.dde.Daemon1 \
+  --object-path /org/deepin/dde/Daemon1 \
   --method org.deepin.dde.Daemon1.StartPart2
 ```
 

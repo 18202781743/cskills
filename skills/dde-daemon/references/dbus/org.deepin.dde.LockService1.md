@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.LockService` |
-| Object path | `/com/deepin/daemon/LockService` |
+| Service | `org.deepin.dde.LockService1` |
+| Object path | `/org/deepin/dde/LockService1` |
 | Interface | `org.deepin.dde.LockService1` |
 | Bus | System |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 锁屏服务方法
 
 #### CurrentUser
@@ -27,8 +24,8 @@
 
 ```bash
 pkexec gdbus call --system \
-  --dest org.deepin.dde.LockService \
-  --object-path /com/deepin/daemon/LockService \
+  --dest org.deepin.dde.LockService1 \
+  --object-path /org/deepin/dde/LockService1 \
   --method org.deepin.dde.LockService1.CurrentUser
 ```
 
@@ -44,8 +41,8 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest org.deepin.dde.LockService \
-  --object-path /com/deepin/daemon/LockService \
+  --dest org.deepin.dde.LockService1 \
+  --object-path /org/deepin/dde/LockService1 \
   --method org.deepin.dde.LockService1.SwitchToUser "user"
 ```
 

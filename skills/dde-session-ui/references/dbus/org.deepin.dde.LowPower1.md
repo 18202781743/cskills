@@ -1,6 +1,6 @@
 # org.deepin.dde.LowPower1 接口参考
 
-该接口提供低电量提示显示能力。
+该接口提供低电量提示窗口的显示控制能力。
 
 ## 接口信息
 
@@ -11,6 +11,30 @@
 | Interface | `org.deepin.dde.LowPower1` |
 | Bus | Session |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
+### Raise
 
-> 详见源码获取完整的接口定义。
+将低电量提示窗口提升到最前层。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest org.deepin.dde.LowPower1 \
+  --object-path /org/deepin/dde/LowPower1 \
+  --method org.deepin.dde.LowPower1.Raise
+```
+
+### Quit
+
+退出低电量提示程序。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest org.deepin.dde.LowPower1 \
+  --object-path /org/deepin/dde/LowPower1 \
+  --method org.deepin.dde.LowPower1.Quit
+```

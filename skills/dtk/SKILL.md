@@ -9,30 +9,6 @@ Categories:
 
 DTK（Deepin Tool Kit）是 Deepin 桌面环境的开发套件。本 skill 描述 DTK 对外提供的 D-Bus 接口和 DConfig 公共配置能力。
 
-## D-Bus 接口
-
-### 文件拖拽服务
-
-提供跨进程文件拖拽交互能力。拖拽源进程在 Session 总线上注册此接口对象，文件接收方通过 D-Bus 与拖拽源通信，实现拖拽状态查询、进度同步和数据回传。接口使用动态 baseService（拖拽源进程的唯一连接名），接收方从拖拽 MIME 数据中获取 service 名称和会话 UUID 后调用。
-
-详见 [com.deepin.dtk.FileDrag](references/dbus/com.deepin.dtk.FileDrag.md)
-
-## DConfig 配置
-
-DTK 通过 DConfig 暴露两组公共配置资源（appId 为空，所有 DTK 应用共享）。
-
-### DTK 应用偏好配置
-
-控制以下 DTK 应用的外观与行为：主题、动画、滚动条、标题栏、新特性展示、菜单搜索、日志规则。
-
-详见 [org.deepin.dtk.preference](references/config/org.deepin.dtk.preference.md)
-
-### 区域格式配置
-
-控制以下系统的区域格式：语言、日期、时间、数字、货币、纸张。
-
-详见 [org.deepin.region-format](references/config/org.deepin.region-format.md)
-
 ## CLI 命令
 
 ### dci
@@ -113,3 +89,27 @@ SVG 转 PNG 转换工具，将 SVG 矢量图渲染为 PNG 位图。
 
 详见 [dtk6-svgc.md](references/cli/dtk6-svgc.md)
 
+
+## D-Bus 接口
+
+### 文件拖拽服务
+
+提供跨进程文件拖拽交互能力。拖拽源进程在 Session 总线上注册此接口对象，文件接收方通过 D-Bus 与拖拽源通信，实现拖拽状态查询、进度同步和数据回传。接口使用动态 baseService（拖拽源进程的唯一连接名），接收方从拖拽 MIME 数据中获取 service 名称和会话 UUID 后调用。
+
+详见 [com.deepin.dtk.FileDrag](references/dbus/com.deepin.dtk.FileDrag.md)
+
+## DConfig 配置项
+
+DTK 通过 DConfig 暴露两组公共配置资源（appId 为空，所有 DTK 应用共享）。
+
+### DTK 应用偏好配置
+
+控制以下 DTK 应用的外观与行为：主题、动画、滚动条、标题栏、新特性展示、菜单搜索、日志规则。
+
+详见 [org.deepin.dtk.preference](references/config/org.deepin.dtk.preference.md)
+
+### 区域格式配置
+
+控制以下系统的区域格式：语言、日期、时间、数字、货币、纸张。
+
+详见 [org.deepin.region-format](references/config/org.deepin.region-format.md)

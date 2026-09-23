@@ -10,9 +10,6 @@
 | Object path | `/org/kde/StatusNotifierWatcher` |
 | Interface | `org.kde.StatusNotifierWatcher` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 托盘监控属性
 
 #### RegisteredStatusNotifierItems（属性）

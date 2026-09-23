@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.Greeter` |
-| Object path | `/com/deepin/daemon/Greeter` |
+| Service | `org.deepin.dde.Greeter1` |
+| Object path | `/org/deepin/dde/Greeter1` |
 | Interface | `org.deepin.dde.Greeter1` |
 | Bus | System |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### Greeter 方法
 
 #### UpdateGreeterQtTheme
@@ -27,8 +24,8 @@
 
 ```bash
 pkexec gdbus call --system \
-  --dest org.deepin.dde.Greeter \
-  --object-path /com/deepin/daemon/Greeter \
+  --dest org.deepin.dde.Greeter1 \
+  --object-path /org/deepin/dde/Greeter1 \
   --method org.deepin.dde.Greeter1.UpdateGreeterQtTheme
 ```
 

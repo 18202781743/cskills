@@ -10,9 +10,6 @@
 | Object path | `/com/deepin/ScreenSaver` |
 | Interface | `com.deepin.ScreenSaver` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 屏保启动与停止
 
 #### Start
@@ -42,8 +39,6 @@ gdbus call --session \
   --object-path /com/deepin/ScreenSaver \
   --method com.deepin.ScreenSaver.Stop
 ```
-
-
 ### 预览与配置
 
 #### Preview
@@ -129,8 +124,6 @@ gdbus call --session \
   --object-path /com/deepin/ScreenSaver \
   --method com.deepin.ScreenSaver.RefreshScreenSaverList
 ```
-
-
 ### 屏保属性
 
 #### isRunning（属性）

@@ -1,4 +1,4 @@
-# com.deepin.daemon.Accounts1 接口参考
+# org.deepin.dde.Accounts1 接口参考
 
 该接口提供用户和用户组创建、删除、查询和属性管理能力。
 
@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `com.deepin.daemon.Accounts` |
-| Object path | `/com/deepin/daemon/Accounts` |
-| Interface | `com.deepin.daemon.Accounts1` |
+| Service | `org.deepin.dde.Accounts1` |
+| Object path | `/org/deepin/dde/Accounts1` |
+| Interface | `org.deepin.dde.Accounts1` |
 | Bus | System |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 用户管理方法
 
 #### CreateUser
@@ -27,9 +24,9 @@
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.CreateUser "user" "Full Name" 1
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.CreateUser "user" "Full Name" 1
 ```
 
 #### DeleteUser
@@ -44,9 +41,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.DeleteUser "user" true
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.DeleteUser "user" true
 ```
 
 #### FindUserById
@@ -61,9 +58,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.FindUserById 1000
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.FindUserById 1000
 ```
 
 #### FindUserByName
@@ -78,9 +75,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.FindUserByName "user"
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.FindUserByName "user"
 ```
 
 #### RandUserIcon
@@ -95,9 +92,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.RandUserIcon
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.RandUserIcon
 ```
 
 #### IsUsernameValid
@@ -112,9 +109,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.IsUsernameValid "user"
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.IsUsernameValid "user"
 ```
 
 #### IsPasswordValid
@@ -129,12 +126,10 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.IsPasswordValid "password"
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.IsPasswordValid "password"
 ```
-
-
 ### 用户组管理方法
 
 #### CreateGroup
@@ -149,9 +144,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.CreateGroup "group"
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.CreateGroup "group"
 ```
 
 #### DeleteGroup
@@ -166,9 +161,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.DeleteGroup "group"
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.DeleteGroup "group"
 ```
 
 #### GetGroups
@@ -183,9 +178,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.GetGroups
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.GetGroups
 ```
 
 #### GetGroupInfoByName
@@ -200,9 +195,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.GetGroupInfoByName "group"
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.GetGroupInfoByName "group"
 ```
 
 #### GetPresetGroups
@@ -217,8 +212,8 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Accounts \
-  --object-path /com/deepin/daemon/Accounts \
-  --method com.deepin.daemon.Accounts1.GetPresetGroups
+  --dest org.deepin.dde.Accounts1 \
+  --object-path /org/deepin/dde/Accounts1 \
+  --method org.deepin.dde.Accounts1.GetPresetGroups
 ```
 

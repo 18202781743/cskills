@@ -9,6 +9,15 @@ Categories:
 
 xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现，通过 Session 总线提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、访问、全局快捷键、账户和后台管理能力。
 
+## CLI 命令
+
+### xdg-desktop-portal-dde
+
+DDE 的 XDG Desktop Portal 后端实现，为沙箱应用（如 Flatpak）提供访问系统资源（文件选择、屏幕截图、屏幕共享）的 DBus 接口。
+
+详见 [xdg-desktop-portal-dde.md](references/cli/xdg-desktop-portal-dde.md)
+
+
 ## D-Bus 接口
 
 ### 截图
@@ -88,12 +97,3 @@ xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现，通过 Sess
 提供标准 portal 请求关闭能力。
 
 详见 [org.freedesktop.impl.portal.Request.md](references/dbus/org.freedesktop.impl.portal.Request.md)
-
-## CLI 命令
-
-### xdg-desktop-portal-dde
-
-DDE 的 XDG Desktop Portal 后端实现，为沙箱应用（如 Flatpak）提供访问系统资源（文件选择、屏幕截图、屏幕共享）的 DBus 接口。
-
-详见 [xdg-desktop-portal-dde.md](references/cli/xdg-desktop-portal-dde.md)
-

@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/SessionManager1` |
 | Interface | `org.deepin.dde.SessionManager1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 电源操作
 
 #### Logout
@@ -210,8 +207,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/SessionManager1 \
   --method org.deepin.dde.SessionManager1.RequestHibernate
 ```
-
-
 ### 能力查询
 
 #### CanLogout
@@ -283,8 +278,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/SessionManager1 \
   --method org.deepin.dde.SessionManager1.CanHibernate
 ```
-
-
 ### 抑制管理
 
 #### Inhibit
@@ -342,8 +335,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/SessionManager1 \
   --method org.deepin.dde.SessionManager1.GetInhibitors
 ```
-
-
 ### 其他操作
 
 #### Register
@@ -401,8 +392,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/SessionManager1 \
   --method org.deepin.dde.SessionManager1.ToggleDebug
 ```
-
-
 ### 会话管理器属性
 
 #### CurrentSessionPath（属性）

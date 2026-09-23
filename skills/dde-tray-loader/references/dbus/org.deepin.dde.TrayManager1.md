@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/TrayManager1` |
 | Interface | `org.deepin.dde.TrayManager1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 托盘操作
 
 #### EnableNotification
@@ -56,8 +53,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/TrayManager1 \
   --method org.deepin.dde.TrayManager1.Manage
 ```
-
-
 ### 托盘属性
 
 #### TrayIcons（属性）

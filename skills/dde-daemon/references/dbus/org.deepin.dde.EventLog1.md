@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.EventLog` |
-| Object path | `/com/deepin/daemon/EventLog` |
+| Service | `org.deepin.dde.EventLog1` |
+| Object path | `/org/deepin/dde/EventLog1` |
 | Interface | `org.deepin.dde.EventLog1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 事件日志方法
 
 #### WriteEventLog
@@ -24,8 +21,8 @@
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.EventLog \
-  --object-path /com/deepin/daemon/EventLog \
+  --dest org.deepin.dde.EventLog1 \
+  --object-path /org/deepin/dde/EventLog1 \
   --method org.deepin.dde.EventLog1.WriteEventLog "{}"
 ```
 

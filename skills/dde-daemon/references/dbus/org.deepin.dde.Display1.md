@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.Display` |
-| Object path | `/com/deepin/daemon/Display` |
+| Service | `org.deepin.dde.Display1` |
+| Object path | `/org/deepin/dde/Display1` |
 | Interface | `org.deepin.dde.Display1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 显示管理方法
 
 #### ApplyChanges
@@ -24,8 +21,8 @@
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Display \
-  --object-path /com/deepin/daemon/Display \
+  --dest org.deepin.dde.Display1 \
+  --object-path /org/deepin/dde/Display1 \
   --method org.deepin.dde.Display1.ApplyChanges
 ```
 
@@ -38,8 +35,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Display \
-  --object-path /com/deepin/daemon/Display \
+  --dest org.deepin.dde.Display1 \
+  --object-path /org/deepin/dde/Display1 \
   --method org.deepin.dde.Display1.ResetChanges
 ```
 
@@ -52,8 +49,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Display \
-  --object-path /com/deepin/daemon/Display \
+  --dest org.deepin.dde.Display1 \
+  --object-path /org/deepin/dde/Display1 \
   --method org.deepin.dde.Display1.SwitchMode 0 "eDP-1"
 ```
 
@@ -66,8 +63,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Display \
-  --object-path /com/deepin/daemon/Display \
+  --dest org.deepin.dde.Display1 \
+  --object-path /org/deepin/dde/Display1 \
   --method org.deepin.dde.Display1.Save
 ```
 
@@ -80,8 +77,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Display \
-  --object-path /com/deepin/daemon/Display \
+  --dest org.deepin.dde.Display1 \
+  --object-path /org/deepin/dde/Display1 \
   --method org.deepin.dde.Display1.AssociateTouch "eDP-1" "touch0"
 ```
 
@@ -94,8 +91,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Display \
-  --object-path /com/deepin/daemon/Display \
+  --dest org.deepin.dde.Display1 \
+  --object-path /org/deepin/dde/Display1 \
   --method org.deepin.dde.Display1.AssociateTouchByUUID "eDP-1" "uuid"
 ```
 
@@ -108,8 +105,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Display \
-  --object-path /com/deepin/daemon/Display \
+  --dest org.deepin.dde.Display1 \
+  --object-path /org/deepin/dde/Display1 \
   --method org.deepin.dde.Display1.ChangeBrightness 0.5
 ```
 

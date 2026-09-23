@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.Gesture` |
-| Object path | `/com/deepin/daemon/Gesture` |
+| Service | `org.deepin.dde.Gesture1` |
+| Object path | `/org/deepin/dde/Gesture1` |
 | Interface | `org.deepin.dde.Gesture1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 手势管理信号
 
 #### TouchSinglePressGesture
@@ -24,8 +21,8 @@
 
 ```bash
 gdbus monitor --session \
-  --dest org.deepin.dde.Gesture \
-  --object-path /com/deepin/daemon/Gesture
+  --dest org.deepin.dde.Gesture1 \
+  --object-path /org/deepin/dde/Gesture1
 ```
 
 #### TouchLongPressGesture
@@ -37,7 +34,7 @@ gdbus monitor --session \
 
 ```bash
 gdbus monitor --session \
-  --dest org.deepin.dde.Gesture \
-  --object-path /com/deepin/daemon/Gesture
+  --dest org.deepin.dde.Gesture1 \
+  --object-path /org/deepin/dde/Gesture1
 ```
 

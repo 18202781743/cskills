@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/Keybinding1` |
 | Interface | `org.deepin.dde.Keybinding1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 快捷键查询
 
 #### ListAllShortcuts
@@ -126,8 +123,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/Keybinding1 \
   --method org.deepin.dde.Keybinding1.SearchShortcuts "workspace"
 ```
-
-
 ### 快捷键修改
 
 #### ModifyHotkeys
@@ -157,8 +152,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/Keybinding1 \
   --method org.deepin.dde.Keybinding1.Disable "workspace_switch_left"
 ```
-
-
 ### 自定义快捷键
 
 #### AddCustomShortcut
@@ -230,8 +223,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/Keybinding1 \
   --method org.deepin.dde.Keybinding1.DeleteCustomShortcut "custom_1"
 ```
-
-
 ### 快捷键捕获与冲突处理
 
 #### BeginCapture
@@ -289,8 +280,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/Keybinding1 \
   --method org.deepin.dde.Keybinding1.ReplaceHotkey "id1" "<Super>Left" ""
 ```
-
-
 ### 配置管理
 
 #### ReloadConfigs
@@ -376,8 +365,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/Keybinding1 \
   --method org.deepin.dde.Keybinding1.SetCapsLockState 0
 ```
-
-
 ### 键盘锁属性
 
 #### NumLockState（属性）

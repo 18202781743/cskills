@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.LangSelector` |
-| Object path | `/com/deepin/daemon/LangSelector` |
+| Service | `org.deepin.dde.LangSelector1` |
+| Object path | `/org/deepin/dde/LangSelector1` |
 | Interface | `org.deepin.dde.LangSelector1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 语言选择方法
 
 #### GetLocaleList
@@ -24,8 +21,8 @@
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.LangSelector \
-  --object-path /com/deepin/daemon/LangSelector \
+  --dest org.deepin.dde.LangSelector1 \
+  --object-path /org/deepin/dde/LangSelector1 \
   --method org.deepin.dde.LangSelector1.GetLocaleList
 ```
 
@@ -38,8 +35,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.LangSelector \
-  --object-path /com/deepin/daemon/LangSelector \
+  --dest org.deepin.dde.LangSelector1 \
+  --object-path /org/deepin/dde/LangSelector1 \
   --method org.deepin.dde.LangSelector1.GetCurrentLocale
 ```
 
@@ -52,8 +49,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.LangSelector \
-  --object-path /com/deepin/daemon/LangSelector \
+  --dest org.deepin.dde.LangSelector1 \
+  --object-path /org/deepin/dde/LangSelector1 \
   --method org.deepin.dde.LangSelector1.SetLocale "zh_CN.UTF-8"
 ```
 

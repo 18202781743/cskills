@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/Gesture1` |
 | Interface | `org.deepin.dde.Gesture1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 手势查询与修改
 
 #### ListAllGestures
@@ -46,9 +43,6 @@ gdbus call --session \
 #### GetGestureAvaiableActions
 
 获取手势可用动作。
-
-> **待核验**: `actionType` 参数支持固定的动作类型选项，具体选项值待核验源码确认。
-
 - **输入参数**: `actionType`（string, 类型 `s`）：动作类型；`fingerNum`（int32, 类型 `i`）：手指数
 - **返回值**: `s`（string）：可用动作 JSON
 
@@ -58,8 +52,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/Gesture1 \
   --method org.deepin.dde.Gesture1.GetGestureAvaiableActions "swipe" 3
 ```
-
-
 ### 手势信号
 
 #### GestureInfosChanged

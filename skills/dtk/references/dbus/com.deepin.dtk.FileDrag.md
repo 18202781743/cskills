@@ -12,9 +12,6 @@
 | Service | `<dynamic baseService>`（如 `:1.23`） |
 | Object path | `/Ddnd` |
 | Interface | `com.deepin.dtk.FileDrag` |
-
-> **待核验声明**：本文档接口信息基于 dtkgui 源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ## 方法
 
 ### setData

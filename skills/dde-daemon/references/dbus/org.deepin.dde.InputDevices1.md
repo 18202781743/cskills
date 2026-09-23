@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.InputDevices` |
-| Object path | `/com/deepin/daemon/InputDevices` |
+| Service | `org.deepin.dde.InputDevices1` |
+| Object path | `/org/deepin/dde/InputDevices1` |
 | Interface | `org.deepin.dde.InputDevices1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 输入设备管理方法
 
 #### AddLayoutOption
@@ -24,8 +21,8 @@
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.AddLayoutOption "layout"
 ```
 
@@ -38,8 +35,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.AddUserLayout "layout"
 ```
 
@@ -52,8 +49,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.ClearLayoutOption
 ```
 
@@ -66,8 +63,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.DeleteLayoutOption "layout"
 ```
 
@@ -80,8 +77,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.DeleteUserLayout "layout"
 ```
 
@@ -94,8 +91,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.GetLayoutDesc "layout"
 ```
 
@@ -108,8 +105,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.LayoutList
 ```
 
@@ -122,8 +119,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.AllLayoutList
 ```
 
@@ -136,8 +133,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.Reset
 ```
 
@@ -150,8 +147,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.ToggleNextLayout
 ```
 
@@ -164,8 +161,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.InputDevices \
-  --object-path /com/deepin/daemon/InputDevices \
+  --dest org.deepin.dde.InputDevices1 \
+  --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.Enable true
 ```
 

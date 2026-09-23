@@ -6,13 +6,10 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.Audio` |
-| Object path | `/com/deepin/daemon/Audio` |
+| Service | `org.deepin.dde.Audio1` |
+| Object path | `/org/deepin/dde/Audio1` |
 | Interface | `org.deepin.dde.Audio1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 音频管理方法
 
 #### IsPortEnabled
@@ -24,8 +21,8 @@
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.IsPortEnabled "/path/to/port"
 ```
 
@@ -38,8 +35,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.NoRestartPulseAudio true
 ```
 
@@ -52,8 +49,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.Reset
 ```
 
@@ -66,8 +63,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetBluetoothAudioMode "a2dp"
 ```
 
@@ -80,8 +77,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetPort "/path/to/port"
 ```
 
@@ -94,8 +91,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetPortEnabled "/path/to/port" true
 ```
 
@@ -108,8 +105,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetCurrentAudioServer "pulseaudio"
 ```
 
@@ -122,8 +119,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetMono true
 ```
 
@@ -136,8 +133,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.StopAudioService
 ```
 
@@ -150,8 +147,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.Tick
 ```
 
@@ -164,8 +161,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.GetMeter
 ```
 
@@ -178,8 +175,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetBalance 0.5
 ```
 
@@ -192,8 +189,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetFade 0.5
 ```
 
@@ -206,8 +203,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetMute true
 ```
 
@@ -220,8 +217,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.deepin.dde.Audio \
-  --object-path /com/deepin/daemon/Audio \
+  --dest org.deepin.dde.Audio1 \
+  --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.SetVolume 0.5
 ```
 

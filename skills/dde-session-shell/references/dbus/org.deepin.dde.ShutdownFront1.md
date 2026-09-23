@@ -10,9 +10,6 @@
 | Object path | `/org/deepin/dde/ShutdownFront1` |
 | Interface | `org.deepin.dde.ShutdownFront1` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 关机操作
 
 #### Show
@@ -154,8 +151,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/ShutdownFront1 \
   --method org.deepin.dde.ShutdownFront1.UpdateAndReboot
 ```
-
-
 ### 关机属性
 
 #### Visible（属性）

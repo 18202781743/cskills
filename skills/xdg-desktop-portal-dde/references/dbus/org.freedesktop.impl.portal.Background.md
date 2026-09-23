@@ -10,9 +10,6 @@
 | Object path | `/org/freedesktop/portal/desktop` |
 | Interface | `org.freedesktop.impl.portal.Background` |
 | Bus | Session |
-
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
-
 ### 后台管理方法
 
 #### RequestBackground
