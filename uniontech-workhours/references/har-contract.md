@@ -95,6 +95,8 @@ OA 考勤月历的响应结构与 BI 工时接口不同：`result` 以当月日�
 
 ## API 执行顺序
 
+默认通过 `scripts/workhours.py` 执行下面的顺序。它将认证、跨月考勤查询、按周内容合并、草稿 ID 复用和写后回读固化为一个非交互 CLI；计划格式见 `assets/workhours-plan.example.json`。所有命令输出 `web_url=https://oa.uniontech.com/wui/ChanYanWorkHour.html`，便于在网页版核验。只有脚本无法覆盖的诊断场景才直接调用接口，并继续遵守以下契约。
+
 1. 使用当前有效会话查询 `getWorkHourAttendance`、`getWorkHourWeekOrLastWeek` 和 `getProjectTaskFromOA`；优先核对此前确认的默认任务仍有效，再用响应中的项目、任务、阶段、审批人及现有 ID 确认目标。工作内容关键词不决定任务。已提交/审批中的记录不直接覆盖。
 2. 按目标周组装 `workContent` 与逐日小时数，核对周范围、日期、项目、任务、阶段、打卡起止时间、计算依据、拟填工时、异常提醒和工作内容全文。`status=review` 的日期须先取得用户明确时长。不要只展示新增的一行而隐藏同一 `workContent` 中的其他行。必要信息明确后在本轮直接保存草稿，不因展示预览暂停，也不询问是否保存；用户补充内容时重新查询并组装。
 

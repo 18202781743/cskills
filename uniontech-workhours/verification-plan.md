@@ -31,6 +31,9 @@
 | 工时无法由有效考勤可靠计算时必须由用户指定，不猜测 | 对照 `SKILL.md` 输入和缺项、考勤异常规则 | PASS |
 | 项目任务不唯一、当日缺下班卡或多任务工时未分配时不写入 | 对照口语化周报请求章节和考勤异常规则 | PASS |
 | 接口记录与入口文档的保存及提交授权一致 | 对照 `SKILL.md` 默认流程第 5-6 步和接口记录的 API 执行顺序：直接保存并回读、提交另行确认 | PASS |
+| 统一 CLI 默认只预览，草稿写入需 `--apply`，提交需额外 `--confirm-submit` | 运行 `python3 scripts/workhours.py --help` 并由单元测试覆盖计划解析、草稿 ID 复用和已提交记录拒绝 | PASS |
+| CLI 自动保留本周旧内容、过滤跨周文字、同内容重复执行不重复追加 | 运行 `python3 -m unittest discover -s tests -v` 中 `test_workhours.py` | PASS |
+| 查询、预览、写入结果均提供网页版核验入口 | 运行 `python3 scripts/workhours.py web-url` 并检查 `SKILL.md` 回复规范 | PASS |
 | skill 包内引用路径可解析，入口文档不依赖本机 HAR 路径 | 检查 `SKILL.md` 相对链接、接口记录的来源说明和文件存在性 | PASS |
 | 触发范围覆盖口语化周报、补填和草稿，排除纯文字润色及其他 OA 待办 | 检查 `description` 与 `evals/trigger-evals.json` 五个样例；样例格式经 JSON 校验，实际模型触发效果待运行评测 | PASS |
 
