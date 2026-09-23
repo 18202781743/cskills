@@ -163,9 +163,30 @@ class WorkhoursHelpersTest(unittest.TestCase):
             "task_id": 4176,
             "entries": [{"date": monday, "hours": MODULE.decimal_hours(8), "content": "原内容，"}],
         }
-        payload = MODULE.prepare_groups(client, plan, submit=True)[0]["payload"][0]
-        self.assertEqual(payload["hours"], "8.00")
-        self.assertEqual((payload["status"], payload["startLog"], payload["saveUpdateFlag"]), (1, 1, 1))
+        payload = MODULE.prepare_groups(client, plan, submit=True)[0]["payload"]
+        self.assertEqual(len(payload), 7)
+        self.assertEqual(payload[0]["hours"], "8.00")
+        self.assertEqual((payload[0]["status"], payload[0]["startLog"], payload[0]["saveUpdateFlag"]), (1, 1, 1))
+        self.assertEqual(payload[0]["sourceType"], "0")
+        for empty in payload[1:]:
+            self.assertIsNone(empty["hours"])
+            self.assertEqual((empty["status"], empty["startLog"], empty["saveUpdateFlag"]), (0, 1, 1))
+
+    def test_submit_refuses_unplanned_draft_hours(self):
+        monday = date(2026, 9, 21)
+        row = task_row(
+            "2026-09-21 计划内容，\n2026-09-22 其他草稿，",
+            {"workHourDay": "2026-09-21", "hours": "8.00", "status": "0", "id": "42"},
+        )
+        row["two"] = {"workHourDay": "2026-09-22", "hours": "8.00", "status": "0", "id": "43"}
+        client = FakeClient({monday.isoformat(): [row]})
+        plan = {
+            "project_id": 2454,
+            "task_id": 4176,
+            "entries": [{"date": monday, "hours": MODULE.decimal_hours(8), "content": "计划内容，"}],
+        }
+        with self.assertRaisesRegex(RuntimeError, "未包含在计划中"):
+            MODULE.prepare_groups(client, plan, submit=True)
 
     def test_inspect_excludes_completed_rounding_difference(self):
         monday = date(2026, 9, 21)

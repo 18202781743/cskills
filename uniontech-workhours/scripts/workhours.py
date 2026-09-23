@@ -15,6 +15,7 @@ import argparse
 import json
 import re
 import sys
+import time
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
@@ -272,7 +273,13 @@ def find_task_template(client, monday, project_id, task_id):
     )
 
 
-def payload_item(row, target, hours, content, monday, sunday, existing, status):
+def payload_item(row, target, hours, content, monday, sunday, existing, status, submitting=False):
+    if hours is None:
+        hours_value = None
+    elif submitting:
+        hours_value = f"{hours:.2f}"
+    else:
+        hours_value = float(hours)
     return {
         "id": existing.get("id") if existing else None,
         "submitNew": (existing.get("submitNew") or "new") if existing else "new",
@@ -288,15 +295,15 @@ def payload_item(row, target, hours, content, monday, sunday, existing, status):
         "workContent": content,
         "projectStageType": row.get("projectStageType"),
         "projectStageName": row.get("projectStageName"),
-        "sourceType": 0,
+        "sourceType": str(existing.get("sourceType") or "0") if submitting and existing else ("0" if submitting else 0),
         "workHourDay": target.isoformat(),
-        "hours": f"{hours:.2f}" if status == 1 else float(hours),
+        "hours": hours_value,
         "firstDayWeek": monday.isoformat(),
         "lastDayDeek": sunday.isoformat(),
         "processCode": process_code(target),
         "status": status,
-        "startLog": status,
-        "saveUpdateFlag": status,
+        "startLog": 1 if submitting else 0,
+        "saveUpdateFlag": 1 if submitting else 0,
     }
 
 
@@ -322,6 +329,7 @@ def prepare_groups(client, plan, submit=False):
         additions = {entry["date"]: entry["content"] for entry in entries}
         content = merge_week_content(current.get("workContent") if current else "", monday, sunday, additions)
         payload = []
+        entry_by_date = {entry["date"]: entry for entry in entries}
         for entry in entries:
             existing = find_day(current, entry["date"]) if current else None
             old_status = str(existing.get("status")) if existing else None
@@ -330,10 +338,37 @@ def prepare_groups(client, plan, submit=False):
                     raise RuntimeError(f"{entry['date']} 不是已回读的可提交草稿")
             elif existing and old_status != "0":
                 raise RuntimeError(f"{entry['date']} 已非可编辑草稿，状态为 {old_status}")
-            payload.append(payload_item(
-                row, entry["date"], entry["hours"], content, monday, sunday,
-                existing, 1 if submit else 0,
-            ))
+
+        if submit:
+            # The live page submits a complete seven-day task row. Filled drafts
+            # become status 1; empty dates remain status 0 but are still sent.
+            # Existing pending/approved dates are filtered out by the page.
+            for offset in range(7):
+                target = monday + timedelta(days=offset)
+                existing = find_day(current, target)
+                entry = entry_by_date.get(target)
+                old_status = str(existing.get("status")) if existing else None
+                if entry:
+                    payload.append(payload_item(
+                        row, target, entry["hours"], content, monday, sunday,
+                        existing, 1, submitting=True,
+                    ))
+                elif existing and old_status in ("1", "3"):
+                    continue
+                elif existing and existing.get("hours") not in (None, "", "0", "0.00"):
+                    raise RuntimeError(f"{target} 还有未包含在计划中的草稿或退回工时，拒绝一并提交")
+                else:
+                    payload.append(payload_item(
+                        row, target, None, content, monday, sunday,
+                        existing, 0, submitting=True,
+                    ))
+        else:
+            for entry in entries:
+                existing = find_day(current, entry["date"]) if current else None
+                payload.append(payload_item(
+                    row, entry["date"], entry["hours"], content, monday, sunday,
+                    existing, 0,
+                ))
         prepared.append({
             "monday": monday,
             "sunday": sunday,
@@ -354,7 +389,8 @@ def verify_groups(client, plan, groups, expected_status):
         for entry in group["entries"]:
             actual = find_day(row, entry["date"])
             expected_hours = f"{entry['hours']:.2f}"
-            if (not actual or not actual.get("id") or str(actual.get("status")) != str(expected_status)
+            valid_statuses = {"1", "3"} if expected_status == 1 else {str(expected_status)}
+            if (not actual or not actual.get("id") or str(actual.get("status")) not in valid_statuses
                     or actual.get("hours") != expected_hours):
                 raise RuntimeError(f"{entry['date']} 回读校验失败")
             verified.append({
@@ -364,6 +400,41 @@ def verify_groups(client, plan, groups, expected_status):
                 "record_id": actual.get("id"),
             })
     return verified
+
+
+def verify_submission_calendar(client, groups):
+    for group in groups:
+        calendar = {
+            item.get("workHourDay"): item
+            for item in client.calendar(group["monday"], group["sunday"])
+        }
+        for entry in group["entries"]:
+            item = calendar.get(entry["date"].isoformat())
+            if not item:
+                raise RuntimeError(f"{entry['date']} 日历汇总回读缺失")
+            pending = Decimal(str(item.get("noApprovedHours") or 0))
+            approved = Decimal(str(item.get("havedApprovedHours") or 0))
+            if pending + approved < entry["hours"]:
+                raise RuntimeError(f"{entry['date']} 尚未进入待审批或已审批状态")
+
+
+def verify_stable_submission(client, plan, group):
+    consecutive = 0
+    last_error = None
+    verified = []
+    for attempt in range(4):
+        try:
+            verified = verify_groups(client, plan, [group], 1)
+            verify_submission_calendar(client, [group])
+            consecutive += 1
+            if consecutive == 2:
+                return verified
+        except RuntimeError as error:
+            consecutive = 0
+            last_error = error
+        if attempt < 3:
+            time.sleep(2)
+    raise RuntimeError(f"提交状态未稳定：{last_error or '连续回读未通过'}")
 
 
 def public_preview(plan, groups, mode, applied=False, verified=None):
@@ -399,7 +470,10 @@ def run_write(client, args, submit=False):
     verified = []
     for group in groups:
         client.save(group["payload"])
-        verified.extend(verify_groups(client, plan, [group], 1 if submit else 0))
+        if submit:
+            verified.extend(verify_stable_submission(client, plan, group))
+        else:
+            verified.extend(verify_groups(client, plan, [group], 0))
     return public_preview(
         plan, groups, "submitted" if submit else "draft-saved", applied=True, verified=verified,
     )

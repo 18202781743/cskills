@@ -34,6 +34,8 @@
 | 统一 CLI 默认只预览，草稿写入需 `--apply`，提交需额外 `--confirm-submit` | 运行 `python3 scripts/workhours.py --help` 并由单元测试覆盖计划解析、草稿 ID 复用和已提交记录拒绝 | PASS |
 | CLI 自动保留本周旧内容、过滤跨周文字、同内容重复执行不重复追加 | 运行 `python3 -m unittest discover -s tests -v` 中 `test_workhours.py` | PASS |
 | 查询、预览、写入结果均提供网页版核验入口 | 运行 `python3 scripts/workhours.py web-url` 并检查 `SKILL.md` 回复规范 | PASS |
+| 项目工时提交按当前网页行为发送整周 7 天数据，空日期保持 `hours=null/status=0` | 对照 2026-09-23 当前网页构造逻辑，并由 `test_submit_uses_two_decimal_string_and_requires_draft` 覆盖 | PASS |
+| 提交成功不能只看即时 `status=1`，还需日历待审批/已审批小时及稳定回读 | 对照实际发生的短暂状态后回退问题和 `verify_stable_submission` | PASS |
 | skill 包内引用路径可解析，入口文档不依赖本机 HAR 路径 | 检查 `SKILL.md` 相对链接、接口记录的来源说明和文件存在性 | PASS |
 | 触发范围覆盖口语化周报、补填和草稿，排除纯文字润色及其他 OA 待办 | 检查 `description` 与 `evals/trigger-evals.json` 五个样例；样例格式经 JSON 校验，实际模型触发效果待运行评测 | PASS |
 
