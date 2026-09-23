@@ -13,6 +13,7 @@ python3 evals/test_dryrun.py version      # 版本推断（从 deb 仓库解析�
 python3 evals/test_dryrun.py crp-pack     # CRP 打包
 python3 evals/test_dryrun.py build-repo   # 制作更新仓库
 python3 evals/test_dryrun.py update-repo  # 修改 yaml + PR
+python3 evals/test_package_versions.py    # Debian 包版本降级门禁
 python3 evals/test_dryrun.py build-layer  # 构建玲珑 Layer
 python3 evals/test_dryrun.py push-layer   # N8N 推送
 ```
@@ -159,4 +160,3 @@ python3 scripts/linglong-update.py build-layer --repo-url github.com/linglongdev
 ```bash
 python3 scripts/linglong-update.py push-layer --layer-url https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/205/
 ```
-

@@ -53,8 +53,12 @@ DTK5_REPO_URL = "https://github.com/linglongdev/org.deepin.runtime.dtk5.git"
 
 # CRP 外部工具路径
 _CRP_PACK_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "crp_pack.py")
+_PACKAGE_VERSION_CHECK_SCRIPT = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "check-package-versions.py"
+)
 
 CACHE_DIR = Path.home() / ".cache" / "linglong-runtime-update" / "repos"
+REPORT_DIR = CACHE_DIR.parent / "reports"
 
 
 DEFAULT_CONFIG: Dict[str, Any] = {
@@ -97,6 +101,9 @@ def _check_deps() -> None:
         sys.exit(1)
     if not shutil.which("gh"):
         _log("未找到 gh 命令，请先安装 GitHub CLI", "ERROR")
+        sys.exit(1)
+    if not shutil.which("dpkg"):
+        _log("未找到 dpkg 命令，无法按 Debian 版本规则检查包版本", "ERROR")
         sys.exit(1)
 
 # 配置管理
@@ -799,7 +806,8 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
                 deb_repo: Optional[str] = None,
                 fork_owner: Optional[str] = None,
                 repo: str = "runtime",
-                dry_run: bool = False) -> bool:
+                dry_run: bool = False,
+                ignore_package_version_gate: bool = False) -> bool:
     if fork_owner is None:
         fork_owner = cfg.get("fork_owner")
     _log("=" * 60)
@@ -862,7 +870,8 @@ def update_repo(cfg: Dict[str, Any], version: Optional[str] = None,
             return False
     else:
         if not _update_runtime_repo("org.deepin.runtime", cfg["runtime_repo_path"],
-                                     version, deb_repo, fork_owner, cfg):
+                                     version, deb_repo, fork_owner, cfg,
+                                     ignore_package_version_gate):
             return False
 
     _log("仓库更新完成")
@@ -988,10 +997,35 @@ def _update_deepin_repo_url(repo_path: str, repo_url: str) -> None:
         Path(update_go).write_text(new_c)
         _log(f"update.go 仓库地址已更新为 {repo_url}")
 
+
+def _check_package_versions(repo_path: str, base_ref: str) -> bool:
+    """调用独立脚本，阻止已有 Debian 包发生版本降级。"""
+    _log(f"检查包版本是否降级（基线: {base_ref}）...")
+    report_file = REPORT_DIR / (
+        "package-version-check-" + datetime.now().strftime("%Y%m%d-%H%M%S") + ".md"
+    )
+    result = subprocess.run(
+        [sys.executable, _PACKAGE_VERSION_CHECK_SCRIPT,
+         "--repo-path", repo_path, "--base-ref", base_ref,
+         "--report-file", str(report_file)],
+        capture_output=True,
+        text=True,
+    )
+    if result.stdout.strip():
+        for line in result.stdout.strip().splitlines():
+            _log(line)
+    if result.returncode != 0:
+        for line in result.stderr.strip().splitlines():
+            _log(line, "ERROR")
+        _log("包版本检查未通过", "ERROR")
+        return False
+    return True
+
 def _update_runtime_repo(label: str, repo_path: str, version: str,
                          deb_repo: str,
                          fork_owner: Optional[str] = None,
-                         cfg: Optional[Dict[str, Any]] = None) -> bool:
+                         cfg: Optional[Dict[str, Any]] = None,
+                         ignore_package_version_gate: bool = False) -> bool:
     """从 upstream 重建更新分支，推送到 fork 并向 upstream 创建 PR。"""
     _log(f"--- {label} ---")
     repo_slug = f"linglongdev/{label}"
@@ -1047,7 +1081,16 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
     else:
         _log("daily.bash 不存在", "WARN")
 
-    # 4. 基于最新 upstream 创建单个更新提交。
+    # 4. 创建 PR 前检查所有架构的包版本，任何降级都停止后续提交、推送和 PR。
+    if not _check_package_versions(repo_path, "upstream/HEAD"):
+        if not ignore_package_version_gate:
+            _log("停止提交、推送和创建 PR", "ERROR")
+            _log("仅当用户明确要求继续创建 PR 或忽略包版本门禁后，才可使用 "
+                 "--ignore-package-version-gate 重试", "ERROR")
+            return False
+        _log("用户已明确忽略包版本门禁，将带着已报告的降级问题继续提交和创建 PR", "WARN")
+
+    # 5. 基于最新 upstream 创建单个更新提交。
     _run(["git", "-C", repo_path, "add", "-A"])
     msg = (f"chore: update linglong runtime to {version}\n\n"
            f"Update repo URL to {deb_repo}\nVersion: {version}\n\n"
@@ -1055,11 +1098,11 @@ def _update_runtime_repo(label: str, repo_path: str, version: str,
            f"Influence: 更新 DTK 玲珑 runtime 依赖仓库地址和版本")
     _run(["git", "-C", repo_path, "commit", "-m", msg])
 
-    # 5. 仅推送 fork 的 origin，不直接推送 linglongdev upstream。
+    # 6. 仅推送 fork 的 origin，不直接推送 linglongdev upstream。
     _log(f"强推到 fork: {fork_slug}")
     _run(["git", "-C", repo_path, "push", "-f", "origin", branch])
 
-    # 6. 创建或复用 PR
+    # 7. 创建或复用 PR
     existing_pr = subprocess.run(
         ["gh", "pr", "list", "--repo", repo_slug,
          "--state", "open", "--head", f"{fork_slug.split('/')[0]}:{branch}",
@@ -1510,6 +1553,10 @@ def _build_parser() -> argparse.ArgumentParser:
             s.add_argument("--fork-owner", default=None, help="Fork 目标 GitHub 用户/组织（默认从 config 读取或 gh api user 探测）")
             s.add_argument("--repo", default="runtime", choices=["runtime", "webengine", "dtk5"],
                            help="目标仓库: runtime (org.deepin.runtime, 默认), webengine (org.deepin.runtime.webengine), dtk5 (org.deepin.runtime.dtk5)")
+            s.add_argument(
+                "--ignore-package-version-gate", action="store_true",
+                help="即使包版本门禁失败也继续提交并创建 PR；仅在用户明确授权后使用",
+            )
         elif name == "build-layer":
             s.add_argument("--check", action="store_true", help="查询构建状态（不提取仓库地址）")
             s.add_argument("--build-url", default=None, help="Jenkins 构建 URL（与 --check 配合，如 https://jenkins.cicd.getdeepin.org/view/dtk/job/linglong-runtime-build/202/）")
@@ -1558,7 +1605,8 @@ def main() -> int:
             return 0 if r else 1
         elif args.command == "update-repo":
             return 0 if update_repo(cfg, args.version, args.deb_repo,
-                                    args.fork_owner, args.repo, args.dry_run) else 1
+                                    args.fork_owner, args.repo, args.dry_run,
+                                    args.ignore_package_version_gate) else 1
         elif args.command == "build-layer":
             return 0 if build_layer(cfg, repo_url=args.repo_url,
                                     repo=args.repo,

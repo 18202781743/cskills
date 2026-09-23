@@ -169,5 +169,96 @@ class RuntimePrMergeGateTests(unittest.TestCase):
         self.assertTrue(ok)
         fork_mock.assert_called_once()
 
+
+class PackageVersionGateTests(unittest.TestCase):
+    @mock.patch.object(lu, "_log")
+    @mock.patch.object(lu.subprocess, "run")
+    def test_checker_failure_blocks_following_operations(self, run_mock, log_mock):
+        run_mock.return_value = subprocess.CompletedProcess(
+            ["check-package-versions.py"], 1, "",
+            "包版本检查失败：发现 1 个包发生版本降级：\n"
+            "  - linglong.yaml: libfoo: 2.0-1 -> 1.0-1\n",
+        )
+        self.assertFalse(lu._check_package_versions("/repo", "upstream/HEAD"))
+        command = run_mock.call_args.args[0]
+        self.assertIn("--report-file", command)
+        messages = [call.args for call in log_mock.call_args_list]
+        self.assertTrue(any("libfoo" in args[0] for args in messages))
+        self.assertTrue(any("包版本检查未通过" in args[0] for args in messages))
+
+    @mock.patch.object(lu, "_run_gh")
+    @mock.patch.object(lu, "_check_package_versions", return_value=False)
+    @mock.patch.object(lu, "_ensure_fork", return_value="tester/org.deepin.runtime")
+    @mock.patch.object(lu, "_run")
+    @mock.patch.object(lu.subprocess, "run")
+    def test_runtime_update_stops_before_commit_push_and_pr(
+            self, run_mock, command_mock, fork_mock, check_mock, gh_mock):
+        def result_for(cmd, **kwargs):
+            if cmd[-3:] == ["remote", "get-url", "upstream"]:
+                return subprocess.CompletedProcess(cmd, 1, "", "")
+            if cmd[-1:] == ["branch"]:
+                return subprocess.CompletedProcess(cmd, 0, "", "")
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+
+        run_mock.side_effect = result_for
+        with tempfile.TemporaryDirectory() as repo_path:
+            ok = lu._update_runtime_repo(
+                "org.deepin.runtime", repo_path, "6.7.0.50",
+                "http://repo/stable_x", "tester", {},
+            )
+
+        self.assertFalse(ok)
+        check_mock.assert_called_once_with(repo_path, "upstream/HEAD")
+        commands = [call.args[0] for call in command_mock.call_args_list]
+        self.assertFalse(any("commit" in cmd for cmd in commands))
+        self.assertFalse(any("push" in cmd for cmd in commands))
+        gh_mock.assert_not_called()
+
+    @mock.patch.object(lu, "_run_gh")
+    @mock.patch.object(lu, "_check_package_versions", return_value=False)
+    @mock.patch.object(lu, "_ensure_fork", return_value="tester/org.deepin.runtime")
+    @mock.patch.object(lu, "_run")
+    @mock.patch.object(lu.subprocess, "run")
+    def test_explicit_ignore_continues_to_commit_push_and_pr(
+            self, run_mock, command_mock, fork_mock, check_mock, gh_mock):
+        def result_for(cmd, **kwargs):
+            if cmd[-3:] == ["remote", "get-url", "upstream"]:
+                return subprocess.CompletedProcess(cmd, 1, "", "")
+            if cmd[-1:] == ["branch"]:
+                return subprocess.CompletedProcess(cmd, 0, "", "")
+            if cmd[:3] == ["gh", "pr", "list"]:
+                return subprocess.CompletedProcess(
+                    cmd, 0, "https://github.com/linglongdev/org.deepin.runtime/pull/1\n", ""
+                )
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+
+        run_mock.side_effect = result_for
+        with tempfile.TemporaryDirectory() as repo_path:
+            ok = lu._update_runtime_repo(
+                "org.deepin.runtime", repo_path, "6.7.0.50",
+                "http://repo/stable_x", "tester", {},
+                ignore_package_version_gate=True,
+            )
+
+        self.assertTrue(ok)
+        commands = [call.args[0] for call in command_mock.call_args_list]
+        self.assertTrue(any("commit" in cmd for cmd in commands))
+        self.assertTrue(any("push" in cmd for cmd in commands))
+        gh_mock.assert_not_called()
+
+    def test_ignore_gate_cli_flag_defaults_false_and_can_be_explicit(self):
+        common = [
+            "update-repo", "--version", "6.7.0.50",
+            "--deb-repo", "http://repo/stable_x",
+        ]
+        self.assertFalse(
+            lu._build_parser().parse_args(common).ignore_package_version_gate
+        )
+        self.assertTrue(
+            lu._build_parser().parse_args(
+                common + ["--ignore-package-version-gate"]
+            ).ignore_package_version_gate
+        )
+
 if __name__ == "__main__":
     unittest.main()

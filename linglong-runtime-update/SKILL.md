@@ -26,6 +26,7 @@ CRP、Jenkins、N8N 均为内网服务，请求响应缓慢（单次 5-30 秒）
 - Go 环境（`daily.bash` 内部 `go run update.go` 使用）
 - `ll-builder`（`daily.bash` 内部调用 `ll-builder build`）
 - `gh` CLI 已认证
+- `dpkg`（创建 runtime PR 前按 Debian 版本规则检查包版本）
 - 网络代理需配置 `no_proxy=.uniontech.com,.getdeepin.org,10.20.64.92`（内网直连、外网走系统代理）
 
 脚本启动时自动检查上述依赖，缺失会报错退出。
@@ -121,6 +122,36 @@ python3 scripts/linglong-update.py build-repo --check --build-url https://jenkin
 
 runtime 默认使用 fork 工作流：从 `upstream` 最新代码重建 `update/linglong-runtime`，推送到 fork，再向 `linglongdev/org.deepin.runtime` 创建或复用 PR。
 
+**⚠ 包版本门禁（必须通过）**：`daily.bash` 更新完成后、commit/push/创建 PR 前，脚本自动运行 `scripts/check-package-versions.py`，比较 `upstream/HEAD` 与工作区中根目录及各架构 `linglong.yaml` 的 Debian 包版本。`riscv64` 架构默认忽略，不参与门禁；根目录（amd64）及 arm64、loong64、sw64、mips64 等其它架构必须检查。已有包的新版本必须按 Debian 版本规则大于或等于旧版本；新增包不受影响。发现降级时会按“包名 + 旧版本 + 新版本”聚合重复架构，输出问题摘要，并将完整 Markdown 报告保存到 `~/.cache/linglong-runtime-update/reports/package-version-check-<时间>.md`。报告包含包名、版本变化、受影响 YAML/架构和处理要求，并注明忽略了 `riscv64`；必须把报告路径明确告知用户，方便后续逐项修复。随后停止提交、推送和 PR 创建，不得绕过检查创建 PR。
+
+门禁失败后默认停止。只有用户在当前请求中已经明确声明“忽略包门禁”，或看到失败报告后明确要求“继续提交/创建 PR”，才允许在重试时添加 `--ignore-package-version-gate`。普通的“更新 runtime”“创建 PR”等初始任务描述不视为忽略授权，agent 不得自行添加该参数。即使明确忽略，仍须保留并告知用户降级报告路径，在继续前说明存在的降级包数量。
+
+#### 单独运行包版本门禁
+
+不修改仓库、不提交也不创建 PR，只比较当前工作区与指定 Git 基线：
+
+```bash
+python3 scripts/check-package-versions.py \
+  --repo-path ~/.cache/linglong-runtime-update/repos/org.deepin.runtime \
+  --base-ref upstream/HEAD \
+  --report-file ~/.cache/linglong-runtime-update/reports/manual-package-version-check.md
+```
+
+- 返回 `0`：全部已有包版本相等或升级，可以继续创建 PR。
+- 返回 `1`：发现降级；终端输出聚合摘要，完整信息写入 `--report-file`。
+- 返回 `2`：基线、解析、依赖或报告写入异常，同样不得继续创建 PR。
+
+上述命令默认跳过 `riscv64/linglong.yaml`。如需人工复核该架构，显式增加 `--check-riscv64`；该参数只影响独立检查，不改变自动 PR 门禁默认忽略 riscv64 的规则。
+
+门禁失败后，先修复报告中的包并重新检查。若用户明确接受风险并要求继续，再执行：
+
+```bash
+python3 scripts/linglong-update.py update-repo \
+  --version 6.7.0.50 \
+  --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/ \
+  --ignore-package-version-gate
+```
+
 **⚠ 顺序约束（重要）**：webengine / dtk5 必须在 **runtime PR 合并后** 再执行 `update-repo --repo webengine` / `--repo dtk5`。脚本在更新 webengine/dtk5 前会校验 `linglongdev/org.deepin.runtime` 的 `main` 分支 `linglong.yaml` 是否已是目标版本；未合并时会直接报错中止，防止 runtime 更新未就绪时 webengine / dtk5 先行推送造成不一致。运行时若报“runtime PR 尚未合并”，请先合并 runtime PR 再重试。
 
 ```bash
@@ -151,9 +182,10 @@ python3 scripts/linglong-update.py update-repo \
 2. 从 `upstream/HEAD` 强制重建固定分支 `update/linglong-runtime`
 3. 修改 `update.go` 中的 `deepinRepoURL` 为新的 deb 仓库地址
 4. 将玲珑版本号传递给 `daily.bash`，由 `update.go` + `daily.bash` 自动更新 `linglong.yaml`
-5. 创建单个更新 commit，强推到 fork 的固定分支
-6. 创建 PR 到 upstream（如 PR 已存在则复用）
-7. PR 创建后返回，不等待合并；该阶段没有 `update-repo --check`，使用 GitHub 页面或 `gh pr view` 查询
+5. 对除 riscv64 外的所有 `linglong.yaml` 执行 Debian 包版本降级检查；失败时默认停止，只有用户明确授权才能忽略
+6. 创建单个更新 commit，强推到 fork 的固定分支
+7. 创建 PR 到 upstream（如 PR 已存在则复用）
+8. PR 创建后返回，不等待合并；该阶段没有 `update-repo --check`，使用 GitHub 页面或 `gh pr view` 查询
 
 > `linglong.yaml` 的版本号和仓库 URL 由 `update.go` 和 `daily.bash` 自动更新，脚本不直接修改 `linglong.yaml`。
 
@@ -266,6 +298,7 @@ python3 scripts/linglong-update.py push-layer --check \
 │   ├── org.deepin.runtime/          # runtime 仓库本地 clone
 │   └── org.deepin.runtime.webengine/ # webengine 仓库本地 clone
 │   ├── org.deepin.runtime.dtk5/     # dtk5 仓库本地 clone
+└── reports/                          # 包版本降级 Markdown 报告
 ```
 
 脚本启动时自动检查 `go`、`ll-builder`、`gh` 及 Python 模块依赖，缺失会报错退出。
@@ -322,6 +355,7 @@ python3 scripts/linglong-update.py push-layer --repo dtk5 --layer-url <build-lay
 - Python 3.8+ 及 `requests`、`cryptography`、`rsa` 模块
 - Go（系统已安装）
 - `ll-builder`、`gh` CLI
+- `dpkg`（包版本比较）
 - CRP 认证通过外部 `crp_pack.py` 脚本（`Fernet` 加密缓存凭证到 `~/.config/uniontech-oa/`）
 - 网络代理需配置 `no_proxy` 包含 `.uniontech.com`、`.getdeepin.org`、`10.20.64.92`
 

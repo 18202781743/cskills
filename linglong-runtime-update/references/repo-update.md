@@ -7,6 +7,7 @@
 ### 前置条件
 
 - `gh` CLI 已认证（`gh auth status` 通过）
+- `dpkg` 可用（用于 `dpkg --compare-versions`）
 - 仓库若不存在本地，脚本自动 clone 到 `~/.cache/linglong-runtime-update/repos/`：
   - `https://github.com/linglongdev/org.deepin.runtime.git`
   - `https://github.com/linglongdev/org.deepin.runtime.webengine.git`
@@ -30,9 +31,36 @@
 3. **webengine/dtk5**: `git am patches/<仓库名>/*.patch` 应用补丁（三路合并兜底，保留原始 commit 信息）
 4. 修改 `update.go` 中的 `deepinRepoURL` 为新的 deb 仓库地址
 5. 传递玲珑版本号给 `daily.bash` 脚本
-6. `git add -A` → commit → 强推到 fork 的 `origin/update/linglong-runtime`
-7. `gh pr create` 向 upstream 创建 PR（head 为 `<fork-owner>:update/linglong-runtime`）
-8. 命令返回后手动检查 GitHub PR；没有 `--check` 子命令
+6. 运行 `scripts/check-package-versions.py`，以 `upstream/HEAD` 为基线检查根目录和除 riscv64 外的各架构 `linglong.yaml`；任何受检的已有 Debian 包降级都中止
+7. `git add -A` → commit → 强推到 fork 的 `origin/update/linglong-runtime`
+8. `gh pr create` 向 upstream 创建 PR（head 为 `<fork-owner>:update/linglong-runtime`）
+9. 命令返回后手动检查 GitHub PR；没有 `--check` 子命令
+
+### 包版本门禁
+
+runtime 的 `daily.bash` 生成 YAML 后，`update-repo` 自动执行：
+
+```bash
+python3 scripts/check-package-versions.py \
+  --repo-path ~/.cache/linglong-runtime-update/repos/org.deepin.runtime \
+  --base-ref upstream/HEAD \
+  --report-file /tmp/package-version-check.md
+```
+
+脚本从 `.deb` URL 的 `包名_版本_架构.deb` 提取版本，并用 `dpkg --compare-versions` 按 Debian 规则比较（支持 epoch、`~` 和 Debian revision）。相同版本和升级通过；新增包不参与旧版本比较。若存在降级，脚本按“包名 + 旧版本 + 新版本”聚合相同问题，将涉及的 YAML/架构合并展示，返回非零状态。
+
+默认跳过 `riscv64/linglong.yaml`，其它架构均参与门禁。独立运行脚本时可添加 `--check-riscv64` 对 riscv64 做额外复核；自动 `update-repo` 门禁不添加此参数，因此 riscv64 降级不会阻止 PR。输出和 Markdown 报告会明确标记忽略架构为 `riscv64`。
+
+`update-repo` 会把完整 Markdown 报告保存到 `~/.cache/linglong-runtime-update/reports/package-version-check-<时间>.md`，并在错误输出中打印绝对路径。报告包含检查基线、降级记录数、问题包数、每个包的版本变化、影响的 YAML/架构及处理要求。应把该路径告知用户，供后续定位仓库来源并逐项修复。报告位于缓存目录，不会进入 runtime 的提交或 PR。解析失败、基线不存在、缺少 `dpkg` 或报告写入失败同样按失败处理。检查不通过时不得 commit、push 或创建/复用 PR。
+
+门禁失败后默认停止。只有用户已明确声明忽略门禁，或在看到失败报告后明确要求继续提交/创建 PR，才能重试并添加 `--ignore-package-version-gate`。不得根据普通更新或创建 PR 请求自行推断忽略授权。显式忽略只改变是否继续提交，不会取消检查或报告生成：脚本仍会输出并保存全部降级信息。
+
+```bash
+python3 scripts/linglong-update.py update-repo \
+  --version 6.7.0.50 \
+  --deb-repo http://10.20.64.92:8080/crimson_runtime/stable_xxx/ \
+  --ignore-package-version-gate
+```
 
 ### 命令示例
 
