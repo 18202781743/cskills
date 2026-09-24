@@ -333,12 +333,12 @@ gdbus call --session \
 
 ## 兼容性接口说明
 
-上述接口由 dde-osd 模块注册。dde-osd 同时注册了以下通知相关 D-Bus 服务：
+上述通知相关 D-Bus 服务最初由 dde-session-ui 的 dde-osd 模块注册。当前 dde-osd 模块未编译（CMakeLists.txt 中已注释禁用），这些服务由 dde-shell 通过插件提供：
 
-- `org.freedesktop.Notifications`（对象路径 `/org/freedesktop/Notifications`）— 标准 freedesktop 通知接口
-- `org.deepin.dde.Notification1`（对象路径 `/org/deepin/dde/Notification1`）— DDE 扩展通知接口
-- `org.deepin.dde.Osd1`（对象路径 `/`）— OSD 面板接口
+- `org.deepin.dde.Notification1`（对象路径 `/org/deepin/dde/Notification1`）— 由 dde-shell 的 `org.deepin.ds.notificationserver` 和 `org.deepin.ds.notificationcenter` 插件注册，DDE 扩展通知接口
+- `org.deepin.dde.Osd1`（对象路径 `/`）— 由 dde-shell 的 `org.deepin.ds.osd` 插件注册，OSD 面板接口
+- `org.freedesktop.Notifications`（对象路径 `/org/freedesktop/Notifications`）— 由 dde-shell 的 `org.deepin.ds.notificationserver` 插件注册，标准 freedesktop 通知接口
 
 其中，`org.freedesktop.Notifications` 与 `org.deepin.dde.Notification1` 指向同一通知对象，`org.deepin.dde.Notification1` 是标准接口的超集，在标准通知接口功能基础上扩展了通知记录管理、应用通知设置管理、系统通知设置管理、通知中心显示控制等 DDE 专属能力。`org.freedesktop.Notifications` 用于兼容遵循 freedesktop.org Notification 规范的第三方应用，使其无需修改即可在 DDE 环境中正常发送通知。
 
-上述服务名可能与 dde-shell 冲突（dde-shell 也可能注册 `org.freedesktop.Notifications` 等服务名），实际运行时仅一个进程持有这些服务名。
+旧版兼容服务名 `com.deepin.dde.Notification` 和 `com.deepin.dde.osd` 已由 `dde-api-dbus-proxy-v1` 代理转发，不再作为示例使用。
