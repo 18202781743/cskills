@@ -1,6 +1,6 @@
 # dde-dconfig 命令参考
 
-DDE 配置（dconfig）命令行管理工具，用于管理 DTK 提供的配置策略系统（dconfig）。
+DDE 配置（DConfig）命令行管理工具，用于管理 DTK 提供的配置策略系统（DConfig）。
 
 ## 基本信息
 
@@ -12,7 +12,7 @@ DDE 配置（dconfig）命令行管理工具，用于管理 DTK 提供的配置�
 
 ## 用途
 
-DDE 配置（dconfig）命令行管理工具，用于管理 DTK 提供的配置策略系统（dconfig）。dconfig 是 DDE 中统一的配置管理中心，允许应用通过标准化的配置描述文件声明可配置项，用户和系统可以对这些配置项进行读写操作。该工具支持列出所有可配置的应用和配置项、查询指定配置项的值和元信息、设置和重置配置项的值、监听配置变化以及启动图形化配置编辑器。典型使用场景包括：系统管理员批量调整应用配置、开发者在调试时查看和修改配置项、运维脚本中自动化配置管理。
+DDE 配置（DConfig）命令行管理工具，用于管理 DTK 提供的配置策略系统（DConfig）。DConfig 是 DDE 中统一的配置管理中心，允许应用通过标准化的配置描述文件声明可配置项，用户和系统可以对这些配置项进行读写操作。该工具支持列出所有可配置的应用和配置资源、查询指定配置项的值和元信息、设置和重置配置项的值、监听配置变化以及启动图形化配置编辑器。典型使用场景包括：系统管理员批量调整应用配置、开发者在调试时查看和修改配置项、运维脚本中自动化配置管理。
 
 ## 用法
 
@@ -57,22 +57,14 @@ dde-dconfig list
 # org.deepin.dde.dock
 # ...
 
-# 列出指定应用的所有配置项
+# 列出指定 appId 的所有配置资源（包括公共资源）
 dde-dconfig list -a org.deepin.dde.appearance
-# 输出示例（部分）：
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/assets/cupertino/icons-hour.json
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/assets/cupertino/icons-minute.json
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/assets/cupertino/icons-second.json
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance.gschema
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/font-clockfont-size
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/gtk-theme
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/icon-theme
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/Font_Size
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/Font_Serif
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/Font_Mono
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/Font_Standard
-# org.deepin.dde.appearance.application/org.deepin.dde.appearance/ActiveFont
-# ...
+# 输出示例：
+# org.deepin.dtk.preference
+# example
+# org.deepin.dde.appearance
+# org.deepin.region-format
+# org.deepin.application-agreement
 
 # 查询 appearance 的 Font_Size 配置值
 dde-dconfig get -a org.deepin.dde.appearance -k Font_Size
@@ -111,7 +103,7 @@ dde-dconfig get -a org.deepin.dde.appearance -k Font_Size -u 1000
 # 输出：
 # 10.5
 
-# 启动 dconfig 图形化编辑器
+# 启动 DConfig 图形化编辑器
 dde-dconfig gui
 
 # 使用位置参数简写方式查询配置值（等价于 -a 和 -k）
