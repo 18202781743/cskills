@@ -32,6 +32,8 @@ gdbus call --system \
 
 #### acquireManager
 
+> **兼容性接口**：此方法为旧版兼容接口，功能与 `acquireManagerV2` 相同，用于获取配置管理器对象。与当前版本 `acquireManagerV2` 的区别在于不含 `uid` 参数（内部使用默认 uid 0）。保留此接口仅为兼容历史调用方，新代码应使用 `acquireManagerV2`。
+
 获取指定应用和资源的配置管理器对象。
 
 - **输入参数**: `appid`（string, 类型 `s`）：应用 ID；`name`（string, 类型 `s`）：资源名；`subpath`（string, 类型 `s`）：子路径
