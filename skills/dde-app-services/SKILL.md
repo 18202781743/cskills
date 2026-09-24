@@ -1,13 +1,13 @@
 ---
 name: dde-app-services
-description: dde-app-services 是 DDE 的 DConfig 配置管理服务组件，提供统一的系统配置管理能力。通过 D-Bus 接口提供配置管理器对象获取、配置值读写与重置、元信息查询、配置更新同步、用户配置数据移除、配置热加载的全局 DConfig 管理功能，以及仅作用于 dde-dconfig-daemon 自身的日志规则设置功能；同时提供 dde-dconfig、dde-dconfig-daemon、dde-dconfig-editor 命令行配置管理工具
+description: dde-app-services 是 DDE 的 DConfig 配置管理服务组件，提供统一的系统配置管理能力。通过 D-Bus 接口提供配置管理器对象获取、配置值读写与重置、元信息查询、配置更新同步、用户配置数据移除、配置热加载、管理器对象延迟释放时间设置的全局 DConfig 管理功能，以及仅作用于 dde-dconfig-daemon 自身的日志规则设置功能；同时提供 `dde-dconfig`、`dde-dconfig-daemon`、`dde-dconfig-editor` 命令行配置管理工具
 Categories:
   - Settings
 ---
 
 # dde-app-services
 
-dde-app-services 是 DDE 的 DConfig 配置管理服务组件，提供统一的系统配置管理能力。通过 System 总线提供全局的配置管理器对象获取、配置值读写与重置、元信息查询、配置更新同步、用户配置数据移除、配置热加载能力，以及仅作用于 dde-dconfig-daemon 自身的日志规则设置能力。同时提供 dde-dconfig、dde-dconfig-daemon、dde-dconfig-editor 命令行配置管理工具。部分接口需要提权操作。
+dde-app-services 是 DDE 的 DConfig 配置管理服务组件，提供统一的系统配置管理能力。通过 System 总线提供全局的配置管理器对象获取、配置值读写与重置、元信息查询、配置更新同步、用户配置数据移除、配置热加载能力，以及仅作用于 dde-dconfig-daemon 自身的日志规则设置能力。同时提供 `dde-dconfig`、`dde-dconfig-daemon`、`dde-dconfig-editor` 命令行配置管理工具。部分接口需要提权操作。
 
 ## D-Bus 接口
 

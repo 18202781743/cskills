@@ -1,6 +1,6 @@
 # org.desktopspec.ConfigManager 接口参考
 
-该接口提供全局的 DConfig 配置管理器对象获取、更新、同步能力，以及 dde-dconfig-daemon 自身的日志规则设置、用户配置数据移除和配置热加载能力。其中配置管理器对象获取、更新、同步为全局 DConfig 管理功能；日志规则设置（enableVerboseLogging、disableVerboseLogging、setLogRules）仅用于设置 dde-dconfig-daemon 自身的日志级别与行为，而非系统全局日志。
+该接口提供全局的 DConfig 配置管理器对象获取、更新、同步能力，以及用户配置数据移除和配置热加载的全局能力，以及仅作用于 dde-dconfig-daemon 自身的日志规则设置能力。其中配置管理器对象获取、更新、同步为全局 DConfig 管理功能；日志规则设置（enableVerboseLogging、disableVerboseLogging、setLogRules）仅用于设置 dde-dconfig-daemon 自身的日志级别与行为，而非系统全局日志。
 
 ## 接口信息
 

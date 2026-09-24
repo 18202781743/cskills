@@ -6,7 +6,7 @@ DDE 配置（DConfig）命令行管理工具，用于管理 DTK 提供的配置�
 
 | 字段 | 值 |
 |------|------|
-| 所属包名 | `dde-dconfig`（属于 `dde-dconfig-daemon` 包） |
+| 所属包名 | `dde-dconfig-daemon` |
 | 安装路径 | `/usr/bin/dde-dconfig` |
 | DDE 角色 | 用户和开发者均可使用的配置管理命令行工具；系统脚本和运维流程中也常调用 |
 
@@ -75,10 +75,10 @@ dde-dconfig get -a org.deepin.dde.appearance -k Font_Size -m name
 # 输出：
 # Font_Size
 
-# 查询配置项的中文描述（使用 -l 指定语言）
-dde-dconfig get -a org.deepin.dde.appearance -k Font_Size -m description -l zh_CN
+# 查询配置项的描述（使用 -m 指定字段）
+dde-dconfig get -a org.deepin.dde.appearance -k Font_Size -m description
 # 输出：
-# 字体大小
+# The desktop font size
 
 # 查询配置项是否为默认值
 dde-dconfig get -a org.deepin.dde.appearance -k Font_Size -m isDefaultValue
