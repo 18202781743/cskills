@@ -1,6 +1,6 @@
 # org.desktopspec.ConfigManager.Manager 接口参考
 
-该接口为动态获取的配置管理器对象接口，提供配置值读写、重置和元信息查询能力。对象路径通过 `acquireManager` 或 `acquireManagerV2` 方法获取。
+该接口为动态获取的配置管理器对象接口，提供配置值读写、重置和元信息查询能力。对象路径通过 `acquireManagerV2` 方法获取（旧版兼容接口 `acquireManager` 亦可，但不推荐新代码使用）。
 
 ## 接口信息
 
@@ -11,7 +11,6 @@
 | Interface | `org.desktopspec.ConfigManager.Manager` |
 | Bus | System |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
 
 
 ### 配置值读写

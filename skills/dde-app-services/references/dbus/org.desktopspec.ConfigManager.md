@@ -11,7 +11,6 @@
 | Interface | `org.desktopspec.ConfigManager` |
 | Bus | System |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
 
 
 ### 管理器对象获取
@@ -30,29 +29,12 @@ gdbus call --system \
   --method org.desktopspec.ConfigManager.acquireManagerV2 1000 "org.deepin.dde.daemon" "org.deepin.dde.daemon.power" ""
 ```
 
-#### acquireManager
-
-> **兼容性接口**：此方法为旧版兼容接口，功能与 `acquireManagerV2` 相同，用于获取配置管理器对象。与当前版本 `acquireManagerV2` 的区别在于不含 `uid` 参数（内部使用默认 uid 0）。保留此接口仅为兼容历史调用方，新代码应使用 `acquireManagerV2`。
-
-获取指定应用和资源的配置管理器对象。
-
-- **输入参数**: `appid`（string, 类型 `s`）：应用 ID；`name`（string, 类型 `s`）：资源名；`subpath`（string, 类型 `s`）：子路径
-- **返回值**: `o`（object path）：管理器对象路径
-
-```bash
-gdbus call --system \
-  --dest org.desktopspec.ConfigManager \
-  --object-path / \
-  --method org.desktopspec.ConfigManager.acquireManager "org.deepin.dde.daemon" "org.deepin.dde.daemon.power" ""
-```
-
-
 ### 兼容性接口
 
 本接口中存在新旧两个版本的管理器对象获取方法，用于向后兼容：
 
 - `acquireManagerV2`（当前版本）：带 `uid` 参数，支持多用户场景下获取指定用户的配置管理器对象。
-- `acquireManager`（旧版兼容接口）：不含 `uid` 参数（内部使用默认 uid 0），功能与 `acquireManagerV2` 相同。
+- `acquireManager`（旧版兼容接口）：不含 `uid` 参数（内部使用调用方的 uid），功能与 `acquireManagerV2` 相同。
 
 两者功能一致，均为获取配置管理器对象。旧版 `acquireManager` 保留仅为兼容历史调用方，新代码应使用 `acquireManagerV2`。
 
