@@ -98,6 +98,8 @@ SVG 转 PNG 转换工具，将 SVG 矢量图渲染为 PNG 位图。
 
 详见 [com.deepin.dtk.FileDrag](references/dbus/com.deepin.dtk.FileDrag.md)
 
+> **兼容性说明**：dtkgui 仅注册了 `com.deepin.dtk.FileDrag` 一个 D-Bus 接口（对象路径 `/Ddnd`），为当前正在使用的唯一接口，不存在为兼容旧版本而保留的别名或废弃接口。该接口的服务名为动态 baseService（由 D-Bus 守护进程在运行时分配），无固定的 well-known service name，亦无历史兼容服务名。
+
 ## DConfig 配置项
 
 DTK 通过 DConfig 暴露两组公共配置资源（appId 为空，所有 DTK 应用共享）。两组配置的作用范围不同：DTK 应用偏好配置仅作用于 DTK 应用，区域格式配置作用于系统全局。
