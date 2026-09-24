@@ -29,4 +29,6 @@ gdbus call --session \
 
 ## 兼容性说明
 
-dde-polkit-agent 仅注册唯一的 D-Bus 服务 `org.deepin.dde.Polkit1.AuthAgent`，不存在为兼容旧版接口而保留的别名或废弃接口。该接口为当前正在使用的唯一 D-Bus 接口，无历史兼容接口。
+dde-polkit-agent 当前注册的唯一 D-Bus 服务为 `org.deepin.dde.Polkit1.AuthAgent`（对象路径 `/com/deepin/dde/Polkit1/AuthAgent`），这是 V23 接口改造后启用的接口，所有示例均使用此接口。
+
+旧版接口（V23 改造前）使用的服务名为 `com.deepin.Polkit1AuthAgent`（对象路径 `/com/deepin/Polkit1AuthAgent`），已在 V23 接口改造适配（commit f610246）中替换为新接口名，当前代码中不再注册旧服务名，不存在兼容别名。旧接口仅作历史记录，不再可用。

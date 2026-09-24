@@ -17,7 +17,7 @@ dde-polkit-agent 是 DDE 的 PolicyKit 认证代理组件，通过 Session 总�
 
 详见 [org.deepin.dde.Polkit1.AuthAgent.md](references/dbus/org.deepin.dde.Polkit1.AuthAgent.md)
 
-dde-polkit-agent 仅在 Session 总线上注册唯一的 D-Bus 服务 `org.deepin.dde.Polkit1.AuthAgent`（对象路径 `/com/deepin/dde/Polkit1/AuthAgent`），不存在为兼容旧版接口而保留的别名或废弃接口。该接口为当前正在使用的唯一 D-Bus 接口。
+dde-polkit-agent 在 Session 总线上注册 D-Bus 服务 `org.deepin.dde.Polkit1.AuthAgent`（对象路径 `/com/deepin/dde/Polkit1/AuthAgent`），这是 V23 接口改造后启用的当前唯一 D-Bus 接口。旧版接口使用服务名 `com.deepin.Polkit1AuthAgent`（对象路径 `/com/deepin/Polkit1AuthAgent`），已在 V23 改造中替换，当前不再注册，仅作历史记录。
 
 ## CLI 命令
 
