@@ -91,7 +91,7 @@ gdbus call --session \
 
 按指定模式显示启动器。
 
-- **功能**：以指定的显示模式打开启动器界面。mode 为 0 表示全屏模式，mode 为 1 表示窗口模式。
+- **功能**：按指定模式显示启动器（接口定义 mode 为 0 表示全屏模式，1 表示窗口模式）。注意：当前实现为空操作，不实际改变启动器显示状态，此方法可能已被废弃。
 - **触发条件**：由外部调用方主动调用，通常在需要以特定模式弹出启动器时触发。
 - **使用场景**：桌面环境组件需要以全屏或窗口模式打开启动器时调用（例如根据屏幕尺寸或用户偏好选择模式）。
 
@@ -137,7 +137,7 @@ gdbus call --session \
 启动器关闭时发出。
 
 - **功能**：通知启动器界面已关闭。
-- **触发条件**：启动器界面被关闭（通过 Exit 方法调用或用户操作关闭）后发出。
+- **触发条件**：启动器可见状态变为 false 时发出，通常由 Hide 或 Toggle 方法调用触发，也可由用户操作（如点击窗口外部、按 Esc 键）触发。
 - **使用场景**：外部组件（如任务栏）需要在启动器关闭后更新自身状态时监听该信号。
 
 - **参数**: 无
@@ -153,7 +153,7 @@ gdbus monitor --session \
 启动器显示时发出。
 
 - **功能**：通知启动器界面已显示。
-- **触发条件**：启动器界面被显示（通过 Show、Toggle 或 ShowByMode 方法调用）后发出。
+- **触发条件**：启动器界面被显示（通过 Show 或 Toggle 方法调用）后发出。
 - **使用场景**：外部组件（如任务栏）需要在启动器显示后更新自身状态时监听该信号。
 
 - **参数**: 无
@@ -188,7 +188,7 @@ dde-launchpad 当前仅导出 `org.deepin.dde.Launcher1` 一个 D-Bus 服务接�
 
 以下为旧版兼容性服务名，由 `dde-api-dbus-proxy-v1` 代理转发，并非 dde-launchpad 自身导出，仅作功能概述：
 
-- `com.deepin.dde.Launcher`：旧版启动器前端服务名，通过 dde-api-dbus-proxy-v1 兼容转发，功能与 `org.deepin.dde.Launcher1` 相同。
-- `com.deepin.dde.daemon.Launcher`：旧版启动器后端服务名，通过 dde-api-dbus-proxy-v1 兼容转发，功能与 `org.deepin.dde.Launcher1` 相同。
+- `com.deepin.dde.Launcher`：旧版启动器前端服务名，通过 `dde-api-dbus-proxy-v1` 兼容转发，功能与 `org.deepin.dde.Launcher1` 相同。
+- `com.deepin.dde.daemon.Launcher`：旧版启动器后端服务名，通过 `dde-api-dbus-proxy-v1` 兼容转发，功能与 `org.deepin.dde.Launcher1` 相同。
 
 这些旧接口已废弃，不应在新代码中使用，新代码应统一使用 `org.deepin.dde.Launcher1`。Dock 相关的历史别名接口属于 dde-shell，不在 dde-launchpad 中。
