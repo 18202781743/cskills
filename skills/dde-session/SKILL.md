@@ -48,3 +48,7 @@ DDE 锁屏快速登录工具，用于在锁屏状态下快速重新登录。
 提供窗口管理器查询和切换能力。
 
 详见 [org.deepin.dde.WMSwitcher1.md](references/dbus/org.deepin.dde.WMSwitcher1.md)
+
+### 兼容性说明
+
+dde-session 导出的三个 D-Bus 服务（`org.deepin.dde.Session1`、`org.deepin.dde.SessionManager1`、`org.deepin.dde.WMSwitcher1`）均为当前正在使用的接口，不存在为兼容旧版历史接口而保留的别名或废弃服务名。dde-session 在启动时通过 `registerService` 注册这三个服务名，未注册任何额外的兼容性服务名。
