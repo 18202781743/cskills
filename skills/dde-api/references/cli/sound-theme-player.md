@@ -16,7 +16,7 @@
 
 ## 用法
 
-`sound-theme-player [options]`
+`/usr/lib/deepin-api/sound-theme-player [options]`
 
 ## 参数
 
@@ -28,11 +28,11 @@
 
 ```bash
 # 默认启动（自动退出开启，空闲后自动退出）
-sound-theme-player
+/usr/lib/deepin-api/sound-theme-player
 
 # 启动并禁用自动退出（保持常驻，适用于持续需要播放声音的场景）
-sound-theme-player -auto-quit false
+/usr/lib/deepin-api/sound-theme-player -auto-quit false
 
 # 显式启用自动退出
-sound-theme-player -auto-quit true
+/usr/lib/deepin-api/sound-theme-player -auto-quit true
 ```

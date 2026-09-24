@@ -1,17 +1,17 @@
 ---
 name: dde-api
-description: 提供图形信息查询、拼音搜索、设备管理、区域设置和声音主题播放的 D-Bus 接口
+description: 提供图像处理、拼音查询、蓝牙设备管理、区域设置、声音主题播放的 D-Bus 接口，以及文件打开、GRUB 主题调整、图片模糊处理、声音主题播放守护进程的 CLI 命令
 Categories:
   - Develop
 ---
 
 # dde-api
 
-dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供图形处理、拼音查询、设备管理、区域设置和声音主题播放能力。
+dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供图像处理、拼音查询、蓝牙设备管理、区域设置和声音主题播放的 D-Bus 接口，同时提供文件打开、GRUB 主题调整、图片模糊处理和声音主题播放守护进程的 CLI 命令。
 
 ## D-Bus 接口
 
-### 图形处理
+### 图像处理
 
 提供图像裁剪、缩放、旋转、模糊、圆角处理能力。
 
@@ -23,7 +23,7 @@ dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供�
 
 详见 [org.deepin.dde.Pinyin1.md](references/dbus/org.deepin.dde.Pinyin1.md)
 
-### 设备管理
+### 蓝牙设备管理
 
 提供蓝牙设备阻止状态查询和解锁能力。
 
@@ -37,7 +37,7 @@ dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供�
 
 ### 声音主题播放
 
-提供声音主题播放控制能力。
+提供声音主题播放控制能力。对应的 CLI 守护进程为 `sound-theme-player`。
 
 详见 [org.deepin.dde.SoundThemePlayer1.md](references/dbus/org.deepin.dde.SoundThemePlayer1.md)
 
@@ -57,13 +57,12 @@ GRUB 主题调整工具，用于根据屏幕分辨率和语言环境自动调整
 
 ### image-blur
 
-图片模糊处理工具，使用高斯模糊算法对图片进行模糊处理。
+图片模糊处理工具，使用高斯模糊算法对图片进行模糊处理。与 `Graphic1` D-Bus 接口的 `BlurImage` 方法不同，该 CLI 工具支持通过 `-sigma` 参数控制模糊强度。
 
 详见 [image-blur.md](references/cli/image-blur.md)
 
 ### sound-theme-player
 
-声音主题播放守护进程，提供 DBus 接口供其他程序播放系统声音。
+声音主题播放守护进程，启动后提供 `org.deepin.dde.SoundThemePlayer1` D-Bus 接口供其他程序播放系统声音。
 
 详见 [sound-theme-player.md](references/cli/sound-theme-player.md)
-
