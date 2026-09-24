@@ -93,3 +93,7 @@ gdbus monitor --session \
   --object-path /org/kde/StatusNotifierWatcher
 ```
 
+
+## 兼容性接口
+
+`org.kde.StatusNotifierWatcher` 是 KDE 标准系统托盘状态通知接口，由 dde-daemon 系统托盘模块在 `org.deepin.dde.TrayManager1` 服务上注册，兼容遵循 KDE StatusNotifierItem 协议的应用程序。

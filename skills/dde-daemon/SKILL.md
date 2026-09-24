@@ -1,6 +1,6 @@
 ---
 name: dde-daemon
-description: dde-daemon 是 DDE 桌面环境的核心后端守护进程，负责管理系统音频、蓝牙、输入设备、显示、账户、电源、语言选择、GRUB2 引导、手势、锁屏、屏幕保护、系统信息、搜索、剪贴板、飞行模式、按键事件、应用商店会话。本 skill 提供 dde-daemon 的系统级 D-Bus 接口文档、CLI 命令使用说明和 DConfig 配置项参考。
+description: dde-daemon 是 DDE 桌面环境的核心后端守护进程，负责管理系统的硬件、外设、账户、电源及系统信息服务。本 skill 提供 dde-daemon 的 D-Bus 接口文档、CLI 命令使用说明和 DConfig 配置项参考。
 Categories:
   - Settings
 ---
