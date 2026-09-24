@@ -32,6 +32,10 @@ dde-tray-loader 自身的托盘插件加载器，负责加载和管理系统托�
 
 详见 [org.deepin.dde.TrayManager1.md](references/dbus/org.deepin.dde.TrayManager1.md)
 
+### 兼容性说明
+
+dde-tray-loader 的 D-Bus 接口（Keyboard1、TrayManager1）服务名稳定，无历史别名或兼容性接口。仓库中 `plugins/dde-dock/dbus/xml/` 目录下的 XML 文件为调用其他服务的客户端代理定义，非本仓库导出的接口；FDO Selection Manager 使用 X11 selection 机制（`_NET_SYSTEM_TRAY`），不属于 D-Bus 接口。
+
 ## DConfig 配置项
 
 dde-tray-loader 自身插件的 DConfig 配置资源，管理任务栏插件默认驻留列表和电源插件充电保护阈值。
