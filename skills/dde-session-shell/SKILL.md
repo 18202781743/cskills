@@ -1,13 +1,13 @@
 ---
 name: dde-session-shell
-description: 提供锁屏界面显示控制、关机界面显示控制和电源操作接口
+description: 提供锁屏程序启动、登录界面显示设置、登录界面亮度初始化、登录欢迎界面运行、手势密码重置的 CLI 命令，锁屏界面显示控制、关机界面显示控制、电源操作的 D-Bus 接口，快速登录开关的 DConfig 配置项
 Categories:
-  - Application
+  - Settings
 ---
 
 # dde-session-shell
 
-dde-session-shell 是 DDE 登录锁屏组件，通过 Session 总线提供锁屏界面显示控制、关机界面显示控制和电源操作能力。
+dde-session-shell 是 DDE 登录锁屏组件，提供锁屏程序、登录界面、关机界面的 CLI 命令工具，通过 Session 总线提供锁屏界面显示控制、关机界面显示控制和电源操作能力，并通过 DConfig 暴露快速登录开关配置。
 
 ## CLI 命令
 
@@ -58,10 +58,10 @@ LightDM Deepin Greeter 的辅助程序，用于在登录过程中处理亮度调
 
 ## DConfig 配置项
 
-dde-session-shell 通过 DConfig 暴露账户快速登录配置资源。
+dde-session-shell 通过 DConfig 暴露快速登录功能的开关配置。该配置由 lightdm-deepin-greeter 读取应用，非系统全局账户配置。
 
-### 账户配置
+### 快速登录开关
 
-快速登录开关配置。
+控制是否启用快速登录功能，开启时开机后自动登录并进入锁屏状态。
 
 详见 [org.deepin.dde.daemon.accounts](references/config/org.deepin.dde.daemon.accounts.md)

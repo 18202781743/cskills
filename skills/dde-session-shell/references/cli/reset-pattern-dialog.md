@@ -16,7 +16,7 @@
 
 ## 用法
 
-`reset-pattern-dialog [options]`
+`/usr/lib/dde-control-center/reset-pattern-dialog [options]`
 
 ## 参数
 
@@ -28,14 +28,14 @@
 | `-f <f>` | 调用者全名 | 是 |
 | `-a <a>` | 调用者应用名 | 是 |
 
-> 注：此二进制未调用 `addHelpOption()`，无 `--help` 输出。以上选项从源码 `QCommandLineParser` 定义中提取。
+> 注：此二进制未调用 `addHelpOption()`，无 `--help` 输出。以上选项从源码 `QCommandLineParser` 定义中提取。该二进制不在默认 PATH 中，需使用完整路径执行。
 
 ## 使用示例
 
 ```bash
 # 重置手势密码：指定旧密码 ID 和新密码 ID
-reset-pattern-dialog --old old-gesture-123 --new new-gesture-456
+/usr/lib/dde-control-center/reset-pattern-dialog --old old-gesture-123 --new new-gesture-456
 
 # 指定调用者信息重置手势密码
-reset-pattern-dialog --old old-gesture-123 --new new-gesture-456 -u testuser -f "Test User" -a dde-lock
+/usr/lib/dde-control-center/reset-pattern-dialog --old old-gesture-123 --new new-gesture-456 -u testuser -f "Test User" -a dde-lock
 ```
