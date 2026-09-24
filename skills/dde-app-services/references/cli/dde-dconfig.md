@@ -55,7 +55,6 @@ dde-dconfig list
 # org.deepin.dde.dconfig
 # org.deepin.dde.desktop
 # org.deepin.dde.dock
-# ...
 
 # 列出指定 appId 的所有配置资源（包括公共资源）
 dde-dconfig list -a org.deepin.dde.appearance
