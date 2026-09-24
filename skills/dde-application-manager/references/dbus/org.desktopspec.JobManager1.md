@@ -8,8 +8,8 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.desktopspec.JobManager1` |
-| Object path | `/org/desktopspec/JobManager1` |
+| Service | `org.desktopspec.ApplicationManager1` |
+| Object path | `/org/desktopspec/ApplicationManager1/JobManager1` |
 | Interface | `org.desktopspec.JobManager1` |
 | Bus | Session |
 
@@ -27,8 +27,8 @@
 
 ```bash
 gdbus monitor --session \
-  --dest org.desktopspec.JobManager1 \
-  --object-path /org/desktopspec/JobManager1
+  --dest org.desktopspec.ApplicationManager1 \
+  --object-path /org/desktopspec/ApplicationManager1/JobManager1
 ```
 
 #### JobRemoved
@@ -37,13 +37,13 @@ gdbus monitor --session \
 
 - **参数**:
   - `job`（object path, 类型 `o`）：任务对象路径
-  - `status`（string, 类型 `s`）：任务最终状态，取值为 `started`、`running`、`finished`、`suspending`、`suspend`、`canceled`
+  - `status`（string, 类型 `s`）：任务最终状态，取值为 `pending`、`running`、`suspending`、`suspended`、`canceled`、`finished`、`failed`
   - `result`（数组, 类型 `av`）：任务结果，调用方需遍历列表判断值的有效性
 
 监听示例：
 
 ```bash
 gdbus monitor --session \
-  --dest org.desktopspec.JobManager1 \
-  --object-path /org/desktopspec/JobManager1
+  --dest org.desktopspec.ApplicationManager1 \
+  --object-path /org/desktopspec/ApplicationManager1/JobManager1
 ```

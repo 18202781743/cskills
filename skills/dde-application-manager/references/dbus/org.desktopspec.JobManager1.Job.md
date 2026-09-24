@@ -6,7 +6,7 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.desktopspec.JobManager1` |
+| Service | `org.desktopspec.ApplicationManager1` |
 | Object path | `<dynamic>` |
 | Interface | `org.desktopspec.JobManager1.Job` |
 | Bus | Session |
@@ -22,35 +22,35 @@
 
 ```bash
 gdbus call --session \
-  --dest org.desktopspec.JobManager1 \
+  --dest org.desktopspec.ApplicationManager1 \
   --object-path <dynamic> \
   --method org.desktopspec.JobManager1.Job.Cancel
 ```
 
 #### Suspend
 
-暂停该任务。成功调用后任务状态先变为 `suspending`，随后变为 `suspend`。
+暂停该任务。成功调用后任务状态先变为 `suspending`，随后变为 `suspended`。
 
 - **输入参数**: 无
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
-  --dest org.desktopspec.JobManager1 \
+  --dest org.desktopspec.ApplicationManager1 \
   --object-path <dynamic> \
   --method org.desktopspec.JobManager1.Job.Suspend
 ```
 
 #### Resume
 
-恢复已暂停的任务。成功调用后恢复异步计算，任务状态变为 `working`。
+恢复已暂停的任务。成功调用后恢复异步计算，任务状态变为 `running`。
 
 - **输入参数**: 无
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
-  --dest org.desktopspec.JobManager1 \
+  --dest org.desktopspec.ApplicationManager1 \
   --object-path <dynamic> \
   --method org.desktopspec.JobManager1.Job.Resume
 ```
@@ -59,7 +59,7 @@ gdbus call --session \
 
 #### Status（属性）
 
-任务当前状态。取值为 `started`、`running`、`finished`、`suspending`、`suspend`、`canceled`。
+任务当前状态。取值为 `pending`、`running`、`suspending`、`suspended`、`canceled`、`finished`、`failed`。
 
 | 属性 | 值 |
 |------|------|
@@ -70,7 +70,7 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.desktopspec.JobManager1 \
+  --dest org.desktopspec.ApplicationManager1 \
   --object-path <dynamic> \
   --method org.freedesktop.DBus.Properties.Get \
   org.desktopspec.JobManager1.Job Status

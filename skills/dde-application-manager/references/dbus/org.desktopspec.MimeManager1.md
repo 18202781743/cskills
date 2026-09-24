@@ -6,8 +6,8 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.desktopspec.MimeManager1` |
-| Object path | `/org/desktopspec/MimeManager1` |
+| Service | `org.desktopspec.ApplicationManager1` |
+| Object path | `/org/desktopspec/ApplicationManager1/MimeManager1` |
 | Interface | `org.desktopspec.MimeManager1` |
 | Bus | Session |
 
@@ -22,8 +22,8 @@
 
 ```bash
 gdbus call --session \
-  --dest org.desktopspec.MimeManager1 \
-  --object-path /org/desktopspec/MimeManager1 \
+  --dest org.desktopspec.ApplicationManager1 \
+  --object-path /org/desktopspec/ApplicationManager1/MimeManager1 \
   --method org.desktopspec.MimeManager1.queryDefaultApplication \
   "text/plain"
 ```
@@ -36,8 +36,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.desktopspec.MimeManager1 \
-  --object-path /org/desktopspec/MimeManager1 \
+  --dest org.desktopspec.ApplicationManager1 \
+  --object-path /org/desktopspec/ApplicationManager1/MimeManager1 \
   --method org.desktopspec.MimeManager1.setDefaultApplication \
   "{'text/plain':'org.deepin.editor'}"
 ```
@@ -50,8 +50,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.desktopspec.MimeManager1 \
-  --object-path /org/desktopspec/MimeManager1 \
+  --dest org.desktopspec.ApplicationManager1 \
+  --object-path /org/desktopspec/ApplicationManager1/MimeManager1 \
   --method org.desktopspec.MimeManager1.unsetDefaultApplication \
   "['text/plain']"
 ```
@@ -65,8 +65,8 @@ gdbus call --session \
 
 ```bash
 gdbus call --session \
-  --dest org.desktopspec.MimeManager1 \
-  --object-path /org/desktopspec/MimeManager1 \
+  --dest org.desktopspec.ApplicationManager1 \
+  --object-path /org/desktopspec/ApplicationManager1/MimeManager1 \
   --method org.desktopspec.MimeManager1.listApplications \
   "text/plain"
 ```
@@ -83,6 +83,6 @@ MIME 信息重新加载时发出。当应用安装/卸载导致 MIME 关联发�
 
 ```bash
 gdbus monitor --session \
-  --dest org.desktopspec.MimeManager1 \
-  --object-path /org/desktopspec/MimeManager1
+  --dest org.desktopspec.ApplicationManager1 \
+  --object-path /org/desktopspec/ApplicationManager1/MimeManager1
 ```
