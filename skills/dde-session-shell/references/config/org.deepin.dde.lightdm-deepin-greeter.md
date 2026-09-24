@@ -32,11 +32,11 @@
 | `defaultLoginPlugin` | 默认的认证插件 | 默认使用的认证插件，默认为空，重启后生效。（**deprecated**）此配置不推荐使用，使用 defaultLoginPlugins 配置替代 | string | readwrite |
 | `designatedLoginPlugins` | 指定的认证插件 | 指定使用的认证插件，优先级最高，会覆盖 defaultLoginPlugins 的值。类型：字符串数组，内部填充插件的 key 值。默认值：空数组。生效时机：重启后生效 | array | readwrite |
 | `defaultLoginPlugins` | 默认的认证插件 | 默认使用的认证插件，优先级次于 designatedLoginPlugins。类型：字符串数组，内部填充插件的 key 值。默认值：空数组。生效时机：重启后生效 | array | readwrite |
-| `loginPluginsDisplayOrder` | 认证插件的优先级 | 认证插件的显示顺序。类型：字符串数组，内部填充插件的 key 值。默认值：空数组。生效时机：重启后生效 | array | readwrite |
-| `loginPluginsAuthOrder` | 认证插件的优先级 | 认证插件的认证优先级，此配置优先级最高，会覆盖其它的优先级设置。类型：字符串数组，内部填充插件的 key 值。默认值：空数组。生效时机：重启后生效 | array | readwrite |
+| `loginPluginsDisplayOrder` | 认证插件展示的顺序 | 认证插件的显示顺序。类型：字符串数组，内部填充插件的 key 值。默认值：空数组。生效时机：重启后生效 | array | readwrite |
+| `loginPluginsAuthOrder` | 认证插件认证的顺序 | 认证插件的认证优先级，此配置优先级最高，会覆盖其它的优先级设置。类型：字符串数组，内部填充插件的 key 值。默认值：空数组。生效时机：重启后生效 | array | readwrite |
 | `showMediaWidget` | 是否显示多媒体控制界面 | 是否显示多媒体控制界面，true-显示，false-隐藏 | bool | readwrite |
 | `accountExpression` | 账户名命名规则 | 账户名命名规则 | string | readwrite |
-| `longPressDisplayPassword` | 是否长按小眼睛显示密码 | 是否长按小眼睛显示密码，true-鼠按长按小眼睛才显示密码，false-鼠标点击一下就一直显示密码 | bool | readwrite |
+| `longPressDisplayPassword` | 是否长按小眼睛显示密码 | 是否长按小眼睛显示密码，true-鼠标长按小眼睛才显示密码，false-鼠标点击一下就一直显示密码 | bool | readwrite |
 
 ## 读写示例
 
