@@ -1,13 +1,13 @@
 ---
 name: dde-control-center
-description: 提供控制中心窗口显示隐藏切换、页面跳转、模块列表获取和全局搜索接口
+description: 提供控制中心应用启动与模块查看的 CLI 命令、控制中心窗口显示控制与页面跳转及全局搜索的 D-Bus 接口、控制中心应用自身的窗口尺寸与模块显示配置的 DConfig 配置项
 Categories:
-  - Settings
+  - Application
 ---
 
 # dde-control-center
 
-dde-control-center 是 DDE 控制中心，通过 Session 总线提供窗口显示控制、页面跳转、模块列表获取和全局搜索能力。
+dde-control-center 是 DDE 控制中心，提供控制中心应用的启动与模块查看 CLI 命令，通过 Session 总线提供窗口显示控制、页面跳转、模块列表获取和全局搜索的 D-Bus 接口，以及控制中心应用自身的窗口尺寸与各模块显示配置的 DConfig 配置项。
 
 ## CLI 命令
 
@@ -34,7 +34,7 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 
 ## DConfig 配置项
 
-dde-control-center 通过 DConfig 暴露窗口尺寸、账户、通用信息、日期时间、显示、个性化和声音配置资源。
+以下 DConfig 配置项均为控制中心应用自身的配置，用于控制控制中心窗口尺寸及各设置模块的显示行为，而非系统全局配置。
 
 ### 控制中心窗口配置
 
