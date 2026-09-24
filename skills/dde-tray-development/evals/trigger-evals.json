@@ -1,0 +1,153 @@
+[
+  {
+    "query": "开发一个 PluginsItemInterfaceV2 网络状态托盘插件。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "任务栏快捷面板增加一个 70x60 的蓝牙开关。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "dde-tray-loader 没有加载我的 api 2.0.0 插件。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "托盘插件右键菜单增加一个可勾选的静音选项。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "快捷面板点击后需要打开详情页并返回主面板。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "处理 MSG_GET_SUPPORT_FLAG 和插件可用状态变化通知。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "任务栏从底部移到左侧后，托盘图标需要旋转。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "允许用户在控制中心隐藏某个托盘插件，并提供亮暗主题图标。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "给 dde-shell 写一个顶栏 Panel 插件。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "用 DAppletBridge 实现两个 Shell 插件通信。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "托盘插件用 DConfig 持久化用户设置，配置 ID 应该怎么命名，meta 文件放哪里。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "托盘插件 CMake 需要 Dtk6::Core，但不依赖 Dtk6::Widget，怎么配置。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "托盘插件使用 DIconTheme 加载主题图标，暗色主题下 findQIcon 返回空图标。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "普通 Qt 应用使用 QSystemTrayIcon 最小化到托盘。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "创建一个 LayerShell 侧边栏窗口。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "控制中心增加任务栏设置页面。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "DIconButton 的 dci 图标不随主题切换。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "开发一个 dde-shell Containment 插件管理 Dock Applet。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "普通 QWidget 程序通过 DBus 打开控制中心。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "托盘插件怎么用 DGuiApplicationHelper 适配亮暗主题图标。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development",
+    "cross_skill": "dtk-development"
+  },
+  {
+    "query": "DTK 的 DAboutDialog 应该放在托盘右键菜单里吗。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "快捷面板增加一个 70x60 的蓝牙开关。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "托盘右键菜单增加一个可勾选的静音选项。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "快捷面板点击后打开详情页并返回主面板。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "快捷面板音量控件需要发送 MSG_ITEM_ACTIVE_STATE。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "托盘插件的详情页返回后控件状态没有刷新。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "控制中心增加蓝牙设置页面。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "DConfig 的 meta 文件覆盖没有生效。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "普通 Qt 程序解析一个 JSON 文件。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "QSystemTrayIcon 的菜单需要支持勾选项。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  }
+]
