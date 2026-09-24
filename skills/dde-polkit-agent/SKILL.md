@@ -1,28 +1,31 @@
 ---
 name: dde-polkit-agent
-description: 提供 polkit 认证代理窗口 ID 设置的 D-Bus 接口和 PolicyKit 认证代理守护进程的 CLI 命令
+description: dde-polkit-agent 是 DDE 的 PolicyKit 认证代理守护进程，负责在用户执行需要特权的操作时弹出图形认证对话框。本 skill 提供 dde-polkit-agent 自身的 CLI 命令参考，以及在 Session 总线上对外暴露的 polkit 认证代理窗口 ID 设置 D-Bus 接口文档。
 Categories:
   - Application
 ---
 
 # dde-polkit-agent
 
-dde-polkit-agent 是 DDE 的 PolicyKit 认证代理组件，通过 Session 总线提供认证代理窗口 ID 设置的 D-Bus 接口，并提供认证代理守护进程的 CLI 命令。
+dde-polkit-agent 是 DDE 的 PolicyKit 认证代理守护进程，负责在用户执行需要特权的操作时弹出图形认证对话框，收集用户密码或指纹认证信息，是 DDE 权限管理的前端组件。该程序在用户会话启动时由 systemd 用户服务 `dde-polkit-agent.service` 自动启动，需要图形显示环境（X11/Wayland）。
 
-## D-Bus 接口
+本 skill 提供以下内容：
 
-### 认证代理
-
-提供 polkit 认证代理窗口 ID 设置能力。
-
-详见 [org.deepin.dde.Polkit1.AuthAgent.md](references/dbus/org.deepin.dde.Polkit1.AuthAgent.md)
-
-dde-polkit-agent 在 Session 总线上注册 D-Bus 服务 `org.deepin.dde.Polkit1.AuthAgent`（对象路径 `/com/deepin/dde/Polkit1/AuthAgent`），这是 V23 接口改造后启用的当前唯一 D-Bus 接口。旧版接口使用服务名 `com.deepin.Polkit1AuthAgent`（对象路径 `/com/deepin/Polkit1AuthAgent`），已在 V23 改造中替换，当前不再注册，仅作历史记录。
+- **CLI 命令**（仅作用于 dde-polkit-agent 自身）：`dde-polkit-agent` 守护进程二进制的用法和选项说明
+- **D-Bus 接口**（全局，Session 总线上对外暴露）：polkit 认证代理窗口 ID 设置接口
 
 ## CLI 命令
 
 ### dde-polkit-agent
 
-DDE 的 PolicyKit 认证代理，负责在用户执行需要特权的操作时弹出认证对话框。
+DDE 的 PolicyKit 认证代理守护进程二进制，由 systemd 用户服务 `dde-polkit-agent.service` 在会话启动时自动启动，通常无需手动运行。
 
 详见 [dde-polkit-agent.md](references/cli/dde-polkit-agent.md)
+
+## D-Bus 接口
+
+### 认证代理
+
+dde-polkit-agent 在 Session 总线上注册 D-Bus 服务 `org.deepin.dde.Polkit1.AuthAgent`（对象路径 `/com/deepin/dde/Polkit1/AuthAgent`），提供 polkit 认证代理窗口 ID 设置能力，供外部应用调用以关联认证窗口。
+
+详见 [org.deepin.dde.Polkit1.AuthAgent.md](references/dbus/org.deepin.dde.Polkit1.AuthAgent.md)

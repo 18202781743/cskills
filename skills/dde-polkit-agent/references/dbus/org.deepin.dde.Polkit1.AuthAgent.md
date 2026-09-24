@@ -1,8 +1,8 @@
 # org.deepin.dde.Polkit1.AuthAgent 接口参考
 
-该接口提供 polkit 认证代理窗口 ID 设置能力。
-
 ## 接口信息
+
+该接口在 **Session 总线**上注册，提供 polkit 认证代理窗口 ID 设置能力，供外部应用调用以关联认证窗口。
 
 | 字段 | 值 |
 |------|------|
@@ -11,14 +11,21 @@
 | Interface | `org.deepin.dde.Polkit1.AuthAgent` |
 | Bus | Session |
 
-### 认证代理方法
+## 方法
 
-#### setWIdForAction
+### setWIdForAction
 
-为指定动作设置窗口 ID。
+为指定 polkit 动作设置窗口 ID。
 
-- **输入参数**: `action_id`（string, 类型 `s`）：动作 ID；`window_id`（uint64, 类型 `t`）：窗口 ID
-- **返回值**: 无
+- **功能**：将调用方应用的窗口 ID 关联到指定的 polkit 动作（action_id），使认证对话框能够正确关联到发起认证请求的窗口。
+- **触发条件**：当外部应用需要在执行特权操作前，将自身窗口 ID 传递给认证代理时调用此方法。
+- **使用场景**：应用在发起需要 polkit 认证的操作前，调用此方法将窗口 ID 传递给认证代理，使认证对话框能与发起窗口正确关联（如窗口居中、窗口归属设置）。
+- **输入参数**：
+  - `action_id`（string, 类型 `s`）：polkit 动作 ID，对应 `/usr/share/polkit-1/actions/` 下 `.policy` 文件中定义的 action id
+  - `window_id`（uint64, 类型 `t`）：窗口 ID（X11 Window ID 或 Wayland window ID）
+- **返回值**：无
+
+## 示例
 
 ```bash
 gdbus call --session \
@@ -29,6 +36,6 @@ gdbus call --session \
 
 ## 兼容性说明
 
-dde-polkit-agent 当前注册的唯一 D-Bus 服务为 `org.deepin.dde.Polkit1.AuthAgent`（对象路径 `/com/deepin/dde/Polkit1/AuthAgent`），这是 V23 接口改造后启用的接口，所有示例均使用此接口。
+当前接口 `org.deepin.dde.Polkit1.AuthAgent`（对象路径 `/com/deepin/dde/Polkit1/AuthAgent`）是 V23 接口改造后启用的唯一 D-Bus 接口，所有示例均使用此接口。
 
-旧版接口（V23 改造前）使用的服务名为 `com.deepin.Polkit1AuthAgent`（对象路径 `/com/deepin/Polkit1AuthAgent`），已在 V23 接口改造适配（commit f610246）中替换为新接口名，当前代码中不再注册旧服务名，不存在兼容别名。旧接口仅作历史记录，不再可用。
+旧版接口（V23 改造前）使用服务名 `com.deepin.Polkit1AuthAgent`（对象路径 `/com/deepin/Polkit1AuthAgent`），已在 V23 接口改造中替换为新接口名，当前不再注册，属于**废弃**接口，仅作历史记录。
