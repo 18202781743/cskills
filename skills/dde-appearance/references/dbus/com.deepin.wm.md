@@ -11,29 +11,89 @@
 | Interface | `com.deepin.wm` |
 | Bus | Session |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
+> **核验来源**：本文档接口信息基于 dde-appearance 源码 D-Bus XML 定义文件 `dbus/com.deepin.wm.xml` 核对，与源码完全一致。该接口在 dde-appearance 中由 `dde-fakewm` 模块注册，在实际 DDE 环境中由真实窗口管理器（如 deepin-kwin）提供同名接口。
+
+## 方法（Methods）
 
 ### 工作区背景
 
-#### GetCurrentWorkspaceBackgrounds
+#### GetCurrentWorkspaceBackground
 
-获取当前工作区背景列表。
+获取当前工作区背景。
 
 - **输入参数**: 无
-- **返回值**: `as`（string 数组）：背景 URI 列表
+- **返回值**: `s`（string）：背景 URI
 
 ```bash
 gdbus call --session \
   --dest com.deepin.wm \
   --object-path /com/deepin/wm \
-  --method com.deepin.wm.GetCurrentWorkspaceBackgrounds
+  --method com.deepin.wm.GetCurrentWorkspaceBackground
+```
+
+#### SetCurrentWorkspaceBackground
+
+设置当前工作区背景。
+
+- **输入参数**: `uri`（string, 类型 `s`）：背景 URI
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.SetCurrentWorkspaceBackground "file:///path/to/wallpaper.jpg"
+```
+
+#### GetWorkspaceBackground
+
+获取指定工作区背景。
+
+- **输入参数**: `index`（int32, 类型 `i`）：工作区索引
+- **返回值**: `s`（string）：背景 URI
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.GetWorkspaceBackground 0
+```
+
+#### SetWorkspaceBackground
+
+设置指定工作区背景。
+
+- **输入参数**:
+  - `index`（int32, 类型 `i`）：工作区索引
+  - `uri`（string, 类型 `s`）：背景 URI
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.SetWorkspaceBackground 0 "file:///path/to/wallpaper.jpg"
+```
+
+#### SetTransientBackground
+
+设置临时背景。
+
+- **输入参数**: `uri`（string, 类型 `s`）：背景 URI
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.SetTransientBackground "file:///path/to/wallpaper.jpg"
 ```
 
 #### GetCurrentWorkspaceBackgroundForMonitor
 
 获取指定显示器的当前工作区背景。
 
-- **输入参数**: `monitorName`（string, 类型 `s`）：显示器名称
+- **输入参数**: `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: `s`（string）：背景 URI
 
 ```bash
@@ -47,14 +107,68 @@ gdbus call --session \
 
 设置指定显示器的当前工作区背景。
 
-- **输入参数**: `monitorName`（string, 类型 `s`）：显示器名称；`uri`（string, 类型 `s`）：背景 URI
+- **输入参数**:
+  - `uri`（string, 类型 `s`）：背景 URI
+  - `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest com.deepin.wm \
   --object-path /com/deepin/wm \
-  --method com.deepin.wm.SetCurrentWorkspaceBackgroundForMonitor "eDP-1" "file:///path/to/wallpaper.jpg"
+  --method com.deepin.wm.SetCurrentWorkspaceBackgroundForMonitor \
+  "file:///path/to/wallpaper.jpg" "eDP-1"
+```
+
+#### GetWorkspaceBackgroundForMonitor
+
+获取指定工作区和显示器的背景。
+
+- **输入参数**:
+  - `index`（int32, 类型 `i`）：工作区索引
+  - `strMonitorName`（string, 类型 `s`）：显示器名称
+- **返回值**: `s`（string）：背景 URI
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.GetWorkspaceBackgroundForMonitor 0 "eDP-1"
+```
+
+#### SetWorkspaceBackgroundForMonitor
+
+设置指定工作区和显示器的背景。
+
+- **输入参数**:
+  - `index`（int32, 类型 `i`）：工作区索引
+  - `strMonitorName`（string, 类型 `s`）：显示器名称
+  - `uri`（string, 类型 `s`）：背景 URI
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.SetWorkspaceBackgroundForMonitor \
+  0 "eDP-1" "file:///path/to/wallpaper.jpg"
+```
+
+#### SetTransientBackgroundForMonitor
+
+设置指定显示器的临时背景。
+
+- **输入参数**:
+  - `uri`（string, 类型 `s`）：背景 URI
+  - `strMonitorName`（string, 类型 `s`）：显示器名称
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.SetTransientBackgroundForMonitor \
+  "file:///path/to/wallpaper.jpg" "eDP-1"
 ```
 
 #### ChangeCurrentWorkspaceBackground
@@ -70,7 +184,6 @@ gdbus call --session \
   --object-path /com/deepin/wm \
   --method com.deepin.wm.ChangeCurrentWorkspaceBackground "file:///path/to/wallpaper.jpg"
 ```
-
 
 ### 工作区切换
 
@@ -146,7 +259,7 @@ gdbus call --session \
 
 #### SwitchToWorkspace
 
-切换工作区方向。
+按方向切换工作区。
 
 - **输入参数**: `backward`（bool, 类型 `b`）：是否向后切换
 - **返回值**: 无
@@ -158,6 +271,37 @@ gdbus call --session \
   --method com.deepin.wm.SwitchToWorkspace false
 ```
 
+### 装饰主题
+
+#### SetDecorationTheme
+
+设置装饰主题。
+
+- **输入参数**:
+  - `themeType`（string, 类型 `s`）：主题类型
+  - `themeName`（string, 类型 `s`）：主题名称
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.SetDecorationTheme "deepin" "default"
+```
+
+#### SetDecorationDeepinTheme
+
+设置 deepin 装饰主题。
+
+- **输入参数**: `deepinThemeName`（string, 类型 `s`）：deepin 主题名称
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.SetDecorationDeepinTheme "default"
+```
 
 ### 快捷键管理
 
@@ -231,52 +375,202 @@ gdbus call --session \
   --method com.deepin.wm.RemoveAccel "workspace_switch_left"
 ```
 
+### 窗口操作
 
-### 装饰主题
+#### SwitchApplication
 
-#### SetDecorationTheme
+在应用程序窗口间切换。
 
-设置装饰主题。
-
-- **输入参数**: `themeType`（string, 类型 `s`）：主题类型；`themeName`（string, 类型 `s`）：主题名称
+- **输入参数**: `backward`（bool, 类型 `b`）：是否向后切换
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest com.deepin.wm \
   --object-path /com/deepin/wm \
-  --method com.deepin.wm.SetDecorationTheme "gtk" "deepin"
+  --method com.deepin.wm.SwitchApplication false
 ```
 
-#### SetDecorationDeepinTheme
+#### TileActiveWindow
 
-设置 deepin 装饰主题。
+将活动窗口平铺到指定方向。
 
-- **输入参数**: `deepinThemeName`（string, 类型 `s`）：主题名称
+- **输入参数**: `side`（uint32, 类型 `u`）：平铺方向
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest com.deepin.wm \
   --object-path /com/deepin/wm \
-  --method com.deepin.wm.SetDecorationDeepinTheme "bloom"
+  --method com.deepin.wm.TileActiveWindow 1
 ```
 
+#### BeginToMoveActiveWindow
 
-### 窗口与多任务
+开始移动活动窗口。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.BeginToMoveActiveWindow
+```
+
+#### ToggleActiveWindowMaximize
+
+切换活动窗口的最大化状态。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.ToggleActiveWindowMaximize
+```
+
+#### MinimizeActiveWindow
+
+最小化活动窗口。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.MinimizeActiveWindow
+```
+
+#### MaximizeActiveWindow
+
+最大化活动窗口。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.MaximizeActiveWindow
+```
+
+#### UnMaximizeActiveWindow
+
+取消最大化活动窗口。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.UnMaximizeActiveWindow
+```
+
+#### ShowWorkspace
+
+显示工作区。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.ShowWorkspace
+```
+
+#### ShowWindow
+
+显示窗口。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.ShowWindow
+```
+
+#### ShowAllWindow
+
+显示所有窗口。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.ShowAllWindow
+```
+
+#### PerformAction
+
+执行指定类型的操作。
+
+- **输入参数**: `type`（int32, 类型 `i`）：操作类型
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.PerformAction 1
+```
+
+#### PreviewWindow
+
+预览指定窗口。
+
+- **输入参数**: `xid`（uint32, 类型 `u`）：窗口 XID
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.PreviewWindow 12345
+```
+
+#### CancelPreviewWindow
+
+取消窗口预览。
+
+- **输入参数**: 无
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm \
+  --method com.deepin.wm.CancelPreviewWindow
+```
 
 #### PresentWindows
 
-展示指定窗口列表。
+呈现指定窗口列表。
 
-- **输入参数**: `xids`（uint32 数组, 类型 `au`）：窗口 ID 列表
+- **输入参数**: `xids`（uint32 数组, 类型 `au`）：窗口 XID 列表
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest com.deepin.wm \
   --object-path /com/deepin/wm \
-  --method com.deepin.wm.PresentWindows [uint32 1, 2]
+  --method com.deepin.wm.PresentWindows "[12345, 12346]"
 ```
 
 #### EnableZoneDetected
@@ -293,12 +587,14 @@ gdbus call --session \
   --method com.deepin.wm.EnableZoneDetected true
 ```
 
+### 多任务与桌面
+
 #### GetMultiTaskingStatus
 
 获取多任务状态。
 
 - **输入参数**: 无
-- **返回值**: `b`（bool）：多任务是否启用
+- **返回值**: `b`（bool）：是否处于多任务状态
 
 ```bash
 gdbus call --session \
@@ -311,7 +607,7 @@ gdbus call --session \
 
 设置多任务状态。
 
-- **输入参数**: `isActive`（bool, 类型 `b`）：是否启用
+- **输入参数**: `isActive`（bool, 类型 `b`）：是否激活
 - **返回值**: 无
 
 ```bash
@@ -323,7 +619,7 @@ gdbus call --session \
 
 #### GetIsShowDesktop
 
-查询是否显示桌面。
+获取是否处于显示桌面状态。
 
 - **输入参数**: 无
 - **返回值**: `b`（bool）：是否显示桌面
@@ -337,7 +633,7 @@ gdbus call --session \
 
 #### SetShowDesktop
 
-设置是否显示桌面。
+设置显示桌面状态。
 
 - **输入参数**: `isShowDesktop`（bool, 类型 `b`）：是否显示桌面
 - **返回值**: 无
@@ -349,10 +645,9 @@ gdbus call --session \
   --method com.deepin.wm.SetShowDesktop true
 ```
 
+## 属性（Properties）
 
-### 窗口管理器属性
-
-#### compositingEnabled（属性）
+#### compositingEnabled
 
 合成器是否启用。
 
@@ -379,7 +674,8 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.wm compositingEnabled <true>
 ```
-#### compositingPossible（属性）
+
+#### compositingPossible
 
 合成器是否可用。
 
@@ -397,7 +693,8 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.wm compositingPossible
 ```
-#### compositingAllowSwitch（属性）
+
+#### compositingAllowSwitch
 
 是否允许切换合成器。
 
@@ -415,7 +712,8 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.wm compositingAllowSwitch
 ```
-#### zoneEnabled（属性）
+
+#### zoneEnabled
 
 区域检测是否启用。
 
@@ -442,7 +740,8 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.wm zoneEnabled <true>
 ```
-#### cursorTheme（属性）
+
+#### cursorTheme
 
 光标主题。
 
@@ -469,7 +768,8 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.wm cursorTheme "<string>"
 ```
-#### cursorSize（属性）
+
+#### cursorSize
 
 光标大小。
 
@@ -497,7 +797,7 @@ gdbus call --session \
   com.deepin.wm cursorSize <int32 24>
 ```
 
-### 窗口管理器信号
+## 信号（Signals）
 
 #### DecorationThemeChanged
 
@@ -516,7 +816,9 @@ gdbus monitor --session \
 
 工作区背景变化时发出。
 
-- **参数**: `index`（int32, 类型 `i`）：工作区索引；`newUri`（string, 类型 `s`）：新背景 URI
+- **参数**:
+  - `index`（int32, 类型 `i`）：工作区索引
+  - `newUri`（string, 类型 `s`）：新背景 URI
 - **触发条件**: 工作区背景被设置时发出
 
 ```bash
@@ -529,7 +831,10 @@ gdbus monitor --session \
 
 指定显示器工作区背景变化时发出。
 
-- **参数**: `index`（int32, 类型 `i`）：工作区索引；`strMonitorName`（string, 类型 `s`）：显示器名称；`uri`（string, 类型 `s`）：新背景 URI
+- **参数**:
+  - `index`（int32, 类型 `i`）：工作区索引
+  - `strMonitorName`（string, 类型 `s`）：显示器名称
+  - `uri`（string, 类型 `s`）：新背景 URI
 - **触发条件**: 指定显示器工作区背景被设置时发出
 
 ```bash
@@ -581,8 +886,153 @@ gdbus monitor --session \
 
 工作区切换时发出。
 
-- **参数**: `from`（int32, 类型 `i`）：原工作区索引；`to`（int32, 类型 `i`）：新工作区索引
+- **参数**:
+  - `from`（int32, 类型 `i`）：原工作区索引
+  - `to`（int32, 类型 `i`）：新工作区索引
 - **触发条件**: 工作区切换时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### BeginToMoveActiveWindowChanged
+
+开始移动活动窗口信号。
+
+- **参数**: 无
+- **触发条件**: 调用 `BeginToMoveActiveWindow` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### SwitchApplicationChanged
+
+应用程序切换信号。
+
+- **参数**: `backward`（bool, 类型 `b`）：是否向后切换
+- **触发条件**: 调用 `SwitchApplication` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### TileActiveWindowChanged
+
+窗口平铺信号。
+
+- **参数**: `side`（int32, 类型 `i`）：平铺方向
+- **触发条件**: 调用 `TileActiveWindow` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### ToggleActiveWindowMaximizeChanged
+
+窗口最大化切换信号。
+
+- **参数**: 无
+- **触发条件**: 调用 `ToggleActiveWindowMaximize` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### MaximizeActiveWindowChanged
+
+窗口最大化信号。
+
+- **参数**: 无
+- **触发条件**: 调用 `MaximizeActiveWindow` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### UnMaximizeActiveWindowChanged
+
+取消窗口最大化信号。
+
+- **参数**: 无
+- **触发条件**: 调用 `UnMaximizeActiveWindow` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### ShowAllWindowChanged
+
+显示所有窗口信号。
+
+- **参数**: 无
+- **触发条件**: 调用 `ShowAllWindow` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### ShowWindowChanged
+
+显示窗口信号。
+
+- **参数**: 无
+- **触发条件**: 调用 `ShowWindow` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### ShowWorkspaceChanged
+
+显示工作区信号。
+
+- **参数**: 无
+- **触发条件**: 调用 `ShowWorkspace` 时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### ResumeCompositorChanged
+
+合成器恢复信号。
+
+- **参数**: `reason`（int32, 类型 `i`）：恢复原因
+- **触发条件**: 合成器恢复时发出
+
+```bash
+gdbus monitor --session \
+  --dest com.deepin.wm \
+  --object-path /com/deepin/wm
+```
+
+#### SuspendCompositorChanged
+
+合成器挂起信号。
+
+- **参数**: `reason`（int32, 类型 `i`）：挂起原因
+- **触发条件**: 合成器挂起时发出
 
 ```bash
 gdbus monitor --session \

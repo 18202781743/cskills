@@ -1,19 +1,19 @@
 ---
 name: dde-appearance
-description: 提供字体、主题、壁纸、光标、缩放、深色模式、窗口圆角、不透明度、窗口模糊效果的外观设置及工作区背景切换的 D-Bus 读写接口；另提供 dde-fakewm 虚拟窗口管理器作为 dde-appearance 自身的开发调试工具
+description: 提供字体、主题、壁纸、光标、缩放、窗口圆角、不透明度的外观设置及工作区背景切换的 D-Bus 读写接口；另提供 dde-fakewm 虚拟窗口管理器作为 dde-appearance 自身的开发调试工具
 Categories:
   - Settings
 ---
 
 # dde-appearance
 
-dde-appearance 是 DDE 外观管理组件。通过 Session 总线提供系统全局的外观设置（字体、主题、壁纸、光标、缩放、深色模式、窗口圆角、不透明度、窗口模糊效果）和窗口管理器工作区背景切换能力。此外，dde-appearance 项目还包含 dde-fakewm 虚拟窗口管理器，作为 dde-appearance 自身的开发调试工具。
+dde-appearance 是 DDE 外观管理组件。通过 Session 总线提供系统全局的外观设置（字体、主题、壁纸、光标、缩放、窗口圆角、不透明度）和窗口管理器工作区背景切换能力。此外，dde-appearance 项目还包含 dde-fakewm 虚拟窗口管理器，作为 dde-appearance 自身的开发调试工具。
 
 ## D-Bus 接口
 
 ### 外观设置
 
-提供系统全局的字体、主题、壁纸、光标、缩放、深色模式、窗口圆角、不透明度和窗口模糊效果的读写接口。
+提供系统全局的字体、主题、壁纸、光标、缩放、窗口圆角、不透明度的读写接口。
 
 详见 [org.deepin.dde.Appearance1.md](references/dbus/org.deepin.dde.Appearance1.md)
 
