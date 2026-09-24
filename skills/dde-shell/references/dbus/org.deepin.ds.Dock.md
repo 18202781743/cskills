@@ -6,16 +6,16 @@
 | 字段 | 值 |
 |------|------|
 | Service | `org.deepin.ds.Dock` |
-| Object path | `/org/deepin/dde/Dock1` |
+| Object path | `/org/deepin/ds/Dock` |
 | Interface | `org.deepin.ds.Dock` |
 | Bus | Session |
 ## 兼容接口
 
-Dock 面板服务除当前使用的 `org.deepin.ds.Dock` 外，还注册了两个历史别名服务，三者指向同一 Dock 对象（对象路径 `/org/deepin/dde/Dock1`），用于向后兼容不同版本的调用方：
+Dock 面板服务除当前使用的 `org.deepin.ds.Dock` 外，还注册了两个历史别名服务，各自注册在独立的对象路径上，用于向后兼容不同版本的调用方：
 
-- `org.deepin.ds.Dock`（`/org/deepin/dde/Dock1`）— 当前服务名。
+- `org.deepin.ds.Dock`（`/org/deepin/ds/Dock`）— 当前服务名。
 - `org.deepin.dde.Dock1`（`/org/deepin/dde/Dock1`）— 旧版前端接口别名。
-- `org.deepin.dde.daemon.Dock1`（`/org/deepin/dde/Dock1`）— 旧版守护进程接口别名。
+- `org.deepin.dde.daemon.Dock1`（`/org/deepin/dde/daemon/Dock1`）— 旧版守护进程接口别名。
 
 新代码应优先使用 `org.deepin.ds.Dock`。
 
@@ -33,7 +33,7 @@ Dock 面板服务除当前使用的 `org.deepin.ds.Dock` 外，还注册了两�
 ```bash
 gdbus call --session \
   --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/dde/Dock1 \
+  --object-path /org/deepin/ds/Dock \
   --method org.deepin.ds.Dock.callShow
 ```
 
@@ -47,7 +47,7 @@ gdbus call --session \
 ```bash
 gdbus call --session \
   --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/dde/Dock1 \
+  --object-path /org/deepin/ds/Dock \
   --method org.deepin.ds.Dock.ReloadPlugins
 ```
 
@@ -65,7 +65,7 @@ Dock 的几何区域。
 ```bash
 gdbus call --session \
   --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/dde/Dock1 \
+  --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Get \
   org.deepin.ds.Dock geometry
 ```
@@ -84,7 +84,7 @@ Dock 位置。
 ```bash
 gdbus call --session \
   --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/dde/Dock1 \
+  --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Get \
   org.deepin.ds.Dock position
 ```
@@ -94,7 +94,7 @@ gdbus call --session \
 ```bash
 gdbus call --session \
   --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/dde/Dock1 \
+  --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Set \
   org.deepin.ds.Dock position "<int32 0>"
 ```
@@ -113,7 +113,7 @@ gdbus call --session \
 ```bash
 gdbus call --session \
   --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/dde/Dock1 \
+  --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Get \
   org.deepin.ds.Dock showInPrimary
 ```
@@ -123,7 +123,7 @@ gdbus call --session \
 ```bash
 gdbus call --session \
   --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/dde/Dock1 \
+  --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Set \
   org.deepin.ds.Dock showInPrimary "<true>"
 ```
