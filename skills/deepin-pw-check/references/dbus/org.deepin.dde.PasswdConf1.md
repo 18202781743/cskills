@@ -13,20 +13,20 @@ deepin-pw-check 是 DDE 的密码安全策略组件，负责管理系统级密�
 
 ## 兼容性接口
 
-**关系类型：兼容**
+**关系类型：已废弃**
 
-旧版接口 `com.deepin.daemon.PasswdConf`（对象路径 `/com/deepin/daemon/PasswdConf`，接口名 `com.deepin.daemon.PasswdConf`，System 总线）为兼容历史调用方而保留，提供与 `org.deepin.dde.PasswdConf1` 完全相同的 14 个方法，功能一致但使用旧版命名规范。新代码应推荐使用 `org.deepin.dde.PasswdConf1`，因为该接口采用了符合 DDE 新版 D-Bus 命名规范的接口名称。本文档中的所有示例均使用最新接口 `org.deepin.dde.PasswdConf1`，旧接口不提供示例。
+旧版接口 `com.deepin.daemon.PasswdConf`（对象路径 `/com/deepin/daemon/PasswdConf`，接口名 `com.deepin.daemon.PasswdConf`，System 总线）已在 commit `53794d4`（2022-11）中被完全替换为 `org.deepin.dde.PasswdConf1`。旧接口已废弃，不再可用。新代码应使用 `org.deepin.dde.PasswdConf1`。本文档中的所有示例均使用 `org.deepin.dde.PasswdConf1`。
 
 ## 通用配置
 
 ### WriteConfig
 
-写入完整配置。将传入的 keyfile 格式内容直接写入配置文件 `/etc/deepin/dde.conf`。
+写入完整配置。将传入的 GKeyFile/INI 格式内容直接写入配置文件 `/etc/deepin/dde.conf`。
 
 - **功能**：覆盖写入完整配置文件内容
 - **触发条件**：当需要批量替换全部密码策略配置时调用
 - **使用场景**：配置导入、批量配置恢复
-- **输入参数**：`data`（string, 类型 `s`）：配置文件内容（keyfile/INI 格式）
+- **输入参数**：`data`（string, 类型 `s`）：配置文件内容（GKeyFile/INI 格式）
 - **返回值**：无
 
 权限：
@@ -37,19 +37,18 @@ pkexec gdbus call --system \
   --dest org.deepin.dde.PasswdConf1 \
   --object-path /org/deepin/dde/PasswdConf1 \
   --method org.deepin.dde.PasswdConf1.WriteConfig '[Password]
-PASSWORD_MIN_LENGTH=8
-'
+PASSWORD_MIN_LENGTH=8'
 ```
 
 ### ReadConfig
 
 读取完整配置。读取配置文件 `/etc/deepin/dde.conf` 的全部内容。
 
-- **功能**：读取当前全部密码安全策略配置（keyfile/INI 格式）
+- **功能**：读取当前全部密码安全策略配置（GKeyFile/INI 格式）
 - **触发条件**：当需要获取当前完整配置内容时调用
 - **使用场景**：配置查看、备份前获取当前配置
 - **输入参数**：无
-- **返回值**：`s`（string）：配置文件内容（keyfile/INI 格式）
+- **返回值**：`s`（string）：配置文件内容（GKeyFile/INI 格式）
 
 权限：
 - requires_sudo: true
@@ -70,6 +69,7 @@ pkexec gdbus call --system \
 - **使用场景**：配置回滚、恢复误修改的密码策略
 - **输入参数**：无
 - **返回值**：无
+- **注意**：若从未执行过 Backup，备份文件 `/etc/deepin/dde.conf.bak` 不存在，Reset 会返回错误
 
 权限：
 - requires_sudo: true
@@ -156,7 +156,7 @@ pkexec gdbus call --system \
 - **触发条件**：当需要查询密码校验允许的字符集时调用
 - **使用场景**：密码策略展示、校验策略查询
 - **输入参数**：无
-- **返回值**：`s`（string）：校验策略字符串（分号分隔的字符类别集合）
+- **返回值**：`s`（string）：分号分隔的字符集字符串
 
 ```bash
 gdbus call --system \
@@ -178,7 +178,7 @@ gdbus call --system \
 - **功能**：设置密码校验所使用的策略（包含允许的字符集）
 - **触发条件**：当需要修改密码校验允许的字符集时调用
 - **使用场景**：管理员调整密码校验字符集
-- **输入参数**：`s`（string, 类型 `s`）：校验策略字符串（分号分隔的字符类别集合）
+- **输入参数**：`s`（string, 类型 `s`）：分号分隔的字符集字符串
 - **返回值**：无
 
 权限：
@@ -188,7 +188,7 @@ gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.PasswdConf1 \
   --object-path /org/deepin/dde/PasswdConf1 \
-  --method org.deepin.dde.PasswdConf1.SetValidatePolicy '1234567890;abcdefghijklmnopqrstuvwxyz;ABCDEFGHIJKLMNOPQRSTUVWXYZ;~`!@#$%^&*()-_+=|\{}[]:"'"'"'<>,.?/'
+  --method org.deepin.dde.PasswdConf1.SetValidatePolicy '1234567890;abcdefghijklmnopqrstuvwxyz;ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 ```
 
 ### GetValidateRequired
