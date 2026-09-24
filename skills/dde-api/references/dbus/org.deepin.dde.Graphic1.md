@@ -1,6 +1,6 @@
 # org.deepin.dde.Graphic1 接口参考
 
-该接口提供图像模糊、裁剪、合成、转换、翻转、缩放、旋转、缩略图生成、颜色格式转换和主色调提取能力。
+该接口提供图像模糊、裁剪、合成、格式转换、填充、翻转、缩放、旋转、缩略图生成、主色调提取、尺寸获取、颜色转换能力。
 
 ## 接口信息
 
@@ -10,6 +10,8 @@
 | Object path | `/org/deepin/dde/Graphic1` |
 | Interface | `org.deepin.dde.Graphic1` |
 | Bus | Session |
+
+> **验证说明**：以下方法签名基于 dde-api 源码确认。
 
 ## 图像处理方法
 
@@ -360,7 +362,7 @@ gdbus call --session \
   --dest org.deepin.dde.Graphic1 \
   --object-path /org/deepin/dde/Graphic1 \
   --method org.deepin.dde.Graphic1.Rgb2Hsv \
-  "byte 0" "byte 255" "byte 0"
+  0x00 0xff 0x00
 ```
 
 ### RotateImageLeft

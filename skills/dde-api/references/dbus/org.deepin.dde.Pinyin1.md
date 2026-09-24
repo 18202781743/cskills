@@ -11,7 +11,7 @@
 | Interface | `org.deepin.dde.Pinyin1` |
 | Bus | Session |
 
-> **验证说明**：该接口为 Session 总线服务，当前环境无 X11 显示，无法进行运行时内省验证。以下方法签名基于接口定义确认。
+> **验证说明**：以下方法签名基于 dde-api 源码确认。
 
 ## 拼音查询方法
 

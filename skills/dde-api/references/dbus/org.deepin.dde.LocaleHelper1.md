@@ -13,7 +13,7 @@
 | Interface | `org.deepin.dde.LocaleHelper1` |
 | Bus | System |
 
-> **验证说明**：已通过 `gdbus introspect --system` 运行时内省验证，以下方法均可访问。
+> **验证说明**：已通过 `gdbus introspect --system` 运行时内省验证，以下方法均可访问。源码中另有 `SetAllowCaller` 方法，但在当前运行时内省中不可见。
 
 ## 区域设置方法
 

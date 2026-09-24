@@ -1,6 +1,6 @@
 ---
 name: dde-api
-description: dde-api 是 DDE 后端调用库组件，提供图像处理、拼音查询、蓝牙设备管理、区域设置、声音主题播放的全局 D-Bus 接口，以及文件打开、GRUB 主题调整、图片模糊处理、声音主题播放守护进程的 CLI 命令
+description: dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供图像处理、拼音查询、蓝牙设备管理、区域设置、声音主题播放的 D-Bus 接口，同时提供文件打开、GRUB 主题调整、图片模糊处理、声音主题播放守护进程的 CLI 命令
 Categories:
   - Develop
 ---
@@ -13,7 +13,7 @@ dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供�
 
 ### 图像处理
 
-提供图像模糊、裁剪、合成、转换、翻转、缩放、旋转、缩略图生成、颜色格式转换和主色调提取能力。
+提供图像模糊、裁剪、合成、格式转换、填充、翻转、缩放、旋转、缩略图生成、主色调提取、尺寸获取、颜色转换能力。
 
 详见 [org.deepin.dde.Graphic1.md](references/dbus/org.deepin.dde.Graphic1.md)
 
@@ -40,22 +40,6 @@ dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供�
 提供声音主题播放控制能力。对应的 CLI 守护进程为 `sound-theme-player`。
 
 详见 [org.deepin.dde.SoundThemePlayer1.md](references/dbus/org.deepin.dde.SoundThemePlayer1.md)
-
-### 兼容接口
-
-以下接口为历史遗留或兼容性接口，当前可能未激活或已废弃，不建议在新代码中使用：
-
-- **org.deepin.dde.LunarCalendar1**（废弃）：农历日历查询接口，`.service` 文件 Exec 已被注释，当前未激活。
-
-详见 [org.deepin.dde.LunarCalendar1.md](references/dbus/org.deepin.dde.LunarCalendar1.md)
-
-- **org.deepin.dde.Validator1**（废弃）：主机名和用户名校验接口，当前未被使用和编译，可能已废弃。
-
-详见 [org.deepin.dde.Validator1.md](references/dbus/org.deepin.dde.Validator1.md)
-
-- **org.deepin.dde.InhibitHint1**（兼容）：抑制提示接口，以库形式由调用方注册，无独立 `.service` 文件。
-
-详见 [org.deepin.dde.InhibitHint1.md](references/dbus/org.deepin.dde.InhibitHint1.md)
 
 ## CLI 命令
 
