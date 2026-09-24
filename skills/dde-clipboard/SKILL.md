@@ -1,13 +1,13 @@
 ---
 name: dde-clipboard
-description: dde-clipboard 是 DDE 桌面环境的剪贴板管理组件，提供剪贴板管理工具的命令行启动、剪贴板前端服务与守护进程的 Session 总线 D-Bus 接口，以及 dde-clipboard 应用自身的提示组件显示配置
+description: dde-clipboard 是 DDE 桌面环境的剪贴板管理组件，提供剪贴板管理工具的命令行使用、剪贴板前端服务与守护进程的 Session 总线 D-Bus 接口，以及 dde-clipboard 应用自身的提示组件显示配置
 Categories:
   - Application
 ---
 
 # dde-clipboard
 
-dde-clipboard 是 DDE 桌面环境的剪贴板管理组件，提供剪贴板管理工具的命令行启动、剪贴板前端服务与守护进程的 Session 总线 D-Bus 接口，以及 dde-clipboard 应用自身的提示组件显示配置。
+dde-clipboard 是 DDE 桌面环境的剪贴板管理组件，提供剪贴板管理工具的命令行使用、剪贴板前端服务与守护进程的 Session 总线 D-Bus 接口，以及 dde-clipboard 应用自身的提示组件显示配置。
 
 ## CLI 命令
 
@@ -57,8 +57,8 @@ dde-clipboard 当前仅注册上述两个 D-Bus 服务接口（`org.deepin.dde.C
 用例：
 ```bash
 # 查询当前值
-dde-dconfig -a org.deepin.dde.clipboard -r org.deepin.dde.clipboard -k showTipsWidget --get
+dde-dconfig get -a org.deepin.dde.clipboard -r org.deepin.dde.clipboard -k showTipsWidget
 
 # 设置为不显示提示组件
-dde-dconfig -a org.deepin.dde.clipboard -r org.deepin.dde.clipboard -k showTipsWidget --set false
+dde-dconfig set -a org.deepin.dde.clipboard -r org.deepin.dde.clipboard -k showTipsWidget -v false
 ```
