@@ -27,8 +27,9 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 | `-h, --help` | 显示命令行帮助 | 否 |
 | `-v, --version` | 显示版本信息 | 否 |
 | `-p <plugin path(s)>` | 插件路径，单个或多个（用 `;` 分隔） | 否（与 `--group` 二选一） |
-| `-g <group name>` | 指定当前进程的显示组名，用于面板中标识本进程加载的插件组 | 是 |
+| `-g <group name>` | 指定当前进程的显示名称，用于面板中标识本进程加载的插件组 | 是 |
 | `--group <group name>` | 加载指定组名下的所有插件。有效组名为 `selfMaintenanceTrayPlugins`、`subprojectTrayPlugins`、`crashProneTrayPlugins`、`otherTrayPlugins` | 是 |
+| `--check-group <group name>` | 检查指定分组是否包含插件（诊断模式），不初始化图形环境。有效组名同 `--group` | 是 |
 
 ## 使用示例
 
@@ -45,7 +46,7 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 # 加载指定组名下的所有插件
 /usr/libexec/trayplugin-loader --group selfMaintenanceTrayPlugins
 
-# 加载指定组名下的所有插件并指定显示组名
+# 加载指定组名下的所有插件并指定显示名称
 /usr/libexec/trayplugin-loader --group subprojectTrayPlugins -g subproject-panel
 
 # 查看版本信息

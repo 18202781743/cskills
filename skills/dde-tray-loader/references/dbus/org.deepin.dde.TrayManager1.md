@@ -50,7 +50,7 @@ gdbus call --session \
 
 请求重新获取 X11 系统托盘选择权。
 
-- **功能**: 请求重新获取 X11 系统托盘选择权（`_NET_SYSTEM_TRAY` selection ownership），发出 `reclainRequested` 信号
+- **功能**: 请求重新获取 X11 系统托盘选择权（`_NET_SYSTEM_TRAY` selection ownership）
 - **输入参数**: 无
 - **返回值**: `b`（bool）：始终返回 `true`
 - **触发条件**: 当需要重新接管系统托盘管理权时调用

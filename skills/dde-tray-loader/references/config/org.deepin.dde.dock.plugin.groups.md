@@ -6,9 +6,9 @@
 
 | Key | Name | Description | 类型 | Permissions | Visibility |
 |---|---|---|---|---|---|
-| `selfMaintenanceTrayPlugins` | 自维护托盘插件列表 | 自维护托盘插件的路径列表，这些插件由 dde-tray-loader 自身维护，通过 `--group selfMaintenanceTrayPlugins` 加载 | string | readonly | private |
-| `subprojectTrayPlugins` | 子项目托盘插件列表 | 子项目托盘插件的路径列表，通过 `--group subprojectTrayPlugins` 加载 | string | readwrite | private |
-| `crashProneTrayPlugins` | 易崩溃托盘插件列表 | 易崩溃托盘插件的路径列表，通过 `--group crashProneTrayPlugins` 加载 | string | readwrite | private |
+| `selfMaintenanceTrayPlugins` | 自维护托盘插件列表 | 自维护托盘插件的路径列表，这些插件由 dde-tray-loader 自身维护，通过 `--group selfMaintenanceTrayPlugins` 加载 | array | readonly | private |
+| `subprojectTrayPlugins` | 子项目托盘插件列表 | 子项目托盘插件的路径列表，通过 `--group subprojectTrayPlugins` 加载 | array | readwrite | private |
+| `crashProneTrayPlugins` | 易崩溃托盘插件列表 | 易崩溃托盘插件的路径列表，通过 `--group crashProneTrayPlugins` 加载 | array | readwrite | private |
 
 ## 读写示例
 
