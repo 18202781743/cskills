@@ -25,7 +25,7 @@ Dock 面板服务除当前使用的 `org.deepin.ds.Dock` 外，还注册了两�
 
 #### callShow
 
-> ⚠️ **未实现的桩函数**：该方法在源码（`dockpanel.cpp`）中为 TODO 空桩实现，当前不可用。
+> ⚠️ **未实现的桩函数**：该方法为 TODO 空桩实现，当前不可用。
 
 调用 Dock 显示。
 
@@ -34,7 +34,7 @@ Dock 面板服务除当前使用的 `org.deepin.ds.Dock` 外，还注册了两�
 
 #### ReloadPlugins
 
-> ⚠️ **未实现的桩函数**：该方法在源码（`dockpanel.cpp`）中为 TODO 空桩实现，当前不可用。
+> ⚠️ **未实现的桩函数**：该方法为 TODO 空桩实现，当前不可用。
 
 重新加载 Dock 插件。
 

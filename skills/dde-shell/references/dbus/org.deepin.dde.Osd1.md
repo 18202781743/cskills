@@ -2,10 +2,10 @@
 
 该接口提供 OSD（On-Screen Display）提示的显示能力，支持通过 OSD 类型标识触发对应的屏幕提示显示。
 
-dde-shell 的 OSD 面板（`OsdPanel`）在 Session 总线上注册了两个 D-Bus 接口，两者提供相同的 `ShowOSD` 方法：
+dde-shell 的 OSD 面板在 Session 总线上注册了两个 D-Bus 接口，两者提供相同的 `ShowOSD` 方法：
 
-- `org.deepin.dde.Osd1`（本接口）— 注册在 object path `/`，通过 `registerService` 注册独立 service name `org.deepin.dde.Osd1`，并由 `OsdDBusAdaptor` 适配。用于兼容旧版调用方。
-- `org.deepin.dde.shell.osd` — 注册在 object path `/org/deepin/dde/shell/osd`，由 `OsdPanel` 对象直接通过 `ExportAllSlots` 暴露，无独立 service name（使用 dde-shell 进程的 bus name）。
+- `org.deepin.dde.Osd1`（本接口）— 注册在 object path `/`，注册独立 service name `org.deepin.dde.Osd1`。用于兼容旧版调用方。
+- `org.deepin.dde.shell.osd` — 注册在 object path `/org/deepin/dde/shell/osd`，无独立 service name（使用 dde-shell 进程的 bus name）。
 
 ## 接口信息
 
@@ -18,7 +18,7 @@ dde-shell 的 OSD 面板（`OsdPanel`）在 Session 总线上注册了两个 D-B
 
 ## org.deepin.dde.shell.osd 接口
 
-`org.deepin.dde.shell.osd` 接口由 `OsdPanel` 对象在 `init()` 中通过 `ExportAllSlots` 直接注册，无独立 service name（使用 dde-shell 进程的 bus name，通常为 `org.deepin.dde.shell`）。
+`org.deepin.dde.shell.osd` 接口由 dde-shell 直接注册，无独立 service name（使用 dde-shell 进程的 bus name，通常为 `org.deepin.dde.shell`）。
 
 | 字段 | 值 |
 |------|------|
@@ -46,12 +46,12 @@ gdbus call --session \
 
 - **功能**: 根据 OSD 类型标识触发对应的屏幕提示显示
 - **触发条件**: 系统服务或硬件事件（如音量键、亮度键、快捷键）需要展示 OSD 时调用
-- **使用场景**: 音量调节、亮度调节、WLAN 开关、飞行模式切换、电源模式切换、窗口特效切换等
+- **使用场景**: 音量调节、亮度调节、WLAN 开关、飞行模式切换、电源模式切换、窗口特效切换、大写锁定开关、数字键盘开关、触摸板开关、Fn 键切换、麦克风静音切换、摄像头开关、显示器切换、键盘布局切换
 - **输入参数**:
   - `text`（string, 类型 `s`）：OSD 类型标识
 - **返回值**: 无
 
-**支持的选项**（来源于 dde-shell 源码 `panels/notification/osd/` 下各 applet 的 `match()` / `types` / `osdTypeModel`）:
+**支持的选项**:
 
 音频：
 - `AudioUp` — 音量增大

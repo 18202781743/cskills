@@ -1,6 +1,6 @@
 # org.deepin.dde.shell.notification.center 接口参考
 
-该接口提供通知中心面板的显示控制能力，支持切换、显示和隐藏通知中心。dde-shell 的 NotificationCenterPanel 在 Session 总线上注册此接口，对象为 NotificationCenterProxy。
+该接口提供通知中心面板的显示控制能力，支持切换、显示和隐藏通知中心。此接口在 Session 总线上注册，对象路径为 `/org/deepin/dde/shell/notification/center`。
 
 ## 接口信息
 
@@ -17,7 +17,7 @@
 
 dde-shell 的通知中心面板还注册了以下旧版兼容接口，提供与 `org.deepin.dde.shell.notification.center` 相同的 Toggle/Show/Hide 方法和 VisibleChanged 信号，用于向后兼容旧版本调用方：
 
-- `org.deepin.dde.Widgets1`（`/org/deepin/dde/Widgets1`）— 旧版通知中心窗口控制接口，通过 `NotificationCenterDBusAdaptor` 注册，方法与信号同上。
+- `org.deepin.dde.Widgets1`（`/org/deepin/dde/Widgets1`）— 旧版通知中心窗口控制接口，方法与信号同上。
 
 ## 方法
 

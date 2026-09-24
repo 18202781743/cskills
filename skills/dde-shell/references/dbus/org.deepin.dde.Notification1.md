@@ -13,7 +13,7 @@
 
 ## 兼容性接口
 
-dde-shell 的通知服务由同一个 `NotificationManager` 对象注册了以下 D-Bus 服务接口，以兼容 freedesktop 标准通知规范并提供 DDE 扩展功能：
+dde-shell 的通知服务注册了以下 D-Bus 服务接口，以兼容 freedesktop 标准通知规范并提供 DDE 扩展功能：
 
 - `org.freedesktop.Notifications`（`/org/freedesktop/Notifications`）— freedesktop 标准通知接口，是 `org.deepin.dde.Notification1` 的子集，仅提供通知发送（`Notify`）、关闭（`CloseNotification`）、能力查询（`GetCapabilities`）和服务器信息查询（`GetServerInformation`）功能。保留此接口是为了兼容遵循 freedesktop 通知规范的应用。
 
@@ -319,7 +319,7 @@ gdbus monitor --session \
 
 #### AppSettingChanged
 
-> ⚠️ **当前未实现**：该信号在源码中已声明但从未 emit，当前不会触发。
+> ⚠️ **当前未实现**：已声明但从未 emit，当前不会触发。
 
 应用通知设置变化时发出。
 
@@ -328,7 +328,7 @@ gdbus monitor --session \
 
 #### SystemSettingChanged
 
-> ⚠️ **当前未实现**：该信号在源码中已声明但从未 emit，当前不会触发。
+> ⚠️ **当前未实现**：已声明但从未 emit，当前不会触发。
 
 系统通知设置变化时发出。
 
