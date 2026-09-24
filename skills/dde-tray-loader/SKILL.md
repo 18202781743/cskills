@@ -1,17 +1,17 @@
 ---
 name: dde-tray-loader
-description: dde-tray-loader 是 DDE 托盘加载器组件，负责加载和管理系统托盘区域的插件。提供全局的键盘布局切换与托盘图标管理 Session D-Bus 接口，以及仅作用于 dde-tray-loader 自身的托盘插件加载命令行工具和任务栏插件 DConfig 配置项（涵盖默认驻留列表、插件排序、关机菜单、通知状态、音量调节、充电保护阈值）
+description: dde-tray-loader 是 DDE 桌面环境的托盘插件加载器组件，负责加载和管理系统托盘区域的插件。提供全局键盘布局切换与托盘图标管理的 Session D-Bus 接口，以及 dde-tray-loader 自身的托盘插件加载命令行工具和任务栏插件 DConfig 配置项（包含默认驻留插件列表、插件顺序、电源插件充电保护全局阈值与电池时间显示、插件交互行为控制、关机按钮右键菜单、音量调节与滑动条、未读通知状态）
 Categories:
   - Application
 ---
 
 # dde-tray-loader
 
-dde-tray-loader 是 DDE 托盘加载器组件，负责加载和管理系统托盘区域的插件。该 skill 提供以下能力：
+dde-tray-loader 是 DDE 桌面环境的托盘插件加载器组件，负责加载和管理系统托盘区域的插件。该 skill 提供以下能力：
 
 - **全局 Session D-Bus 接口**：键盘布局切换和状态查询（Keyboard1）、托盘图标管理和通知控制（TrayManager1），对整个桌面会话生效
 - **自身 CLI 工具**：`trayplugin-loader`，仅作用于 dde-tray-loader 自身的插件加载，由 dde-shell 在会话启动时自动拉起
-- **自身 DConfig 配置项**：任务栏插件的默认驻留列表、插件排序、关机按钮右键菜单、通知未读状态、音量调节、充电保护阈值，仅作用于 dde-tray-loader 自身
+- **自身 DConfig 配置项**：任务栏插件的默认驻留插件列表、插件顺序、电源插件充电保护全局阈值与电池时间显示、插件交互行为控制、关机按钮右键菜单、音量调节与滑动条、未读通知状态，仅作用于 dde-tray-loader 自身
 
 ## CLI 命令
 
@@ -36,19 +36,21 @@ dde-tray-loader 自身的托盘插件加载器，负责加载和管理系统托�
 
 详见 [org.deepin.dde.TrayManager1.md](references/dbus/org.deepin.dde.TrayManager1.md)
 
-### 兼容性说明
-
-dde-tray-loader 的 D-Bus 接口（Keyboard1、TrayManager1）服务名稳定，无历史别名或兼容性接口。
-
 ## DConfig 配置项
 
 dde-tray-loader 自身插件的 DConfig 配置资源，仅作用于 dde-tray-loader 自身。
 
 ### 任务栏插件通用配置
 
-默认驻留任务栏插件列表和插件排序配置。
+默认驻留任务栏插件列表和插件顺序配置。
 
 详见 [org.deepin.dde.dock.plugin.common](references/config/org.deepin.dde.dock.plugin.common.md)
+
+### 插件交互行为配置
+
+控制托盘加载器是否允许调用插件的激活、上下文菜单、悬浮提示接口。
+
+详见 [org.deepin.dde.dock.plugin.interaction](references/config/org.deepin.dde.dock.plugin.interaction.md)
 
 ### 关机按钮配置
 
@@ -58,7 +60,7 @@ dde-tray-loader 自身插件的 DConfig 配置资源，仅作用于 dde-tray-loa
 
 ### 通知插件配置
 
-通知未读状态配置。
+未读通知状态配置。
 
 详见 [org.deepin.dde.dock.plugin.notification](references/config/org.deepin.dde.dock.plugin.notification.md)
 

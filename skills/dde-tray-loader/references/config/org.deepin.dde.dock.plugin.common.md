@@ -7,7 +7,7 @@
 | Key | Name | Description | 类型 | Permissions | Visibility |
 |---|---|---|---|---|---|
 | `defaultDockedPlugins` | 默认驻留任务栏插件 | 配置默认驻留在任务栏上的插件列表，仅控制初始默认状态，重启后生效 | array | readonly | public |
-| `pluginsOrder` | 任务栏插件顺序 | 任务栏运行时的插件排列顺序，2-普通插件区域，3-固定区域（最左侧），7-工具插件区域（最右边） | string | readwrite | private |
+| `pluginsOrder` | 任务栏插件顺序 | 任务栏运行时的插件顺序，2-普通插件区域，3-固定区域（最左侧），7-工具插件区域（最右侧） | string | readwrite | private |
 
 ## 读写示例
 

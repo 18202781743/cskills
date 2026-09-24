@@ -7,7 +7,7 @@
 | Key | Name | Description | 类型 | Permissions | Visibility |
 |---|---|---|---|---|---|
 | `soundOutputSlider` | 音量滑动条 | 音量滑动条显示状态，0-Enabled（启用），1-Disabled（禁用），2-Hidden（隐藏） | number | readwrite | private |
-| `enableAdjustVolumeNoCard` | 无输出端口时允许调节音量 | 控制在没有音频输出端口时是否允许调节音量 | bool | readwrite | private |
+| `enableAdjustVolumeNoCard` | 无输出端口时允许调节音量 | 全局配置，控制在没有音频输出端口时是否允许调节音量 | bool | readwrite | private |
 
 ## 读写示例
 
