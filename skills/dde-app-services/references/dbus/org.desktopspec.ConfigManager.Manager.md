@@ -206,7 +206,7 @@ gdbus call --system \
 配置值变化时发出。
 
 - **参数**: `key`（string, 类型 `s`）：配置键名
-- **触发条件**: 配置值被设置时发出
+- **触发条件**: 配置值被设置时发出；当 meta 文件更新后执行 reload 或 update 操作时也可能触发此信号
 
 ```bash
 gdbus monitor --system \
