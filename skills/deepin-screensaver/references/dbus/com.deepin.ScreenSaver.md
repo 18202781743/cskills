@@ -1,6 +1,6 @@
 # com.deepin.ScreenSaver 接口参考
 
-该接口提供屏幕保护程序的启动、停止、预览、配置管理和屏保列表查询能力。
+该接口在 **Session 总线**上注册，对象路径为 `/com/deepin/ScreenSaver`，提供屏幕保护程序的启动、停止、预览、配置管理和屏保列表查询能力。
 
 ## 接口信息
 
@@ -10,12 +10,16 @@
 | Object path | `/com/deepin/ScreenSaver` |
 | Interface | `com.deepin.ScreenSaver` |
 | Bus | Session |
+
 ### 屏保启动与停止
 
 #### Start
 
 启动屏保。
 
+- **功能**: 启动屏幕保护程序。
+- **触发条件**: 用户手动调用，或空闲超时后由系统自动触发。
+- **使用场景**: 需要立即启动屏幕保护时使用。
 - **输入参数**: 无
 - **返回值**: 无
 
@@ -30,6 +34,9 @@ gdbus call --session \
 
 停止屏保。
 
+- **功能**: 停止正在运行的屏幕保护程序。
+- **触发条件**: 用户手动调用，或检测到用户输入活动时触发。
+- **使用场景**: 需要停止正在运行的屏幕保护时使用。
 - **输入参数**: 无
 - **返回值**: 无
 
@@ -39,13 +46,17 @@ gdbus call --session \
   --object-path /com/deepin/ScreenSaver \
   --method com.deepin.ScreenSaver.Stop
 ```
+
 ### 预览与配置
 
 #### Preview
 
 预览指定屏保。
 
-- **输入参数**: `name`（string, 类型 `s`）：屏保名称；`staysOn`（int32, 类型 `i`）：是否保持显示
+- **功能**: 以预览模式启动指定屏保，用于展示屏保效果。
+- **触发条件**: 用户在屏保设置界面选择预览某个屏保时调用。
+- **使用场景**: 在屏保配置界面预览屏保效果时使用。
+- **输入参数**: `name`（string, 类型 `s`）：屏保名称；`staysOn`（int32, 类型 `i`）：是否保持显示（0 = 底层显示，1 = 顶层显示）
 - **返回值**: `b`（bool）：是否成功
 
 ```bash
@@ -59,6 +70,9 @@ gdbus call --session \
 
 获取指定屏保的封面图片路径。
 
+- **功能**: 返回指定屏保的封面缩略图路径。
+- **触发条件**: 渲染屏保配置界面的屏保列表时调用。
+- **使用场景**: 在屏保列表中展示每个屏保的封面缩略图时使用。
 - **输入参数**: `name`（string, 类型 `s`）：屏保名称
 - **返回值**: `s`（string）：封面图片路径
 
@@ -73,6 +87,9 @@ gdbus call --session \
 
 启动指定屏保的自定义配置。
 
+- **功能**: 打开指定屏保的自定义配置对话框。
+- **触发条件**: 用户点击屏保配置界面的配置按钮时调用。
+- **使用场景**: 需要配置特定屏保的自定义参数时使用。
 - **输入参数**: `name`（string, 类型 `s`）：屏保名称
 - **返回值**: `b`（bool）：是否成功
 
@@ -87,6 +104,9 @@ gdbus call --session \
 
 获取可配置的屏保项列表。
 
+- **功能**: 返回所有支持自定义配置的屏保名称列表。
+- **触发条件**: 初始化屏保配置界面时调用。
+- **使用场景**: 加载屏保配置界面前获取可配置的屏保列表时使用。
 - **输入参数**: 无
 - **返回值**: `as`（string 数组）：可配置屏保名称列表
 
@@ -101,6 +121,9 @@ gdbus call --session \
 
 查询指定屏保是否可配置。
 
+- **功能**: 判断指定屏保是否支持自定义配置。
+- **触发条件**: 渲染屏保配置界面、判断是否显示配置按钮时调用。
+- **使用场景**: 判断某个屏保是否支持自定义配置时使用。
 - **输入参数**: `name`（string, 类型 `s`）：屏保名称
 - **返回值**: `b`（bool）：是否可配置
 
@@ -115,6 +138,9 @@ gdbus call --session \
 
 刷新屏保列表。
 
+- **功能**: 重新扫描并更新屏保列表。
+- **触发条件**: 屏保应用安装或卸载后调用。
+- **使用场景**: 安装或卸载屏保应用后需要更新屏保列表时使用。
 - **输入参数**: 无
 - **返回值**: 无
 
@@ -124,11 +150,16 @@ gdbus call --session \
   --object-path /com/deepin/ScreenSaver \
   --method com.deepin.ScreenSaver.RefreshScreenSaverList
 ```
+
 ### 屏保属性
 
 #### isRunning（属性）
 
 屏保是否正在运行。
+
+- **功能**: 标识屏幕保护程序当前是否处于运行状态。
+- **触发条件**: 屏保启动时变为 `true`，停止时变为 `false`。
+- **使用场景**: 判断当前屏保运行状态时使用。
 
 | 属性 | 值 |
 |------|------|
@@ -144,9 +175,14 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.ScreenSaver isRunning
 ```
+
 #### currentScreenSaver（属性）
 
 当前使用的屏保名称。
+
+- **功能**: 获取或设置当前正在使用的屏保名称。
+- **触发条件**: 用户切换屏保时属性值更新。
+- **使用场景**: 获取或设置当前使用的屏保时使用。
 
 | 属性 | 值 |
 |------|------|
@@ -162,6 +198,7 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.ScreenSaver currentScreenSaver
 ```
+
 设置示例：
 
 ```bash
@@ -171,9 +208,14 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.ScreenSaver currentScreenSaver "<string>"
 ```
+
 #### allScreenSaver（属性）
 
 所有可用屏保列表。
+
+- **功能**: 返回系统中所有已安装的屏保名称列表。
+- **触发条件**: 安装或卸载屏保应用后属性值更新。
+- **使用场景**: 获取系统中所有可用屏保列表时使用。
 
 | 属性 | 值 |
 |------|------|
@@ -189,9 +231,14 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.ScreenSaver allScreenSaver
 ```
+
 #### batteryScreenSaverTimeout（属性）
 
 电池模式下屏保超时时间。
+
+- **功能**: 获取或设置电池供电时屏保启动的空闲超时时间（单位：秒）。
+- **触发条件**: 用户在电源设置中修改时更新。
+- **使用场景**: 获取或设置电池模式下的屏保启动延迟时间时使用。
 
 | 属性 | 值 |
 |------|------|
@@ -207,6 +254,7 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.ScreenSaver batteryScreenSaverTimeout
 ```
+
 设置示例：
 
 ```bash
@@ -216,9 +264,14 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.ScreenSaver batteryScreenSaverTimeout <int32 60>
 ```
+
 #### linePowerScreenSaverTimeout（属性）
 
 交流电源模式下屏保超时时间。
+
+- **功能**: 获取或设置交流电源供电时屏保启动的空闲超时时间（单位：秒）。
+- **触发条件**: 用户在电源设置中修改时更新。
+- **使用场景**: 获取或设置交流电源模式下的屏保启动延迟时间时使用。
 
 | 属性 | 值 |
 |------|------|
@@ -234,6 +287,7 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.ScreenSaver linePowerScreenSaverTimeout
 ```
+
 设置示例：
 
 ```bash
@@ -243,9 +297,14 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.ScreenSaver linePowerScreenSaverTimeout <int32 300>
 ```
+
 #### lockScreenAtAwake（属性）
 
 唤醒时是否锁定屏幕。
+
+- **功能**: 控制从屏保唤醒后是否自动锁定屏幕。
+- **触发条件**: 用户在锁屏设置中修改时更新。
+- **使用场景**: 控制从屏保唤醒后是否自动锁定屏幕时使用。
 
 | 属性 | 值 |
 |------|------|
@@ -261,6 +320,7 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.ScreenSaver lockScreenAtAwake
 ```
+
 设置示例：
 
 ```bash
@@ -270,9 +330,14 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.ScreenSaver lockScreenAtAwake <true>
 ```
+
 #### lockScreenDelay（属性）
 
 锁定屏幕延迟时间。
+
+- **功能**: 从屏幕保护启动开始到一定时间段内唤醒不锁定屏幕，超过该时间段后唤醒才锁定屏幕（单位：秒）。
+- **触发条件**: 用户在锁屏设置中修改时更新。
+- **使用场景**: 控制屏保启动后到锁定屏幕的延迟时间时使用。
 
 | 属性 | 值 |
 |------|------|
@@ -288,6 +353,7 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   com.deepin.ScreenSaver lockScreenDelay
 ```
+
 设置示例：
 
 ```bash
@@ -297,4 +363,3 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.ScreenSaver lockScreenDelay <int32 5>
 ```
----

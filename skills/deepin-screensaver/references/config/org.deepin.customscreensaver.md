@@ -1,6 +1,13 @@
 # org.deepin.customscreensaver
 
-自定义屏保轮播配置资源，管理屏保图片的轮播间隔、播放模式和图片路径。
+自定义屏保轮播配置资源，管理屏保图片的轮播间隔、播放模式和图片路径。仅作用于 deepin-screensaver 自身应用。
+
+## 配置资源信息
+
+| 字段 | 值 |
+|------|------|
+| App ID | `org.deepin.screensaver` |
+| Resource ID | `org.deepin.customscreensaver` |
 
 ## 配置项
 
