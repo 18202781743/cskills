@@ -1,6 +1,6 @@
 # org.deepin.dde.LastoreSessionHelper1 接口参考
 
-该接口提供应用商店会话辅助能力，包括磁盘空间检查、系统代理获取、通知发送、通知关闭和日志上报。该服务在系统总线上导出两个对象：`Lastore` 和 `Agent`。
+该接口提供应用商店会话辅助能力，包括磁盘空间检查、系统代理获取、通知发送、通知关闭和日志上报。该服务在 Session 总线上导出 `Lastore` 对象，同时在 System 总线上导出 `Agent` 对象（由系统总线 Lastore 服务通过 `RegisterAgent` 注册调用）。
 
 ## 接口信息
 
@@ -9,7 +9,7 @@
 | Service | `org.deepin.dde.LastoreSessionHelper1` |
 | Object path | `/org/deepin/dde/LastoreSessionHelper1` |
 | Interface | `org.deepin.dde.LastoreSessionHelper1` |
-| Bus | System |
+| Bus | Session |
 
 ### Lastore 对象方法
 
@@ -21,19 +21,19 @@
 - **返回值**: `result`（bool, 类型 `b`）：磁盘空间是否充足
 
 ```bash
-gdbus call --system \
+gdbus call --session \
   --dest org.deepin.dde.LastoreSessionHelper1 \
   --object-path /org/deepin/dde/LastoreSessionHelper1 \
   --method org.deepin.dde.LastoreSessionHelper1.IsDiskSpaceSufficient
 ```
 
-### Agent 对象方法
+### Agent 对象
 
-Agent 对象导出在相同的系统总线服务下，对象路径为 `/org/deepin/dde/Lastore1/Agent`，接口为 `org.deepin.dde.Lastore1.Agent`。
+Agent 对象导出在 System 总线上，对象路径为 `/org/deepin/dde/Lastore1/Agent`，接口为 `org.deepin.dde.Lastore1.Agent`。Agent 由系统总线 Lastore 服务（`org.deepin.dde.Lastore1`）通过 `RegisterAgent` 注册，其方法由系统总线 Lastore 服务调用，不通过 `org.deepin.dde.LastoreSessionHelper1` 服务名直接访问。
 
 | 字段 | 值 |
 |------|------|
-| Service | `org.deepin.dde.LastoreSessionHelper1` |
+| Service | 进程唯一连接名（System 总线） |
 | Object path | `/org/deepin/dde/Lastore1/Agent` |
 | Interface | `org.deepin.dde.Lastore1.Agent` |
 | Bus | System |
@@ -44,13 +44,6 @@ Agent 对象导出在相同的系统总线服务下，对象路径为 `/org/deep
 
 - **输入参数**: 无
 - **返回值**: `outArg0`（`a{ss}`，map[string]string）：代理信息，键为代理类型（`http`、`https`、`ftp`、`socks`），值为代理地址
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.LastoreSessionHelper1 \
-  --object-path /org/deepin/dde/Lastore1/Agent \
-  --method org.deepin.dde.Lastore1.Agent.GetManualProxy
-```
 
 #### SendNotify
 
@@ -67,14 +60,6 @@ gdbus call --system \
   - `expireTimeout`（int32, 类型 `i`）：过期超时时间（毫秒），`-1` 表示默认，`0` 表示不自动隐藏
 - **返回值**: `outArg0`（uint32, 类型 `u`）：通知 ID
 
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.LastoreSessionHelper1 \
-  --object-path /org/deepin/dde/Lastore1/Agent \
-  --method org.deepin.dde.Lastore1.Agent.SendNotify \
-  "appName" 0 "icon" "summary" "body" "[]" "{}" -1
-```
-
 #### CloseNotification
 
 关闭指定通知。
@@ -82,23 +67,9 @@ gdbus call --system \
 - **输入参数**: `id`（uint32, 类型 `u`）：通知 ID
 - **返回值**: 无
 
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.LastoreSessionHelper1 \
-  --object-path /org/deepin/dde/Lastore1/Agent \
-  --method org.deepin.dde.Lastore1.Agent.CloseNotification 1
-```
-
 #### ReportLog
 
 上报日志信息。
 
 - **输入参数**: `msg`（string, 类型 `s`）：日志消息
 - **返回值**: 无
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.LastoreSessionHelper1 \
-  --object-path /org/deepin/dde/Lastore1/Agent \
-  --method org.deepin.dde.Lastore1.Agent.ReportLog "log message"
-```

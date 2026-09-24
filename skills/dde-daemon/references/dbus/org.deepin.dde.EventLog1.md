@@ -12,17 +12,30 @@
 | Bus | Session |
 ### 事件日志方法
 
-#### WriteEventLog
+#### Enable
 
-写入事件日志。
+启用或禁用事件日志记录。
 
-- **输入参数**: `event`（string, 类型 `s`）：事件 JSON 字符串
+- **输入参数**: `enable`（bool, 类型 `b`）：是否启用事件日志记录
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.EventLog1 \
   --object-path /org/deepin/dde/EventLog1 \
-  --method org.deepin.dde.EventLog1.WriteEventLog "{}"
+  --method org.deepin.dde.EventLog1.Enable true
 ```
 
+#### ReportLog
+
+上报事件日志。
+
+- **输入参数**: `log`（string, 类型 `s`）：事件 JSON 字符串
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest org.deepin.dde.EventLog1 \
+  --object-path /org/deepin/dde/EventLog1 \
+  --method org.deepin.dde.EventLog1.ReportLog "{}"
+```
