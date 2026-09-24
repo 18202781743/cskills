@@ -22,6 +22,6 @@ xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现，为沙箱�
 
 ## 命令行选项
 
-该二进制不提供任何命令行选项。启动后直接注册 DBus 服务并进入事件循环，由 DBus 在沙箱应用请求系统服务时自动激活。
+该进程由 DBus 自动激活，不支持命令行选项参数。启动后直接注册 DBus 服务并进入事件循环。
 
 > 注意：`xdg-desktop-portal-dde` 是 Portal 后端守护进程，由 DBus 在沙箱应用请求系统服务时自动激活，通常无需手动运行。手动运行时需要图形环境（Display）支持，否则会因无法初始化 Qt 平台插件而崩溃。

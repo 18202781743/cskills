@@ -1,13 +1,13 @@
 ---
 name: xdg-desktop-portal-dde
-description: xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现，为沙箱应用提供访问系统资源的 Portal D-Bus 接口。本 skill 提供通过 Session 总线为沙箱应用提供截图、设置、壁纸、通知、文件选择、账户、访问、应用选择、后台管理、全局快捷键、Inhibit、密钥、锁定、请求的全局 Portal D-Bus 接口，以及 xdg-desktop-portal-dde 自身的后台服务命令行工具
+description: xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现，为沙箱应用提供访问系统资源的 Portal D-Bus 接口。本 skill 提供通过 Session 总线为沙箱应用提供截图、屏幕取色、屏幕共享、壁纸设置、通知发送与移除（仅作用于 portal 通道）、文件选择、账户查询、访问对话框、应用选择、后台运行管理、全局快捷键绑定、会话抑制、密钥检索、锁定模式设置、请求生命周期管理的 Portal D-Bus 接口，读写桌面环境全局设置（颜色方案、强调色）的 Settings 接口，以及 xdg-desktop-portal-dde 自身的后台服务命令行工具
 Categories:
   - Settings
 ---
 
 # xdg-desktop-portal-dde
 
-xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现。它通过 Session 总线为沙箱应用提供访问系统资源（文件选择、屏幕截图、屏幕取色、壁纸设置、通知发送、用户信息查询、全局快捷键绑定、会话抑制）的 Portal D-Bus 接口，由 DBus 在沙箱应用请求系统服务时自动激活。
+xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现。它通过 Session 总线为沙箱应用提供访问系统资源（文件选择、屏幕截图、屏幕取色、屏幕共享、壁纸设置、通知发送、用户信息查询、全局快捷键绑定、会话抑制）的 Portal D-Bus 接口，由 DBus 在沙箱应用请求系统服务时自动激活。
 
 ## CLI 命令
 
@@ -20,7 +20,7 @@ xdg-desktop-portal-dde 自身的后台服务进程，为沙箱应用（如 Flatp
 
 ## D-Bus 接口
 
-以下 D-Bus 接口均为全局接口，通过 Session 总线注册，对系统中所有沙箱应用生效。服务名为 `org.freedesktop.impl.portal.desktop.dde`，对象路径为 `/org/freedesktop/portal/desktop`。
+以下 D-Bus 接口均通过 Session 总线注册。服务名为 `org.freedesktop.impl.portal.desktop.dde`，对象路径为 `/org/freedesktop/portal/desktop`。
 
 ### 截图
 
@@ -28,9 +28,15 @@ xdg-desktop-portal-dde 自身的后台服务进程，为沙箱应用（如 Flatp
 
 详见 [org.freedesktop.impl.portal.Screenshot.md](references/dbus/org.freedesktop.impl.portal.Screenshot.md)
 
+### 屏幕共享
+
+提供屏幕共享会话创建、源选择和共享启动能力。仅在 Wayland 环境下可用。
+
+详见 [org.freedesktop.impl.portal.ScreenCast.md](references/dbus/org.freedesktop.impl.portal.ScreenCast.md)
+
 ### 设置
 
-提供桌面环境设置读取能力。
+读写桌面环境全局设置（颜色方案、强调色）。
 
 详见 [org.freedesktop.impl.portal.Settings.md](references/dbus/org.freedesktop.impl.portal.Settings.md)
 
@@ -42,7 +48,7 @@ xdg-desktop-portal-dde 自身的后台服务进程，为沙箱应用（如 Flatp
 
 ### 通知
 
-提供桌面通知发送和移除能力。
+仅作用于 portal 通道的通知发送与移除。
 
 详见 [org.freedesktop.impl.portal.Notification.md](references/dbus/org.freedesktop.impl.portal.Notification.md)
 
@@ -105,6 +111,28 @@ xdg-desktop-portal-dde 自身的后台服务进程，为沙箱应用（如 Flatp
 提供标准 portal 请求关闭能力。
 
 详见 [org.freedesktop.impl.portal.Request.md](references/dbus/org.freedesktop.impl.portal.Request.md)
+
+## 平台可用性
+
+各 D-Bus 接口的平台可用性如下：
+
+| 接口 | 平台可用性 |
+|------|------------|
+| ScreenCast | 仅 Wayland |
+| Wallpaper | 仅 Wayland |
+| Background | 仅 X11（需 `XDG_CURRENT_DESKTOP=DDE` 或 `DEEPIN`） |
+| Settings | 仅 X11（需 `XDG_CURRENT_DESKTOP=DDE` 或 `DEEPIN`） |
+| Inhibit | 仅 X11（需 `XDG_CURRENT_DESKTOP=DDE` 或 `DEEPIN`） |
+| Account | 仅 X11（需 `XDG_CURRENT_DESKTOP=DDE` 或 `DEEPIN`） |
+| GlobalShortcuts | 仅 X11（需 `XDG_CURRENT_DESKTOP=DDE` 或 `DEEPIN`） |
+| Lockdown | 仅 X11（需 `XDG_CURRENT_DESKTOP=DDE` 或 `DEEPIN`） |
+| Secret | 仅 X11（需 `XDG_CURRENT_DESKTOP=DDE` 或 `DEEPIN`） |
+| FileChooser | 双平台（Wayland 和 X11） |
+| Screenshot | 双平台（Wayland 和 X11） |
+| Notification | 双平台（Wayland 和 X11） |
+| Access | 双平台（Wayland 和 X11） |
+| AppChooser | 双平台（Wayland 和 X11） |
+| Request | 双平台（Wayland 和 X11） |
 
 ## 兼容性说明
 

@@ -1,6 +1,6 @@
 # org.freedesktop.impl.portal.Notification 接口参考
 
-该接口提供桌面通知发送和移除能力，允许沙箱应用通过 Portal 接口发送桌面通知并接收通知交互回调。
+该接口仅作用于 portal 通道的通知发送与移除，允许沙箱应用通过 Portal 接口发送桌面通知并接收通知交互回调。
 
 ## 接口信息
 
