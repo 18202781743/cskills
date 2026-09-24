@@ -68,7 +68,6 @@ gdbus call --session \
 - **使用场景**：系统托盘监听此信号以更新托盘图标列表。
 
 - **参数**: `itemId`（string, 类型 `s`）：项 ID
-- **触发条件**: 状态通知项注册时发出
 
 ```bash
 gdbus monitor --session \
@@ -85,7 +84,6 @@ gdbus monitor --session \
 - **使用场景**：系统托盘监听此信号以移除对应的托盘图标。
 
 - **参数**: `itemId`（string, 类型 `s`）：项 ID
-- **触发条件**: 状态通知项注销时发出
 
 ```bash
 gdbus monitor --session \
@@ -96,4 +94,4 @@ gdbus monitor --session \
 
 ## 兼容性接口
 
-`org.kde.StatusNotifierWatcher` 是 KDE 标准系统托盘状态通知接口，由 dde-daemon 系统托盘模块在 `org.deepin.dde.TrayManager1` 服务上注册，兼容遵循 KDE StatusNotifierItem 协议的应用程序。
+`org.kde.StatusNotifierWatcher` 是 KDE 标准系统托盘状态通知接口，由 `trayicon1/` 模块在 `org.deepin.dde.TrayManager1` 服务上注册，兼容遵循 KDE StatusNotifierItem 协议的应用程序。
