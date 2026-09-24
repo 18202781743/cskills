@@ -16,6 +16,8 @@
 
 注销当前会话。
 
+> ⚠️ **已废弃**：此方法在源码中标记为 `Q_DECL_DEPRECATED`，建议使用 `RequestLogout` 替代。
+
 - **输入参数**: 无
 - **返回值**: 无
 
@@ -29,6 +31,8 @@ gdbus call --session \
 #### Reboot
 
 重启系统。
+
+> ⚠️ **已废弃**：此方法在源码中标记为 `Q_DECL_DEPRECATED`，建议使用 `RequestReboot` 替代。
 
 - **输入参数**: 无
 - **返回值**: 无
@@ -44,6 +48,8 @@ gdbus call --session \
 
 关闭系统。
 
+> ⚠️ **已废弃**：此方法在源码中标记为 `Q_DECL_DEPRECATED`，建议使用 `RequestShutdown` 替代。
+
 - **输入参数**: 无
 - **返回值**: 无
 
@@ -58,6 +64,8 @@ gdbus call --session \
 
 显示电源操作选择界面。
 
+> ⚠️ **已废弃**：此方法在源码中标记为 `Q_DECL_DEPRECATED`。
+
 - **输入参数**: 无
 - **返回值**: 无
 
@@ -66,48 +74,6 @@ gdbus call --session \
   --dest org.deepin.dde.SessionManager1 \
   --object-path /org/deepin/dde/SessionManager1 \
   --method org.deepin.dde.SessionManager1.PowerOffChoose
-```
-
-#### ForceLogout
-
-强制注销当前会话。
-
-- **输入参数**: 无
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.SessionManager1 \
-  --object-path /org/deepin/dde/SessionManager1 \
-  --method org.deepin.dde.SessionManager1.ForceLogout
-```
-
-#### ForceReboot
-
-强制重启系统。
-
-- **输入参数**: 无
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.SessionManager1 \
-  --object-path /org/deepin/dde/SessionManager1 \
-  --method org.deepin.dde.SessionManager1.ForceReboot
-```
-
-#### ForceShutdown
-
-强制关闭系统。
-
-- **输入参数**: 无
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.SessionManager1 \
-  --object-path /org/deepin/dde/SessionManager1 \
-  --method org.deepin.dde.SessionManager1.ForceShutdown
 ```
 
 #### RequestLogout
@@ -193,20 +159,6 @@ gdbus call --session \
   --object-path /org/deepin/dde/SessionManager1 \
   --method org.deepin.dde.SessionManager1.RequestLock
 ```
-
-#### RequestHibernate
-
-请求休眠。
-
-- **输入参数**: 无
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.SessionManager1 \
-  --object-path /org/deepin/dde/SessionManager1 \
-  --method org.deepin.dde.SessionManager1.RequestHibernate
-```
 ### 能力查询
 
 #### CanLogout
@@ -253,10 +205,10 @@ gdbus call --session \
 
 #### CanSuspend
 
-查询是否可以挂起。
+查询系统是否支持待机。
 
 - **输入参数**: 无
-- **返回值**: `b`（bool）：是否可以挂起
+- **返回值**: `b`（bool）：是否支持待机
 
 ```bash
 gdbus call --session \
@@ -267,10 +219,10 @@ gdbus call --session \
 
 #### CanHibernate
 
-查询是否可以休眠。
+查询系统是否支持休眠。
 
 - **输入参数**: 无
-- **返回值**: `b`（bool）：是否可以休眠
+- **返回值**: `b`（bool）：是否支持休眠
 
 ```bash
 gdbus call --session \
@@ -282,7 +234,7 @@ gdbus call --session \
 
 #### Inhibit
 
-添加会话抑制。
+注册会话抑制器，阻止系统执行指定的会话操作（如待机、注销、关机等）。
 
 - **输入参数**: `appId`（string, 类型 `s`）：应用 ID；`toplevelXid`（uint32, 类型 `u`）：窗口 XID；`reason`（string, 类型 `s`）：抑制原因；`flags`（uint32, 类型 `u`）：抑制标志
 - **返回值**: `u`（uint32）：抑制 cookie
@@ -339,7 +291,7 @@ gdbus call --session \
 
 #### Register
 
-注册应用。
+注册应用，使其参与会话生命周期管理。
 
 - **输入参数**: `id`（string, 类型 `s`）：应用 ID
 - **返回值**: `b`（bool）：是否成功
@@ -452,6 +404,8 @@ gdbus call --session \
 
 会话阶段。
 
+> ⚠️ **已废弃**：此属性在源码中标记为 `Q_DECL_DEPRECATED`。
+
 | 属性 | 值 |
 |------|------|
 | 类型 | `i` |
@@ -468,6 +422,19 @@ gdbus call --session \
 ```
 
 ### 会话管理器信号
+
+#### LockedChanged
+
+会话锁定状态变化时发出。
+
+- **参数**: `locked`（bool, 类型 `b`）：是否锁定
+- **触发条件**: 会话锁定状态变化时发出
+
+```bash
+gdbus monitor --session \
+  --dest org.deepin.dde.SessionManager1 \
+  --object-path /org/deepin/dde/SessionManager1
+```
 
 #### Unlock
 
@@ -507,4 +474,3 @@ gdbus monitor --session \
   --dest org.deepin.dde.SessionManager1 \
   --object-path /org/deepin/dde/SessionManager1
 ```
-
