@@ -1,13 +1,13 @@
 ---
 name: dde-daemon
-description: 提供音频、蓝牙、输入设备、语言选择、显示、账户、定时、系统信息、搜索、会话监控、声音效果、X 事件监控、守护进程、剪贴板、屏幕保护、系统托盘、事件日志、手势、背光、Greeter、锁屏、GRUB2 引导、飞行模式、UADP、交换调度、按键事件、应用商店会话的系统级 D-Bus 接口，会话与系统守护进程、背光调节、GRUB2 配置、语言选择、音效播放、锁屏触发、默认终端与文件管理器设置、X 认证权限修复、文件搜索的 CLI 命令，以及显示器、外观、输入设备、鼠标、电源、音效、系统信息、触摸板、触摸屏、小红点、Wacom 数位板的 DConfig 配置项（dde-daemon 自身管理的配置资源）
+description: dde-daemon 是 DDE 桌面环境的核心后端守护进程，负责管理系统音频、蓝牙、输入设备、显示、账户、电源、语言选择、GRUB2 引导、手势、锁屏、屏幕保护、系统信息、搜索、剪贴板、飞行模式、按键事件、应用商店会话。本 skill 提供 dde-daemon 的系统级 D-Bus 接口文档、CLI 命令使用说明和 DConfig 配置项参考。
 Categories:
   - Settings
 ---
 
 # dde-daemon
 
-dde-daemon 是 DDE 后端守护进程组件，通过 Session 和 System 总线提供音频、蓝牙、输入设备、语言选择、显示、账户、定时、系统信息、搜索、会话监控、声音效果、X 事件监控、守护进程、剪贴板、屏幕保护、系统托盘、事件日志、手势、背光、Greeter、锁屏、GRUB2 引导、飞行模式、UADP、交换调度、按键事件、应用商店会话的系统级 D-Bus 接口，提供会话与系统守护进程、背光调节、GRUB2 配置、语言选择、音效播放、锁屏触发、默认终端与文件管理器设置、X 认证权限修复、文件搜索的 CLI 命令，并提供显示器、外观、输入设备、鼠标、电源、音效、系统信息、触摸板、触摸屏、小红点、Wacom 数位板的 DConfig 配置项（dde-daemon 自身管理的配置资源）。
+dde-daemon 是 DDE 桌面环境的核心后端守护进程，通过 Session 和 System 总线提供系统级 D-Bus 接口，同时提供 CLI 命令和 DConfig 配置项。以下分别列出各接口、命令和配置的参考文档。
 
 ## CLI 命令
 
@@ -256,13 +256,6 @@ Xauthority 权限修复工具，用于修正 `.Xauthority` 文件的权限问题
 详见 [org.deepin.dde.LastoreSessionHelper1.md](references/dbus/org.deepin.dde.LastoreSessionHelper1.md)
 
 
-### 兼容性接口
-
-dde-daemon 中存在部分为兼容旧版调用或第三方标准协议而保留的 D-Bus 接口：
-
-- **`org.dde.session.Daemon1`**（Session 总线）：旧版兼容服务名，与 `org.deepin.dde.Daemon1`（Session 总线）提供相同的 CallTrace、StartPart2 方法，保留此服务名别名以兼容历史调用方。
-- **`org.deepin.dde.ScreenSaver1`**（Session 总线）：DDE 屏幕保护服务名，在对象路径 `/org/freedesktop/ScreenSaver` 上实现 freedesktop 标准 `org.freedesktop.ScreenSaver` 接口，兼容遵循 freedesktop 屏幕保护规范的应用程序。
-- **`org.kde.StatusNotifierWatcher`**（Session 总线）：KDE 标准系统托盘状态通知接口，由 `trayicon1/` 模块在 `org.deepin.dde.TrayManager1` 服务上注册，兼容遵循 KDE StatusNotifierItem 协议的应用程序。
 
 ## DConfig 配置项
 
