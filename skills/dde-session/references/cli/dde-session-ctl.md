@@ -23,8 +23,9 @@ DDE 会话控制工具，用于执行关机、退出会话、注销这三项会�
 | 选项 | 说明 | 是否需要值 |
 |------|------|------------|
 | `-h, --help` | 显示命令行帮助 | 否 |
-| `--version` | 显示版本信息 | 否 |
-| `-s, --shutdown` | 关闭 DDE | 否 |
+| `--help-all` | 显示包含 Qt 通用选项的完整帮助 | 否 |
+| `-v, --version` | 显示版本信息 | 否 |
+| `-s, --shutdown` | 关闭 DDE（关机） | 否 |
 | `-S, --session-exit` | 会话退出任务 | 否 |
 | `-l, --logout` | 注销会话 | 否 |
 
@@ -41,5 +42,5 @@ DDE 会话控制工具，用于执行关机、退出会话、注销这三项会�
 /usr/libexec/dde-session-ctl -l
 
 # 查看版本信息
-/usr/libexec/dde-session-ctl --version
+/usr/libexec/dde-session-ctl -v
 ```
