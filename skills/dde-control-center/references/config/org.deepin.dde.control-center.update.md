@@ -6,8 +6,8 @@
 
 | Key | Name | Description | 类型 | Permissions | Flags |
 |---|---|---|---|---|---|
-| `updateSafety` | 安全更新 | 配置控制中心更新设置中安全更新的显示状态 | string | readwrite | global |
-| `updateAutoInstall` | 自动安装 | 配置控制中心更新设置中自动安装的显示状态 | string | readwrite | global |
+| `updateSafety` | 安全更新 | 配置控制中心更新设置中安全更新的显示状态 | string | readwrite | |
+| `updateAutoInstall` | 自动安装 | 配置控制中心更新设置中自动安装的显示状态 | string | readwrite | |
 | `updateThirdPartySource` | 第三方源 | 配置控制中心更新设置中第三方源的显示状态 | string | readwrite | global |
 | `p2pUpdateEnabled` | P2P 更新 | 配置控制中心更新设置中 P2P 更新的显示状态 | string | readwrite | global |
 | `updateHistoryEnabled` | 更新历史记录 | 配置控制中心更新设置中更新历史记录的显示状态 | string | readwrite | |
