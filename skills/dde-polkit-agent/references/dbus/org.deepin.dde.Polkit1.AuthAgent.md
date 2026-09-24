@@ -26,3 +26,7 @@ gdbus call --session \
   --object-path /com/deepin/dde/Polkit1/AuthAgent \
   --method org.deepin.dde.Polkit1.AuthAgent.setWIdForAction "org.example.action" 12345
 ```
+
+## 兼容性说明
+
+dde-polkit-agent 仅注册唯一的 D-Bus 服务 `org.deepin.dde.Polkit1.AuthAgent`，不存在为兼容旧版接口而保留的别名或废弃接口。该接口为当前正在使用的唯一 D-Bus 接口，无历史兼容接口。
