@@ -3,7 +3,7 @@ name: dde-application-manager
 description: >
   dde-application-manager 是 DDE 应用管理器组件，负责应用生命周期管理，包括应用启动、应用属性管理、应用实例管理、任务跟踪、MIME 类型管理和应用更新通知。
   本 skill 提供 dde-application-manager 的 D-Bus 接口、DConfig 配置项和 CLI 命令的参考文档。
-  D-Bus 接口覆盖应用管理、应用属性、应用实例、任务管理、任务对象操作、MIME 类型管理和应用更新通知；
+  D-Bus 接口覆盖应用管理、对象管理、应用属性、应用实例、任务管理、任务对象操作、MIME 类型管理和应用更新通知；
   DConfig 配置项覆盖应用启动次数记录、应用环境变量管理和应用属性会话级覆盖；
   CLI 命令覆盖应用启动与身份识别。
 Categories:
@@ -80,14 +80,7 @@ dde-application-manager 是 DDE 应用管理器组件，通过 Session 总线提
 
 详见 [org.deepin.dde.application-manager](references/config/org.deepin.dde.application-manager.md)
 
-### 对象管理
-
-提供所有已注册应用对象的批量查询和应用对象添加/移除事件通知能力。
-
-详见 [org.desktopspec.ObjectManager1.md](references/dbus/org.desktopspec.ObjectManager1.md)
-
-### 应用属性
-会话级覆盖
+### 应用属性会话级覆盖
 
 应用 Exec、TryExec 和 Icon 字段的会话级覆盖配置。
 
