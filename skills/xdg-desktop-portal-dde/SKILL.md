@@ -1,19 +1,19 @@
 ---
 name: xdg-desktop-portal-dde
-description: 提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、访问、全局快捷键、账户和后台管理的 portal D-Bus 接口
+description: 提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、访问、全局快捷键、账户和后台管理的 Session Portal D-Bus 接口，以及 xdg-desktop-portal-dde 自身的后台服务命令行工具
 Categories:
-  - Application
+  - Settings
 ---
 
 # xdg-desktop-portal-dde
 
-xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现，通过 Session 总线提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、访问、全局快捷键、账户和后台管理能力。
+xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现。通过 Session 总线为沙箱应用提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、访问、全局快捷键、账户和后台管理的 Portal D-Bus 接口；同时提供 xdg-desktop-portal-dde 自身的后台服务命令行工具，由 DBus 在沙箱应用请求系统服务时自动激活。
 
 ## CLI 命令
 
 ### xdg-desktop-portal-dde
 
-DDE 的 XDG Desktop Portal 后端实现，为沙箱应用（如 Flatpak）提供访问系统资源（文件选择、屏幕截图、屏幕共享）的 DBus 接口。
+xdg-desktop-portal-dde 自身的后台服务进程，为沙箱应用（如 Flatpak）提供访问系统资源（文件选择、屏幕截图、屏幕共享）的 DBus 接口。由 DBus 在沙箱应用请求系统服务时自动激活，一般不需要用户直接运行。
 
 详见 [xdg-desktop-portal-dde.md](references/cli/xdg-desktop-portal-dde.md)
 
