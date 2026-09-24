@@ -10,47 +10,19 @@
 | Object path | `/org/freedesktop/portal/desktop` |
 | Interface | `org.freedesktop.impl.portal.Wallpaper` |
 | Bus | Session |
+
 ### 壁纸方法
 
-#### Set
+#### SetWallpaperURI
 
-设置壁纸。
+设置壁纸 URI。
 
-- **输入参数**: `parent_handle`（object, 类型 `o`）：父窗口句柄；`options`（字典, 类型 `a{sv}`）：壁纸选项
-- **返回值**: `o`（object path）：请求路径
-
-```bash
-gdbus call --session \
-  --dest org.freedesktop.impl.portal.desktop.dde \
-  --object-path /org/freedesktop/portal/desktop \
-  --method org.freedesktop.impl.portal.Wallpaper.Set "" {}
-```
-
-#### SetColor
-
-设置纯色壁纸。
-
-- **输入参数**: `parent_handle`（object, 类型 `o`）：父窗口句柄；`options`（字典, 类型 `a{sv}`）：颜色选项
-- **返回值**: `o`（object path）：请求路径
+- **输入参数**: `handle`（object path, 类型 `o`）：请求句柄；`app_id`（string, 类型 `s`）：应用 ID；`parent_window`（string, 类型 `s`）：父窗口标识；`uri`（string, 类型 `s`）：壁纸 URI；`options`（字典, 类型 `a{sv}`）：壁纸选项
+- **返回值**: `u`（uint）：响应码
 
 ```bash
 gdbus call --session \
   --dest org.freedesktop.impl.portal.desktop.dde \
   --object-path /org/freedesktop/portal/desktop \
-  --method org.freedesktop.impl.portal.Wallpaper.SetColor "" {}
+  --method org.freedesktop.impl.portal.Wallpaper.SetWallpaperURI "/" "app" "" "file:///usr/share/wallpapers/deepin/desktop.jpg" {}
 ```
-
-#### Ensure
-
-确保壁纸设置生效。
-
-- **输入参数**: `self`（string, 类型 `s`）：壁纸标识
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.freedesktop.impl.portal.desktop.dde \
-  --object-path /org/freedesktop/portal/desktop \
-  --method org.freedesktop.impl.portal.Wallpaper.Ensure "wallpaper_id"
-```
-

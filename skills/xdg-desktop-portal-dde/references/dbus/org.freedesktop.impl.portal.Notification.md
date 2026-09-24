@@ -10,33 +10,33 @@
 | Object path | `/org/freedesktop/portal/desktop` |
 | Interface | `org.freedesktop.impl.portal.Notification` |
 | Bus | Session |
+
 ### 通知方法
 
-#### Add
+#### AddNotification
 
-添加通知。
+发送桌面通知。
 
-- **输入参数**: `parent_handle`（object, 类型 `o`）：父窗口句柄；`id`（string, 类型 `s`）：通知 ID；`notification`（字典, 类型 `a{sv}`）：通知内容
-- **返回值**: `o`（object path）：请求路径
-
-```bash
-gdbus call --session \
-  --dest org.freedesktop.impl.portal.desktop.dde \
-  --object-path /org/freedesktop/portal/desktop \
-  --method org.freedesktop.impl.portal.Notification.Add "" "notif1" {}
-```
-
-#### Remove
-
-移除通知。
-
-- **输入参数**: `id`（string, 类型 `s`）：通知 ID
-- **返回值**: `o`（object path）：请求路径
+- **输入参数**: `app_id`（string, 类型 `s`）：应用 ID；`id`（string, 类型 `s`）：通知 ID；`notification`（字典, 类型 `a{sv}`）：通知内容（包含 title、body、icon 等）
+- **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.freedesktop.impl.portal.desktop.dde \
   --object-path /org/freedesktop/portal/desktop \
-  --method org.freedesktop.impl.portal.Notification.Remove "notif1"
+  --method org.freedesktop.impl.portal.Notification.AddNotification "app" "notif1" "{}"
 ```
 
+#### RemoveNotification
+
+移除桌面通知。
+
+- **输入参数**: `app_id`（string, 类型 `s`）：应用 ID；`id`（string, 类型 `s`）：通知 ID
+- **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest org.freedesktop.impl.portal.desktop.dde \
+  --object-path /org/freedesktop/portal/desktop \
+  --method org.freedesktop.impl.portal.Notification.RemoveNotification "app" "notif1"
+```

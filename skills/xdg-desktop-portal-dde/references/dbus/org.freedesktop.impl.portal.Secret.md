@@ -10,19 +10,25 @@
 | Object path | `/org/freedesktop/portal/desktop` |
 | Interface | `org.freedesktop.impl.portal.Secret` |
 | Bus | Session |
+
+### 属性
+
+| 属性名 | 类型 | 权限 | 说明 |
+|--------|------|------|------|
+| `version` | `u` | read | 接口版本号 |
+
 ### 密钥方法
 
 #### RetrieveSecret
 
 检索密钥。
 
-- **输入参数**: `parent_handle`（object, 类型 `o`）：父窗口句柄；`namespace`（string, 类型 `s`）：命名空间；`path`（string, 类型 `s`）：密钥路径
-- **返回值**: `o`（object path）：请求路径
+- **输入参数**: `handle`（object path, 类型 `o`）：请求句柄；`app_id`（string, 类型 `s`）：应用 ID；`fd`（文件描述符, 类型 `h`）：文件描述符；`options`（字典, 类型 `a{sv}`）：选项
+- **返回值**: `u`（uint）：响应码；`result`（字典, 类型 `a{sv}`）：密钥检索结果
 
 ```bash
 gdbus call --session \
   --dest org.freedesktop.impl.portal.desktop.dde \
   --object-path /org/freedesktop/portal/desktop \
-  --method org.freedesktop.impl.portal.Secret.RetrieveSecret "" "ns" "path"
+  --method org.freedesktop.impl.portal.Secret.RetrieveSecret "/" "app" 0 {}
 ```
-
