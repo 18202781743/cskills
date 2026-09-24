@@ -10,6 +10,11 @@
 | Object path | `/org/deepin/dde/ShutdownFront1` |
 | Interface | `org.deepin.dde.ShutdownFront1` |
 | Bus | Session |
+
+## 兼容接口
+
+该接口同时通过旧版兼容别名 `com.deepin.dde.shutdownFront`（对象路径 `/com/deepin/dde/shutdownFront`）暴露，两者共享同一实现，功能完全相同。旧版接口仅供历史应用向后兼容使用。
+
 ### 关机操作
 
 #### Show

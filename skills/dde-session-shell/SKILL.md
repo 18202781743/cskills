@@ -56,6 +56,15 @@ LightDM Deepin Greeter 的辅助程序，用于在登录过程中处理亮度调
 
 详见 [org.deepin.dde.ShutdownFront1.md](references/dbus/org.deepin.dde.ShutdownFront1.md)
 
+### 兼容接口
+
+dde-session-shell 通过 Dual Q_CLASSINFO 机制同时注册新旧两套 D-Bus 服务名，旧版接口作为兼容别名保留，与新版接口共享同一实现，提供完全相同的功能。旧版接口仅供历史应用向后兼容使用，新代码应优先使用上述 `org.deepin.dde.LockFront1` 和 `org.deepin.dde.ShutdownFront1` 接口。
+
+| 兼容服务名 | 对象路径 | 接口名 | 对应新版接口 | 说明 |
+|---|---|---|---|---|
+| `com.deepin.dde.lockFront` | `/com/deepin/dde/lockFront` | `com.deepin.dde.lockFront` | `org.deepin.dde.LockFront1` | 锁屏前端旧版兼容别名 |
+| `com.deepin.dde.shutdownFront` | `/com/deepin/dde/shutdownFront` | `com.deepin.dde.shutdownFront` | `org.deepin.dde.ShutdownFront1` | 关机前端旧版兼容别名 |
+
 ## DConfig 配置项
 
 dde-session-shell 通过 DConfig 暴露快速登录功能的开关配置。该配置由 lightdm-deepin-greeter 读取应用，非系统全局账户配置。
