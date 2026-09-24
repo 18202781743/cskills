@@ -13,16 +13,18 @@
 | Interface | `org.deepin.dde.LocaleHelper1` |
 | Bus | System |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
+> **验证说明**：已通过 `gdbus introspect --system` 运行时内省验证，以下方法均可访问。源码中另有 `SetAllowCaller` 方法（`locale-helper/exported_methods_auto.go`），但在当前运行时内省中不可见，可能需要特定安全上下文或尚未部署到当前环境，此处不予文档化。
 
-### 区域设置方法
+## 区域设置方法
 
-#### GenerateLocale
+### GenerateLocale
 
-生成区域设置。
+生成指定的区域设置。该方法执行完毕后会发出 `Success` 信号通知结果。
 
-- **输入参数**: `s`（string, 类型 `s`）：区域名称
-- **返回值**: `s`（string）：生成的区域设置
+- **输入参数**:
+  - `locale`（string, 类型 `s`）：区域名称（如 `zh_CN.UTF-8`）
+- **返回值**: 无（出错时返回 dbus.Error）
+- **信号**: 完成后发出 `Success(ok bool, reason string)` 信号
 
 权限：
 - requires_sudo: true
@@ -31,15 +33,17 @@
 pkexec gdbus call --system \
   --dest org.deepin.dde.LocaleHelper1 \
   --object-path /org/deepin/dde/LocaleHelper1 \
-  --method org.deepin.dde.LocaleHelper1.GenerateLocale "zh_CN.UTF-8"
+  --method org.deepin.dde.LocaleHelper1.GenerateLocale \
+  "zh_CN.UTF-8"
 ```
 
-#### SetLocale
+### SetLocale
 
 设置系统区域。
 
-- **输入参数**: `s`（string, 类型 `s`）：区域名称
-- **返回值**: 无
+- **输入参数**:
+  - `locale`（string, 类型 `s`）：区域名称（如 `zh_CN.UTF-8`）
+- **返回值**: 无（出错时返回 dbus.Error）
 
 权限：
 - requires_sudo: true
@@ -48,20 +52,22 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.LocaleHelper1 \
   --object-path /org/deepin/dde/LocaleHelper1 \
-  --method org.deepin.dde.LocaleHelper1.SetLocale "zh_CN.UTF-8"
+  --method org.deepin.dde.LocaleHelper1.SetLocale \
+  "zh_CN.UTF-8"
 ```
 
-#### SetAllowCaller
+## 信号
 
-设置允许的调用者。
+### Success
 
-- **输入参数**: `s`（string, 类型 `s`）：调用者
-- **返回值**: 无
+`GenerateLocale` 方法执行完毕后发出此信号，通知操作结果。
+
+- **参数**:
+  - `ok`（bool, 类型 `b`）：操作是否成功
+  - `reason`（string, 类型 `s`）：失败原因（成功时为空字符串）
 
 ```bash
-gdbus call --system \
+gdbus monitor --system \
   --dest org.deepin.dde.LocaleHelper1 \
-  --object-path /org/deepin/dde/LocaleHelper1 \
-  --method org.deepin.dde.LocaleHelper1.SetAllowCaller "myapp"
+  --object-path /org/deepin/dde/LocaleHelper1
 ```
-

@@ -11,16 +11,16 @@
 | Interface | `org.deepin.dde.Device1` |
 | Bus | System |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
+> **验证说明**：已通过 `gdbus introspect --system` 运行时内省验证，所有方法均可访问。
 
-### 设备管理方法
+## 设备管理方法
 
-#### HasBluetoothDeviceBlocked
+### HasBluetoothDeviceBlocked
 
 查询是否有蓝牙设备被阻止。
 
 - **输入参数**: 无
-- **返回值**: `b`（bool）：是否有设备被阻止
+- **返回值**: `has`（bool, 类型 `b`）：是否有设备被阻止
 
 ```bash
 gdbus call --system \
@@ -29,7 +29,7 @@ gdbus call --system \
   --method org.deepin.dde.Device1.HasBluetoothDeviceBlocked
 ```
 
-#### UnblockBluetoothDevices
+### UnblockBluetoothDevices
 
 解除所有蓝牙设备的阻止。
 
@@ -45,4 +45,3 @@ pkexec gdbus call --system \
   --object-path /org/deepin/dde/Device1 \
   --method org.deepin.dde.Device1.UnblockBluetoothDevices
 ```
-
