@@ -10,16 +10,16 @@
 | Object path | `/org/deepin/dde/Notification1` |
 | Interface | `org.deepin.dde.Notification1` |
 | Bus | Session |
-## 通知接口兼容性
 
-dde-shell 的通知服务由同一个通知对象注册了以下多个 D-Bus 服务接口，以兼容标准接口并提供 DDE 扩展功能：
+## 兼容性接口
 
-- `org.freedesktop.Notifications`（`/org/freedesktop/Notifications`）— freedesktop 标准通知接口，提供通知发送、关闭和能力查询功能，供使用 freedesktop 通知规范的应用调用。
-- `org.deepin.dde.Notification1`（`/org/deepin/dde/Notification1`）— DDE 扩展通知接口，是 `org.freedesktop.Notifications` 的超集，在标准通知功能基础上增加了应用通知管理、系统通知配置和通知记录管理功能。
-- `org.deepin.dde.shell.notification.center` — 通知中心接口，提供通知中心的管理功能。
-- `org.deepin.dde.Widgets1`（`/org/deepin/dde/Widgets1`）— 通知中心窗口控制接口，提供通知中心窗口的 Toggle/Show/Hide 控制。
+dde-shell 的通知服务由同一个 `NotificationManager` 对象注册了以下 D-Bus 服务接口，以兼容 freedesktop 标准通知规范并提供 DDE 扩展功能：
 
-`org.deepin.dde.Notification1` 与 `org.freedesktop.Notifications` 共用同一通知服务实现，前者是后者的超集。保留 `org.freedesktop.Notifications` 是为了兼容遵循 freedesktop 通知规范的应用，`org.deepin.dde.Notification1` 则在标准接口基础上提供 DDE 扩展的通知管理功能。
+- `org.freedesktop.Notifications`（`/org/freedesktop/Notifications`）— freedesktop 标准通知接口，是 `org.deepin.dde.Notification1` 的子集，仅提供通知发送（`Notify`）、关闭（`CloseNotification`）、能力查询（`GetCapabilities`）和服务器信息查询（`GetServerInformation`）功能。保留此接口是为了兼容遵循 freedesktop 通知规范的应用。
+
+`org.deepin.dde.Notification1`（`/org/deepin/dde/Notification1`）是 `org.freedesktop.Notifications` 的超集，在标准通知功能基础上增加了应用通知管理、系统通知配置和通知记录管理功能。两个接口共用同一通知服务实现。
+
+> 注意：`org.deepin.dde.shell.notification.center` 是独立的通知中心面板接口，不属于本接口的兼容范围，详见 [org.deepin.dde.shell.notification.center](org.deepin.dde.shell.notification.center.md)。
 
 ## 方法、属性与信号
 
@@ -230,6 +230,7 @@ gdbus call --session \
 
 用户触发通知动作时发出。
 
+- **触发条件**: 用户点击通知上的动作按钮时触发
 - **参数**:
   - `id`（uint, 类型 `u`）：通知 ID
   - `actionKey`（string, 类型 `s`）：动作键
@@ -244,6 +245,7 @@ gdbus monitor --session \
 
 通知关闭时发出。
 
+- **触发条件**: 通知过期、用户手动关闭、调用 CloseNotification 时触发
 - **参数**:
   - `id`（uint, 类型 `u`）：通知 ID
   - `reason`（uint, 类型 `u`）：关闭原因；`1` 表示过期，`2` 表示用户关闭，`3` 表示调用方关闭，`4` 表示原因未定义
@@ -258,6 +260,7 @@ gdbus monitor --session \
 
 通知激活并产生激活令牌时发出。
 
+- **触发条件**: 通知被点击激活且系统提供 xdg-activation token 时触发
 - **参数**:
   - `id`（uint, 类型 `u`）：通知 ID
   - `token`（string, 类型 `s`）：激活令牌
@@ -316,31 +319,21 @@ gdbus monitor --session \
 
 #### AppSettingChanged
 
+> ⚠️ **当前未实现**：该信号在源码中已声明但从未 emit，当前不会触发。
+
 应用通知设置变化时发出。
 
 - **参数**:
   - `settings`（string, 类型 `s`）：设置 JSON 字符串
-- **触发条件**: 调用 `SetAppSetting` 后发出
-
-```bash
-gdbus monitor --session \
-  --dest org.deepin.dde.Notification1 \
-  --object-path /org/deepin/dde/Notification1
-```
 
 #### SystemSettingChanged
+
+> ⚠️ **当前未实现**：该信号在源码中已声明但从未 emit，当前不会触发。
 
 系统通知设置变化时发出。
 
 - **参数**:
   - `settings`（string, 类型 `s`）：设置 JSON 字符串
-- **触发条件**: 系统通知设置变化时发出
-
-```bash
-gdbus monitor --session \
-  --dest org.deepin.dde.Notification1 \
-  --object-path /org/deepin/dde/Notification1
-```
 
 #### SystemInfoChanged
 

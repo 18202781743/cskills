@@ -25,31 +25,21 @@ Dock 面板服务除当前使用的 `org.deepin.ds.Dock` 外，还注册了两�
 
 #### callShow
 
+> ⚠️ **未实现的桩函数**：该方法在源码（`dockpanel.cpp`）中为 TODO 空桩实现，当前不可用。
+
 调用 Dock 显示。
 
 - **输入参数**: 无
 - **返回值**: 无
 
-```bash
-gdbus call --session \
-  --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/ds/Dock \
-  --method org.deepin.ds.Dock.callShow
-```
-
 #### ReloadPlugins
+
+> ⚠️ **未实现的桩函数**：该方法在源码（`dockpanel.cpp`）中为 TODO 空桩实现，当前不可用。
 
 重新加载 Dock 插件。
 
 - **输入参数**: 无
 - **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.ds.Dock \
-  --object-path /org/deepin/ds/Dock \
-  --method org.deepin.ds.Dock.ReloadPlugins
-```
 
 ### Dock 属性
 
