@@ -16,7 +16,7 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 
 ## 用法
 
-`trayplugin-loader [options]`
+`/usr/libexec/trayplugin-loader [options]`
 
 ## 参数
 
@@ -32,17 +32,17 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 
 ```bash
 # 加载单个托盘插件
-trayplugin-loader -p /usr/lib/dde-tray-loader/plugins/mytray.so
+/usr/libexec/trayplugin-loader -p /usr/lib/dde-tray-loader/plugins/mytray.so
 
 # 加载多个托盘插件（用分号分隔路径）
-trayplugin-loader -p /usr/lib/dde-tray-loader/plugins/tray1.so;/usr/lib/dde-tray-loader/plugins/tray2.so
+/usr/libexec/trayplugin-loader -p /usr/lib/dde-tray-loader/plugins/tray1.so;/usr/lib/dde-tray-loader/plugins/tray2.so
 
 # 加载插件并指定组名（用于面板分组显示）
-trayplugin-loader -p /usr/lib/dde-tray-loader/plugins/mytray.so -g panel-tray
+/usr/libexec/trayplugin-loader -p /usr/lib/dde-tray-loader/plugins/mytray.so -g panel-tray
 
 # 按组名加载该组下所有插件
-trayplugin-loader -group panel-tray
+/usr/libexec/trayplugin-loader -group panel-tray
 
 # 查看版本信息
-trayplugin-loader --version
+/usr/libexec/trayplugin-loader --version
 ```
