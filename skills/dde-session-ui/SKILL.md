@@ -1,13 +1,13 @@
 ---
 name: dde-session-ui
-description: 提供黑屏、警告对话框、欢迎界面和低电量提示的 D-Bus 接口
+description: 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒、内存警告的 CLI 命令，以及黑屏、警告对话框、欢迎界面、低电量提示的 D-Bus 接口，和登录提醒开关的 DConfig 配置项（仅适用于 dde-session-ui 自身的登录提醒功能）
 Categories:
   - Application
 ---
 
 # dde-session-ui
 
-dde-session-ui 是 DDE 通用 UI 组件，通过 Session 总线提供黑屏、警告对话框、欢迎界面和低电量提示能力。
+dde-session-ui 是 DDE 通用 UI 组件，提供黑屏、警告对话框、欢迎界面、低电量提示、提示对话框、许可证对话框、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、登录提醒、内存警告的 CLI 命令和 D-Bus 接口，以及登录提醒开关的 DConfig 配置项。
 
 ## CLI 命令
 
@@ -112,10 +112,10 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 
 ## DConfig 配置项
 
-dde-session-ui 通过 DConfig 暴露登录提醒配置资源。
+dde-session-ui 通过 DConfig 暴露登录提醒配置资源，该配置仅适用于 dde-session-ui 自身的登录提醒功能。
 
 ### 登录提醒配置
 
-登录提醒启用开关配置。
+登录提醒启用开关配置，控制是否显示登录提醒通知。
 
 详见 [org.deepin.login-reminder](references/config/org.deepin.login-reminder.md)
