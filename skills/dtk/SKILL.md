@@ -1,13 +1,13 @@
 ---
 name: dtk
-description: DTK 开发套件提供的跨进程文件拖拽 D-Bus 接口和 DTK 应用偏好与区域格式 DConfig 配置能力
+description: 提供 DCI 图标打包解包查看、DCI 图片格式转换、DCI 图标主题构建与查找、图片处理、X11 窗口属性读写、KWin 调试信息输出、DConfig 配置 C++ 代码生成、D-Bus 接口 C++ 代码生成、DTK 设置翻译代码与 GSettings schema 生成、中文转拼音、系统信息查询、SVG 转 PNG 的 CLI 命令，DTK 应用间跨进程文件拖拽 D-Bus 接口，DTK 应用偏好 DConfig 配置（作用范围为 DTK 应用）和系统区域格式 DConfig 配置（作用范围为系统全局）
 Categories:
   - Develop
 ---
 
 # dtk
 
-DTK（Deepin Tool Kit）是 Deepin 桌面环境的开发套件。本 skill 描述 DTK 对外提供的 D-Bus 接口和 DConfig 公共配置能力。
+DTK（Deepin Tool Kit）是 Deepin 桌面环境的开发套件。本 skill 描述 DTK 对外提供的 CLI 命令、D-Bus 接口和 DConfig 公共配置能力。
 
 ## CLI 命令
 
@@ -100,16 +100,16 @@ SVG 转 PNG 转换工具，将 SVG 矢量图渲染为 PNG 位图。
 
 ## DConfig 配置项
 
-DTK 通过 DConfig 暴露两组公共配置资源（appId 为空，所有 DTK 应用共享）。
+DTK 通过 DConfig 暴露两组公共配置资源（appId 为空，所有 DTK 应用共享）。两组配置的作用范围不同：DTK 应用偏好配置仅作用于 DTK 应用，区域格式配置作用于系统全局。
 
 ### DTK 应用偏好配置
 
-控制以下 DTK 应用的外观与行为：主题、动画、滚动条、标题栏、新特性展示、菜单搜索、日志规则。
+控制 DTK 应用的外观与行为：主题、动画、滚动条、标题栏、新特性展示、菜单搜索、日志规则。作用范围为 DTK 应用。
 
 详见 [org.deepin.dtk.preference](references/config/org.deepin.dtk.preference.md)
 
 ### 区域格式配置
 
-控制以下系统的区域格式：语言、日期、时间、数字、货币、纸张。
+控制系统的区域格式：语言、日期、时间、数字、货币、纸张。作用范围为系统全局。
 
 详见 [org.deepin.region-format](references/config/org.deepin.region-format.md)

@@ -36,6 +36,7 @@ DCI 图片格式转换工具，用于在 DCI（Deepin Custom Image）格式与 a
 ## 使用示例
 
 ```bash
+# 注意：此工具不随包安装，需从 DTK 源码构建后使用
 # 将 DCI 图片转换为 alpha8 格式
 dci-image-converter --toAlpha8 /tmp/output/ /usr/share/dsg/icons/bloom/icons/app.dci
 

@@ -38,6 +38,7 @@ DTK 图片处理工具，支持图片旋转、应用滤镜效果、查看图片�
 ## 使用示例
 
 ```bash
+# 注意：此工具不随包安装，需从 DTK 源码构建后使用
 # 旋转图片 90 度并保存到新文件
 image-handler -r 90 -o /tmp/rotated.jpg /home/user/photo.jpg
 
