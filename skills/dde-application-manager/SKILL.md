@@ -1,13 +1,13 @@
 ---
 name: dde-application-manager
-description: 提供应用启动、应用属性管理、任务跟踪、MIME 类型管理和应用更新通知的 D-Bus 接口
+description: 提供应用启动、应用属性管理、任务跟踪、MIME 类型管理、应用更新通知的 D-Bus 接口，应用启动次数记录与环境变量配置的 DConfig 配置项，应用启动与身份识别的 CLI 命令
 Categories:
   - Application
 ---
 
 # dde-application-manager
 
-dde-application-manager 是 DDE 应用管理器组件，通过 Session 总线提供应用启动、应用属性管理、任务跟踪、MIME 类型管理和应用更新通知能力。
+dde-application-manager 是 DDE 应用管理器组件，通过 Session 总线提供应用启动、应用属性管理、任务跟踪、MIME 类型管理和应用更新通知能力，并通过 DConfig 暴露自身配置、通过 CLI 工具提供命令行操作入口。
 
 ## D-Bus 接口
 
@@ -43,7 +43,7 @@ dde-application-manager 是 DDE 应用管理器组件，通过 Session 总线提
 
 ## DConfig 配置项
 
-dde-application-manager 通过 DConfig 暴露应用启动次数记录和应用环境变量配置资源。
+以下 DConfig 配置项仅作用于 dde-application-manager 自身，用于配置 dde-application-manager 的应用启动次数记录和应用环境变量管理行为，而非系统全局配置。
 
 ### 应用启动次数配置
 
@@ -70,4 +70,3 @@ DDE 应用管理器客户端命令行工具，用于启动应用、执行命令�
 应用身份识别工具，用于识别指定进程以何种身份（应用 ID）运行。
 
 详见 [app-identifier.md](references/cli/app-identifier.md)
-
