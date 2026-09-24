@@ -255,6 +255,15 @@ Xauthority 权限修复工具，用于修正 `.Xauthority` 文件的权限问题
 
 详见 [org.deepin.dde.LastoreSessionHelper1.md](references/dbus/org.deepin.dde.LastoreSessionHelper1.md)
 
+
+### 兼容性接口
+
+dde-daemon 中存在部分为兼容旧版调用或第三方标准协议而保留的 D-Bus 接口：
+
+- **`org.dde.session.Daemon1`**（Session 总线）：旧版兼容服务名，与 `org.deepin.dde.Daemon1`（Session 总线）提供相同的 CallTrace、StartPart2 方法，保留此服务名别名以兼容历史调用方。
+- **`org.deepin.dde.ScreenSaver1`**（Session 总线）：DDE 屏幕保护服务名，在对象路径 `/org/freedesktop/ScreenSaver` 上实现 freedesktop 标准 `org.freedesktop.ScreenSaver` 接口，兼容遵循 freedesktop 屏幕保护规范的应用程序。
+- **`org.kde.StatusNotifierWatcher`**（Session 总线）：KDE 标准系统托盘状态通知接口，由 `trayicon1/` 模块在 `org.deepin.dde.TrayManager1` 服务上注册，兼容遵循 KDE StatusNotifierItem 协议的应用程序。
+
 ## DConfig 配置项
 
 dde-daemon 通过 DConfig 暴露显示器、外观、输入设备、鼠标、电源、音效、系统信息、触摸板、触摸屏、小红点和 Wacom 数位板配置资源。
