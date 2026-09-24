@@ -8,7 +8,7 @@
 - **人脸验证**：VerifyStart / VerifyStop
 - **人脸删除**：Delete
 - **属性**：Claim（设备占用状态）、List（人脸列表）、CharaType（特征类型）
-- **信号**：ErollStatus（录入状态）、VerifyStatus（验证状态）
+- **信号**：EnrollStatus（录入状态）、VerifyStatus（验证状态）
 
 ## 接口关系
 
