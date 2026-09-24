@@ -1,13 +1,13 @@
 ---
 name: dde-polkit-agent
-description: 提供 polkit 认证代理窗口 ID 设置接口
+description: 提供 polkit 认证代理窗口 ID 设置的 D-Bus 接口和 PolicyKit 认证代理守护进程的 CLI 命令
 Categories:
   - Application
 ---
 
 # dde-polkit-agent
 
-dde-polkit-agent 是 DDE 的 polkit 认证代理组件，通过 Session 总线提供 polkit 认证代理窗口 ID 设置能力。
+dde-polkit-agent 是 DDE 的 PolicyKit 认证代理组件，通过 Session 总线提供认证代理窗口 ID 设置的 D-Bus 接口，并提供认证代理守护进程的 CLI 命令。
 
 ## D-Bus 接口
 
@@ -24,4 +24,3 @@ dde-polkit-agent 是 DDE 的 polkit 认证代理组件，通过 Session 总线�
 DDE 的 PolicyKit 认证代理，负责在用户执行需要特权的操作时弹出认证对话框。
 
 详见 [dde-polkit-agent.md](references/cli/dde-polkit-agent.md)
-
