@@ -90,6 +90,8 @@ gdbus call --session \
 - **输入参数**: `url`（string, 类型 `s`）：页面 URL
 - **返回值**: 无
 
+> **兼容性说明**：以下 `ShowPage(QString, QString)` 和 `ShowModule(QString)` 为旧版兼容接口，已标记 `Q_DECL_DEPRECATED_X`。它们使用模块名+页面名的方式定位页面，功能与当前 `ShowPage(QString url)` 等效，仅为兼容旧版调用方保留，新代码应使用单参数 `ShowPage(QString url)`。
+
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.ControlCenter1 \
