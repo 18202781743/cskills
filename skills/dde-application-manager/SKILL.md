@@ -41,6 +41,10 @@ dde-application-manager 是 DDE 应用管理器组件，通过 Session 总线提
 
 详见 [org.desktopspec.ApplicationUpdateNotifier1.md](references/dbus/org.desktopspec.ApplicationUpdateNotifier1.md)
 
+### 兼容性说明
+
+dde-application-manager 的所有 D-Bus 接口均遵循 desktopspec 规范，为当前正在使用的正式接口，不存在为兼容旧版历史接口而保留的别名或废弃接口。所有接口名称、对象路径和接口名均与源码中注册的接口一致。
+
 ## DConfig 配置项
 
 以下 DConfig 配置项仅作用于 dde-application-manager 自身，用于配置 dde-application-manager 的应用启动次数记录和应用环境变量管理行为，而非系统全局配置。
