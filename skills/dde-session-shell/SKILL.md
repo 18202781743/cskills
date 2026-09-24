@@ -1,8 +1,8 @@
 ---
 name: dde-session-shell
-description: 提供锁屏程序启动、登录界面显示设置、登录界面亮度初始化、登录欢迎界面运行、手势密码重置的 CLI 命令，锁屏界面显示控制、关机界面显示控制、电源操作的 D-Bus 接口，快速登录开关的 DConfig 配置项
+description: dde-session-shell 是 DDE 桌面环境的登录锁屏组件，负责系统锁屏、用户登录认证、关机重启界面显示。该 skill 提供 dde-lock（锁屏程序）、lightdm-deepin-greeter（登录界面）、greeter-display-setting（登录界面显示设置）、lightdm-deepin-greeter-lighter（登录界面亮度初始化）、reset-pattern-dialog（手势密码重置）的 CLI 命令；提供锁屏界面显示控制、关机界面显示控制及电源操作的 D-Bus 接口（仅作用于 dde-session-shell 自身）；提供快速登录开关的 DConfig 配置项（仅作用于 lightdm-deepin-greeter 自身）
 Categories:
-  - Settings
+  - Application
 ---
 
 # dde-session-shell
@@ -19,7 +19,7 @@ DDE 锁屏程序，是 DDE 桌面环境中负责屏幕锁定和用户切换的�
 
 ### reset-pattern-dialog
 
-重置登录手势密码对话框，位于 `dde-session-shell/plugins/login-gesture/reset-pattern-dialog`。
+重置登录手势密码对话框，用于在 DDE 手势密码登录功能中重置用户的手势密码。
 
 详见 [reset-pattern-dialog.md](references/cli/reset-pattern-dialog.md)
 
