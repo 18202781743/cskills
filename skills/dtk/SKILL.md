@@ -1,6 +1,6 @@
 ---
 name: dtk
-description: 提供 DCI 图标打包解包查看、DCI 图片格式转换、DCI 图标主题构建与查找、图片处理、X11 窗口属性读写、KWin 调试信息输出、DConfig 配置 C++ 代码生成、D-Bus 接口 C++ 代码生成、DTK 设置翻译代码与 GSettings schema 生成、中文转拼音、系统信息查询、SVG 转 PNG 的 CLI 命令，DTK 应用间跨进程文件拖拽 D-Bus 接口，DTK 应用偏好 DConfig 配置（作用范围为 DTK 应用）和系统区域格式 DConfig 配置（作用范围为系统全局）
+description: DTK（Deepin Tool Kit）是 Deepin 桌面环境的开发套件。本 skill 提供 DTK 框架的 CLI 命令、D-Bus 接口和 DConfig 配置能力：DCI 图标打包解包查看、DCI 图片格式转换、DCI 图标主题构建与查找、图片处理、X11 窗口属性读写、KWin 调试信息输出、DConfig 配置 C++ 代码生成、D-Bus 接口 C++ 代码生成、DTK 设置翻译代码与 GSettings schema 生成、中文转拼音、系统信息查询、SVG 转 PNG 的 CLI 命令，DTK 应用间跨进程文件拖拽 D-Bus 接口，DTK 应用偏好 DConfig 配置（作用范围为 DTK 应用）和系统区域格式 DConfig 配置（作用范围为系统全局）
 Categories:
   - Develop
 ---
