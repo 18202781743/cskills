@@ -11,8 +11,6 @@
 | Interface | `com.deepin.wm` |
 | Bus | Session |
 
-> **核验来源**：本文档接口信息基于 dde-appearance 源码 D-Bus XML 定义文件 `dbus/com.deepin.wm.xml` 核对，与源码完全一致。该接口在 dde-appearance 中由 `dde-fakewm` 模块注册，在实际 DDE 环境中由真实窗口管理器（如 deepin-kwin）提供同名接口。
-
 ## 方法（Methods）
 
 ### 工作区背景
@@ -23,6 +21,7 @@
 
 - **输入参数**: 无
 - **返回值**: `s`（string）：背景 URI
+- **使用场景**: 需要读取当前工作区壁纸 URI 用于显示时使用。
 
 ```bash
 gdbus call --session \
@@ -37,6 +36,7 @@ gdbus call --session \
 
 - **输入参数**: `uri`（string, 类型 `s`）：背景 URI
 - **返回值**: 无
+- **使用场景**: 需要设置当前工作区壁纸时使用。
 
 ```bash
 gdbus call --session \
@@ -51,6 +51,7 @@ gdbus call --session \
 
 - **输入参数**: `index`（int32, 类型 `i`）：工作区索引
 - **返回值**: `s`（string）：背景 URI
+- **使用场景**: 需要读取指定工作区的壁纸 URI 时使用。
 
 ```bash
 gdbus call --session \
@@ -67,6 +68,7 @@ gdbus call --session \
   - `index`（int32, 类型 `i`）：工作区索引
   - `uri`（string, 类型 `s`）：背景 URI
 - **返回值**: 无
+- **使用场景**: 需要为指定工作区设置壁纸时使用。
 
 ```bash
 gdbus call --session \
@@ -81,6 +83,7 @@ gdbus call --session \
 
 - **输入参数**: `uri`（string, 类型 `s`）：背景 URI
 - **返回值**: 无
+- **使用场景**: 需要临时设置背景（如预览壁纸）时使用，临时背景在切换工作区后恢复。
 
 ```bash
 gdbus call --session \
@@ -95,6 +98,7 @@ gdbus call --session \
 
 - **输入参数**: `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: `s`（string）：背景 URI
+- **使用场景**: 需要读取指定显示器的当前工作区壁纸 URI 时使用。
 
 ```bash
 gdbus call --session \
@@ -111,6 +115,7 @@ gdbus call --session \
   - `uri`（string, 类型 `s`）：背景 URI
   - `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: 无
+- **使用场景**: 需要为指定显示器设置当前工作区壁纸时使用，例如多显示器环境下为不同屏幕设置不同壁纸。
 
 ```bash
 gdbus call --session \
@@ -128,6 +133,7 @@ gdbus call --session \
   - `index`（int32, 类型 `i`）：工作区索引
   - `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: `s`（string）：背景 URI
+- **使用场景**: 需要读取指定工作区和显示器的壁纸 URI 时使用。
 
 ```bash
 gdbus call --session \
@@ -145,6 +151,7 @@ gdbus call --session \
   - `strMonitorName`（string, 类型 `s`）：显示器名称
   - `uri`（string, 类型 `s`）：背景 URI
 - **返回值**: 无
+- **使用场景**: 需要为指定工作区和显示器设置壁纸时使用。
 
 ```bash
 gdbus call --session \
@@ -162,6 +169,7 @@ gdbus call --session \
   - `uri`（string, 类型 `s`）：背景 URI
   - `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: 无
+- **使用场景**: 需要为指定显示器临时设置背景（如预览壁纸）时使用。
 
 ```bash
 gdbus call --session \
@@ -177,6 +185,7 @@ gdbus call --session \
 
 - **输入参数**: `uri`（string, 类型 `s`）：背景 URI
 - **返回值**: 无
+- **使用场景**: 需要更改当前工作区壁纸并触发相关信号时使用。
 
 ```bash
 gdbus call --session \
@@ -193,6 +202,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: `i`（int32）：工作区索引
+- **使用场景**: 需要获取当前活动工作区的索引时使用。
 
 ```bash
 gdbus call --session \
@@ -207,6 +217,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: `i`（int32）：工作区数量
+- **使用场景**: 需要获取当前工作区总数时使用。
 
 ```bash
 gdbus call --session \
@@ -221,6 +232,7 @@ gdbus call --session \
 
 - **输入参数**: `index`（int32, 类型 `i`）：工作区索引
 - **返回值**: 无
+- **使用场景**: 需要程序化切换到指定工作区时使用。
 
 ```bash
 gdbus call --session \
@@ -235,6 +247,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要切换到上一个工作区时使用，例如响应用户快捷键操作。
 
 ```bash
 gdbus call --session \
@@ -249,6 +262,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要切换到下一个工作区时使用，例如响应用户快捷键操作。
 
 ```bash
 gdbus call --session \
@@ -263,6 +277,7 @@ gdbus call --session \
 
 - **输入参数**: `backward`（bool, 类型 `b`）：是否向后切换
 - **返回值**: 无
+- **使用场景**: 需要按方向（向前或向后）切换工作区时使用。
 
 ```bash
 gdbus call --session \
@@ -281,6 +296,7 @@ gdbus call --session \
   - `themeType`（string, 类型 `s`）：主题类型
   - `themeName`（string, 类型 `s`）：主题名称
 - **返回值**: 无
+- **使用场景**: 需要设置窗口装饰主题时使用。
 
 ```bash
 gdbus call --session \
@@ -295,6 +311,7 @@ gdbus call --session \
 
 - **输入参数**: `deepinThemeName`（string, 类型 `s`）：deepin 主题名称
 - **返回值**: 无
+- **使用场景**: 需要设置 deepin 风格的窗口装饰主题时使用。
 
 ```bash
 gdbus call --session \
@@ -311,6 +328,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: `s`（string）：快捷键 JSON
+- **使用场景**: 需要获取所有窗口管理器快捷键配置用于显示或修改时使用。
 
 ```bash
 gdbus call --session \
@@ -325,6 +343,7 @@ gdbus call --session \
 
 - **输入参数**: `id`（string, 类型 `s`）：快捷键 ID
 - **返回值**: `as`（string 数组）：快捷键列表
+- **使用场景**: 需要获取某个特定快捷键的当前绑定键时使用。
 
 ```bash
 gdbus call --session \
@@ -339,6 +358,7 @@ gdbus call --session \
 
 - **输入参数**: `id`（string, 类型 `s`）：快捷键 ID
 - **返回值**: `as`（string 数组）：默认快捷键列表
+- **使用场景**: 需要获取某个快捷键的默认绑定用于恢复默认设置时使用。
 
 ```bash
 gdbus call --session \
@@ -353,6 +373,7 @@ gdbus call --session \
 
 - **输入参数**: `data`（string, 类型 `s`）：快捷键 JSON
 - **返回值**: `b`（bool）：是否成功
+- **使用场景**: 需要修改某个快捷键绑定时使用，例如用户在设置中自定义快捷键。
 
 ```bash
 gdbus call --session \
@@ -367,6 +388,7 @@ gdbus call --session \
 
 - **输入参数**: `id`（string, 类型 `s`）：快捷键 ID
 - **返回值**: 无
+- **使用场景**: 需要移除某个快捷键绑定时使用。
 
 ```bash
 gdbus call --session \
@@ -383,6 +405,7 @@ gdbus call --session \
 
 - **输入参数**: `backward`（bool, 类型 `b`）：是否向后切换
 - **返回值**: 无
+- **使用场景**: 需要在打开的应用程序窗口间切换时使用，例如响应 Alt+Tab 快捷键。
 
 ```bash
 gdbus call --session \
@@ -397,6 +420,7 @@ gdbus call --session \
 
 - **输入参数**: `side`（uint32, 类型 `u`）：平铺方向
 - **返回值**: 无
+- **使用场景**: 需要将活动窗口平铺到屏幕左侧、右侧或最大化时使用。
 
 ```bash
 gdbus call --session \
@@ -411,6 +435,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要通过程序化方式触发活动窗口移动操作时使用。
 
 ```bash
 gdbus call --session \
@@ -425,6 +450,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要切换活动窗口的最大化/还原状态时使用。
 
 ```bash
 gdbus call --session \
@@ -439,6 +465,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要最小化活动窗口时使用。
 
 ```bash
 gdbus call --session \
@@ -453,6 +480,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要最大化活动窗口时使用。
 
 ```bash
 gdbus call --session \
@@ -467,6 +495,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要取消活动窗口的最大化状态时使用。
 
 ```bash
 gdbus call --session \
@@ -481,6 +510,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要显示工作区概览时使用。
 
 ```bash
 gdbus call --session \
@@ -495,6 +525,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要从工作区概览中显示窗口时使用。
 
 ```bash
 gdbus call --session \
@@ -509,6 +540,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要显示所有窗口（退出显示桌面状态）时使用。
 
 ```bash
 gdbus call --session \
@@ -523,6 +555,7 @@ gdbus call --session \
 
 - **输入参数**: `type`（int32, 类型 `i`）：操作类型
 - **返回值**: 无
+- **使用场景**: 需要执行预定义的窗口管理器操作时使用。
 
 ```bash
 gdbus call --session \
@@ -537,6 +570,7 @@ gdbus call --session \
 
 - **输入参数**: `xid`（uint32, 类型 `u`）：窗口 XID
 - **返回值**: 无
+- **使用场景**: 需要预览指定窗口内容时使用。
 
 ```bash
 gdbus call --session \
@@ -551,6 +585,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要取消窗口预览状态时使用。
 
 ```bash
 gdbus call --session \
@@ -565,6 +600,7 @@ gdbus call --session \
 
 - **输入参数**: `xids`（uint32 数组, 类型 `au`）：窗口 XID 列表
 - **返回值**: 无
+- **使用场景**: 需要同时呈现多个指定窗口时使用。
 
 ```bash
 gdbus call --session \
@@ -579,6 +615,7 @@ gdbus call --session \
 
 - **输入参数**: `enabled`（bool, 类型 `b`）：是否启用
 - **返回值**: 无
+- **使用场景**: 需要启用或禁用窗口区域检测（用于窗口平铺辅助）时使用。
 
 ```bash
 gdbus call --session \
@@ -595,6 +632,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: `b`（bool）：是否处于多任务状态
+- **使用场景**: 需要读取当前是否处于多任务状态时使用。
 
 ```bash
 gdbus call --session \
@@ -609,6 +647,7 @@ gdbus call --session \
 
 - **输入参数**: `isActive`（bool, 类型 `b`）：是否激活
 - **返回值**: 无
+- **使用场景**: 需要激活或退出多任务状态时使用。
 
 ```bash
 gdbus call --session \
@@ -623,6 +662,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: `b`（bool）：是否显示桌面
+- **使用场景**: 需要读取当前是否处于显示桌面状态时使用。
 
 ```bash
 gdbus call --session \
@@ -637,6 +677,7 @@ gdbus call --session \
 
 - **输入参数**: `isShowDesktop`（bool, 类型 `b`）：是否显示桌面
 - **返回值**: 无
+- **使用场景**: 需要切换显示桌面状态时使用，例如响应显示桌面快捷键。
 
 ```bash
 gdbus call --session \
@@ -655,6 +696,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `b` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置合成器启用状态时使用。
 
 读取示例：
 
@@ -683,6 +725,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `b` |
 | 读写权限 | read |
+- **使用场景**: 需要检查当前环境是否支持合成器时使用。
 
 读取示例：
 
@@ -702,6 +745,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `b` |
 | 读写权限 | read |
+- **使用场景**: 需要检查是否允许切换合成器状态时使用。
 
 读取示例：
 
@@ -721,6 +765,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `b` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置窗口区域检测是否启用时使用。
 
 读取示例：
 
@@ -749,6 +794,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置窗口管理器的光标主题时使用。
 
 读取示例：
 
@@ -777,6 +823,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `i` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置窗口管理器的光标大小时使用。
 
 读取示例：
 
@@ -805,6 +852,7 @@ gdbus call --session \
 
 - **参数**: 无
 - **触发条件**: 装饰主题被设置时发出
+- **使用场景**: 需要监听装饰主题变化以同步更新 UI 时使用。
 
 ```bash
 gdbus monitor --session \
@@ -820,6 +868,7 @@ gdbus monitor --session \
   - `index`（int32, 类型 `i`）：工作区索引
   - `newUri`（string, 类型 `s`）：新背景 URI
 - **触发条件**: 工作区背景被设置时发出
+- **使用场景**: 需要监听工作区壁纸变化以同步更新 UI 或其他组件时使用。
 
 ```bash
 gdbus monitor --session \
@@ -836,6 +885,7 @@ gdbus monitor --session \
   - `strMonitorName`（string, 类型 `s`）：显示器名称
   - `uri`（string, 类型 `s`）：新背景 URI
 - **触发条件**: 指定显示器工作区背景被设置时发出
+- **使用场景**: 需要监听指定显示器的工作区壁纸变化时使用。
 
 ```bash
 gdbus monitor --session \
@@ -849,6 +899,7 @@ gdbus monitor --session \
 
 - **参数**: `enabled`（bool, 类型 `b`）：是否启用
 - **触发条件**: 合成器启用状态变化时发出
+- **使用场景**: 需要监听合成器启用状态变化以更新相关 UI 时使用。
 
 ```bash
 gdbus monitor --session \
@@ -862,6 +913,7 @@ gdbus monitor --session \
 
 - **参数**: `enabled`（bool, 类型 `b`）：是否启用
 - **触发条件**: 窗口管理器合成器启用状态变化时发出
+- **使用场景**: 需要监听窗口管理器合成器状态变化时使用。
 
 ```bash
 gdbus monitor --session \
@@ -875,6 +927,7 @@ gdbus monitor --session \
 
 - **参数**: `count`（int32, 类型 `i`）：新工作区数量
 - **触发条件**: 工作区数量变化时发出
+- **使用场景**: 需要监听工作区数量变化以更新工作区切换器 UI 时使用。
 
 ```bash
 gdbus monitor --session \
@@ -890,6 +943,7 @@ gdbus monitor --session \
   - `from`（int32, 类型 `i`）：原工作区索引
   - `to`（int32, 类型 `i`）：新工作区索引
 - **触发条件**: 工作区切换时发出
+- **使用场景**: 需要监听工作区切换以同步更新任务栏或桌面状态时使用。
 
 ```bash
 gdbus monitor --session \
@@ -903,6 +957,7 @@ gdbus monitor --session \
 
 - **参数**: 无
 - **触发条件**: 调用 `BeginToMoveActiveWindow` 时发出
+- **使用场景**: 需要监听活动窗口开始移动操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -916,6 +971,7 @@ gdbus monitor --session \
 
 - **参数**: `backward`（bool, 类型 `b`）：是否向后切换
 - **触发条件**: 调用 `SwitchApplication` 时发出
+- **使用场景**: 需要监听应用程序窗口间切换操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -929,6 +985,7 @@ gdbus monitor --session \
 
 - **参数**: `side`（int32, 类型 `i`）：平铺方向
 - **触发条件**: 调用 `TileActiveWindow` 时发出
+- **使用场景**: 需要监听活动窗口平铺操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -942,6 +999,7 @@ gdbus monitor --session \
 
 - **参数**: 无
 - **触发条件**: 调用 `ToggleActiveWindowMaximize` 时发出
+- **使用场景**: 需要监听活动窗口最大化切换操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -955,6 +1013,7 @@ gdbus monitor --session \
 
 - **参数**: 无
 - **触发条件**: 调用 `MaximizeActiveWindow` 时发出
+- **使用场景**: 需要监听活动窗口最大化操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -968,6 +1027,7 @@ gdbus monitor --session \
 
 - **参数**: 无
 - **触发条件**: 调用 `UnMaximizeActiveWindow` 时发出
+- **使用场景**: 需要监听取消活动窗口最大化操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -981,6 +1041,7 @@ gdbus monitor --session \
 
 - **参数**: 无
 - **触发条件**: 调用 `ShowAllWindow` 时发出
+- **使用场景**: 需要监听显示所有窗口操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -994,6 +1055,7 @@ gdbus monitor --session \
 
 - **参数**: 无
 - **触发条件**: 调用 `ShowWindow` 时发出
+- **使用场景**: 需要监听显示窗口操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -1007,6 +1069,7 @@ gdbus monitor --session \
 
 - **参数**: 无
 - **触发条件**: 调用 `ShowWorkspace` 时发出
+- **使用场景**: 需要监听显示工作区操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -1020,6 +1083,7 @@ gdbus monitor --session \
 
 - **参数**: `reason`（int32, 类型 `i`）：恢复原因
 - **触发条件**: 合成器恢复时发出
+- **使用场景**: 需要监听合成器恢复操作时使用。
 
 ```bash
 gdbus monitor --session \
@@ -1033,6 +1097,7 @@ gdbus monitor --session \
 
 - **参数**: `reason`（int32, 类型 `i`）：挂起原因
 - **触发条件**: 合成器挂起时发出
+- **使用场景**: 需要监听合成器挂起操作时使用。
 
 ```bash
 gdbus monitor --session \

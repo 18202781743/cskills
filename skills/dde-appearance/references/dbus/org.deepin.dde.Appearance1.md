@@ -11,8 +11,6 @@
 | Interface | `org.deepin.dde.Appearance1` |
 | Bus | Session |
 
-> **核验来源**：本文档接口信息基于 dde-appearance 源码 D-Bus XML 定义文件 `dbus/org.deepin.dde.Appearance1.xml` 及头文件 `src/service/dbus/appearance1.h` 核对，与源码完全一致。
-
 ## 方法（Methods）
 
 ### 通用设置
@@ -25,8 +23,9 @@
   - `ty`（string, 类型 `s`）：类型名称
   - `value`（string, 类型 `s`）：值
 - **返回值**: 无
+- **使用场景**: 需要程序化设置某个外观属性时使用，例如设置字体、主题、壁纸、光标、缩放、窗口圆角、不透明度。
 
-**`ty` 支持的选项**（来源于 dde-appearance 源码 `commondefine.h` 及 `appearancemanager.cpp` 的 `doSetByType()`）:
+**`ty` 支持的选项**:
 - `gtk` — GTK 主题
 - `icon` — 图标主题
 - `cursor` — 光标主题
@@ -57,8 +56,9 @@ gdbus call --session \
 
 - **输入参数**: `ty`（string, 类型 `s`）：类型名称
 - **返回值**: `s`（string）：JSON 格式的可用值列表
+- **使用场景**: 需要获取可用的外观选项列表用于 UI 展示或选择时使用。
 
-**`ty` 支持的选项**（来源于 `appearancemanager.cpp` 的 `doList()`）:
+**`ty` 支持的选项**:
 - `gtk` — GTK 主题
 - `icon` — 图标主题
 - `cursor` — 光标主题
@@ -82,8 +82,9 @@ gdbus call --session \
   - `ty`（string, 类型 `s`）：类型名称
   - `name`（string, 类型 `s`）：项名称
 - **返回值**: 无
+- **使用场景**: 需要删除用户自定义的外观项时使用，例如删除自定义壁纸、自定义字体。
 
-**`ty` 支持的选项**（来源于 `appearancemanager.cpp` 的 `deleteThermByType()`）:
+**`ty` 支持的选项**:
 - `gtk` — GTK 主题
 - `icon` — 图标主题
 - `cursor` — 光标主题
@@ -104,6 +105,7 @@ gdbus call --session \
   - `ty`（string, 类型 `s`）：类型名称
   - `names`（string 数组, 类型 `as`）：要筛选的名称列表
 - **返回值**: `s`（string）：JSON 格式的筛选结果
+- **使用场景**: 需要获取指定外观项的详细信息时使用，例如获取某个图标主题或字体详情。
 
 **`ty` 支持的选项**: `gtk`、`icon`、`cursor`、`background`、`globaltheme`、`standardfont`、`monospacefont`
 
@@ -122,6 +124,7 @@ gdbus call --session \
   - `ty`（string, 类型 `s`）：类型名称
   - `name`（string, 类型 `s`）：项名称
 - **返回值**: `s`（string）：缩略图文件路径
+- **使用场景**: 需要获取图标、光标、全局主题的缩略图用于 UI 展示时使用。
 
 **`ty` 支持的选项**: `icon`、`cursor`、`globaltheme`
 
@@ -138,6 +141,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: 无
+- **使用场景**: 需要将所有外观设置恢复为系统默认值时使用，例如用户点击「恢复默认设置」按钮。
 
 ```bash
 gdbus call --session \
@@ -154,6 +158,7 @@ gdbus call --session \
 
 - **输入参数**: `activeColors`（string, 类型 `s`）：活动色值
 - **返回值**: 无
+- **使用场景**: 需要设置系统活动色（强调色）时使用，例如用户在控制中心选择新的活动色。
 
 ```bash
 gdbus call --session \
@@ -168,6 +173,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: `s`（string）：活动色值
+- **使用场景**: 需要读取当前系统活动色用于显示或其他组件同步时使用。
 
 ```bash
 gdbus call --session \
@@ -184,6 +190,7 @@ gdbus call --session \
 
 - **输入参数**: `scale`（double, 类型 `d`）：缩放比例
 - **返回值**: 无
+- **使用场景**: 需要设置全局缩放比例时使用，例如用户在控制中心调整缩放比例。
 
 ```bash
 gdbus call --session \
@@ -192,26 +199,13 @@ gdbus call --session \
   --method org.deepin.dde.Appearance1.SetScaleFactor 1.25
 ```
 
-#### GetScaleFactor
-
-获取缩放比例。
-
-- **输入参数**: 无
-- **返回值**: `d`（double）：缩放比例
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.Appearance1 \
-  --object-path /org/deepin/dde/Appearance1 \
-  --method org.deepin.dde.Appearance1.GetScaleFactor
-```
-
 #### SetScreenScaleFactors
 
 设置各屏幕的缩放比例。
 
 - **输入参数**: `scaleFactor`（字典 `a{sd}`）：屏幕名到缩放比例的映射
 - **返回值**: 无
+- **使用场景**: 需要为不同显示器设置不同缩放比例时使用，例如多显示器环境下为高 DPI 屏幕设置更大缩放。
 
 ```bash
 gdbus call --session \
@@ -226,6 +220,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: `a{sd}`（字典）：屏幕名到缩放比例的映射
+- **使用场景**: 需要读取各屏幕的缩放比例用于显示或同步时使用。
 
 ```bash
 gdbus call --session \
@@ -242,6 +237,7 @@ gdbus call --session \
 
 - **输入参数**: `uri`（string, 类型 `s`）：背景 URI
 - **返回值**: 无
+- **使用场景**: 需要设置当前工作区的壁纸时使用。
 
 ```bash
 gdbus call --session \
@@ -256,6 +252,7 @@ gdbus call --session \
 
 - **输入参数**: 无
 - **返回值**: `s`（string）：背景 URI
+- **使用场景**: 需要读取当前工作区的壁纸 URI 用于显示时使用。
 
 ```bash
 gdbus call --session \
@@ -272,6 +269,7 @@ gdbus call --session \
   - `uri`（string, 类型 `s`）：背景 URI
   - `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: 无
+- **使用场景**: 需要为指定显示器设置当前工作区壁纸时使用，例如多显示器环境下为不同屏幕设置不同壁纸。
 
 ```bash
 gdbus call --session \
@@ -287,6 +285,7 @@ gdbus call --session \
 
 - **输入参数**: `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: `s`（string）：背景 URI
+- **使用场景**: 需要读取指定显示器的当前工作区壁纸 URI 时使用。
 
 ```bash
 gdbus call --session \
@@ -304,6 +303,7 @@ gdbus call --session \
   - `strMonitorName`（string, 类型 `s`）：显示器名称
   - `uri`（string, 类型 `s`）：背景 URI
 - **返回值**: 无
+- **使用场景**: 需要为指定工作区和显示器设置壁纸时使用，例如为第 2 个工作区的副屏设置专属壁纸。
 
 ```bash
 gdbus call --session \
@@ -321,6 +321,7 @@ gdbus call --session \
   - `index`（int32, 类型 `i`）：工作区索引
   - `strMonitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: `s`（string）：背景 URI
+- **使用场景**: 需要读取指定工作区和显示器的壁纸 URI 时使用。
 
 ```bash
 gdbus call --session \
@@ -337,6 +338,7 @@ gdbus call --session \
   - `monitorName`（string, 类型 `s`）：显示器名称
   - `imageGile`（string, 类型 `s`）：图片文件路径
 - **返回值**: 无
+- **使用场景**: 需要为指定显示器设置背景图片文件时使用。
 
 ```bash
 gdbus call --session \
@@ -353,6 +355,7 @@ gdbus call --session \
   - `monitorName`（string, 类型 `s`）：显示器名称
   - `slideShow`（string, 类型 `s`）：幻灯片配置（JSON 格式）
 - **返回值**: 无
+- **使用场景**: 需要配置壁纸幻灯片轮播时使用，例如设置壁纸自动切换间隔。
 
 ```bash
 gdbus call --session \
@@ -367,6 +370,7 @@ gdbus call --session \
 
 - **输入参数**: `monitorName`（string, 类型 `s`）：显示器名称
 - **返回值**: `s`（string）：幻灯片配置（JSON 格式）
+- **使用场景**: 需要读取壁纸幻灯片轮播配置用于显示时使用。
 
 ```bash
 gdbus call --session \
@@ -385,6 +389,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `d` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置当前字体大小时使用。
 
 读取示例：
 
@@ -413,6 +418,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `d` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置窗口不透明度时使用。
 
 读取示例：
 
@@ -441,6 +447,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `i` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置窗口圆角半径时使用。
 
 读取示例：
 
@@ -469,6 +476,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | read |
+- **使用场景**: 需要读取当前背景 URI 用于显示时使用。
 
 读取示例：
 
@@ -488,6 +496,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | read |
+- **使用场景**: 需要读取当前全局主题名称时使用。
 
 读取示例：
 
@@ -507,6 +516,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | read |
+- **使用场景**: 需要读取当前 GTK 主题名称时使用。
 
 读取示例：
 
@@ -526,6 +536,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | read |
+- **使用场景**: 需要读取当前图标主题名称时使用。
 
 读取示例：
 
@@ -545,6 +556,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | read |
+- **使用场景**: 需要读取当前光标主题名称时使用。
 
 读取示例：
 
@@ -564,6 +576,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `i` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置光标大小时使用。
 
 读取示例：
 
@@ -592,6 +605,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | read |
+- **使用场景**: 需要读取当前等宽字体名称时使用。
 
 读取示例：
 
@@ -611,6 +625,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | read |
+- **使用场景**: 需要读取当前标准字体名称时使用。
 
 读取示例：
 
@@ -630,6 +645,7 @@ Qt 活动色。
 |------|------|
 | 类型 | `s` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置 Qt 活动色时使用。
 
 读取示例：
 
@@ -658,6 +674,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置壁纸幻灯片轮播配置时使用。
 
 读取示例：
 
@@ -686,6 +703,7 @@ gdbus call --session \
 |------|------|
 | 类型 | `s` |
 | 读写权限 | read |
+- **使用场景**: 需要读取壁纸 URI 列表用于显示时使用。
 
 读取示例：
 
@@ -705,6 +723,7 @@ DTK 缩放模式。
 |------|------|
 | 类型 | `i` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置 DTK 缩放模式时使用。
 
 读取示例：
 
@@ -733,6 +752,7 @@ Qt 滚动条策略。
 |------|------|
 | 类型 | `i` |
 | 读写权限 | readwrite |
+- **使用场景**: 需要读取或设置 Qt 滚动条显示策略时使用。
 
 读取示例：
 
@@ -763,6 +783,7 @@ gdbus call --session \
   - `ty`（string, 类型 `s`）：属性类型
   - `value`（string, 类型 `s`）：新值
 - **触发条件**: 外观属性被设置时发出
+- **使用场景**: 需要监听外观属性变化以同步更新 UI 或其他组件状态时使用。
 
 ```bash
 gdbus monitor --session \
@@ -776,6 +797,7 @@ gdbus monitor --session \
 
 - **参数**: `type`（string, 类型 `s`）：刷新类型
 - **触发条件**: 外观配置刷新完成时发出
+- **使用场景**: 需要在外观配置刷新完成后执行后续操作时使用。
 
 ```bash
 gdbus monitor --session \
