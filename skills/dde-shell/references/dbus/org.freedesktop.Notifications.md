@@ -10,6 +10,17 @@
 | Object path | `/org/freedesktop/Notifications` |
 | Interface | `org.freedesktop.Notifications` |
 | Bus | Session |
+## 通知接口兼容性
+
+dde-shell 的通知服务由同一个通知对象注册了以下多个 D-Bus 服务接口，以兼容标准接口并提供 DDE 扩展功能：
+
+- `org.freedesktop.Notifications`（`/org/freedesktop/Notifications`）— freedesktop 标准通知接口，提供通知发送、关闭和能力查询功能，供使用 freedesktop 通知规范的应用调用。
+- `org.deepin.dde.Notification1`（`/org/deepin/dde/Notification1`）— DDE 扩展通知接口，是 `org.freedesktop.Notifications` 的超集，在标准通知功能基础上增加了应用通知管理、系统通知配置和通知记录管理功能。
+- `org.deepin.dde.shell.notification.center` — 通知中心接口，提供通知中心的管理功能。
+- `org.deepin.dde.Widgets1`（`/org/deepin/dde/Widgets1`）— 通知中心窗口控制接口，提供通知中心窗口的 Toggle/Show/Hide 控制。
+
+`org.deepin.dde.Notification1` 与 `org.freedesktop.Notifications` 共用同一通知服务实现，前者是后者的超集。保留 `org.freedesktop.Notifications` 是为了兼容遵循 freedesktop 通知规范的应用，`org.deepin.dde.Notification1` 则在标准接口基础上提供 DDE 扩展的通知管理功能。
+
 ## 方法
 
 ### GetCapabilities
