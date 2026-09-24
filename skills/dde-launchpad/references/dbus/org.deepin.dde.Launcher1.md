@@ -105,7 +105,6 @@ gdbus call --session \
   --method org.deepin.dde.Launcher1.ShowByMode 'int64 1'
 ```
 
-
 ### 启动器属性
 
 #### Visible（属性）
@@ -189,7 +188,7 @@ dde-launchpad 当前仅导出 `org.deepin.dde.Launcher1` 一个 D-Bus 服务接�
 
 以下为旧版兼容性服务名，由 `dde-api-dbus-proxy-v1` 代理转发，并非 dde-launchpad 自身导出，仅作功能概述：
 
-- `com.deepin.dde.Launcher`：旧版启动器前端服务名，通过 dde-api-dbus-proxy 兼容转发，功能与 `org.deepin.dde.Launcher1` 相同。
-- `com.deepin.dde.daemon.Launcher`：旧版启动器后端服务名，通过 dde-api-dbus-proxy 兼容转发。
+- `com.deepin.dde.Launcher`：旧版启动器前端服务名，通过 dde-api-dbus-proxy-v1 兼容转发，功能与 `org.deepin.dde.Launcher1` 相同。
+- `com.deepin.dde.daemon.Launcher`：旧版启动器后端服务名，通过 dde-api-dbus-proxy-v1 兼容转发，功能与 `org.deepin.dde.Launcher1` 相同。
 
 这些旧接口已废弃，不应在新代码中使用，新代码应统一使用 `org.deepin.dde.Launcher1`。Dock 相关的历史别名接口属于 dde-shell，不在 dde-launchpad 中。
