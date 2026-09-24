@@ -22,6 +22,12 @@ dde-application-manager 是 DDE 应用管理器组件，通过 Session 总线提
 
 详见 [org.desktopspec.ApplicationManager1.md](references/dbus/org.desktopspec.ApplicationManager1.md)
 
+### 对象管理
+
+提供所有已注册应用对象的批量查询和应用对象添加/移除事件通知能力。
+
+详见 [org.desktopspec.ObjectManager1.md](references/dbus/org.desktopspec.ObjectManager1.md)
+
 ### 应用属性
 
 提供应用启动、桌面操作和应用属性查询能力。
@@ -74,7 +80,14 @@ dde-application-manager 是 DDE 应用管理器组件，通过 Session 总线提
 
 详见 [org.deepin.dde.application-manager](references/config/org.deepin.dde.application-manager.md)
 
-### 应用属性会话级覆盖
+### 对象管理
+
+提供所有已注册应用对象的批量查询和应用对象添加/移除事件通知能力。
+
+详见 [org.desktopspec.ObjectManager1.md](references/dbus/org.desktopspec.ObjectManager1.md)
+
+### 应用属性
+会话级覆盖
 
 应用 Exec、TryExec 和 Icon 字段的会话级覆盖配置。
 

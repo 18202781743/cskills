@@ -9,7 +9,7 @@
 | Service | `org.desktopspec.ApplicationUpdateNotifier1` |
 | Object path | `/org/desktopspec/ApplicationUpdateNotifier1` |
 | Interface | `org.desktopspec.ApplicationUpdateNotifier1` |
-| Bus | Session |
+| Bus | System |
 
 ### 应用更新信号
 
@@ -22,7 +22,7 @@
 监听示例：
 
 ```bash
-gdbus monitor --session \
+gdbus monitor --system \
   --dest org.desktopspec.ApplicationUpdateNotifier1 \
   --object-path /org/desktopspec/ApplicationUpdateNotifier1
 ```
