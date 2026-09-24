@@ -19,4 +19,6 @@ deepin-pw-check 是 DDE 的密码安全策略组件，通过 System 总线提供
 
 ### 兼容性说明
 
-deepin-pw-check 仅提供一个 D-Bus 服务接口 `org.deepin.dde.PasswdConf1`（对象路径 `/org/deepin/dde/PasswdConf1`，System 总线），不存在为兼容旧版历史接口而保留的别名或废弃接口。
+deepin-pw-check 当前推荐使用 D-Bus 服务接口 `org.deepin.dde.PasswdConf1`（对象路径 `/org/deepin/dde/PasswdConf1`，System 总线）。
+
+旧版兼容接口 `com.deepin.daemon.PasswdConf`（对象路径 `/com/deepin/daemon/PasswdConf`，接口名 `com.deepin.daemon.PasswdConf`，System 总线）仍可访问，提供与 `org.deepin.dde.PasswdConf1` 相同的 14 个方法，用于兼容旧版调用方。文档中的所有示例均使用最新接口 `org.deepin.dde.PasswdConf1`，旧接口仅在此做功能概述说明。

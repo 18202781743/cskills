@@ -10,8 +10,11 @@
 | Interface | `org.deepin.dde.PasswdConf1` |
 | Bus | System |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
 
+
+## 兼容性接口
+
+旧版兼容接口 `com.deepin.daemon.PasswdConf`（对象路径 `/com/deepin/daemon/PasswdConf`，接口名 `com.deepin.daemon.PasswdConf`，System 总线）仍可访问，提供与 `org.deepin.dde.PasswdConf1` 完全相同的 14 个方法，用于兼容旧版调用方。本文档中的所有示例均使用最新接口 `org.deepin.dde.PasswdConf1`，旧接口不提供示例。
 
 ### 通用配置
 
