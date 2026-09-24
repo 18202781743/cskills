@@ -13,9 +13,9 @@ deepin-pw-check 是 DDE 的密码安全策略组件，负责管理系统级密�
 
 ## 兼容性接口
 
-**关系类型：已废弃**
+**关系类型：废弃**
 
-旧版接口 `com.deepin.daemon.PasswdConf`（对象路径 `/com/deepin/daemon/PasswdConf`，接口名 `com.deepin.daemon.PasswdConf`，System 总线）已在 commit `53794d4`（2022-11）中被完全替换为 `org.deepin.dde.PasswdConf1`。旧接口已废弃，不再可用。新代码应使用 `org.deepin.dde.PasswdConf1`。本文档中的所有示例均使用 `org.deepin.dde.PasswdConf1`。
+旧版接口 `com.deepin.daemon.PasswdConf` 已在 v23 中废弃并由 `org.deepin.dde.PasswdConf1` 完全替代，当前代码不再注册旧接口名称，历史调用方需迁移至新接口。
 
 ## 通用配置
 
