@@ -16,9 +16,9 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 
 ## 用法
 
-`/usr/libexec/trayplugin-loader [options] -p <plugin path(s)>`
+`/usr/libexec/trayplugin-loader [options] (-p <plugin path(s)> | --group <group name>)`
 
-> **注意**：`-p` 参数为必填项，未指定时程序将显示帮助信息并退出。该工具需要运行中的图形显示环境（Wayland 或 X11），无显示环境时无法启动。
+> **注意**：`-p` 和 `--group` 二选一，未指定任一时显示帮助信息并退出。该工具需要运行中的图形显示环境（Wayland 或 X11），无显示环境时无法启动。
 
 ## 参数
 
@@ -26,8 +26,9 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 |------|------|------------|
 | `-h, --help` | 显示命令行帮助 | 否 |
 | `-v, --version` | 显示版本信息 | 否 |
-| `-p <plugin path(s)>` | 插件路径，单个或多个（用 `;` 分隔） | 是（必填） |
-| `-g <group name>` | 指定插件路径的组名 | 是 |
+| `-p <plugin path(s)>` | 插件路径，单个或多个（用 `;` 分隔） | 否（与 `--group` 二选一） |
+| `-g <group name>` | 指定当前进程的显示组名，用于面板中标识本进程加载的插件组 | 是 |
+| `--group <group name>` | 加载指定组名下的所有插件。有效组名为 `selfMaintenanceTrayPlugins`、`subprojectTrayPlugins`、`crashProneTrayPlugins`、`otherTrayPlugins` | 是 |
 
 ## 使用示例
 
@@ -40,6 +41,12 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 
 # 加载插件并指定组名（用于面板分组显示）
 /usr/libexec/trayplugin-loader -p /usr/lib/dde-tray-loader/plugins/mytray.so -g panel-tray
+
+# 加载指定组名下的所有插件
+/usr/libexec/trayplugin-loader --group selfMaintenanceTrayPlugins
+
+# 加载指定组名下的所有插件并指定显示组名
+/usr/libexec/trayplugin-loader --group subprojectTrayPlugins -g subproject-panel
 
 # 查看版本信息
 /usr/libexec/trayplugin-loader --version
