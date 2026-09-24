@@ -11,6 +11,6 @@
 | Interface | `org.deepin.dde.Validator1` |
 | Bus | Session |
 
-## 兼容性说明
+## 兼容性说明（废弃）
 
-该接口为历史遗留接口。源码 `validator/main.go` 中的注释明确标注"此执行程序目前没有被使用和编译"，且该服务无 `.service` 激活文件，当前无法通过 D-Bus 自动激活。接口提供 `ValidateHostname` 和 `ValidateUsername` 两个校验方法，保留仅供兼容旧版校验功能参考，不建议在新代码中使用。
+该接口为历史遗留接口，当前未被使用和编译，无 D-Bus 激活文件，无法通过 D-Bus 自动激活。接口提供 `ValidateHostname` 和 `ValidateUsername` 两个校验方法，保留仅供兼容旧版校验功能参考，不建议在新代码中使用。
