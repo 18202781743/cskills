@@ -139,7 +139,7 @@ gdbus call --session \
   --dest org.deepin.dde.Notification1 \
   --object-path /org/deepin/dde/Notification1 \
   --method org.deepin.dde.Notification1.SetAppInfo \
-  "my-app" 0 "<variant true>"
+  "my-app" 0 "<true>"
 ```
 
 #### GetAppSetting
@@ -169,7 +169,7 @@ gdbus call --session \
 gdbus call --session \
   --dest org.deepin.dde.Notification1 \
   --object-path /org/deepin/dde/Notification1 \
-  --method org.deepin.dde.Notification1.SetAppSetting '{"app":"my-app","enabled":true}'
+  --method org.deepin.dde.Notification1.SetAppSetting '"{\"app\":\"my-app\",\"enabled\":true}"'
 ```
 
 ### 系统通知配置
@@ -187,7 +187,7 @@ gdbus call --session \
 gdbus call --session \
   --dest org.deepin.dde.Notification1 \
   --object-path /org/deepin/dde/Notification1 \
-  --method org.deepin.dde.Notification1.SetSystemInfo 0 "<variant true>"
+  --method org.deepin.dde.Notification1.SetSystemInfo 0 "<true>"
 ```
 
 #### GetSystemInfo
@@ -221,7 +221,7 @@ gdbus call --session \
   --dest org.deepin.dde.Notification1 \
   --object-path /org/deepin/dde/Notification1 \
   --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.dde.Notification1 recordCount
+  "org.deepin.dde.Notification1" "recordCount"
 ```
 
 ### 通知事件信号

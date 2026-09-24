@@ -32,7 +32,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock.TaskManager \
   --object-path /org/deepin/ds/Dock/TaskManager \
   --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.ds.Dock.TaskManager windowSplit
+  "org.deepin.ds.Dock.TaskManager" "windowSplit"
 ```
 
 设置示例：
@@ -42,7 +42,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock.TaskManager \
   --object-path /org/deepin/ds/Dock/TaskManager \
   --method org.freedesktop.DBus.Properties.Set \
-  org.deepin.ds.Dock.TaskManager windowSplit "<true>"
+  "org.deepin.ds.Dock.TaskManager" "windowSplit" "<true>"
 ```
 
 #### allowForceQuit（属性）
@@ -61,7 +61,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock.TaskManager \
   --object-path /org/deepin/ds/Dock/TaskManager \
   --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.ds.Dock.TaskManager allowForceQuit
+  "org.deepin.ds.Dock.TaskManager" "allowForceQuit"
 ```
 
 ### 动态 Item 发现与操作
@@ -104,7 +104,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock.TaskManager \
   --object-path /org/deepin/ds/Dock/TaskManager/Item/<运行时获取的-id> \
   --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.ds.Dock.TaskManager.Item name
+  "org.deepin.ds.Dock.TaskManager.Item" "name"
 ```
 
 调用 Item 方法示例：

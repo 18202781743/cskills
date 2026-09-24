@@ -76,8 +76,7 @@ gdbus call --session \
 ```bash
 gdbus monitor --session \
   --dest org.deepin.dde.shell \
-  --object-path /org/deepin/dde/shell/notification/center \
-  org.deepin.dde.shell.notification.center
+  --object-path /org/deepin/dde/shell/notification/center
 ```
 
 ---

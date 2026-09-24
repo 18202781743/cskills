@@ -57,7 +57,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock \
   --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.ds.Dock geometry
+  "org.deepin.ds.Dock" "geometry"
 ```
 
 #### position（属性）
@@ -76,7 +76,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock \
   --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.ds.Dock position
+  "org.deepin.ds.Dock" "position"
 ```
 
 设置示例：
@@ -86,7 +86,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock \
   --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Set \
-  org.deepin.ds.Dock position "<int32 0>"
+  "org.deepin.ds.Dock" "position" "<int32 0>"
 ```
 
 #### showInPrimary（属性）
@@ -105,7 +105,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock \
   --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.ds.Dock showInPrimary
+  "org.deepin.ds.Dock" "showInPrimary"
 ```
 
 设置示例：
@@ -115,7 +115,7 @@ gdbus call --session \
   --dest org.deepin.ds.Dock \
   --object-path /org/deepin/ds/Dock \
   --method org.freedesktop.DBus.Properties.Set \
-  org.deepin.ds.Dock showInPrimary "<true>"
+  "org.deepin.ds.Dock" "showInPrimary" "<true>"
 ```
 
 ---
