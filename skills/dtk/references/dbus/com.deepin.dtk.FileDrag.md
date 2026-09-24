@@ -12,11 +12,12 @@
 | Service | `<dynamic baseService>`（如 `:1.23`） |
 | Object path | `/Ddnd` |
 | Interface | `com.deepin.dtk.FileDrag` |
+
 ## 方法
 
 ### setData
 
-接收方向拖拽源设置数据，通过 UUID 指定拖拽会话。当值发生变化时，拖拽源会发出 `targetDataChanged` 信号。
+接收方向拖拽源设置数据，通过 UUID 指定拖拽会话。当值发生变化时，拖拽源进程内部会发出 `targetDataChanged` 信号（该信号为拖拽源进程内部的 Qt 信号，不通过 D-Bus 传输）。
 
 - **输入参数**:
   - `uuid` (string): 拖拽会话 UUID
@@ -103,20 +104,6 @@ gdbus monitor --session \
   - `uuid` (string): 拖拽会话 UUID
   - `progress` (int32): 当前进度
 - **触发条件**: 拖拽源调用 setProgress 更新进度时发出
-
-```bash
-gdbus monitor --session \
-  --dest :1.23 \
-  --object-path /Ddnd
-```
-
-### targetDataChanged
-
-拖拽会话的目标数据变更时发出。
-
-- **参数**:
-  - `key` (string): 变更的数据键名
-- **触发条件**: 接收方调用 setData 设置数据且值发生变化时由拖拽源发出
 
 ```bash
 gdbus monitor --session \
