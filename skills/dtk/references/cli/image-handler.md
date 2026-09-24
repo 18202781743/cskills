@@ -38,25 +38,25 @@ DTK 图片处理工具，支持图片旋转、应用滤镜效果、查看图片�
 ## 使用示例
 
 ```bash
-# 注意：此工具不随包安装，需从 DTK 源码构建后使用
+# 注意：此工具不随包安装，需从 DTK 源码构建后使用，以下示例假设当前目录为构建目录
 # 旋转图片 90 度并保存到新文件
-image-handler -r 90 -o /tmp/rotated.jpg /home/user/photo.jpg
+./image-handler -r 90 -o /tmp/rotated.jpg /home/user/photo.jpg
 
 # 应用灰度滤镜并保存
-image-handler -f gray -o /tmp/gray.jpg /home/user/photo.jpg
+./image-handler -f gray -o /tmp/gray.jpg /home/user/photo.jpg
 
 # 应用暖色滤镜并保存
-image-handler -f warm -o /tmp/warm.jpg /home/user/photo.jpg
+./image-handler -f warm -o /tmp/warm.jpg /home/user/photo.jpg
 
 # 显示图片的额外信息（尺寸、格式、色彩空间）
-image-handler -e /home/user/photo.jpg
+./image-handler -e /home/user/photo.jpg
 
 # 列出所有支持的图片格式
-image-handler -l
+./image-handler -l
 
 # 旋转 180 度并应用金属滤镜
-image-handler -r 180 -f metal -o /tmp/processed.jpg /home/user/photo.jpg
+./image-handler -r 180 -f metal -o /tmp/processed.jpg /home/user/photo.jpg
 
 # 同时处理多个文件
-image-handler -f cool /home/user/photo1.jpg /home/user/photo2.jpg
+./image-handler -f cool /home/user/photo1.jpg /home/user/photo2.jpg
 ```
