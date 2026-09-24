@@ -45,9 +45,17 @@ dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供�
 
 以下接口为历史遗留或兼容性接口，当前可能未激活或已废弃，不建议在新代码中使用：
 
-- **org.deepin.dde.LunarCalendar1**（Session 总线）：农历日历查询接口。其 `.service` 文件的 Exec 已被注释，当前可能未激活，保留用于兼容历史农历日历功能。
-- **org.deepin.dde.Validator1**（Session 总线）：主机名和用户名校验接口。源码注释标注此程序当前未被使用和编译，可能已废弃，保留用于兼容旧版校验功能。
-- **org.deepin.dde.InhibitHint1**（Session 总线）：抑制提示接口，以库形式由调用方注册，无独立 `.service` 文件。用于向调用方提供抑制提示信息，保留用于兼容旧版抑制提示机制。
+- **org.deepin.dde.LunarCalendar1**：农历日历查询，`.service` 文件 Exec 已被注释，当前未激活。
+
+详见 [org.deepin.dde.LunarCalendar1.md](references/dbus/org.deepin.dde.LunarCalendar1.md)
+
+- **org.deepin.dde.Validator1**：主机名和用户名校验，源码标注当前未被使用和编译，可能已废弃。
+
+详见 [org.deepin.dde.Validator1.md](references/dbus/org.deepin.dde.Validator1.md)
+
+- **org.deepin.dde.InhibitHint1**：抑制提示，以库形式由调用方注册，无独立 `.service` 文件。
+
+详见 [org.deepin.dde.InhibitHint1.md](references/dbus/org.deepin.dde.InhibitHint1.md)
 
 ## CLI 命令
 
