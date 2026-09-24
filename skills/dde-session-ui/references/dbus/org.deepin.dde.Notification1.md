@@ -1,6 +1,6 @@
 # org.deepin.dde.Notification1 接口参考
 
-该接口提供 DDE 通知扩展服务能力，包括通知发送、关闭、通知记录管理、应用通知设置管理、系统通知设置管理、通知中心显示控制。
+该接口提供 DDE 通知扩展服务能力，包括通知发送、通知关闭、通知记录管理、应用通知设置管理、系统通知设置管理、通知中心显示控制。
 
 ## 接口信息
 
@@ -375,13 +375,11 @@ gdbus call --session \
 |--------|------|------|------|
 | `allSetting` | `s` | readwrite | 全部通知设置（JSON 字符串），包含所有应用和系统的通知设置；读取时返回完整设置 JSON，写入时批量更新全部设置 |
 | `systemSetting` | `s` | readwrite | 系统通知设置（JSON 字符串），仅包含系统级通知设置；读取时返回系统设置 JSON，写入时更新系统设置 |
-| `recordCount` | `u` | read | 通知记录数量，当通知记录增减时自动更新 |
 
 ### 信号
 
 | 信号名 | 参数 | 说明 |
 |--------|------|------|
-| `ShowBubble` | 通知气泡信息 | 当新通知被发送且气泡需要弹出时触发；用于通知中心界面同步气泡显示状态 |
 | `NotificationClosed` | `u, u` | 当通知被关闭时触发，参数为通知 ID 和关闭原因；用于调用方感知通知已关闭 |
 | `ActionInvoked` | `u, s` | 当用户点击通知上的行为按钮时触发，参数为通知 ID 和行为名称；用于应用响应用户在通知上的交互 |
 | `RecordAdded` | `s` | 当新通知记录被添加到通知中心时触发，参数为通知记录 JSON；用于通知中心界面实时更新通知列表 |
@@ -389,7 +387,10 @@ gdbus call --session \
 | `SystemInfoChanged` | `u, v` | 当系统通知设置发生变更时触发，参数为信息类型和新值；用于通知设置界面同步更新 |
 | `AppAddedSignal` | `s` | 当新应用首次注册到通知服务时触发，参数为应用名称；用于通知设置界面动态添加新应用条目 |
 | `AppRemovedSignal` | `s` | 当应用从通知服务中移除时触发，参数为应用名称；用于通知设置界面动态移除应用条目 |
-| `recordCountChanged` | `u` | 当通知记录数量发生变化时触发，参数为新的记录数量；用于任务栏通知图标角标更新 |
+| `appRemoved` | `s` | 当应用从通知服务中移除时触发，参数为应用名称；用于通知设置界面动态移除应用条目 |
+| `appAdded` | `s` | 当新应用首次注册到通知服务时触发，参数为应用名称；用于通知设置界面动态添加新应用条目 |
+| `appSettingChanged` | `s` | 当应用通知设置发生变更时触发，参数为应用名称；用于通知设置界面同步更新对应应用的设置状态 |
+| `systemSettingChanged` | `s` | 当系统通知设置发生变更时触发，参数为设置项名称；用于通知设置界面同步更新系统级通知设置状态 |
 
 ## 兼容性接口说明
 
@@ -399,4 +400,4 @@ gdbus call --session \
 - **兼容关系（兼容）**：`org.freedesktop.Notifications`（对象路径 `/org/freedesktop/Notifications`）是标准 freedesktop 通知接口，与 `org.deepin.dde.Notification1` 指向同一通知对象，用于兼容遵循 freedesktop.org Notification 规范的第三方应用，使其无需修改即可在 DDE 环境中正常发送通知。
 - **废弃关系（废弃）**：旧版服务名 `com.deepin.dde.Notification` 和 `com.deepin.dde.osd` 已废弃，由 `dde-api-dbus-proxy-v1` 代理转发以兼容旧调用方，不应在新代码中使用。
 
-上述服务名可能与 dde-shell 注册的服务名冲突，实际运行时仅一个进程持有这些服务名。
+上述通知相关 D-Bus 服务最初由 dde-session-ui 的 dde-osd 模块注册。当前该模块已不再编译，这些服务由 dde-shell 通过插件提供。
