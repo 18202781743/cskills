@@ -52,7 +52,7 @@ gdbus call --session \
 gdbus call --session \
   --dest com.deepin.ScreenSaver \
   --object-path /com/deepin/ScreenSaver \
-  --method com.deepin.ScreenSaver.Preview "DeepinScreensaver" 1
+  --method com.deepin.ScreenSaver.Preview "deepin-custom-screensaver" 1
 ```
 
 #### GetScreenSaverCover
@@ -66,7 +66,7 @@ gdbus call --session \
 gdbus call --session \
   --dest com.deepin.ScreenSaver \
   --object-path /com/deepin/ScreenSaver \
-  --method com.deepin.ScreenSaver.GetScreenSaverCover "DeepinScreensaver"
+  --method com.deepin.ScreenSaver.GetScreenSaverCover "deepin-custom-screensaver"
 ```
 
 #### StartCustomConfig
@@ -80,7 +80,7 @@ gdbus call --session \
 gdbus call --session \
   --dest com.deepin.ScreenSaver \
   --object-path /com/deepin/ScreenSaver \
-  --method com.deepin.ScreenSaver.StartCustomConfig "DeepinScreensaver"
+  --method com.deepin.ScreenSaver.StartCustomConfig "deepin-custom-screensaver"
 ```
 
 #### ConfigurableItems
@@ -108,7 +108,7 @@ gdbus call --session \
 gdbus call --session \
   --dest com.deepin.ScreenSaver \
   --object-path /com/deepin/ScreenSaver \
-  --method com.deepin.ScreenSaver.IsConfigurable "DeepinScreensaver"
+  --method com.deepin.ScreenSaver.IsConfigurable "deepin-custom-screensaver"
 ```
 
 #### RefreshScreenSaverList
