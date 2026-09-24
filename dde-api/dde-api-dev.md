@@ -81,7 +81,7 @@ using namespace DDE_EventLogger;
 | `localehelper` | 区域设置辅助 |
 | `theme` | 主题设置 |
 | `soundeffect` | 音效设置 |
-| `x EVENT_MONITOR` | X 事件监视 |
+| `xevent_monitor` | X 事件监视 |
 
 Go 包路径：`github.com/linuxdeepin/dde-api/<tool>`
 

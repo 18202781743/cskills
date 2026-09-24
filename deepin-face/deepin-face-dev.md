@@ -83,7 +83,7 @@ TEMPLATE = app
 
 | 信号 | 说明 |
 |------|------|
-| `ErollStatus(QString, qint32, QString)` | 注册状态变化 |
+| `ErollStatus(QString, qint32, QString)` | 注册状态变化（注：`ErollStatus` 为源码中的原始命名，疑似 `EnrollStatus` 的历史 typo，文档忠实记录实际代码中的名称） |
 | `VerifyStatus(QString, qint32, QString)` | 验证状态变化 |
 
 ## 7. QML 模块
