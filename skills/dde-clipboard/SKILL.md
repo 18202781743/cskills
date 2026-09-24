@@ -37,6 +37,10 @@ DDE 剪贴板守护进程，负责管理剪贴板历史记录和剪贴板事件�
 
 详见 [org.deepin.dde.ClipboardLoader1.md](references/dbus/org.deepin.dde.ClipboardLoader1.md)
 
+### 兼容性说明
+
+dde-clipboard 的 D-Bus 接口经核对源码与 `dbus-inventory.md` 确认，当前仅注册上述两个服务接口（`org.deepin.dde.Clipboard1` 与 `org.deepin.dde.ClipboardLoader1`），不存在为兼容旧版本而保留的别名或废弃接口。
+
 ## DConfig 配置项
 
 ### showTipsWidget
