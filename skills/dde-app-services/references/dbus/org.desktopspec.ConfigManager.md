@@ -1,6 +1,6 @@
 # org.desktopspec.ConfigManager 接口参考
 
-该接口提供配置管理器对象获取、更新、同步和日志规则设置能力。dde-app-services 是 DDE 提供的全局系统配置管理服务，可读写 DConfig 配置。其中日志配置用于设置 dde-app-services 自身的日志级别/行为，而非系统全局日志。
+该接口提供全局的配置管理器对象获取、更新、同步能力，以及 dde-dconfig-daemon 自身的日志规则设置、用户配置数据移除和配置重新加载能力。其中配置管理器对象获取、更新、同步为全局 DConfig 管理功能；日志规则设置（enableVerboseLogging、disableVerboseLogging、setLogRules）仅用于设置 dde-dconfig-daemon 自身的日志级别与行为，而非系统全局日志。
 
 ## 接口信息
 
@@ -116,7 +116,9 @@ pkexec gdbus call --system \
 ```
 
 
-### 日志与数据管理
+### 日志规则设置（仅作用于 dde-dconfig-daemon 自身）
+
+> 以下接口仅用于设置 dde-dconfig-daemon 自身的日志级别与行为，不影响系统全局日志配置。
 
 #### enableVerboseLogging
 
@@ -168,6 +170,9 @@ pkexec gdbus call --system \
   --object-path / \
   --method org.desktopspec.ConfigManager.setLogRules '{"rules":"*=true"}'
 ```
+
+
+### 数据管理
 
 #### removeUserData
 
