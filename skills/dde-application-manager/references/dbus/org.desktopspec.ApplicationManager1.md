@@ -11,7 +11,7 @@
 | Interface | `org.desktopspec.ApplicationManager1` |
 | Bus | Session |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
+> **核验状态**：已通过源码 D-Bus 内省 XML（`api/dbus/org.desktopspec.ApplicationManager1.xml`）核验，接口名称、对象路径、方法签名和属性类型均与源码一致。
 
 ### 应用管理操作
 

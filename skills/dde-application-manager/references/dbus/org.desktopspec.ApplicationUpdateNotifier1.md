@@ -11,7 +11,7 @@
 | Interface | `org.desktopspec.ApplicationUpdateNotifier1` |
 | Bus | Session |
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
+> **核验状态**：已通过源码 D-Bus 内省 XML（`apps/app-update-notifier/api/dbus/org.desktopspec.ApplicationUpdateNotifier1.xml`）核验，接口名称、对象路径、信号定义均与源码一致。
 
 ### 应用更新信号
 
@@ -20,11 +20,10 @@
 应用更新完成时发出。
 
 - **参数**: 无
-- **触发条件**: 应用更新完成时发出
+- **触发条件**: 应用信息需要更新时发出
 
 ```bash
 gdbus monitor --session \
   --dest org.desktopspec.ApplicationUpdateNotifier1 \
   --object-path /org/desktopspec/ApplicationUpdateNotifier1
 ```
-
