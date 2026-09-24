@@ -1,13 +1,13 @@
 ---
 name: xdg-desktop-portal-dde
-description: 提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、访问、全局快捷键、账户和后台管理的 Session Portal D-Bus 接口，以及 xdg-desktop-portal-dde 自身的后台服务命令行工具
+description: 提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、应用选择、访问、全局快捷键、账户和后台管理的 Session Portal D-Bus 接口，以及 xdg-desktop-portal-dde 自身的后台服务命令行工具
 Categories:
   - Settings
 ---
 
 # xdg-desktop-portal-dde
 
-xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现。通过 Session 总线为沙箱应用提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、访问、全局快捷键、账户和后台管理的 Portal D-Bus 接口；同时提供 xdg-desktop-portal-dde 自身的后台服务命令行工具，由 DBus 在沙箱应用请求系统服务时自动激活。
+xdg-desktop-portal-dde 是 xdg-desktop-portal 的 DDE 后端实现。通过 Session 总线为沙箱应用提供截图、设置、壁纸、锁定、请求、inhibit、密钥、通知、文件选择、应用选择、访问、全局快捷键、账户和后台管理的 Portal D-Bus 接口；同时提供 xdg-desktop-portal-dde 自身的后台服务命令行工具，由 DBus 在沙箱应用请求系统服务时自动激活。
 
 ## CLI 命令
 
@@ -62,6 +62,12 @@ xdg-desktop-portal-dde 自身的后台服务进程，为沙箱应用（如 Flatp
 
 详见 [org.freedesktop.impl.portal.Access.md](references/dbus/org.freedesktop.impl.portal.Access.md)
 
+### 应用选择
+
+提供应用选择对话框能力。
+
+详见 [org.freedesktop.impl.portal.AppChooser.md](references/dbus/org.freedesktop.impl.portal.AppChooser.md)
+
 ### 后台管理
 
 提供后台运行请求和通知能力。
@@ -97,3 +103,7 @@ xdg-desktop-portal-dde 自身的后台服务进程，为沙箱应用（如 Flatp
 提供标准 portal 请求关闭能力。
 
 详见 [org.freedesktop.impl.portal.Request.md](references/dbus/org.freedesktop.impl.portal.Request.md)
+
+## 兼容性说明
+
+xdg-desktop-portal-dde 的所有 D-Bus 接口均遵循 xdg-desktop-portal 标准规范，使用唯一的服务名 `org.freedesktop.impl.portal.desktop.dde` 和对象路径 `/org/freedesktop/portal/desktop`，不存在兼容旧版接口的别名或废弃接口。所有接口均为当前正在使用的标准 portal 实现接口。
