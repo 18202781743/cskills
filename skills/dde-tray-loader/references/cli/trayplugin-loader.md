@@ -16,17 +16,18 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 
 ## 用法
 
-`/usr/libexec/trayplugin-loader [options]`
+`/usr/libexec/trayplugin-loader [options] -p <plugin path(s)>`
+
+> **注意**：`-p` 参数为必填项，未指定时程序将显示帮助信息并退出。该工具需要运行中的图形显示环境（Wayland 或 X11），无显示环境时无法启动。
 
 ## 参数
 
 | 选项 | 说明 | 是否需要值 |
 |------|------|------------|
 | `-h, --help` | 显示命令行帮助 | 否 |
-| `--version` | 显示版本信息 | 否 |
-| `-p <plugin path(s)>` | 插件路径，单个或多个（用 `;` 分隔） | 是 |
+| `-v, --version` | 显示版本信息 | 否 |
+| `-p <plugin path(s)>` | 插件路径，单个或多个（用 `;` 分隔） | 是（必填） |
 | `-g <group name>` | 指定插件路径的组名 | 是 |
-| `-group <group name>` | 按组加载所有插件 | 是 |
 
 ## 使用示例
 
@@ -39,9 +40,6 @@ DDE 托盘插件加载器，负责加载和管理系统托盘区域的插件。�
 
 # 加载插件并指定组名（用于面板分组显示）
 /usr/libexec/trayplugin-loader -p /usr/lib/dde-tray-loader/plugins/mytray.so -g panel-tray
-
-# 按组名加载该组下所有插件
-/usr/libexec/trayplugin-loader -group panel-tray
 
 # 查看版本信息
 /usr/libexec/trayplugin-loader --version
