@@ -97,34 +97,6 @@ gdbus call --session \
   --method org.deepin.dde.ControlCenter1.ShowPage "display"
 ```
 
-#### ShowPage
-
-跳转到指定模块和页面（已弃用）。
-
-- **输入参数**: `module`（string, 类型 `s`）：模块名称；`page`（string, 类型 `s`）：页面名称
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.ControlCenter1 \
-  --object-path /org/deepin/dde/ControlCenter1 \
-  --method org.deepin.dde.ControlCenter1.ShowPage "display" "brightness"
-```
-
-#### ShowModule
-
-跳转到指定模块（已弃用）。
-
-- **输入参数**: `module`（string, 类型 `s`）：模块名称
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.ControlCenter1 \
-  --object-path /org/deepin/dde/ControlCenter1 \
-  --method org.deepin.dde.ControlCenter1.ShowModule "display"
-```
-
 #### GetAllModule
 
 获取所有模块信息。
