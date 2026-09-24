@@ -330,3 +330,15 @@ gdbus call --session \
 | `AppAddedSignal` | `s` | 应用添加 |
 | `AppRemovedSignal` | `s` | 应用移除 |
 | `recordCountChanged` | `u` | 记录数量变更 |
+
+## 兼容性接口说明
+
+上述接口由 dde-osd 模块注册。dde-osd 同时注册了以下通知相关 D-Bus 服务：
+
+- `org.freedesktop.Notifications`（对象路径 `/org/freedesktop/Notifications`）— 标准 freedesktop 通知接口
+- `org.deepin.dde.Notification1`（对象路径 `/org/deepin/dde/Notification1`）— DDE 扩展通知接口
+- `org.deepin.dde.Osd1`（对象路径 `/`）— OSD 面板接口
+
+其中，`org.freedesktop.Notifications` 与 `org.deepin.dde.Notification1` 指向同一通知对象，`org.deepin.dde.Notification1` 是标准接口的超集，在标准通知接口功能基础上扩展了通知记录管理、应用通知设置管理、系统通知设置管理、通知中心显示控制等 DDE 专属能力。`org.freedesktop.Notifications` 用于兼容遵循 freedesktop.org Notification 规范的第三方应用，使其无需修改即可在 DDE 环境中正常发送通知。
+
+上述服务名可能与 dde-shell 冲突（dde-shell 也可能注册 `org.freedesktop.Notifications` 等服务名），实际运行时仅一个进程持有这些服务名。

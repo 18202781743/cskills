@@ -128,12 +128,6 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 
 详见 [org.deepin.dde.MemoryWarningDialog1.md](references/dbus/org.deepin.dde.MemoryWarningDialog1.md)
 
-### 兼容性 D-Bus 接口
-
-以下接口为兼容旧版接口而保留，与当前接口由同一进程实现，功能等价：
-
-- **`org.freedesktop.Notifications`**（对象路径 `/org/freedesktop/Notifications`，接口名 `org.freedesktop.Notifications`）：标准 freedesktop 通知接口，由 `dde-osd` 进程注册，与 `org.deepin.dde.Notification1` 共享同一实现。该接口用于兼容遵循 freedesktop.org Notification 规范的第三方应用发送系统通知，使得这些应用无需修改即可在 DDE 环境中正常发送通知。需注意该服务名可能与 `dde-shell` 冲突（两者都可能注册此服务名），实际运行时仅一个进程持有该服务名。
-
 ## DConfig 配置项
 
 dde-session-ui 通过 DConfig 暴露登录提醒配置资源，该配置仅适用于 dde-session-ui 自身的登录提醒功能。
