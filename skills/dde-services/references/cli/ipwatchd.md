@@ -16,7 +16,7 @@ IP 地址监视守护进程（upstream 开源项目），用于监视网络接�
 
 ## 用法
 
-`ipwatchd [options]`
+`/usr/sbin/ipwatchd [options]`
 
 ## 参数
 
@@ -32,14 +32,14 @@ IP 地址监视守护进程（upstream 开源项目），用于监视网络接�
 
 ```bash
 # 使用默认配置文件启动 IP 监视守护进程
-ipwatchd -c /etc/ipwatchd.conf
+/usr/sbin/ipwatchd -c /etc/ipwatchd.conf
 
 # 以调试模式启动（输出详细调试信息）
-ipwatchd -c /etc/ipwatchd.conf -d
+/usr/sbin/ipwatchd -c /etc/ipwatchd.conf -d
 
 # 以测试模式启动（仅测试配置是否正确，不实际运行）
-ipwatchd -c /etc/ipwatchd.conf -t
+/usr/sbin/ipwatchd -c /etc/ipwatchd.conf -t
 
 # 查看版本信息
-ipwatchd -v
+/usr/sbin/ipwatchd -v
 ```
