@@ -17,12 +17,12 @@
 
 为指定 polkit 动作设置窗口 ID。
 
-- **功能**：将调用方应用的窗口 ID 关联到指定的 polkit 动作（action_id），使认证对话框能够正确关联到发起认证请求的窗口。
-- **触发条件**：当外部应用需要在执行特权操作前，将自身窗口 ID 传递给认证代理时调用此方法。
-- **使用场景**：应用在发起需要 polkit 认证的操作前，调用此方法将窗口 ID 传递给认证代理，使认证对话框能与发起窗口正确关联（如窗口居中、窗口归属设置）。
+- **功能**：为指定的 polkit action 设置关联窗口 ID，使认证对话框作为该窗口的子窗口模态显示。
+- **触发条件**：在发起 polkit 认证请求前由调用方主动调用。
+- **使用场景**：应用程序需要提权操作时，将自身窗口 ID 传入，使认证对话框模态显示在该应用窗口上。
 - **输入参数**：
-  - `action_id`（string, 类型 `s`）：polkit 动作 ID，对应 `/usr/share/polkit-1/actions/` 下 `.policy` 文件中定义的 action id
-  - `window_id`（uint64, 类型 `t`）：窗口 ID（X11 Window ID 或 Wayland window ID）
+  - `action_id`（string, 类型 `s`）：polkit 动作标识符（如 `org.freedesktop.policykit.exec`）
+  - `window_id`（uint64, 类型 `t`）：X11 窗口 ID
 - **返回值**：无
 
 ## 示例
