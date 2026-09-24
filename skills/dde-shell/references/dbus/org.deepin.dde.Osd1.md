@@ -2,11 +2,6 @@
 
 该接口提供 OSD（On-Screen Display）提示的显示能力，支持通过 OSD 类型标识触发对应的屏幕提示显示。
 
-dde-shell 的 OSD 面板在 Session 总线上注册了两个 D-Bus 接口，两者提供相同的 `ShowOSD` 方法：
-
-- `org.deepin.dde.Osd1`（本接口）— 注册在 object path `/`，注册独立 service name `org.deepin.dde.Osd1`。用于兼容旧版调用方。
-- `org.deepin.dde.shell.osd` — 注册在 object path `/org/deepin/dde/shell/osd`，无独立 service name（使用 dde-shell 进程的 bus name）。
-
 ## 接口信息
 
 | 字段 | 值 |
@@ -16,13 +11,22 @@ dde-shell 的 OSD 面板在 Session 总线上注册了两个 D-Bus 接口，两�
 | Interface | `org.deepin.dde.Osd1` |
 | Bus | Session |
 
-## org.deepin.dde.shell.osd 接口
+## 接口关系
 
-`org.deepin.dde.shell.osd` 接口由 dde-shell 直接注册，无独立 service name（使用 dde-shell 进程的 bus name，通常为 `org.deepin.dde.shell`）。
+dde-shell 的 OSD 面板在 Session 总线上注册了两个 D-Bus 接口，两者提供相同的 `ShowOSD` 方法，功能无差异：
+
+- `org.deepin.dde.Osd1`（本接口）— 注册在 object path `/`，拥有独立 service name `org.deepin.dde.Osd1`。
+- `org.deepin.dde.shell.osd` — 注册在 object path `/org/deepin/dde/shell/osd`，无独立 service name（使用 dde-shell 进程的 bus name，通常为 `org.deepin.dde.shell`）。
+
+两个接口为同一 OSD 功能的不同注册路径，不存在功能差异。`org.deepin.dde.Osd1` 拥有独立 service name，调用更稳定方便；`org.deepin.dde.shell.osd` 无独立 service name，需使用 dde-shell 进程的 bus name。
+
+**推荐使用**：`org.deepin.dde.Osd1`，因其拥有独立 service name，调用更稳定方便。
+
+### org.deepin.dde.shell.osd 接口
 
 | 字段 | 值 |
 |------|------|
-| Service | 无独立 service name（使用 dde-shell 进程的 bus name） |
+| Service | 无独立 service name（使用 dde-shell 进程的 bus name，通常为 `org.deepin.dde.shell`） |
 | Object path | `/org/deepin/dde/shell/osd` |
 | Interface | `org.deepin.dde.shell.osd` |
 | Bus | Session |
@@ -51,7 +55,7 @@ gdbus call --session \
   - `text`（string, 类型 `s`）：OSD 类型标识
 - **返回值**: 无
 
-**支持的选项**:
+**支持的选项**（对应系统服务和硬件事件触发的 OSD 类型）:
 
 音频：
 - `AudioUp` — 音量增大
