@@ -26,17 +26,25 @@ DDE Shell 框架主程序，是 DDE 桌面环境面板（panel）和小程序（
 
 详见 [org.deepin.ds.Dock](references/dbus/org.deepin.ds.Dock.md)
 
+#### 兼容接口
+
+Dock 面板服务除当前使用的 `org.deepin.ds.Dock` 外，还注册了两个历史别名服务 `org.deepin.dde.Dock1` 和 `org.deepin.dde.daemon.Dock1`，三者指向同一 Dock 对象（对象路径 `/org/deepin/dde/Dock1`），用于向后兼容不同版本的调用方。`org.deepin.dde.daemon.Dock1` 提供旧版守护进程接口（应用驻留 Dock、窗口激活等），`org.deepin.dde.Dock1` 提供旧版前端接口（插件管理、Dock 几何与显示控制）。新代码应优先使用 `org.deepin.ds.Dock`。
+
 ### 桌面通知与通知配置
 
 提供桌面通知的发送、更新和关闭能力，可查询通知服务支持的能力与服务器信息；支持按应用读取和修改通知开关及展示配置，读取和修改系统级通知配置，查询通知记录数量，并监听通知处理状态、应用配置和系统配置的变化。
 
 详见 [org.deepin.dde.Notification1](references/dbus/org.deepin.dde.Notification1.md)
 
+> **兼容说明**：dde-shell 的通知服务同时注册了 `org.freedesktop.Notifications`（freedesktop 标准接口）和 `org.deepin.dde.Notification1`（DDE 扩展接口），两者共用同一通知服务实现。`org.freedesktop.Notifications` 提供标准通知发送、关闭和能力查询功能，供使用 freedesktop 通知规范的应用调用；`org.deepin.dde.Notification1` 在此基础上扩展了应用通知管理、系统配置和通知记录功能。
+
 ### 桌面通知（freedesktop 标准）
 
 实现 freedesktop.org 桌面通知规范，提供桌面通知的发送、关闭和能力查询功能。
 
 详见 [org.freedesktop.Notifications.md](references/dbus/org.freedesktop.Notifications.md)
+
+> 该接口为 freedesktop.org 标准通知接口，与 `org.deepin.dde.Notification1` 共用同一实现，供使用标准通知规范的应用调用。
 
 ### OSD 显示
 
