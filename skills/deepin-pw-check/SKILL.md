@@ -16,3 +16,7 @@ deepin-pw-check 是 DDE 的密码安全策略组件，通过 System 总线提供
 提供系统级密码安全策略的读写和管理能力，包括密码校验开关、密码长度限制、校验策略、校验规则数量和首字母大写要求。
 
 详见 [org.deepin.dde.PasswdConf1.md](references/dbus/org.deepin.dde.PasswdConf1.md)
+
+### 兼容性说明
+
+deepin-pw-check 仅提供一个 D-Bus 服务接口 `org.deepin.dde.PasswdConf1`（对象路径 `/org/deepin/dde/PasswdConf1`，System 总线），不存在为兼容旧版历史接口而保留的别名或废弃接口。
