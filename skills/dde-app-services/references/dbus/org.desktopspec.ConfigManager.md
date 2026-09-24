@@ -1,6 +1,6 @@
 # org.desktopspec.ConfigManager 接口参考
 
-该接口提供全局的 DConfig 配置管理器对象获取、更新、同步能力，以及用户配置数据移除和配置热加载的全局能力，以及仅作用于 dde-dconfig-daemon 自身的日志规则设置能力。其中配置管理器对象获取、更新、同步为全局 DConfig 管理功能；日志规则设置（enableVerboseLogging、disableVerboseLogging、setLogRules）仅用于设置 dde-dconfig-daemon 自身的日志级别与行为，而非系统全局日志。
+该接口提供全局的 DConfig 配置管理器对象获取、更新、同步、用户配置数据移除和配置热加载能力，以及仅作用于 `dde-dconfig-daemon` 自身的日志规则设置能力。
 
 ## 接口信息
 
@@ -129,9 +129,9 @@ pkexec gdbus call --system \
 ```
 
 
-### 日志规则设置（仅作用于 dde-dconfig-daemon 自身）
+### 日志规则设置（仅作用于 `dde-dconfig-daemon` 自身）
 
-> 以下接口仅用于设置 dde-dconfig-daemon 自身的日志级别与行为，不影响系统全局日志配置。设置后**实时生效**，**重启服务后失效**。
+> 以下接口仅用于设置 `dde-dconfig-daemon` 自身的日志级别与行为，不影响系统全局日志配置。设置后**实时生效**，**重启服务后失效**。
 
 #### enableVerboseLogging
 
@@ -139,7 +139,7 @@ pkexec gdbus call --system \
 
 - **输入参数**: 无
 - **返回值**: 无
-- **使用场景**: 调试 dde-dconfig-daemon 问题时，快速开启详细日志以获取更多诊断信息。一般情况下使用此接口即可。
+- **使用场景**: 调试 `dde-dconfig-daemon` 问题时，快速开启详细日志以获取更多诊断信息。一般情况下使用此接口即可。
 
 权限：
 - requires_sudo: true
@@ -175,7 +175,7 @@ pkexec gdbus call --system \
 
 - **输入参数**: `rules`（string, 类型 `s`）：Qt logging rules 规则字符串（非 JSON 格式），遵循 Qt 日志规则语法，例如 `*.debug=true;org.deepin.*.debug=false`
 - **返回值**: 无
-- **使用场景**: 需要精细控制 dde-dconfig-daemon 各模块的日志级别时使用，例如仅开启特定模块的调试日志而关闭其他模块。
+- **使用场景**: 需要精细控制 `dde-dconfig-daemon` 各模块的日志级别时使用，例如仅开启特定模块的调试日志而关闭其他模块。
 
 权限：
 - requires_sudo: true
