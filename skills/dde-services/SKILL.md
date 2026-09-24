@@ -1,13 +1,13 @@
 ---
 name: dde-services
-description: 提供快捷键操作执行、IP 地址监视的 CLI 命令，以及电源管理、X 设置、壁纸轮播、快捷键、手势、图像效果、图像模糊、壁纸缓存、环境亮度的 Session D-Bus 接口
+description: 提供快捷键操作执行、IP 地址监视的 CLI 命令，以及电源管理、X 设置、壁纸轮播、快捷键、手势、壁纸缓存、环境亮度的 Session D-Bus 接口
 Categories:
   - Settings
 ---
 
 # dde-services
 
-dde-services 是 DDE 的后端服务组件，提供快捷键操作执行、IP 地址监视的 CLI 命令，以及通过 Session 总线提供电源管理、X 设置、壁纸轮播、快捷键、手势、图像效果、图像模糊、壁纸缓存和环境亮度能力。
+dde-services 是 DDE 的后端服务组件，提供快捷键操作执行、IP 地址监视的 CLI 命令，以及通过 Session 总线提供电源管理、X 设置、壁纸轮播、快捷键、手势、壁纸缓存和环境亮度能力。
 
 ## CLI 命令
 
@@ -55,18 +55,6 @@ IP 地址监视守护进程（upstream 开源项目），用于监视网络接�
 提供手势能力。
 
 详见 [org.deepin.dde.Gesture1.md](references/dbus/org.deepin.dde.Gesture1.md)
-
-### 图像效果
-
-提供图像效果能力。
-
-详见 [org.deepin.dde.ImageEffect1.md](references/dbus/org.deepin.dde.ImageEffect1.md)
-
-### 图像模糊
-
-提供图像模糊能力。
-
-详见 [org.deepin.dde.ImageBlur1.md](references/dbus/org.deepin.dde.ImageBlur1.md)
 
 ### 壁纸缓存
 

@@ -1,6 +1,8 @@
-# org.deepin.dde.ImageEffect1 接口参考
+# org.deepin.dde.ImageEffect1 兼容性接口概述
 
-该接口提供图像效果处理能力。
+该接口为兼容性接口，用于替代 dde-daemon 的 ImageEffect 服务，使旧版应用在 Treeland 会话下仍可正常调用。实际实现挂载在 WallpaperCache 服务上，仅支持 "pixmix"/blur 效果。
+
+> **注意**：此接口为兼容性接口，不建议在新代码中使用。图像效果处理请使用最新的 `org.deepin.dde.WallpaperCache` 接口替代。
 
 ## 接口信息
 
@@ -10,34 +12,10 @@
 | Object path | `/org/deepin/dde/ImageEffect1` |
 | Interface | `org.deepin.dde.ImageEffect1` |
 | Bus | Session |
-### 图像效果
 
-#### Get
+## 功能概述
 
-获取指定效果的图像。
+- **Get(effect, filename)**：获取指定效果的图像，委托给 WallpaperCache 服务处理
+- **Delete(effect, filename)**：删除指定效果的图像，委托给 WallpaperCache 服务处理
 
-- **输入参数**: `effect`（string, 类型 `s`）：效果名称；`filename`（string, 类型 `s`）：文件名
-- **返回值**: `s`（string）：处理后的图像路径
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.ImageEffect1 \
-  --object-path /org/deepin/dde/ImageEffect1 \
-  --method org.deepin.dde.ImageEffect1.Get "blur" "wallpaper.jpg"
-```
-
-#### Delete
-
-删除指定效果的图像。
-
-- **输入参数**: `effect`（string, 类型 `s`）：效果名称；`filename`（string, 类型 `s`）：文件名
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.ImageEffect1 \
-  --object-path /org/deepin/dde/ImageEffect1 \
-  --method org.deepin.dde.ImageEffect1.Delete "blur" "wallpaper.jpg"
-```
-
----
+> 如需处理图像效果，建议使用最新的 `org.deepin.dde.WallpaperCache` 接口，详见 [org.deepin.dde.WallpaperCache.md](org.deepin.dde.WallpaperCache.md)。
