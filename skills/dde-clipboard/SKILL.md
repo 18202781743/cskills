@@ -1,13 +1,13 @@
 ---
 name: dde-clipboard
-description: 提供剪贴板管理工具的命令行启动、剪贴板前端服务与守护进程的 Session 总线 D-Bus 接口、dde-clipboard 应用自身的提示组件显示配置
+description: dde-clipboard 是 DDE 桌面环境的剪贴板管理组件，提供剪贴板管理工具的命令行启动、剪贴板前端服务与守护进程的 Session 总线 D-Bus 接口，以及 dde-clipboard 应用自身的提示组件显示配置
 Categories:
   - Application
 ---
 
 # dde-clipboard
 
-dde-clipboard 是 DDE 剪贴板组件，提供剪贴板管理工具的命令行启动、剪贴板前端服务与守护进程的 Session 总线 D-Bus 接口，以及 dde-clipboard 应用自身的提示组件显示配置。
+dde-clipboard 是 DDE 桌面环境的剪贴板管理组件，提供剪贴板管理工具的命令行启动、剪贴板前端服务与守护进程的 Session 总线 D-Bus 接口，以及 dde-clipboard 应用自身的提示组件显示配置。
 
 ## CLI 命令
 
@@ -27,19 +27,19 @@ DDE 剪贴板守护进程，负责管理剪贴板历史记录和剪贴板事件�
 
 ### 剪贴板服务
 
-管理 DDE 剪贴板前端服务的显示控制，提供剪贴板窗口的切换、显示和隐藏能力。
+管理 DDE 剪贴板前端服务的显示控制，提供剪贴板窗口的切换、显示和隐藏能力。该接口在 Session 总线上注册，仅对当前用户会话生效。
 
 详见 [org.deepin.dde.Clipboard1.md](references/dbus/org.deepin.dde.Clipboard1.md)
 
 ### 剪贴板加载器
 
-提供剪贴板守护进程的剪贴板数据接收与恢复能力。
+提供剪贴板守护进程的剪贴板数据接收与恢复能力。该接口在 Session 总线上注册，仅对当前用户会话生效。
 
 详见 [org.deepin.dde.ClipboardLoader1.md](references/dbus/org.deepin.dde.ClipboardLoader1.md)
 
 ### 兼容性说明
 
-dde-clipboard 的 D-Bus 接口经核对源码与 `dbus-inventory.md` 确认，当前仅注册上述两个服务接口（`org.deepin.dde.Clipboard1` 与 `org.deepin.dde.ClipboardLoader1`），不存在为兼容旧版本而保留的别名或废弃接口。
+dde-clipboard 当前仅注册上述两个 D-Bus 服务接口（`org.deepin.dde.Clipboard1` 与 `org.deepin.dde.ClipboardLoader1`），不存在为兼容旧版本而保留的别名或废弃接口。
 
 ## DConfig 配置项
 
