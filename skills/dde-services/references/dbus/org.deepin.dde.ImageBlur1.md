@@ -19,4 +19,4 @@
 - **Delete(filename)**：删除模糊图像，委托给 WallpaperCache 服务处理
 - **BlurDone(file, blurFile, ok)**（信号）：模糊处理完成时发出
 
-> 如需处理图像模糊，建议使用最新的 `org.deepin.dde.WallpaperCache` 接口（`GetBlurImagePath` 等方法），详见 [org.deepin.dde.WallpaperCache.md](org.deepin.dde.WallpaperCache.md)。
+> 如需处理图像模糊，建议使用最新的 `org.deepin.dde.WallpaperCache` 接口（`GetBlurImagePath`、`GetProcessedImageWithBlur`、`GetProcessedImagePathByFdWithBlur` 方法），详见 [org.deepin.dde.WallpaperCache.md](org.deepin.dde.WallpaperCache.md)。
