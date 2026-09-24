@@ -1,13 +1,13 @@
 ---
 name: dde-session-ui
-description: 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒、内存警告的 CLI 命令，以及黑屏、警告对话框、欢迎界面、低电量提示的 D-Bus 接口，和登录提醒开关的 DConfig 配置项（仅适用于 dde-session-ui 自身的登录提醒功能）
+description: 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒、内存警告的 CLI 命令，以及 OSD 面板、通知服务、黑屏、警告对话框、欢迎界面、低电量提示、内存警告对话框的 D-Bus 接口，和登录提醒开关的 DConfig 配置项（仅适用于 dde-session-ui 自身的登录提醒功能）
 Categories:
   - Application
 ---
 
 # dde-session-ui
 
-dde-session-ui 是 DDE 通用 UI 组件，提供黑屏、警告对话框、欢迎界面、低电量提示、提示对话框、许可证对话框、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、登录提醒、内存警告的 CLI 命令和 D-Bus 接口，以及登录提醒开关的 DConfig 配置项。
+dde-session-ui 是 DDE 通用 UI 组件，提供黑屏、警告对话框、欢迎界面、低电量提示、提示对话框、许可证对话框、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、登录提醒、内存警告的 CLI 命令，以及 OSD 面板、通知服务、黑屏、警告对话框、欢迎界面、低电量提示、内存警告对话框的 D-Bus 接口，和登录提醒开关的 DConfig 配置项。
 
 ## CLI 命令
 
@@ -109,6 +109,30 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 提供低电量提示显示能力。
 
 详见 [org.deepin.dde.LowPower1.md](references/dbus/org.deepin.dde.LowPower1.md)
+
+### OSD 面板
+
+提供 OSD（屏幕显示）面板的显示控制能力，包括音量、亮度等系统 OSD 提示的显示。
+
+详见 [org.deepin.dde.Osd1.md](references/dbus/org.deepin.dde.Osd1.md)
+
+### 通知服务
+
+提供 DDE 通知扩展服务能力，包括通知发送、关闭、通知记录管理、应用通知设置管理、系统通知设置管理、通知中心显示控制等。
+
+详见 [org.deepin.dde.Notification1.md](references/dbus/org.deepin.dde.Notification1.md)
+
+### 内存警告对话框
+
+提供内存警告对话框的显示控制能力，在系统内存不足时弹出警告提示窗口。
+
+详见 [org.deepin.dde.MemoryWarningDialog1.md](references/dbus/org.deepin.dde.MemoryWarningDialog1.md)
+
+### 兼容性 D-Bus 接口
+
+以下接口为兼容旧版接口而保留，与当前接口由同一进程实现，功能等价：
+
+- **`org.freedesktop.Notifications`**（对象路径 `/org/freedesktop/Notifications`，接口名 `org.freedesktop.Notifications`）：标准 freedesktop 通知接口，由 `dde-osd` 进程注册，与 `org.deepin.dde.Notification1` 共享同一实现。该接口用于兼容遵循 freedesktop.org Notification 规范的第三方应用发送系统通知，使得这些应用无需修改即可在 DDE 环境中正常发送通知。需注意该服务名可能与 `dde-shell` 冲突（两者都可能注册此服务名），实际运行时仅一个进程持有该服务名。
 
 ## DConfig 配置项
 
