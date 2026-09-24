@@ -15,6 +15,10 @@
 
 通过 D-Bus 服务激活机制启动警告对话框进程：
 
+- **功能**: 通过 D-Bus 服务名激活机制启动 `dde-warning-dialog` 进程，实现警告对话框的进程单实例控制
+- **触发条件**: 当系统组件尝试调用此 D-Bus 服务名时自动触发，D-Bus 守护进程根据 `.service` 文件自动启动对应进程
+- **使用场景**: 系统检测到电池耗尽或磁盘空间不足严重警告条件时，通过此服务名激活警告对话框进程以显示警告窗口
+
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.WarningDialog1 \

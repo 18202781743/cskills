@@ -1,13 +1,13 @@
 ---
 name: dde-session-ui
-description: 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒、内存警告的 CLI 命令，以及 OSD 面板、通知服务、黑屏、警告对话框、欢迎界面、低电量提示的 D-Bus 接口，和登录提醒开关的 DConfig 配置项（仅适用于 dde-session-ui 自身的登录提醒功能）
+description: dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒的 CLI 命令，OSD 面板、通知服务、黑屏、警告对话框、欢迎界面、低电量提示的 D-Bus 接口，以及登录提醒开关的 DConfig 配置项（仅适用于 dde-session-ui 自身的登录提醒功能）
 Categories:
   - Application
 ---
 
 # dde-session-ui
 
-dde-session-ui 是 DDE 通用 UI 组件，提供黑屏、警告对话框、欢迎界面、低电量提示、提示对话框、许可证对话框、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、登录提醒、内存警告的 CLI 命令，以及 OSD 面板、通知服务、黑屏、警告对话框、欢迎界面、低电量提示的 D-Bus 接口，和登录提醒开关的 DConfig 配置项。
+dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒的 CLI 命令，OSD 面板、通知服务、黑屏、警告对话框、欢迎界面、低电量提示的 D-Bus 接口，以及登录提醒开关的 DConfig 配置项。
 
 ## CLI 命令
 
@@ -77,12 +77,6 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 
 详见 [deepin-login-reminder.md](references/cli/deepin-login-reminder.md)
 
-### dmemory-warning-dialog
-
-内存警告对话框，在系统内存不足时弹出警告提示。
-
-详见 [dmemory-warning-dialog.md](references/cli/dmemory-warning-dialog.md)
-
 
 ## D-Bus 接口
 
@@ -112,13 +106,13 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 
 ### OSD 面板
 
-提供 OSD（屏幕显示）面板的显示控制能力，包括音量、亮度等系统 OSD 提示的显示。
+提供 OSD（屏幕显示）面板的显示控制能力，包括音量、亮度、显示模式、键盘布局、窗口特效 OSD 提示的显示。
 
 详见 [org.deepin.dde.Osd1.md](references/dbus/org.deepin.dde.Osd1.md)
 
 ### 通知服务
 
-提供 DDE 通知扩展服务能力，包括通知发送、关闭、通知记录管理、应用通知设置管理、系统通知设置管理、通知中心显示控制等。
+提供 DDE 通知扩展服务能力，包括通知发送、关闭、通知记录管理、应用通知设置管理、系统通知设置管理、通知中心显示控制。
 
 详见 [org.deepin.dde.Notification1.md](references/dbus/org.deepin.dde.Notification1.md)
 

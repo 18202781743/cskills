@@ -33,7 +33,7 @@ DDE 许可证对话框工具，用于展示软件许可证内容并获取用户�
 | `-p, --palette <string>` | 主题：`light`/`dark`/`auto`（默认跟随系统） | 是 |
 | `-i, --icon-name <string>` | 自定义标题栏图标名 | 是 |
 
-> 注：`--english title`、`--english allow`、`--english content`、`--hide bottom` 的长选项名在源码中使用空格而非连字符，此处按源码实际定义记录。
+> 注：`--english title`、`--english allow`、`--english content`、`--hide bottom` 的长选项名使用空格而非连字符，此处按实际定义记录。
 
 ## 使用示例
 
