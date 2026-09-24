@@ -11,7 +11,7 @@
 | Interface | `org.deepin.dde.Launcher1` |
 | Bus | Session |
 
-> **核验说明**：本文档接口信息已与源码 D-Bus 定义（`dbus/org.deepin.dde.Launcher1.xml` 及生成的 Adaptor）核对一致。
+> **核验说明**：本文档接口信息已与源码 D-Bus 定义（`dbus/org.deepin.dde.Launcher1.xml`、生成的 Adaptor 及 `launcheritem.cpp` 中的 `registerService`/`registerObject` 调用）核对一致。当前服务由 dde-shell 加载 dde-launchpad applet 后在 Session 总线上程序化注册（无 .service 激活文件），dde-shell 运行时即可访问。
 
 ### 启动器显示控制
 
@@ -152,4 +152,11 @@ gdbus monitor --session \
 
 ## 兼容性说明
 
-dde-launchpad 仅导出 `org.deepin.dde.Launcher1` 一个 D-Bus 服务接口，不存在旧版别名或废弃接口。Dock 相关的历史别名接口属于 dde-shell，不在 dde-launchpad 中。
+dde-launchpad 当前仅导出 `org.deepin.dde.Launcher1` 一个 D-Bus 服务接口，这是最新的服务接口名，所有示例均使用此接口。
+
+以下为旧版兼容性服务名，由 `dde-api-dbus-proxy-v1` 代理转发，并非 dde-launchpad 自身导出，仅作功能概述：
+
+- `com.deepin.dde.Launcher`：旧版启动器前端服务名，通过 dde-api-dbus-proxy 兼容转发，功能与 `org.deepin.dde.Launcher1` 相同。
+- `com.deepin.dde.daemon.Launcher`：旧版启动器后端服务名，通过 dde-api-dbus-proxy 兼容转发。
+
+这些旧接口不应在新代码中使用，新代码应统一使用 `org.deepin.dde.Launcher1`。Dock 相关的历史别名接口属于 dde-shell，不在 dde-launchpad 中。
