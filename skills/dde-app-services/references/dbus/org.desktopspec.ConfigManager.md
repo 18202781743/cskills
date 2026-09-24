@@ -47,6 +47,15 @@ gdbus call --system \
 ```
 
 
+### 兼容性接口
+
+本接口中存在新旧两个版本的管理器对象获取方法，用于向后兼容：
+
+- `acquireManagerV2`（当前版本）：带 `uid` 参数，支持多用户场景下获取指定用户的配置管理器对象。
+- `acquireManager`（旧版兼容接口）：不含 `uid` 参数（内部使用默认 uid 0），功能与 `acquireManagerV2` 相同。
+
+两者功能一致，均为获取配置管理器对象。旧版 `acquireManager` 保留仅为兼容历史调用方，新代码应使用 `acquireManagerV2`。
+
 ### 配置更新与同步
 
 #### update

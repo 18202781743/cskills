@@ -17,10 +17,6 @@ dde-app-services 是 DDE 的 DConfig 配置管理服务组件。通过 System �
 
 详见 [org.desktopspec.ConfigManager.md](references/dbus/org.desktopspec.ConfigManager.md)
 
-### 兼容性接口
-
-配置管理器接口中，`acquireManager` 为兼容旧版接口，其功能与当前版本 `acquireManagerV2` 相同，均用于获取配置管理器对象。区别在于 `acquireManagerV2` 增加了 `uid` 参数以支持多用户场景，而旧版 `acquireManager` 不含该参数（内部使用默认 uid 0）。保留 `acquireManager` 仅为兼容历史调用方，新代码应使用 `acquireManagerV2`。
-
 ### 配置管理器 Manager 接口
 
 提供全局的配置值读写、重置和元信息查询能力。
