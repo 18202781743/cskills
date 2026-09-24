@@ -32,15 +32,6 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 
 详见 [org.deepin.dde.ControlCenter1.GrandSearch.md](references/dbus/org.deepin.dde.ControlCenter1.GrandSearch.md)
 
-### 兼容性接口
-
-控制中心 D-Bus 服务保留了以下已废弃的兼容性方法，供旧版调用方继续使用，新代码应优先使用推荐替代方法：
-
-- **ShowPage(QString module, QString page)**：旧版双参数页面跳转接口，通过模块名和页面名定位目标页面。已标记 `Q_DECL_DEPRECATED_X`，推荐使用单参数 `ShowPage(QString url)` 替代。
-- **ShowModule(QString module)**：旧版模块显示接口，通过模块名显示指定模块。已标记 `Q_DECL_DEPRECATED_X`，推荐使用 `ShowPage(QString url)` 替代。
-
-以上兼容性方法仅保留向后兼容，功能与当前 `ShowPage(QString url)` 相同，均为跳转到控制中心指定页面。详见 [org.deepin.dde.ControlCenter1.md](references/dbus/org.deepin.dde.ControlCenter1.md)
-
 ## DConfig 配置项
 
 以下 DConfig 配置项均为控制中心应用自身的配置，用于控制控制中心窗口尺寸及各设置模块的显示行为，而非系统全局配置。

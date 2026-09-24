@@ -90,8 +90,6 @@ gdbus call --session \
 - **输入参数**: `url`（string, 类型 `s`）：页面 URL
 - **返回值**: 无
 
-> **兼容性说明**：以下 `ShowPage(QString, QString)` 和 `ShowModule(QString)` 为旧版兼容接口，已标记 `Q_DECL_DEPRECATED_X`。它们使用模块名+页面名的方式定位页面，功能与当前 `ShowPage(QString url)` 等效，仅为兼容旧版调用方保留，新代码应使用单参数 `ShowPage(QString url)`。
-
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.ControlCenter1 \
@@ -196,4 +194,12 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Get \
   org.deepin.dde.ControlCenter1 Path
 ```
+## 兼容性接口
+
+控制中心 D-Bus 服务在同一对象 `/org/deepin/dde/ControlCenter1` 上注册了以下已废弃的兼容性方法，保留用于向后兼容旧版调用方。这些方法均已在源码中标记 `Q_DECL_DEPRECATED_X`，新代码应使用推荐替代方法。
+
+- **ShowPage(QString module, QString page)**：旧版双参数页面跳转接口，通过模块名和页面名定位目标页面。功能与当前单参数 `ShowPage(QString url)` 等效，推荐使用 `ShowPage(QString url)` 替代。
+- **ShowModule(QString module)**：旧版模块显示接口，通过模块名显示指定模块。功能与 `ShowPage(QString url)` 等效，推荐使用 `ShowPage(QString url)` 替代。
+
+以上方法仅为兼容旧版调用方保留，不建议在新代码中使用。
 ---
