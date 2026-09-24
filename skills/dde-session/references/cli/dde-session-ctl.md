@@ -16,7 +16,7 @@ DDE 会话控制工具，用于执行关机、退出会话、注销这三项会�
 
 ## 用法
 
-`dde-session-ctl [options]`
+`/usr/libexec/dde-session-ctl [options]`
 
 ## 参数
 
@@ -32,14 +32,14 @@ DDE 会话控制工具，用于执行关机、退出会话、注销这三项会�
 
 ```bash
 # 关闭 DDE（关机）
-dde-session-ctl -s
+/usr/libexec/dde-session-ctl -s
 
 # 退出当前 DDE 会话
-dde-session-ctl -S
+/usr/libexec/dde-session-ctl -S
 
 # 注销当前用户会话
-dde-session-ctl -l
+/usr/libexec/dde-session-ctl -l
 
 # 查看版本信息
-dde-session-ctl --version
+/usr/libexec/dde-session-ctl --version
 ```
