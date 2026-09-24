@@ -17,6 +17,10 @@ dde-launchpad 是 DDE 启动器组件，通过 Session 总线提供启动器的�
 
 详见 [org.deepin.dde.Launcher1.md](references/dbus/org.deepin.dde.Launcher1.md)
 
+### 兼容性说明
+
+dde-launchpad 仅导出 `org.deepin.dde.Launcher1` 一个 D-Bus 服务接口，不存在旧版别名或废弃接口。Dock 相关的历史别名接口属于 dde-shell（见 dde-shell skill），不在 dde-launchpad 中。
+
 ## DConfig 配置项
 
 dde-launchpad 通过 DConfig 暴露启动器自身应用行为配置，配置资源挂载在 appId `org.deepin.dde.shell` 下。

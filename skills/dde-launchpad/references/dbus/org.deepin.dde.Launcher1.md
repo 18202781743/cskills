@@ -149,3 +149,7 @@ gdbus monitor --session \
 ```
 
 ---
+
+## 兼容性说明
+
+dde-launchpad 仅导出 `org.deepin.dde.Launcher1` 一个 D-Bus 服务接口，不存在旧版别名或废弃接口。Dock 相关的历史别名接口属于 dde-shell，不在 dde-launchpad 中。
