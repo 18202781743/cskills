@@ -15,11 +15,11 @@
 
 ### `/org/deepin/dde/Appearance1/sync`
 
-主题字体同步配置（ThemeFontSyncConfig）。负责字体大小、GTK 主题、图标主题、光标主题、标准字体、等宽字体六项外观属性的序列化与反序列化。
+主题字体同步配置。负责字体大小、GTK 主题、图标主题、光标主题、标准字体、等宽字体六项外观属性的序列化与反序列化。
 
 ### `/org/deepin/dde/Appearance1/Background`
 
-壁纸背景同步配置（BackgroundSyncConfig）。负责壁纸 URI 列表、壁纸幻灯片轮播配置、登录锁屏背景图片的序列化与反序列化。
+壁纸背景同步配置。负责壁纸 URI 列表、壁纸幻灯片轮播配置、登录锁屏背景图片的序列化与反序列化。
 
 ## 方法（Methods）
 
