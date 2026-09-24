@@ -1,4 +1,4 @@
-# com.deepin.daemon.Authenticate.Face 接口参考
+# org.deepin.dde.Authenticate1.Face 接口参考
 
 该接口提供系统级人脸录入、验证、列出、重命名、删除及默认设备与服务设置能力。
 
@@ -6,9 +6,9 @@
 
 | 字段 | 值 |
 |------|------|
-| Service | `com.deepin.daemon.Authenticate` |
-| Object path | `/com/deepin/daemon/Authenticate/Face` |
-| Interface | `com.deepin.daemon.Authenticate.Face` |
+| Service | `org.deepin.dde.Authenticate1` |
+| Object path | `/org/deepin/dde/Authenticate1/Face` |
+| Interface | `org.deepin.dde.Authenticate1.Face` |
 | Bus | System |
 
 ### 人脸录入
@@ -25,9 +25,9 @@
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.StartEnroll \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.StartEnroll \
   "testuser" "face_service" "my_face"
 ```
 
@@ -40,9 +40,9 @@ pkexec gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.StopEnroll \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.StopEnroll \
   "<enroll_id>"
 ```
 
@@ -57,9 +57,9 @@ gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.StartVerify \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.StartVerify \
   "testuser" "face_service" 30
 ```
 
@@ -72,9 +72,9 @@ gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.StopVerify \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.StopVerify \
   "<verify_id>"
 ```
 
@@ -89,9 +89,9 @@ gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.ListFaces \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.ListFaces \
   "face_service" "testuser"
 ```
 
@@ -107,9 +107,9 @@ gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.RenameFace \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.RenameFace \
   "face_service" "testuser" "old_name" "new_name"
 ```
 
@@ -125,9 +125,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.DeleteFace \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.DeleteFace \
   "face_service" "testuser" "my_face"
 ```
 
@@ -143,9 +143,9 @@ pkexec gdbus call --system \
 
 ```bash
 pkexec gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.DeleteFaces \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.DeleteFaces \
   "face_service" "testuser"
 ```
 
@@ -160,9 +160,9 @@ pkexec gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.SetDefaultDevice \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.SetDefaultDevice \
   "face_service" "/dev/video0"
 ```
 
@@ -175,9 +175,9 @@ gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.SetDefaultService \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.SetDefaultService \
   "face_service"
 ```
 
@@ -192,9 +192,9 @@ gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
-  --method com.deepin.daemon.Authenticate.Face.GetShareMemInfo \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
+  --method org.deepin.dde.Authenticate1.Face.GetShareMemInfo \
   "<operation_id>"
 ```
 
@@ -213,10 +213,10 @@ gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
   --method org.freedesktop.DBus.Properties.Get \
-  com.deepin.daemon.Authenticate.Face DefaultDevice
+  org.deepin.dde.Authenticate1.Face DefaultDevice
 ```
 
 #### DefaultService
@@ -232,10 +232,10 @@ gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
   --method org.freedesktop.DBus.Properties.Get \
-  com.deepin.daemon.Authenticate.Face DefaultService
+  org.deepin.dde.Authenticate1.Face DefaultService
 ```
 
 #### ServiceList
@@ -251,10 +251,10 @@ gdbus call --system \
 
 ```bash
 gdbus call --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face \
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face \
   --method org.freedesktop.DBus.Properties.Get \
-  com.deepin.daemon.Authenticate.Face ServiceList
+  org.deepin.dde.Authenticate1.Face ServiceList
 ```
 
 ### 信号
@@ -267,8 +267,8 @@ gdbus call --system \
 
 ```bash
 gdbus monitor --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face
 ```
 
 #### VerifyStatus
@@ -279,8 +279,8 @@ gdbus monitor --system \
 
 ```bash
 gdbus monitor --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face
 ```
 
 #### DeviceStatus
@@ -291,8 +291,8 @@ gdbus monitor --system \
 
 ```bash
 gdbus monitor --system \
-  --dest com.deepin.daemon.Authenticate \
-  --object-path /com/deepin/daemon/Authenticate/Face
+  --dest org.deepin.dde.Authenticate1 \
+  --object-path /org/deepin/dde/Authenticate1/Face
 ```
 
 ---
