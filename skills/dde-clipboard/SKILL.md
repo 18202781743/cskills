@@ -43,22 +43,10 @@ dde-clipboard 当前仅注册上述两个 D-Bus 服务接口（`org.deepin.dde.C
 
 ## DConfig 配置项
 
-### showTipsWidget
+以下 DConfig 配置项为 dde-clipboard 应用自身的配置，用于控制提示组件的显示行为，而非系统全局配置。
 
-控制 dde-clipboard 应用是否显示提示组件。该配置仅对 dde-clipboard 应用自身生效。
+### 提示组件配置
 
-| 属性 | 值 |
-|------|------|
-| key | showTipsWidget |
-| 类型 | bool |
-| 取值范围 | `true` 显示提示组件；`false` 不显示提示组件 |
-| 权限 | readwrite |
+控制 dde-clipboard 应用是否显示提示组件。
 
-用例：
-```bash
-# 查询当前值
-dde-dconfig get -a org.deepin.dde.clipboard -r org.deepin.dde.clipboard -k showTipsWidget
-
-# 设置为不显示提示组件
-dde-dconfig set -a org.deepin.dde.clipboard -r org.deepin.dde.clipboard -k showTipsWidget -v false
-```
+详见 [org.deepin.dde.clipboard](references/config/org.deepin.dde.clipboard.md)
