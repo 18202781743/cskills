@@ -4,6 +4,8 @@
 
 dtklog 是基于 Qt 的线程安全日志库，提供多级别日志输出、多种日志输出目标（控制台、文件、滚动文件、系统日志）和便捷日志宏。它独立于其他 DTK 模块，仅依赖 Qt Core。
 
+> **弃用说明**：在 DTK6 中 dtklog 已废弃，日志功能已合并至 dtkcore，不再独立维护。DTK6 项目应直接使用 dtkcore 提供的日志功能，不要集成 `libdtk6log-dev`。dtklog 仓库仍独立维护 DTK5 版本，以下文档仅适用于 DTK5 场景。
+
 ## 术语与缩写
 
 - **DTK**：Deepin Tool Kit。
