@@ -38,7 +38,7 @@ DTK QML 应用预加载的 C++ 扩展接口。
 
 ### 功能能力总结
 
-纯虚接口（使用 `Q_DECLARE_INTERFACE` 声明），定义在 QML 引擎加载主文件前执行预加载逻辑的契约。插件通过实现此接口在应用启动早期完成资源预加载、配置初始化等操作。
+纯虚接口（使用 `Q_DECLARE_INTERFACE` 声明），定义在 QML 引擎加载主文件前执行预加载逻辑的契约。插件通过实现此接口在应用启动早期完成资源预加载、配置初始化操作。
 
 ### 使用场景
 
@@ -80,11 +80,11 @@ DTK QML 窗口类型。
 
 ### 功能能力总结
 
-继承 QQuickWindow，提供 DTK 窗口特有的属性和行为，包括窗口圆角、模糊效果、窗口阴影等平台视觉属性的 QML 接口。在 DTK6 中通过 `QML_NAMED_ELEMENT(DWindow)` 注册为 QML 类型 `DWindow`，可在 QML 中直接使用。
+继承 QQuickWindow，提供 DTK 窗口特有的属性和行为，包括窗口圆角、模糊效果、窗口阴影在内的平台视觉属性的 QML 接口。在 DTK6 中通过 `QML_NAMED_ELEMENT(DWindow)` 注册为 QML 类型 `DWindow`，可在 QML 中直接使用。
 
 ### 使用场景
 
-QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影等）时。
+QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影）时。
 
 ## DQuickWindowAttached
 
@@ -108,7 +108,7 @@ DTK 窗口附加属性提供者。
 
 ### 功能能力总结
 
-继承 QObject，将 DPlatformTheme 的平台主题属性（主题色、字号、图标主题等）暴露为 QML 可访问的属性和信号。DTK6 已移除此类型，相关功能由 QML 层直接提供。
+继承 QObject，将 DPlatformTheme 的平台主题属性（主题色、字号、图标主题）暴露为 QML 可访问的属性和信号。DTK6 已移除此类型，相关功能由 QML 层直接提供。
 
 ### 使用场景
 

@@ -4,7 +4,7 @@ dde-qtintegration 是运行期 Qt 插件项目，不提供开发包、CMake 导�
 
 ## 安装
 
-各类插件由系统包管理器安装到 Qt 的插件目录。DTK5 对应的插件安装在 `qt5/plugins` 目录下，DTK6 对应的插件安装在 `qt6/plugins` 目录下。插件按类型分别安装到 `styles`、`iconengines`、`imageformats`、`platformthemes` 等子目录中。使用方工程无需手工指定插件路径。
+各类插件由系统包管理器安装到 Qt 的插件目录。DTK5 对应的插件安装在 `qt5/plugins` 目录下，DTK6 对应的插件安装在 `qt6/plugins` 目录下。插件按类型分别安装到 `styles`、`iconengines`、`imageformats`、`platformthemes` 子目录中。使用方工程无需手工指定插件路径。
 
 ## 运行时加载
 

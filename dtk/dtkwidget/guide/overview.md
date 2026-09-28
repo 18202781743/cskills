@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-dtkwidget 是基于 Qt Widgets 模块的 C++ 控件库，提供 DTK 风格的对话框、窗口、按钮、输入框、列表、视图、样式、动画效果、打印预览、设置界面和辅助工具等控件级别的功能。图形界面层面的非控件能力（调色板、DCI 图标、窗口装饰等）由下层 dtkgui 提供。
+dtkwidget 是基于 Qt Widgets 模块的 C++ 控件库，提供 DTK 风格的对话框、窗口、按钮、输入框、列表、视图、样式、动画效果、打印预览、设置界面和辅助工具这些控件级别的功能。图形界面层面的非控件能力（调色板、DCI 图标、窗口装饰）由下层 dtkgui 提供。
 
 ## 术语与缩写
 
@@ -10,7 +10,7 @@ dtkwidget 是基于 Qt Widgets 模块的 C++ 控件库，提供 DTK 风格的对
 - **DTK5 / DTK6**：分别与 Qt5 / Qt6 配套的主版本。
 - **DWidget**：公开头文件安装目录名，也是主要 C++ 命名空间的一部分。
 - **转发头**：以公开类型名命名的无后缀头文件，转而引入实际声明所在的头文件。
-- **命名空间别名**：dtkwidget 通过 `dwidgetstype.h` 将 Qt Widgets 控件类型以 `D` 前缀重新暴露在 DTK 命名空间中，如 `DPushButton`、`DLabel` 等。
+- **命名空间别名**：dtkwidget 通过 `dwidgetstype.h` 将 Qt Widgets 控件类型以 `D` 前缀重新暴露在 DTK 命名空间中，如 `DPushButton`、`DLabel`。
 
 ## 导出类型
 

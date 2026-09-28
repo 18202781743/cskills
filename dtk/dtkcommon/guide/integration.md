@@ -7,7 +7,7 @@
 当前版本使用 DTK6，开发包名为 `libdtkcommon-dev`。该开发包提供以下构建入口：
 
 - 伞式 CMake 包 `Dtk6`，通过组件查找 DTK6 各子模块；
-- 构建辅助 CMake 包 `DtkBuildHelper`，提供 `dtk_gen_config_header` 等函数。
+- 构建辅助 CMake 包 `DtkBuildHelper`，提供 `dtk_gen_config_header`、`dtk_setup_code_coverage` 和 `dtk_check_and_add_definitions` 函数。
 
 仍需维护 DTK5 工程时，使用同一开发包 `libdtkcommon-dev`，伞式 CMake 包名为 `Dtk`。
 
@@ -21,7 +21,7 @@ DTK6 工程通过伞式包一次性引入多个 DTK 子模块：
 find_package(Dtk6 REQUIRED COMPONENTS Core Gui Widget)
 ```
 
-`Dtk6` 包会依次查找每个指定的组件（对应 `Dtk6Core`、`Dtk6Gui`、`Dtk6Widget` 等），无需逐个 `find_package`。DTK5 兼容工程将包名改为 `Dtk`：
+`Dtk6` 包会依次查找每个指定的组件（对应 `Dtk6Core`、`Dtk6Gui`、`Dtk6Widget`），无需逐个 `find_package`。DTK5 兼容工程将包名改为 `Dtk`：
 
 ```cmake
 find_package(Dtk REQUIRED COMPONENTS Core Gui Widget)

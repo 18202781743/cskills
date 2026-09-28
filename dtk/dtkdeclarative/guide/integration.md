@@ -32,7 +32,7 @@ find_package(DtkDeclarative REQUIRED)
 target_link_libraries(your_target PRIVATE Dtk::Declarative)
 ```
 
-导出目标是首选写法。为兼容已有工程，包配置仍提供 `DtkDeclarative_LIBRARIES`、`DtkDeclarative_INCLUDE_DIRS`、`DtkDeclarative_LIBRARY_DIRS` 以及 `DTKDeclarative_INCLUDE_DIR` 等变量。新工程不应使用这些变量代替导出目标。
+导出目标是首选写法。为兼容已有工程，包配置仍提供 `DtkDeclarative_LIBRARIES`、`DtkDeclarative_INCLUDE_DIRS`、`DtkDeclarative_LIBRARY_DIRS` 以及 `DTKDeclarative_INCLUDE_DIR` 变量。新工程不应使用这些变量代替导出目标。
 
 ## 引用公开接口
 
