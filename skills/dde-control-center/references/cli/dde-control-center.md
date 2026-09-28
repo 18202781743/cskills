@@ -15,10 +15,10 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 
 系统中存在两个路径：
 
-- `/usr/bin/dde-control-center`：bash 脚本包装器，通过安全加载器调用实际二进制 `/usr/libexec/deepin/dde-control-center`。该包装器不会产生终端输出，因此 `--help`、`--list`、`-v` 等需要终端输出的功能无法通过此包装器使用。
+- `/usr/bin/dde-control-center`：bash 脚本包装器，通过安全加载器调用实际二进制 `/usr/libexec/deepin/dde-control-center`。该包装器不会产生终端输出，因此 `--help`、`-v` 这些需要终端输出的功能无法通过此包装器使用。
 - `/usr/libexec/deepin/dde-control-center`：实际二进制程序，支持所有命令行参数，包括需要终端输出的功能。
 
-需要终端输出的命令（如查看帮助、列出模块、查看版本）应直接使用 `/usr/libexec/deepin/dde-control-center`；GUI 启动类操作（如 `-s`、`-t`、`-m`、`-d` 等）可通过 `/usr/bin/dde-control-center` 包装器正常使用。
+需要终端输出的命令（如查看帮助、查看版本）应直接使用 `/usr/libexec/deepin/dde-control-center`；GUI 启动类操作（如 `-s`、`-t`、`-m`、`-d` 这些）可通过 `/usr/bin/dde-control-center` 包装器正常使用。
 
 ## 用途
 
@@ -42,12 +42,10 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 | `-z, --time` | 显示控制中心启动耗时 | 否 |
 | `-l, --logging-module <loggingModule>` | 仅输出指定模块的日志 | 是 |
 | `--spec <plugindir>` | 从指定目录加载插件 | 是 |
-| `-P, --plugin <plugin>` | 加载指定插件 | 是 |
-| `--list` | 列出所有模块并退出 | 否 |
 | `--fd1 <fd1>` | 安全加载器管道 fd1 | 是 |
 | `--fd2 <fd2>` | 安全加载器管道 fd2 | 是 |
 
-> 注：`-P`、`--list`、`--fd1`、`--fd2` 为正常可见选项，在终端宽度不足时 `--help` 输出会被截断。
+> 注：`--fd1`、`--fd2` 为正常可见选项，在终端宽度不足时 `--help` 输出会被截断。
 
 ## 使用示例
 
@@ -76,17 +74,11 @@ dde-control-center -s -l network
 # 从自定义目录加载插件
 dde-control-center --spec /opt/my-plugins/
 
-# 加载指定插件
-dde-control-center -P my-plugin
-
 # 查看命令行帮助（需使用实际二进制，包装器不产生终端输出）
 /usr/libexec/deepin/dde-control-center --help
-
-# 列出所有可用的设置模块 ID（需使用实际二进制，包装器不产生终端输出）
-/usr/libexec/deepin/dde-control-center --list
 
 # 查看版本信息（需使用实际二进制，包装器不产生终端输出）
 /usr/libexec/deepin/dde-control-center -v
 ```
 
-> 注意：`dde-control-center` 是图形应用，GUI 启动类操作（`-s`、`-t`、`-m`、`-d` 等）需要图形显示环境（X11/Wayland），在无 DISPLAY 的终端中运行会报 Qt platform plugin 错误。需要终端输出的命令（`--help`、`--list`、`-v`）必须直接使用 `/usr/libexec/deepin/dde-control-center`，通过 `/usr/bin/dde-control-center` 包装器执行时不会产生任何输出。
+> 注意：`dde-control-center` 是图形应用，GUI 启动类操作（`-s`、`-t`、`-m`、`-d` 这些）需要图形显示环境（X11/Wayland），在无 DISPLAY 的终端中运行会报 Qt platform plugin 错误。需要终端输出的命令（`--help`、`-v`）必须直接使用 `/usr/libexec/deepin/dde-control-center`，通过 `/usr/bin/dde-control-center` 包装器执行时不会产生任何输出。
