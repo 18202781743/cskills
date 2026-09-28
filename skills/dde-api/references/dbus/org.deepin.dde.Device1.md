@@ -11,8 +11,6 @@
 | Interface | `org.deepin.dde.Device1` |
 | Bus | System |
 
-> **验证说明**：已通过 `gdbus introspect --system` 运行时内省验证，所有方法均可访问。
-
 ## 设备管理方法
 
 ### HasBluetoothDeviceBlocked

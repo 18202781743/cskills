@@ -11,8 +11,6 @@
 | Interface | `org.deepin.dde.Graphic1` |
 | Bus | Session |
 
-> **验证说明**：以下方法签名基于 dde-api 源码确认。
-
 ## 图像处理方法
 
 ### BlurImage

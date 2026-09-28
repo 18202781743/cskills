@@ -2,7 +2,7 @@
 
 该接口提供系统区域设置生成和切换能力。
 
-> **条件编译说明**：该接口的二进制文件存在，但对应的 D-Bus 激活文件在安装阶段被删除，因此无法通过 D-Bus activation 自动激活。实际运行时通过 systemd service 启动，而非 D-Bus 自动激活。使用者不应假设该服务可通过 D-Bus 自动拉起，需确保 systemd 服务已启动后再进行 D-Bus 调用。
+> **使用提示**：该服务无法通过 D-Bus 自动激活，需确保对应的 systemd 服务已启动后再进行 D-Bus 调用。
 
 ## 接口信息
 
@@ -12,8 +12,6 @@
 | Object path | `/org/deepin/dde/LocaleHelper1` |
 | Interface | `org.deepin.dde.LocaleHelper1` |
 | Bus | System |
-
-> **验证说明**：已通过 `gdbus introspect --system` 运行时内省验证，以下方法均可访问。源码中另有 `SetAllowCaller` 方法，但在当前运行时内省中不可见。
 
 ## 区域设置方法
 
