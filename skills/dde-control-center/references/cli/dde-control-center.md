@@ -7,8 +7,18 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 | 字段 | 值 |
 |------|------|
 | 所属包名 | `dde-control-center` |
-| 安装路径 | `/usr/bin/dde-control-center` |
+| 安装路径 | `/usr/libexec/deepin/dde-control-center` |
+| 包装器路径 | `/usr/bin/dde-control-center`（bash 脚本包装器，使用安全加载器执行实际二进制，不产生终端输出） |
 | DDE 角色 | 用户直接使用的系统设置 GUI 工具；同时被包括 dde-shell 在内的组件通过 DBus 调用以打开特定设置页 |
+
+## 关于包装器与实际二进制
+
+系统中存在两个路径：
+
+- `/usr/bin/dde-control-center`：bash 脚本包装器，通过安全加载器调用实际二进制 `/usr/libexec/deepin/dde-control-center`。该包装器不会产生终端输出，因此 `--help`、`--list`、`-v` 等需要终端输出的功能无法通过此包装器使用。
+- `/usr/libexec/deepin/dde-control-center`：实际二进制程序，支持所有命令行参数，包括需要终端输出的功能。
+
+需要终端输出的命令（如查看帮助、列出模块、查看版本）应直接使用 `/usr/libexec/deepin/dde-control-center`；GUI 启动类操作（如 `-s`、`-t`、`-m`、`-d` 等）可通过 `/usr/bin/dde-control-center` 包装器正常使用。
 
 ## 用途
 
@@ -16,7 +26,7 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 
 ## 用法
 
-`dde-control-center [options]`
+`/usr/libexec/deepin/dde-control-center [options]`
 
 ## 参数
 
@@ -57,10 +67,6 @@ dde-control-center -m network -p 1
 # 以 DBus 模式启动（供其他程序通过 DBus 调用控制中心）
 dde-control-center -d
 
-# 列出所有可用的设置模块 ID
-# > 注意：此命令需要图形显示环境（X11/Wayland），在无 DISPLAY 的终端中运行会失败。
-dde-control-center --list
-
 # 显示启动耗时（用于性能调试）
 dde-control-center -s -z
 
@@ -73,8 +79,14 @@ dde-control-center --spec /opt/my-plugins/
 # 加载指定插件
 dde-control-center -P my-plugin
 
-# 查看版本信息
-dde-control-center -v
+# 查看命令行帮助（需使用实际二进制，包装器不产生终端输出）
+/usr/libexec/deepin/dde-control-center --help
+
+# 列出所有可用的设置模块 ID（需使用实际二进制，包装器不产生终端输出）
+/usr/libexec/deepin/dde-control-center --list
+
+# 查看版本信息（需使用实际二进制，包装器不产生终端输出）
+/usr/libexec/deepin/dde-control-center -v
 ```
 
-> 注意：`dde-control-center` 是图形应用，大部分操作（`-s`、`-t`、`-m`、`--list`）需要图形显示环境（X11/Wayland），在无 DISPLAY 的终端中运行会报 Qt platform plugin 错误。
+> 注意：`dde-control-center` 是图形应用，GUI 启动类操作（`-s`、`-t`、`-m`、`-d` 等）需要图形显示环境（X11/Wayland），在无 DISPLAY 的终端中运行会报 Qt platform plugin 错误。需要终端输出的命令（`--help`、`--list`、`-v`）必须直接使用 `/usr/libexec/deepin/dde-control-center`，通过 `/usr/bin/dde-control-center` 包装器执行时不会产生任何输出。
