@@ -60,7 +60,7 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 使用场景
 
-开发 Dock、顶栏等顶级面板插件时。
+开发 Dock、顶栏这类顶级面板插件时。
 
 ## DPluginLoader
 

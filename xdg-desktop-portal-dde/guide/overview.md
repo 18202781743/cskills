@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-xdg-desktop-portal-dde 是 DDE 的 XDG Desktop Portal 后端，为 Flatpak、Snap 等沙箱应用提供文件选择、通知、截图、壁纸设置、屏幕共享、远程桌面、访问控制和设置门户接口。使用方通过 DBus 接口与之交互。
+xdg-desktop-portal-dde 是 DDE 的 XDG Desktop Portal 后端，为 Flatpak、Snap 这类沙箱应用提供文件选择、通知、截图、壁纸设置、屏幕共享、远程桌面、访问控制和设置门户接口。使用方通过 DBus 接口与之交互。
 
 ## 术语与缩写
 

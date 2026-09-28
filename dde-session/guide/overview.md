@@ -16,7 +16,7 @@ dde-session 是 DDE 会话管理组件，负责会话启动、会话状态管理
 
 ## 全局约定
 
-dde-session 不安装公共开发头文件，不导出 C++ 命名空间或 CMake 库目标。使用方通过 DBus 接口或命令行工具访问会话管理功能。dde-session 内部引用 freedesktop.login1 和 systemd1 等 DBus 接口。
+dde-session 不安装公共开发头文件，不导出 C++ 命名空间或 CMake 库目标。使用方通过 DBus 接口或命令行工具访问会话管理功能。dde-session 内部引用 freedesktop.login1 和 systemd1 这类 DBus 接口。
 
 ## 按功能查阅
 

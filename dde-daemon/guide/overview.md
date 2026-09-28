@@ -16,7 +16,7 @@ dde-daemon 是 DDE 系统守护进程，使用 Go 语言编写，以 DBus 服务
 
 ## 全局约定
 
-dde-daemon 是纯 Go 项目，不安装 C++ 公共头文件，不导出 CMake 配置文件或库目标。使用方通过 DBus 接口访问其功能。Go 模块路径为 `github.com/linuxdeepin/dde-daemon`，内部按功能划分为 accounts1、audio1、bluetooth1、display1、keybinding1、systeminfo1、timedate1、inputdevices1、grub2、sessionwatcher1、lastore1、search1、soundeffect1、xeventmonitor1、zone1 等 Go 包。
+dde-daemon 是纯 Go 项目，不安装 C++ 公共头文件，不导出 CMake 配置文件或库目标。使用方通过 DBus 接口访问其功能。Go 模块路径为 `github.com/linuxdeepin/dde-daemon`，内部按功能划分为 accounts1、audio1、bluetooth1、display1、keybinding1、systeminfo1、timedate1、inputdevices1、grub2、sessionwatcher1、lastore1、search1、soundeffect1、xeventmonitor1、zone1 这类 Go 包。
 
 ## 按功能查阅
 

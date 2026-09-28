@@ -19,5 +19,5 @@ dde-launchpad 不安装公共开发头文件，不导出 C++ 命名空间或 CMa
 
 ## 按功能查阅
 
-- 通过 DBus 控制启动器显示、隐藏或切换：参见 [org.deepin.dde.Launcher1](modules.md#orgdeepinddeLauncher1)。
+- 通过 DBus 控制启动器显示、隐藏或切换：参见 [org.deepin.dde.Launcher1](modules.md#orgdeepinddelauncher1)。
 - 将 dde-launchpad 引入 dde-shell 插件工程：参见[集成与构建配置](integration.md)。

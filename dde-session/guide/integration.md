@@ -14,7 +14,7 @@ dde-session 不提供开发包。使用方只需确保运行环境中已安装 d
 
 使用 `dbus-send`、Qt DBus 或其他 DBus 客户端库连接上述服务名即可调用接口方法。
 
-使用命令行工具时，直接调用 `dde-session`、`dde-session-ctl` 等命令并传入相应参数。
+使用命令行工具时，直接调用 `dde-session`、`dde-session-ctl` 这类命令并传入相应参数。
 
 ## 关联文档
 

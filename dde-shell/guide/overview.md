@@ -10,7 +10,7 @@ dde-shell 是 DDE Shell 框架库，提供三层插件模型（Applet → Contai
 - **Containment**：容器插件类型，可管理子 Applet。
 - **Panel**：顶级面板插件类型，继承自 Containment，管理窗口，可含子插件。
 - **metadata.json**：插件元数据文件，描述插件 ID、版本、入口和父子关系。
-- **Layer Shell**：Wayland 协议中用于实现面板、锁屏等覆盖层窗口的协议。
+- **Layer Shell**：Wayland 协议中用于实现面板、锁屏这类覆盖层窗口的协议。
 - **DConfig**：DDE 配置中心，插件可通过其读写配置。
 - **插件 ID**：以反向域名格式标识的插件唯一标识。
 
