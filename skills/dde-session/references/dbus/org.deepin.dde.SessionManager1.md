@@ -436,15 +436,3 @@ gdbus monitor --session \
   --dest org.deepin.dde.SessionManager1 \
   --object-path /org/deepin/dde/SessionManager1
 ```
-
-### 已废弃接口
-
-以下方法和属性已废弃，不应在新代码中使用，建议使用对应的 `Request*` 方法替代：
-
-| 废弃方法/属性 | 替代方法 | 说明 |
-|---------------|----------|------|
-| `Logout` | `RequestLogout` | 注销当前会话，废弃后为空实现 |
-| `Reboot` | `RequestReboot` | 重启系统，废弃后为空实现 |
-| `Shutdown` | `RequestShutdown` | 关闭系统，废弃后为空实现 |
-| `PowerOffChoose` | 无直接替代 | 显示电源操作选择界面，废弃后为空实现 |
-| `Stage`（属性） | 无直接替代 | 会话阶段，已废弃，不再使用 |
