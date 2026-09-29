@@ -1,6 +1,6 @@
 # 导出类型介绍
 
-dde-api 提供 C++ header-only 事件日志记录接口，命名空间为 `DDEAPI`，核心类为 `EventLogger`。
+dde-api 提供 C++ header-only 事件日志记录接口，命名空间为 `DDE_EventLogger`，核心类为 `EventLogger`。
 
 ## DDE_EventLogger
 
