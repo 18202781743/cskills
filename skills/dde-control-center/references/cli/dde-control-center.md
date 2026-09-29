@@ -7,23 +7,17 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 | 字段 | 值 |
 |------|------|
 | 所属包名 | `dde-control-center` |
-| 安装路径 | `/usr/libexec/deepin/dde-control-center` |
+| 安装路径（包装器） | `/usr/bin/dde-control-center` |
+| 实际二进制 | `/usr/libexec/deepin/dde-control-center` |
 | DDE 角色 | 用户直接使用的系统设置 GUI 工具；同时被包括 dde-shell 在内的组件通过 DBus 调用以打开特定设置页 |
 
-## 关于包装器与实际二进制
+## 路径说明
 
-系统中存在两个与控制中心相关的可执行文件：
+`/usr/bin/dde-control-center` 是一个 bash 脚本包装器（wrapper），并非实际的二进制程序。实际执行的二进制位于 `/usr/libexec/deepin/dde-control-center`。
 
-- **`/usr/bin/dde-control-center`**：bash 包装器脚本，通过 `deepin-security-loader` 启动控制中心，以获得调用受保护系统服务的授权。这是用户正常启动控制中心的入口。
-- **`/usr/libexec/deepin/dde-control-center`**：真正的 ELF 二进制文件，是控制中心的实际程序。
+该包装器为满足安全执行要求，使用了加载器机制来启动实际二进制。由于此包装机制，`/usr/bin/dde-control-center` 不会有终端输出，因此 `--help`、`--help-all`、`-v`（版本信息）这些功能无法通过 `/usr/bin/dde-control-center` 获取输出。
 
-通过包装器运行 `--help`、`--help-all`、`-v` 命令时不产生终端输出（security loader 在 Qt 初始化之前拦截）。如需获取完整的帮助或版本输出，应直接运行实际二进制文件：
-
-```bash
-/usr/libexec/deepin/dde-control-center --help
-/usr/libexec/deepin/dde-control-center --help-all
-/usr/libexec/deepin/dde-control-center -v
-```
+如需获取终端输出（如帮助信息、版本信息），应直接使用实际二进制 `/usr/libexec/deepin/dde-control-center`。
 
 ## 用途
 
@@ -31,7 +25,8 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 
 ## 用法
 
-`/usr/bin/dde-control-center [options]`
+- GUI 启动（通过包装器）：`/usr/bin/dde-control-center [options]`
+- 获取终端输出（直接使用实际二进制）：`/usr/libexec/deepin/dde-control-center [options]`
 
 ## 参数
 
@@ -48,8 +43,6 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 | `-z, --time` | 显示控制中心启动耗时 | 否 |
 | `-l, --logging-module <loggingModule>` | 仅输出指定模块的日志 | 是 |
 | `--spec <plugindir>` | 从指定目录加载插件 | 是 |
-| `--fd1 <fd1>` | fd1 from security loader | 是 |
-| `--fd2 <fd2>` | fd2 from security loader | 是 |
 
 ## 使用示例
 
@@ -78,17 +71,16 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 # 从自定义目录加载插件
 /usr/bin/dde-control-center --spec /opt/my-plugins/
 
-# 查看命令行帮助（需使用实际二进制，包装器不产生输出）
+# 查看命令行帮助（须使用实际二进制，包装器无终端输出）
 /usr/libexec/deepin/dde-control-center --help
 
-# 查看所有选项（包括 Qt 通用选项）
+# 查看所有选项（包括 Qt 通用选项，须使用实际二进制）
 /usr/libexec/deepin/dde-control-center --help-all
 
-# 查看版本信息
+# 查看版本信息（须使用实际二进制）
 /usr/libexec/deepin/dde-control-center -v
 ```
 
 > 注意：
 > - `dde-control-center` 是图形应用，GUI 启动类操作（`-s`、`-t`、`-m`、`-d` 这些）需要图形显示环境（X11/Wayland），在无 DISPLAY 的终端中运行会报 Qt platform plugin 错误。
-> - `/usr/bin/dde-control-center` 是 bash 包装器脚本，通过 `deepin-security-loader` 启动控制中心。通过包装器运行 `--help`、`--help-all`、`-v` 命令时不产生终端输出（security loader 在 Qt 初始化之前拦截），需使用 `/usr/libexec/deepin/dde-control-center` 获取完整的帮助和版本输出。
-> - `QT_QPA_PLATFORM=offscreen` 环境变量无法解决包装器的输出问题，因为 security loader 在 Qt 初始化之前即拦截。
+> - `/usr/bin/dde-control-center` 是 bash 脚本包装器，使用了安全加载器机制，不会有终端输出。需要终端输出的操作（`--help`、`--help-all`、`-v`）须使用实际二进制 `/usr/libexec/deepin/dde-control-center`。

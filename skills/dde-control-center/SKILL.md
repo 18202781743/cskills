@@ -16,6 +16,8 @@ dde-control-center 是 DDE 控制中心，提供控制中心应用的启动与�
 
 DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的核心图形应用。
 
+> 注意：`/usr/bin/dde-control-center` 是 bash 脚本包装器，使用了安全加载器机制，不会有终端输出。需要终端输出（如 `--help`、`-v`）时须使用实际二进制 `/usr/libexec/deepin/dde-control-center`。
+
 详见 [dde-control-center.md](references/cli/dde-control-center.md)
 
 
