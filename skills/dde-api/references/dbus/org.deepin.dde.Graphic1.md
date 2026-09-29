@@ -189,6 +189,7 @@ gdbus call --session \
   - `dstFile`（string, 类型 `s`）：目标图像路径
   - `width`（int32, 类型 `i`）：目标宽度
   - `height`（int32, 类型 `i`）：目标高度
+  - `style`（string, 类型 `s`）：填充样式（如 `tile`、`center`）
   - `format`（string, 类型 `s`）：输出格式（`png` 或 `jpeg`）
 - **返回值**: 无（出错时返回 dbus.Error）
 
@@ -197,7 +198,7 @@ gdbus call --session \
   --dest org.deepin.dde.Graphic1 \
   --object-path /org/deepin/dde/Graphic1 \
   --method org.deepin.dde.Graphic1.FillImage \
-  "/path/to/input.png" "/path/to/output.png" 800 600 "png"
+  "/path/to/input.png" "/path/to/output.png" 800 600 "center" "png"
 ```
 
 ### FlipImageHorizontal
@@ -335,7 +336,7 @@ gdbus call --session \
   --dest org.deepin.dde.Graphic1 \
   --object-path /org/deepin/dde/Graphic1 \
   --method org.deepin.dde.Graphic1.ResizeImage \
-  "/path/to/input.png" "/path/to/output.png" 800 600 "png"
+  "/path/to/input.png" "/path/to/output.png" 800 600 "center" "png"
 ```
 
 ### Rgb2Hsv
