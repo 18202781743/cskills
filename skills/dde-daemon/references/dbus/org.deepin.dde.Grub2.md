@@ -177,7 +177,7 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Grub2 \
   --object-path /org/deepin/dde/Grub2 \
-  --method org.deepin.dde.Grub2.SetTimeout uint32:5
+  --method org.deepin.dde.Grub2.SetTimeout 5
 ```
 
 ### EditAuthentication 子对象

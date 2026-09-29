@@ -44,7 +44,7 @@ gdbus call --session \
 gdbus call --session \
   --dest org.deepin.dde.ClipboardManager1 \
   --object-path /org/deepin/dde/ClipboardManager1 \
-  --method org.deepin.dde.ClipboardManager1.RemoveTarget uint32:1
+  --method org.deepin.dde.ClipboardManager1.RemoveTarget 1
 ```
 
 #### SaveClipboard

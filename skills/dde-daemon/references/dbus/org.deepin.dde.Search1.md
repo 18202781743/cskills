@@ -27,7 +27,7 @@
 gdbus call --session \
   --dest org.deepin.dde.Search1 \
   --object-path /org/deepin/dde/Search1 \
-  --method org.deepin.dde.Search1.NewSearchWithStrDict '<{"key":"value"}>'
+  --method org.deepin.dde.Search1.NewSearchWithStrDict '{"key":"value"}'
 ```
 
 #### NewSearchWithStrList
@@ -45,7 +45,7 @@ gdbus call --session \
 gdbus call --session \
   --dest org.deepin.dde.Search1 \
   --object-path /org/deepin/dde/Search1 \
-  --method org.deepin.dde.Search1.NewSearchWithStrList '<["item1","item2"]>'
+  --method org.deepin.dde.Search1.NewSearchWithStrList '["item1","item2"]'
 ```
 
 #### SearchStartWithString

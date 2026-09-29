@@ -27,7 +27,7 @@
 gdbus call --session \
   --dest org.deepin.dde.Daemon1 \
   --object-path /org/deepin/dde/Daemon1 \
-  --method org.deepin.dde.Daemon1.CallTrace uint32:10 uint32:5
+  --method org.deepin.dde.Daemon1.CallTrace 10 5
 ```
 
 #### StartPart2

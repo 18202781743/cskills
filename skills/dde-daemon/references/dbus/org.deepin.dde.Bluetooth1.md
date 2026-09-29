@@ -235,5 +235,5 @@ gdbus call --session \
 gdbus call --session \
   --dest org.deepin.dde.Bluetooth1 \
   --object-path /org/deepin/dde/Bluetooth1 \
-  --method org.deepin.dde.Bluetooth1.SendFiles "AA:BB:CC:DD:EE:FF" '<["file1"]>'
+  --method org.deepin.dde.Bluetooth1.SendFiles "AA:BB:CC:DD:EE:FF" '["file1"]'
 ```

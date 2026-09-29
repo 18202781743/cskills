@@ -63,7 +63,7 @@ gdbus call --session \
 gdbus call --session \
   --dest org.deepin.dde.Display1 \
   --object-path /org/deepin/dde/Display1 \
-  --method org.deepin.dde.Display1.SwitchMode byte:0 "eDP-1"
+  --method org.deepin.dde.Display1.SwitchMode 0 "eDP-1"
 ```
 
 #### Save
