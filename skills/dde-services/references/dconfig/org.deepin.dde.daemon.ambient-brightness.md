@@ -2,10 +2,6 @@
 
 该文件文档化环境亮度感知的 DConfig 配置项，包括自动亮度开关、映射模式、加权窗口、lux-亮度曲线、滞回比例和防抖时间。
 
-## 配置项总览
-
-共 9 个 public 配置项。
-
 ## 自动亮度控制
 
 | Key | Name | Description | 类型 | Permissions |

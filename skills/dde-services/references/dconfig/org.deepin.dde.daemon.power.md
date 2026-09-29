@@ -1,10 +1,6 @@
 # org.deepin.dde.daemon.power DConfig 配置参考
 
-该文件文档化电源管理的 DConfig 配置项，包括 CPU 调频、节能模式、定时关机、屏幕延时、电源按键动作配置。仅介绍 visibility 为 public 的配置项。
-
-## 配置项总览
-
-共 38 个 public 配置项。
+该文件文档化电源管理的 DConfig 配置项，包括 CPU 调频、节能模式、定时关机、屏幕延时、电源按键动作配置。
 
 ## CPU 调频与性能模式
 
