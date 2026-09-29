@@ -42,7 +42,7 @@ gdbus call --system \
 gdbus call --system \
   --dest org.desktopspec.ConfigManager \
   --object-path /path/to/manager \
-  --method org.desktopspec.ConfigManager.Manager.setValue "key_name" <variant true>
+  --method org.desktopspec.ConfigManager.Manager.setValue "key_name" <"balance">
 ```
 
 #### isDefaultValue

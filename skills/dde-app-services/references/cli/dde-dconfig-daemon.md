@@ -12,7 +12,7 @@ DDE 配置守护进程，是 DConfig 系统的后台服务进程。
 
 ## 用途
 
-DDE 配置守护进程，是 DConfig 系统的后台服务进程。它通过 DBus 提供配置读写接口，管理所有 DTK 应用的 DConfig 配置项的存储和访问。该守护进程在用户会话启动时由 DBus 自动激活，是 DConfig 配置体系的核心后端，一般不需要用户直接运行。
+DDE 配置守护进程，是 DConfig 系统的后台服务进程。它通过 DBus 提供配置读写接口，管理所有 DTK 应用的 DConfig 配置项的存储和访问。该守护进程为 system 级 systemd 服务，由 systemd 启动，同时支持 DBus 激活，是 DConfig 配置体系的核心后端，一般不需要用户直接运行。
 
 ## 用法
 
