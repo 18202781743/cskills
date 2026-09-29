@@ -25,12 +25,6 @@ DDE 屏幕保护程序，负责在用户空闲一段时间后启动屏幕保护�
 
 详见 [com.deepin.ScreenSaver.md](references/dbus/com.deepin.ScreenSaver.md)
 
-### 兼容性说明
-
-deepin-screensaver 仅注册一个 D-Bus 服务 `com.deepin.ScreenSaver`（对象路径 `/com/deepin/ScreenSaver`），无旧版别名或废弃接口。
-
-系统中另存在 `org.freedesktop.ScreenSaver` 标准 FreeDesktop 屏保接口，由 `treeland-screensaver` 提供（对象路径 `/org/freedesktop/ScreenSaver`），提供 `Inhibit` 和 `UnInhibit` 标准屏保抑制功能。该接口属于 `treeland-screensaver` 组件，与 deepin-screensaver 的 `com.deepin.ScreenSaver` 是独立的不同实现，非兼容别名。
-
 ## DConfig 配置项
 
 以下 DConfig 配置仅作用于 deepin-screensaver 自身应用（App ID: `org.deepin.screensaver`）。
