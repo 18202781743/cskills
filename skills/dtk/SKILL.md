@@ -1,6 +1,6 @@
 ---
 name: dtk
-description: DTK（Deepin Tool Kit）是 Deepin 桌面环境的开发套件，提供 CLI 工具、D-Bus 接口和 DConfig 公共配置能力。本 skill 提供 DCI 图标打包解包查看、DCI 图片格式转换、DCI 图标主题构建与查找、图片处理、X11 窗口属性读写、KWin 调试信息输出、DConfig 配置 C++ 代码生成、D-Bus 接口 C++ 代码生成、DTK 设置翻译代码与 GSettings schema 生成、中文转拼音、系统信息查询、SVG 转 PNG 的 CLI 命令，DTK 应用间跨进程文件拖拽 D-Bus 接口，DTK 应用偏好 DConfig 配置（作用范围为 DTK 应用）和系统区域格式 DConfig 配置（作用范围为系统全局）
+description: DTK（Deepin Tool Kit）是 Deepin 桌面环境的开发套件，提供 CLI 工具、D-Bus 接口和 DConfig 公共配置能力。本 skill 提供 DCI 图标打包解包查看、DCI 图标主题构建与查找、X11 窗口属性读写、KWin 调试信息输出、DConfig 配置 C++ 代码生成、D-Bus 接口 C++ 代码生成、DTK 设置翻译代码与 GSettings schema 生成、中文转拼音、系统信息查询、SVG 转 PNG 的 CLI 命令，DTK 应用间跨进程文件拖拽 D-Bus 接口，DTK 应用偏好 DConfig 配置（作用范围为 DTK 应用）和系统区域格式 DConfig 配置（作用范围为系统全局）
 Categories:
   - Develop
 ---
@@ -17,12 +17,6 @@ DCI 文件打包/解包工具，用于将符合 DCI 目录规范的图标目录�
 
 详见 [dci.md](references/cli/dci.md)
 
-### dci-image-converter
-
-DCI 图片格式转换工具，用于在 DCI（Deepin Custom Image）格式与 alpha8 格式之间进行相互转换。
-
-详见 [dci-image-converter.md](references/cli/dci-image-converter.md)
-
 ### dci-icon-theme
 
 DCI 图标主题构建工具，用于将普通的图标目录结构转换为 DCI 图标主题文件。
@@ -34,12 +28,6 @@ DCI 图标主题构建工具，用于将普通的图标目录结构转换为 DCI
 DCI 图标查找工具，用于在已安装的 DCI 图标主题中搜索指定名称的图标文件。
 
 详见 [dci-iconfinder.md](references/cli/dci-iconfinder.md)
-
-### image-handler
-
-DTK 图片处理工具，支持图片旋转、应用滤镜效果、查看图片信息三项操作。
-
-详见 [image-handler.md](references/cli/image-handler.md)
 
 ### deepin-gui-settings
 
