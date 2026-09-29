@@ -1,4 +1,4 @@
-# QML 导出类型介绍
+# 导出类型介绍
 
 dde-control-center 的 QML 模块 URI 为 `org.deepin.dcc`，导入版本为 `1.0`。该模块为 STATIC 模块，由控制中心运行时提供，使用方通过 `import org.deepin.dcc 1.0` 导入后可使用以下 QML 类型构建设置页面。
 
@@ -13,7 +13,7 @@ dde-control-center 的 QML 模块 URI 为 `org.deepin.dcc`，导入版本为 `1.
 #### 功能能力总结
 
 - 设置节点标识：`name` 属性作为唯一标识，结合父项 `name` 组成 URL，用于定位跳转和配置隐藏、禁用
-- 设置节点位置：`parentName` 属性指定父项 URL，`weight` 属性控制同级节点排列顺序，取值范围 0–65535
+- 设置节点位置：`parentName` 属性指定父项 URL，`weight` 属性控制同级节点排列顺序，取值范围 0–4294967295
 - 设置显示信息：`displayName` 设置显示名称，`description` 设置描述文本，`icon` 设置图标名称
 - 控制可见性与可用性：`visible` 和 `enabled` 控制节点是否显示和可用，`visibleToApp` 和 `enabledToApp` 反映经控制中心配置后的实际可见和可用状态，`canSearch` 控制节点是否参与搜索
 - 设置页面类型：`pageType` 属性指定页面渲染方式，包括 `EditorPage`（编辑控件，左侧显示名称和描述，右侧显示 `page` 组件）、`ItemPage`（整行控件）、`Menu`（菜单项，子页面为 `page`）、`MenuEditor`（菜单加编辑控件）、`Control`（页面中的控件，与其他类型组合使用）、`Editor`（`EditorPage` 与 `Control` 组合）、`Item`（`ItemPage` 与 `Control` 组合）、`UserType`（用户自定义类型，0x80 及以上）
