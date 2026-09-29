@@ -29,6 +29,6 @@ dde-shell 是 DDE Shell 框架库，提供三层插件模型（Applet → Contai
 - 跨插件通信：参见 [DAppletBridge](dde-shell-dev.md#dappletbridge)。
 - 插件发现与加载：参见 [DPluginLoader](dde-shell-dev.md#dpluginloader)、[DPluginMetaData](dde-shell-dev.md#dpluginmetadata)。
 - Dock 面板插件开发：参见 [DAppletDock](dde-shell-dock-dev.md#dappletdock)、[DockItemInfo](dde-shell-dock-dev.md#dockiteminfo)。
-- QML 模块使用：参见 [org.deepin.ds](dde-shell-dev-qml.md#org-deepin-ds)。
-- Dock QML 模块使用：参见 [org.deepin.ds.dock](dde-shell-dock-dev-qml.md#org-deepin-ds-dock)。
+- QML 模块使用：参见 [org.deepin.ds](dde-shell-dev-qml.md#orgdeepinds)。
+- Dock QML 模块使用：参见 [org.deepin.ds.dock](dde-shell-dock-dev-qml.md#orgdeepindsdock)。
 - 插件安装宏：参见[集成与构建配置](integration.md)。
