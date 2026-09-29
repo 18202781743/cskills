@@ -56,7 +56,7 @@ dde-shell 提供以下 CMake 宏用于插件包管理：
 
 公开类型位于 `ds` 命名空间，可使用完整限定名，也可在合适的作用域使用 `DS_USE_NAMESPACE`。
 
-C++ 插件通过 `D_APPLET_CLASS` 宏注册，该宏展开为匿名 namespace 中的 `DAppletFactory` 子类，通过 `Q_PLUGIN_METADATA` 注册 Qt Plugin。
+C++ 插件通过宏注册，注册为 Qt Plugin。
 
 ## QML 集成
 

@@ -24,7 +24,7 @@ DTK QML 应用主窗口的 C++ 扩展接口。
 
 ### 功能能力总结
 
-纯虚接口（使用 `Q_DECLARE_INTERFACE` 声明），定义 DTK QML 应用主窗口可供 C++ 插件扩展的行为契约。插件通过实现此接口向主窗口注入自定义功能。
+纯虚接口，定义 DTK QML 应用主窗口可供 C++ 插件扩展的行为契约。插件通过实现此接口向主窗口注入自定义功能。
 
 ### 使用场景
 
@@ -38,7 +38,7 @@ DTK QML 应用预加载的 C++ 扩展接口。
 
 ### 功能能力总结
 
-纯虚接口（使用 `Q_DECLARE_INTERFACE` 声明），定义在 QML 引擎加载主文件前执行预加载逻辑的契约。插件通过实现此接口在应用启动早期完成资源预加载、配置初始化操作。
+纯虚接口，定义在 QML 引擎加载主文件前执行预加载逻辑的契约。插件通过实现此接口在应用启动早期完成资源预加载、配置初始化操作。
 
 ### 使用场景
 
@@ -52,7 +52,7 @@ QML 场景中的帧缓冲区位块传输渲染项。
 
 ### 功能能力总结
 
-继承 QQuickItem，将离屏帧缓冲区内容通过位块传输（blit）方式渲染到 QML 场景中。在 DTK6 中通过 `QML_NAMED_ELEMENT(BlitFramebuffer)` 注册为 QML 类型 `BlitFramebuffer`，可在 QML 中直接使用。
+将离屏帧缓冲区内容通过位块传输方式渲染到 QML 场景中。
 
 ### 使用场景
 
@@ -66,7 +66,7 @@ QML 场景中的视口裁剪渲染项。
 
 ### 功能能力总结
 
-继承 QQuickItem，提供将指定源项的局部区域裁剪并渲染到视口的能力。在 DTK6 中通过 `QML_NAMED_ELEMENT(ItemViewport)` 注册为 QML 类型 `ItemViewport`，可在 QML 中直接使用。
+提供将指定源项的局部区域裁剪并渲染到视口的能力。
 
 ### 使用场景
 
@@ -80,7 +80,7 @@ DTK QML 窗口类型。
 
 ### 功能能力总结
 
-继承 QQuickWindow，提供 DTK 窗口特有的属性和行为，包括窗口圆角、模糊效果、窗口阴影在内的平台视觉属性的 QML 接口。在 DTK6 中通过 `QML_NAMED_ELEMENT(DWindow)` 注册为 QML 类型 `DWindow`，可在 QML 中直接使用。
+提供 DTK 窗口特有的属性和行为，包括窗口圆角、模糊效果、窗口阴影在内的平台视觉属性的 QML 接口。
 
 ### 使用场景
 
@@ -90,11 +90,11 @@ QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影）时。
 
 ### 定位
 
-DTK 窗口附加属性提供者。
+DTK 窗口附加提供者。
 
 ### 功能能力总结
 
-继承 QObject，通过 `QML_ATTACHED` 机制为任意 QML Item 提供 DTK 窗口附加属性。使普通 QML Item 能够访问其所属 DTK 窗口的平台属性。
+为任意 QML Item 提供 DTK 窗口附加属性。使普通 QML Item 能够访问其所属 DTK 窗口的平台属性。
 
 ### 使用场景
 
@@ -108,7 +108,7 @@ DTK 窗口附加属性提供者。
 
 ### 功能能力总结
 
-继承 QObject，将 DPlatformTheme 的平台主题属性（主题色、字号、图标主题）暴露为 QML 可访问的属性和信号。DTK6 已移除此类型，相关功能由 QML 层直接提供。
+将 DTK 平台主题的平台主题属性（主题色、字号、图标主题）暴露为 QML 可访问的属性和信号。DTK6 已移除此类型，相关功能由 QML 层直接
 
 ### 使用场景
 
@@ -122,24 +122,24 @@ QML 系统调色板项（仅 DTK5，已废弃）。
 
 ### 功能能力总结
 
-继承 QObject，将系统调色板暴露为 QML 可访问的属性，支持 Active、Inactive、Disabled 三种颜色组。已废弃，应使用 `DQMLGlobalObject::palette` 替代。DTK6 已移除此类型。
+将系统调色板暴露为 QML 可访问的属性，支持 Active、Inactive、Disabled 三种颜色组。已废弃，应使用 替代。DTK6 已移除此类型。
 
 ### 使用场景
 
-已废弃，DTK5 中如需在 QML 中访问系统调色板时可使用，新代码应迁移至 `DQMLGlobalObject::palette`。
+已废弃，DTK5 中如需在 QML 中访问系统调色板时可使用，新代码应迁移至。
 ## org.deepin.dtk
 
-DTK 声明式控件的 QML 模块，提供基于 Qt Quick 的 DTK 风格控件库。导入方式为 `import org.deepin.dtk`。模块包含按钮、输入框、对话框、菜单、窗口、进度指示、滑动条、列表视图、阴影渲染、浮动面板、标题栏在内的 DTK 风格 QML 控件类型，以及通过 C++ 注册的 `BlitFramebuffer`、`ItemViewport`、`DWindow` 三个 QML 类型。样式参数通过 `org.deepin.dtk.style` 子模块的 `Style` 单例提供，设置对话框控件通过 `org.deepin.dtk.settings` 子模块提供。
+DTK 声明式控件的 QML 模块，提供基于 Qt Quick 的 DTK 风格控件库。导入方式为 `import org.deepin.dtk`。模块包含按钮、输入框、对话框、菜单、窗口、进度指示、滑动条、列表视图、阴影渲染、浮动面板、标题栏在内的 DTK 风格 QML 控件类型，以及通过 C++ 注册的三个 QML 类型。样式参数通过 `org.deepin.dtk.style` 子模块的单例设置，对话框控件通过 `org.deepin.dtk.settings` 子模块配置。
 
 ### BlitFramebuffer
 
 #### 定位
 
-QML 场景中的帧缓冲区位块传输渲染项，通过 `QML_NAMED_ELEMENT(BlitFramebuffer)` 从 C++ 类 `DQuickBlitFramebuffer` 注册。
+QML 场景中的帧缓冲区位块传输渲染项，从 C++ 类注册为 QML 类型。
 
 #### 功能能力总结
 
-继承 QQuickItem，将离屏帧缓冲区内容通过位块传输方式渲染到 QML 场景中。C++ 侧的详细接口说明参见本文档 [DQuickBlitFramebuffer](#dquickblitframebuffer) 章节。
+将离屏帧缓冲区内容通过位块传输方式渲染到 QML 场景中。C++ 侧的详细接口说明参见本文档 [DQuickBlitFramebuffer](#dquickblitframebuffer) 章节。
 
 #### 使用场景
 
@@ -149,11 +149,11 @@ QML 场景中的帧缓冲区位块传输渲染项，通过 `QML_NAMED_ELEMENT(Bl
 
 #### 定位
 
-QML 场景中的视口裁剪渲染项，通过 `QML_NAMED_ELEMENT(ItemViewport)` 从 C++ 类 `DQuickItemViewport` 注册。
+QML 场景中的视口裁剪渲染项，从 C++ 类注册为 QML 类型。
 
 #### 功能能力总结
 
-继承 QQuickItem，提供将指定源项的局部区域裁剪并渲染到视口的能力。C++ 侧的详细接口说明参见本文档 [DQuickItemViewport](#dquickitemviewport) 章节。
+提供将指定源项的局部区域裁剪并渲染到视口的能力。C++ 侧的详细接口说明参见本文档 [DQuickItemViewport](#dquickitemviewport) 章节。
 
 #### 使用场景
 
@@ -163,11 +163,11 @@ QML 场景中的视口裁剪渲染项，通过 `QML_NAMED_ELEMENT(ItemViewport)`
 
 #### 定位
 
-DTK QML 窗口类型，通过 `QML_NAMED_ELEMENT(DWindow)` 从 C++ 类 `DQuickWindow` 注册，同时通过 `QML_ATTACHED` 提供窗口附加属性。
+DTK QML 窗口类型，从 C++ 类注册为 QML 类型，同时提供窗口附加属性。
 
 #### 功能能力总结
 
-继承 QQuickWindow，提供 DTK 窗口特有的属性和行为，包括窗口圆角、模糊效果、窗口阴影、边框颜色在内的平台视觉属性。通过附加属性机制，任意 QML Item 可访问其所属 DTK 窗口的平台属性。C++ 侧的详细接口说明参见本文档 [DQuickWindow](#dquickwindow) 与 [DQuickWindowAttached](#dquickwindowattached) 章节。
+提供 DTK 窗口特有的属性和行为，包括窗口圆角、模糊效果、窗口阴影、边框颜色在内的平台视觉属性。通过附加属性机制，任意 QML Item 可访问其所属 DTK 窗口的平台属性。C++ 侧的详细接口说明参见本文档 [DQuickWindow](#dquickwindow) 与 [DQuickWindowAttached](#dquickwindowattached) 章节。
 
 #### 使用场景
 
@@ -181,10 +181,7 @@ QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影、边框�
 
 #### 功能能力总结
 
-继承 Action，新增 `aboutDialog` 属性（Component 类型）用于指定点击时显示的关于对话框组件。
-
-公开属性：
-- aboutDialog（Component）
+新增属性用于指定点击时显示的关于对话框组件。
 
 #### 使用场景
 
@@ -198,18 +195,7 @@ QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影、边框�
 
 #### 功能能力总结
 
-继承 DialogWindow，提供 `windowTitle`、`productName`、`productIcon`、`version`、`description`、`license`、`companyLogo` 别名属性用于配置产品信息，以及 `websiteName` 和 `websiteLink` 字符串属性用于显示官网链接。
-
-公开属性：
-- websiteName（string）
-- websiteLink（string）
-- windowTitle（alias）
-- productName（alias）
-- productIcon（alias）
-- version（alias）
-- description（alias）
-- license（alias）
-- companyLogo（alias）
+用于配置产品信息，以及 和用于显示官网链接。
 
 #### 使用场景
 
@@ -219,7 +205,7 @@ QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影、边框�
 
 #### 定位
 
-QtQuick.Templates.AbstractButton 的 DTK 样式实现。
+Qt Quick 抽象按钮的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -233,7 +219,7 @@ QtQuick.Templates.AbstractButton 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Action 的 DTK 样式实现。
+Qt Quick 动作的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -251,10 +237,7 @@ QtQuick.Templates.Action 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.Button，新增 `textColor` 属性（D.Palette 类型）用于自定义按钮文字颜色。
-
-公开属性：
-- textColor（D.Palette）
+新增属性用于自定义按钮文字颜色。
 
 #### 使用场景
 
@@ -264,7 +247,7 @@ QtQuick.Templates.Action 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.ActionGroup 的 DTK 样式实现。
+Qt Quick 动作组的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -282,14 +265,7 @@ QtQuick.Templates.ActionGroup 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 ToolTip，新增 `target` 属性（Item 类型）指定提示指向的目标控件，提供 `backgroundColor`、`borderColor`、`textColor`、`dropShadowColor`、`backgroundColor` 调色板属性控制气泡和连接线的颜色。
-
-公开属性：
-- target（Item）
-- backgroundColor（D.Palette）
-- borderColor（D.Palette）
-- textColor（D.Palette）
-- dropShadowColor（D.Palette）
+新增属性指定提示指向的目标控件，提供控制气泡和连接线的颜色。
 
 #### 使用场景
 
@@ -299,7 +275,7 @@ QtQuick.Templates.ActionGroup 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.ApplicationWindow 的 DTK 样式实现。
+Qt Quick 应用窗口 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -317,12 +293,7 @@ QtQuick.Templates.ApplicationWindow 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 FocusScope，提供 `maxVisibleItems` 属性控制最大可见项数，`itemHeight` 属性设置单项高度，`view` 别名暴露内部列表视图。
-
-公开属性：
-- maxVisibleItems（int）
-- itemHeight（int）
-- view（alias）
+提供控制最大可见项数，设置单项高度，别名暴露内部列表视图。
 
 #### 使用场景
 
@@ -336,15 +307,7 @@ QtQuick.Templates.ApplicationWindow 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Popup，提供 `roundedRadius`、`arrowWidth`、`arrowHeight`、`arrowDirection` 别名属性控制箭头形状和圆角，以及 `arrowX`、`arrowY` 属性定位箭头位置。
-
-公开属性：
-- arrowX（real）
-- arrowY（real）
-- roundedRadius（alias）
-- arrowWidth（alias）
-- arrowHeight（alias）
-- arrowDirection（alias）
+提供控制箭头形状和圆角，以及 、 属性定位箭头位置。
 
 #### 使用场景
 
@@ -358,15 +321,7 @@ QtQuick.Templates.ApplicationWindow 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Window，提供 `roundJoinRadius`、`arrowWidth`、`arrowHeight`、`arrowX`、`arrowY`、`arrowDirection` 别名属性控制箭头形状和位置。
-
-公开属性：
-- roundJoinRadius（alias）
-- arrowWidth（alias）
-- arrowHeight（alias）
-- arrowX（alias）
-- arrowY（alias）
-- arrowDirection（alias）
+提供控制箭头形状和位置。
 
 #### 使用场景
 
@@ -380,22 +335,7 @@ QtQuick.Templates.ApplicationWindow 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Item，提供 `cornerRadius`、`topLeftRadius`、`topRightRadius`、`bottomLeftRadius`、`bottomRightRadius` 属性控制各角圆角，`shadowBlur`、`shadowOffsetX`、`shadowOffsetY`、`shadowColor`、`spread` 属性控制阴影外观。
-
-公开属性：
-- cornerRadius（real）
-- topLeftRadius（variant）
-- topRightRadius（variant）
-- bottomLeftRadius（variant）
-- bottomRightRadius（variant）
-- shadowBlur（real）
-- shadowOffsetX（real）
-- shadowOffsetY（real）
-- shadowColor（color）
-- spread（real）
-公开函数：
-- shadowRadius()
-- bound()
+提供控制各角圆角，控制阴影外观。
 
 #### 使用场景
 
@@ -409,22 +349,7 @@ QtQuick.Templates.ApplicationWindow 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Item，提供 `radius`、`color1`、`color2`、`insideBorderColor`、`outsideBorderColor`、`dropShadowColor`、`innerShadowColor1`、`innerShadowColor2` 调色板属性控制面板外观，`boxShadowBlur`、`boxShadowOffsetY`、`innerShadowOffsetY1` 控制阴影参数，`backgroundFlowsHovered` 控制背景是否跟随悬浮状态变化。
-
-公开属性：
-- radius（int）
-- color1（D.Palette）
-- color2（D.Palette）
-- insideBorderColor（D.Palette）
-- outsideBorderColor（D.Palette）
-- dropShadowColor（D.Palette）
-- innerShadowColor1（D.Palette）
-- innerShadowColor2（D.Palette）
-- boxShadowBlur（int）
-- boxShadowOffsetY（int）
-- innerShadowOffsetY1（int）
-- backgroundFlowsHovered（bool）
-- innerShadowColor（color）
+提供控制面板外观，控制阴影参数，控制背景是否跟随悬浮状态变化。
 
 #### 使用场景
 
@@ -438,23 +363,7 @@ QtQuick.Templates.ApplicationWindow 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Item，提供 `cornerRadius`、`topLeftRadius`、`topRightRadius`、`bottomLeftRadius`、`bottomRightRadius` 属性控制各角圆角，`shadowBlur`、`shadowOffsetX`、`shadowOffsetY`、`shadowColor`、`spread` 属性控制阴影外观，`hollow` 属性控制是否为空心阴影。
-
-公开属性：
-- cornerRadius（real）
-- topLeftRadius（variant）
-- topRightRadius（variant）
-- bottomLeftRadius（variant）
-- bottomRightRadius（variant）
-- shadowBlur（real）
-- shadowOffsetX（real）
-- shadowOffsetY（real）
-- shadowColor（color）
-- spread（real）
-- hollow（bool）
-公开函数：
-- shadowRadius()
-- bound()
+提供控制各角圆角，控制阴影外观，控制是否为空心阴影。
 
 #### 使用场景
 
@@ -464,14 +373,11 @@ QtQuick.Templates.ApplicationWindow 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.BusyIndicator 的 DTK 样式实现。
+Qt Quick 忙碌指示器 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为忙指示器提供 DTK 主题色，新增 `fillColor` 属性（D.Palette 类型）控制旋转指示器颜色。
-
-公开属性：
-- fillColor（D.Palette）
+为忙指示器提供 DTK 主题色，新增控制旋转指示器颜色。
 
 #### 使用场景
 
@@ -481,16 +387,11 @@ QtQuick.Templates.BusyIndicator 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Button 的 DTK 样式实现。
+Qt Quick 按钮 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为按钮提供 DTK 主题色、圆角边框和交互视觉反馈，新增 `textColor` 属性（D.Palette 类型）根据按钮状态（普通、选中、高亮）切换文字颜色，提供 `updateIndicatorAnchors()` 函数更新指示器锚点。
-
-公开属性：
-- textColor（D.Palette）
-公开函数：
-- updateIndicatorAnchors()
+为按钮提供 DTK 主题色、圆角边框和交互视觉反馈，新增属性根据按钮状态（普通、选中、高亮）切换文字颜色，提供更新指示器锚点。
 
 #### 使用场景
 
@@ -504,10 +405,7 @@ QtQuick.Templates.Button 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Control，`buttons` 默认属性接受多个按钮，`group` 别名暴露内部 ButtonGroup。
-
-公开属性：
-- group（alias）
+接受多个按钮，别名暴露内部 ButtonGroup。
 
 #### 使用场景
 
@@ -517,7 +415,7 @@ QtQuick.Templates.Button 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.ButtonGroup 的 DTK 样式实现。
+Qt Quick 按钮组 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -535,11 +433,7 @@ QtQuick.Templates.ButtonGroup 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Rectangle，提供 `backgroundColor` 调色板属性控制指示器背景色，`control` 属性关联所属控件以读取颜色选择器状态。
-
-公开属性：
-- backgroundColor（D.Palette）
-- control（Item）
+提供控制指示器背景色，关联所属控件以读取颜色选择器状态。
 
 #### 使用场景
 
@@ -553,12 +447,7 @@ QtQuick.Templates.ButtonGroup 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 BoxPanel，提供 `button` 属性关联所属按钮控件，`selectValue()` 函数根据普通、选中、高亮三种状态选择对应的视觉属性值。
-
-公开属性：
-- button（Item）
-公开函数：
-- selectValue()
+提供关联所属按钮控件，根据普通、选中、高亮三种状态选择对应的视觉属性值。
 
 #### 使用场景
 
@@ -568,7 +457,7 @@ QtQuick.Templates.ButtonGroup 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.CheckBox 的 DTK 样式实现。
+Qt Quick 复选框 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -582,15 +471,11 @@ QtQuick.Templates.CheckBox 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.CheckDelegate 的 DTK 样式实现。
+Qt Quick 复选委托项 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为带复选框的列表委托项提供 DTK 主题样式，新增 `content` 属性（Component 类型）自定义内容组件，`backgroundColor` 调色板属性控制背景色。
-
-公开属性：
-- content（Component）
-- backgroundColor（D.Palette）
+为带复选框的列表委托项提供 DTK 主题样式，新增自定义内容组件，控制背景色。
 
 #### 使用场景
 
@@ -604,13 +489,7 @@ QtQuick.Templates.CheckDelegate 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Item，提供 `centerPoint` 属性指定扩散中心点，`start()` 和 `stop()` 函数控制动画的开始和停止。
-
-公开属性：
-- centerPoint（point）
-公开函数：
-- start()
-- stop()
+提供指定扩散中心点，和控制动画的开始和停止。
 
 #### 使用场景
 
@@ -620,21 +499,11 @@ QtQuick.Templates.CheckDelegate 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.ComboBox 的 DTK 样式实现。
+Qt Quick 下拉组合框 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为下拉组合框提供 DTK 主题样式，新增 `iconNameRole` 属性指定模型中图标名称的数据角色，`alertText`、`alertDuration`、`showAlert` 属性支持告警提示，`maxVisibleItems` 属性控制下拉列表最大可见项数，`separatorColor` 调色板属性控制分隔线颜色，`iconName` 属性提供当前项图标名称。
-
-公开属性：
-- iconNameRole（string）
-- alertText（string）
-- alertDuration（int）
-- showAlert（bool）
-- maxVisibleItems（int）
-- separatorColor（D.Palette）
-- iconName（string）
-- comboBox（alias）
+为下拉组合框提供 DTK 主题样式，新增属性指定模型中图标名称的数据角色，支持告警提示，控制下拉列表最大可见项数，控制分隔线颜色，提供当前项图标名称。
 
 #### 使用场景
 
@@ -644,7 +513,7 @@ QtQuick.Templates.ComboBox 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Container 的 DTK 样式实现。
+Qt Quick 容器 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -658,7 +527,7 @@ QtQuick.Templates.Container 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Control 的 DTK 样式实现。
+Qt Quick 控件 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -676,12 +545,7 @@ QtQuick.Templates.Control 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Rectangle，提供 `focusBorderSpace` 属性控制焦点边框间距，`focusBorder` 和 `focusBorderVisible` 别名属性控制焦点边框及其可见性。
-
-公开属性：
-- focusBorderSpace（int）
-- focusBorder（alias）
-- focusBorderVisible（alias）
+提供控制焦点边框间距，和控制焦点边框及其可见性。
 
 #### 使用场景
 
@@ -691,7 +555,7 @@ QtQuick.Templates.Control 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.DelayButton 的 DTK 样式实现。
+Qt Quick 延迟按钮 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -705,7 +569,7 @@ QtQuick.Templates.DelayButton 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Dial 的 DTK 样式实现。
+Qt Quick 旋钮 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -719,7 +583,7 @@ QtQuick.Templates.Dial 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Dialog 的 DTK 样式实现。
+Qt Quick 对话框 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -733,7 +597,7 @@ QtQuick.Templates.Dialog 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.DialogButtonBox 的 DTK 样式实现。
+Qt Quick 对话框按钮组 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -751,14 +615,7 @@ QtQuick.Templates.DialogButtonBox 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Control，提供 `content` 别名属性自定义标题栏中间内容，`icon` 别名属性设置图标，`title` 属性设置标题文字，`enableInWindowBlendBlur` 别名属性控制窗口内混合模糊背景的显示。
-
-公开属性：
-- title（string）
-- hasWindowFlag（bool）：: (Window.window.flags & Qt.WindowCloseButtonHint)
-- content（alias）
-- icon（alias）
-- enableInWindowBlendBlur（alias）
+提供自定义标题栏中间内容，设置图标，设置标题文字，控制窗口内混合模糊背景的显示。
 
 #### 使用场景
 
@@ -772,12 +629,7 @@ DTK 风格的对话框窗口。
 
 #### 功能能力总结
 
-继承 Window，提供 `header` 别名属性自定义标题栏组件，`icon` 属性设置窗口图标，`content` 默认属性接受对话框内容，`palette` 别名属性暴露内容项调色板。
-
-公开属性：
-- icon（string）
-- header（alias）
-- palette（alias）
+提供自定义标题栏组件，设置窗口图标，接受对话框内容，暴露内容项调色板。
 
 #### 使用场景
 
@@ -787,7 +639,7 @@ DTK 风格的对话框窗口。
 
 #### 定位
 
-QtQuick.Templates.Drawer 的 DTK 样式实现。
+Qt Quick 抽屉 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -805,16 +657,7 @@ QtQuick.Templates.Drawer 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Rectangle，提供 `control` 属性关联所属输入控件，`backgroundColor` 和 `alertBackgroundColor` 调色板属性控制正常和告警状态背景色，`showBorder` 别名属性控制边框显示，`showAlert`、`alertText`、`alertDuration` 属性支持告警提示。
-
-公开属性：
-- control（Item）
-- backgroundColor（D.Palette）
-- alertBackgroundColor（D.Palette）
-- showAlert（bool）
-- alertText（string）
-- alertDuration（int）
-- showBorder（alias）
+提供关联所属输入控件，和控制正常和告警状态背景色，控制边框显示，支持告警提示。
 
 #### 使用场景
 
@@ -828,11 +671,7 @@ QtQuick.Templates.Drawer 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.ProgressBar，提供 `backgroundColor` 和 `progressBackgroundColor` 调色板属性控制进度条背景和进度背景色。
-
-公开属性：
-- backgroundColor（D.Palette）
-- progressBackgroundColor（D.Palette）
+提供 和控制进度条背景和进度背景色。
 
 #### 使用场景
 
@@ -846,7 +685,7 @@ QtQuick.Templates.Drawer 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Button，将按钮设为圆形且默认选中状态，隐式宽高一致，不可勾选。
+将按钮设为圆形且默认选中状态，隐式宽高一致，不可勾选。
 
 #### 使用场景
 
@@ -860,13 +699,7 @@ QtQuick.Templates.Drawer 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 org.deepin.dtk.impl.FloatingMessageContainer，提供 `contentItem` 属性（Component 类型）自定义消息内容，`button` 属性（Component 类型）自定义操作按钮，`iconName` 属性设置消息图标，`maxContentWidth` 属性控制最大内容宽度。
-
-公开属性：
-- contentItem（Component）
-- button（Component）
-- iconName（string）
-- maxContentWidth（int）
+提供自定义消息内容，自定义操作按钮，设置消息图标，控制最大内容宽度。
 
 #### 使用场景
 
@@ -880,15 +713,7 @@ QtQuick.Templates.Drawer 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Control，提供 `backgroundColor`、`dropShadowColor`、`outsideBorderColor`、`insideBorderColor` 调色板属性控制面板外观，`radius` 和 `blurRadius` 属性控制圆角和模糊半径。
-
-公开属性：
-- backgroundColor（D.Palette）
-- dropShadowColor（D.Palette）
-- outsideBorderColor（D.Palette）
-- insideBorderColor（D.Palette）
-- radius（int）
-- blurRadius（int）
+提供控制面板外观，和控制圆角和模糊半径。
 
 #### 使用场景
 
@@ -902,200 +727,7 @@ DTK 控件流式布局样式定义。
 
 #### 功能能力总结
 
-继承 QtObject，提供 `control` 子对象包含 `radius`、`spacing`、`padding`、`borderWidth`、`focusBorderWidth`、`focusBorderPaddings` 布局参数和 `border` 调色板属性，`settings` 子对象包含 `title` 和 `content` 的字体与边距配置，以及多个布局计算函数。
-
-公开属性：
-- control（QtObject）
-- radius（int）
-- spacing（int）
-- padding（int）
-- borderWidth（int）
-- focusBorderWidth（real）
-- focusBorderPaddings（real）
-- border（D.Palette）
-- settings（QtObject）
-- title（QtObject）
-- marginL1（int）
-- marginL2（int）
-- marginLOther（int）
-- content（QtObject）
-- margin（int）
-- marginOther（int）
-- resetButtonHeight（int）
-- navigation（QtObject）
-- width（int）
-- height（int）
-- textVPadding（int）
-- background（D.Palette）
-- button（QtObject）
-- hPadding（int）
-- vPadding（int）
-- iconSize（int）
-- background1（D.Palette）
-- background2（D.Palette）
-- dropShadow（D.Palette）
-- innerShadow1（D.Palette）
-- innerShadow2（D.Palette）
-- insideBorder（D.Palette）
-- outsideBorder（D.Palette）
-- text（D.Palette）
-- highlightedButton（QtObject）
-- checkedButton（QtObject）
-- innerShadow（D.Palette）
-- windowButton（QtObject）
-- warningButton（QtObject）
-- switchButton（QtObject）
-- indicatorWidth（int）
-- indicatorHeight（int）
-- handleWidth（int）
-- handleHeight（int）
-- iconName（string）
-- handle（D.Palette）
-- floatingButton（QtObject）
-- size（int）
-- iconButton（QtObject）
-- backgroundSize（int）
-- toolButton（QtObject）
-- indicatorRightMargin（int）
-- radioButton（QtObject）
-- indicatorSize（int）
-- topPadding（int）
-- bottomPadding（int）
-- checkBox（QtObject）
-- focusRadius（int）
-- buttonBox（QtObject）
-- comboBox（QtObject）
-- maxVisibleItems（int）
-- edit（QtObject）
-- indicatorSpacing（int）
-- separator（D.Palette）
-- actionIconSize（int）
-- textFieldHeight（int）
-- textAreaHeight（int）
-- alertBackground（D.Palette）
-- placeholderText（D.Palette）
-- searchEdit（QtObject）
-- iconLeftMargin（int）
-- iconRightMargin（int）
-- animationDuration（int）
-- ipEdit（QtObject）
-- fieldWidth（int）
-- passwordEdit（QtObject）
-- echoActionSpacing（int）
-- keySequenceEdit（QtObject）
-- label（QtObject）
-- leftRightPadding（int）
-- topBottomPadding（int）
-- shadowInner1（D.Palette）
-- shadowInner2（D.Palette）
-- shadowOuter（D.Palette）
-- spinBox（QtObject）
-- indicator（QtObject）
-- focusIconSize（int）
-- plusMinusSpinBox（QtObject）
-- buttonIconSize（int）
-- dialogWindow（QtObject）
-- contentHMargin（int）
-- footerMargin（int）
-- titleBarHeight（int）
-- aboutDialog（QtObject）
-- leftAreaWidth（int）
-- productIconHeight（int）
-- popup（QtObject）
-- floatingMessage（QtObject）
-- maximumWidth（int）
-- minimumHeight（int）
-- closeButtonSize（int）
-- floatingPanel（QtObject）
-- toolTip（QtObject）
-- verticalPadding（int）
-- horizontalPadding（int）
-- alertToolTip（QtObject）
-- connectorWidth（int）
-- connectorHeight（int）
-- connecterdropShadow（D.Palette）
-- connecterBackground（D.Palette）
-- menu（QtObject）
-- margins（int）
-- overlap（int）
-- item（QtObject）
-- count（int）
-- lineTopPadding（int）
-- lineBottomPadding（int）
-- lineHeight（int）
-- lineColor（D.Palette）
-- subMenuOpenedBackground（D.Palette）
-- itemText（D.Palette）
-- separatorText（D.Palette）
-- highlightPanel（QtObject）
-- behindWindowBlur（QtObject）
-- lightColor（color）
-- lightNoBlurColor（color）
-- darkColor（color）
-- darkNoBlurColor（color）
-- arrowRectangleBlur（QtObject）
-- roundJoinRadius（int）
-- outBorderColor（color）
-- darkOutBorderColor（color）
-- inBorderColor（color）
-- darkInBorderColor（color）
-- backgroundColor（color）
-- darkBackgroundColor（color）
-- shadowColor（color）
-- darkShadowColor（color）
-- arrowListView（QtObject）
-- stepButtonSize（size）
-- stepButtonIconSize（size）
-- itemHeight（int）
-- upButtonIconName（string）
-- downButtonIconName（string）
-- itemDelegate（QtObject）
-- normalColor（color）
-- cascadeColor（color）
-- checkIndicatorIconSize（int）
-- checkBackgroundColor（D.Palette）
-- checkedColor（color）
-- stackView（QtObject）
-- animationEasingType（int）
-- busyIndicator（QtObject）
-- paddingFactor（int）
-- fillColor（D.Palette）
-- spinnerSource（string）
-- buttonIndicator（QtObject）
-- scrollBar（QtObject）
-- activeWidth（int）
-- hideOpacity（real）
-- hidePauseDuration（int）
-- hideDuration（int）
-- progressBar（QtObject）
-- indeterminateProgressBarWidth（int）
-- indeterminateProgressBarAnimationDuration（int）
-- handleGradientColor（D.Palette）
-- embeddedProgressBar（QtObject）
-- contentHeight（int）
-- backgroundRadius（int）
-- contentRadius（int）
-- progressBackground（D.Palette）
-- waterProgressBar（QtObject）
-- waterFrontImagePath（string）
-- waterBackImagePath（string）
-- popBackground（D.Palette）
-- textColor（D.Palette）
-- titleBar（QtObject）
-- leftMargin（int）
-- slider（QtObject）
-- highlightMargin（int）
-- groove（QtObject）
-- tick（QtObject）
-- textMargin（int）
-- dial（QtObject）
-- pageIndicator（QtObject）
-公开函数：
-- implicitWidth()
-- implicitHeight()
-- backgroundImplicitWidth()
-- contentImplicitWidth()
-- selectColor()
+包含 布局参数和，子对象包含 和 的字体与边距配置，以及多个布局计算函数。
 
 #### 使用场景
 
@@ -1109,13 +741,7 @@ DTK 控件流式布局样式定义。
 
 #### 功能能力总结
 
-继承 Item，提供 `color` 属性控制边框颜色，`borderWidth` 属性控制边框宽度，`radius` 属性控制圆角。
-
-公开属性：
-- color（color）
-- borderWidth（real）
-- radius（real）
-- paddings（real）
+提供控制边框颜色，控制边框宽度，控制圆角。
 
 #### 使用场景
 
@@ -1129,10 +755,7 @@ DTK 控件流式布局样式定义。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.Pane，新增 `radius` 属性控制框架圆角。
-
-公开属性：
-- radius（int）
+新增控制框架圆角。
 
 #### 使用场景
 
@@ -1142,7 +765,7 @@ DTK 控件流式布局样式定义。
 
 #### 定位
 
-QtQuick.Templates.GroupBox 的 DTK 样式实现。
+Qt Quick 分组框 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1160,7 +783,7 @@ QtQuick.Templates.GroupBox 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Action，文本默认为"Help"，触发时调用 `D.ApplicationHelper.handleHelpAction()` 打开帮助页面。
+文本默认为"Help"，触发时调用 打开帮助页面。
 
 #### 使用场景
 
@@ -1174,12 +797,7 @@ QtQuick.Templates.GroupBox 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Item，提供 `backgroundColor`、`outerShadowColor`、`innerShadowColor` 调色板属性控制面板高亮外观。
-
-公开属性：
-- backgroundColor（D.Palette）
-- outerShadowColor（D.Palette）
-- innerShadowColor（D.Palette）
+提供控制面板高亮外观。
 
 #### 使用场景
 
@@ -1189,7 +807,7 @@ QtQuick.Templates.GroupBox 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.AbstractButton 的图标按钮变体。
+Qt Quick 抽象按钮 的图标按钮变体。
 
 #### 功能能力总结
 
@@ -1207,12 +825,7 @@ QtQuick.Templates.AbstractButton 的图标按钮变体。
 
 #### 功能能力总结
 
-继承 Rectangle，提供 `borderWidth` 属性控制边框宽度，`color` 属性控制边框颜色，`radius` 别名属性控制圆角。
-
-公开属性：
-- borderWidth（real）
-- color（color）
-- radius（alias）
+提供控制边框宽度，控制边框颜色，控制圆角。
 
 #### 使用场景
 
@@ -1226,18 +839,7 @@ IPv4 地址输入控件。
 
 #### 功能能力总结
 
-继承 Item，提供 `text` 属性获取完整地址文本，`alertText`、`alertDuration`、`showAlert` 属性支持输入验证告警，`backgroundColor` 调色板属性控制背景色，内部提供 `updateText()`、`clearText()`、`updateByText()` 函数管理各段输入。
-
-公开属性：
-- text（string）
-- alertText（string）
-- alertDuration（int）
-- showAlert（bool）
-- backgroundColor（D.Palette）
-公开函数：
-- updateText()
-- clearText()
-- updateByText()
+提供获取完整地址文本，支持输入验证告警，控制背景色，内部管理各段输入。
 
 #### 使用场景
 
@@ -1247,22 +849,11 @@ IPv4 地址输入控件。
 
 #### 定位
 
-QtQuick.Templates.ItemDelegate 的 DTK 样式实现。
+Qt Quick 列表项委托 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为列表委托项提供 DTK 主题样式，新增 `indicatorVisible` 属性控制指示器可见性，`backgroundVisible` 属性控制背景可见性，`cascadeSelected` 属性支持级联选中，`contentFlow` 属性支持内容流式布局，`content` 属性（Component 类型）自定义内容组件，`checkedTextColor` 调色板属性控制选中文字颜色，`corners` 属性控制圆角方向，`getCornersForBackground()` 函数根据索引和总数计算圆角。
-
-公开属性：
-- indicatorVisible（bool）
-- backgroundVisible（bool）
-- cascadeSelected（bool）
-- contentFlow（bool）
-- content（Component）
-- checkedTextColor（D.Palette）
-- corners（int）
-公开函数：
-- getCornersForBackground()
+为列表委托项提供 DTK 主题样式，新增控制指示器可见性，控制背景可见性，支持级联选中，支持内容流式布局，自定义内容组件，控制选中文字颜色，控制圆角方向，根据索引和总数计算圆角。
 
 #### 使用场景
 
@@ -1276,14 +867,7 @@ QtQuick.Templates.ItemDelegate 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.Control，提供 `text` 属性获取快捷键文本，`placeholderText` 属性设置占位提示，`keys` 别名属性暴露捕获的按键序列，`backgroundColor` 和 `placeholderTextColor` 调色板属性控制背景和占位文字颜色。
-
-公开属性：
-- text（string）
-- placeholderText（string）
-- backgroundColor（D.Palette）
-- placeholderTextColor（D.Palette）
-- keys（alias）
+提供获取快捷键文本，设置占位提示，暴露捕获的按键序列，和控制背景和占位文字颜色。
 
 #### 使用场景
 
@@ -1293,7 +877,7 @@ QtQuick.Templates.ItemDelegate 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Label 的 DTK 样式实现。
+Qt Quick 标签 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1311,10 +895,7 @@ QtQuick.Templates.Label 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.TextField，新增 `clearButton` 只读别名属性暴露清除按钮控件。
-
-公开属性：
-- clearButton（alias）
+新增 只读别名属性暴露清除按钮控件。
 
 #### 使用场景
 
@@ -1328,20 +909,7 @@ DTK 风格的菜单控件。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.Menu，新增 `closeOnInactive` 属性控制失去焦点时是否自动关闭，`maxVisibleItems` 属性控制最大可见项数，`backgroundColor` 调色板属性控制菜单背景色，`model` 属性暴露内容模型，`header` 和 `footer` 属性支持自定义头部和底部组件，`existsChecked` 只读属性指示是否存在选中项，`active` 只读属性指示菜单是否在活动窗口中。
-
-公开属性：
-- closeOnInactive（bool）
-- maxVisibleItems（int）
-- backgroundColor（D.Palette）
-- model（var）
-- header（Component）
-- footer（Component）
-- existsChecked（bool）
-- active（bool）
-- count（int）
-公开函数：
-- refreshContentItemWidth()
+新增控制失去焦点时是否自动关闭，控制最大可见项数，控制菜单背景色，属性暴露内容模型，和 支持自定义头部和底部组件，只读指示是否存在选中项，只读指示菜单是否在活动窗口中。
 
 #### 使用场景
 
@@ -1351,7 +919,7 @@ DTK 风格的菜单控件。
 
 #### 定位
 
-QtQuick.Templates.MenuBar 的 DTK 样式实现。
+Qt Quick 菜单栏 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1365,18 +933,11 @@ QtQuick.Templates.MenuBar 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.MenuItem 的 DTK 样式实现。
+Qt Quick 菜单项 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为菜单项提供 DTK 主题样式，新增 `useIndicatorPadding` 属性控制是否为指示器预留间距，`textColor` 和 `subMenuBackgroundColor` 调色板属性控制文字颜色和子菜单背景色。
-
-公开属性：
-- useIndicatorPadding（bool）
-- textColor（D.Palette）
-- subMenuBackgroundColor（D.Palette）
-- arrowPadding（real）
-- indicatorPadding（real）
+为菜单项提供 DTK 主题样式，新增控制是否为指示器预留间距，和控制文字颜色和子菜单背景色。
 
 #### 使用场景
 
@@ -1390,12 +951,7 @@ QtQuick.Templates.MenuItem 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.MenuSeparator，新增 `text` 属性设置分隔符标题文字，`textColor` 调色板属性控制标题文字颜色。
-
-公开属性：
-- text（string）
-- textColor（D.Palette）
-- separatorColor（D.Palette）
+新增设置分隔符标题文字，控制标题文字颜色。
 
 #### 使用场景
 
@@ -1409,12 +965,7 @@ QtQuick.Templates.MenuItem 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Item，提供 `borderWidth` 属性控制边框宽度，`color` 属性控制边框颜色，`radius` 属性控制圆角。
-
-公开属性：
-- borderWidth（real）
-- color（color）
-- radius（real）
+提供控制边框宽度，控制边框颜色，控制圆角。
 
 #### 使用场景
 
@@ -1424,7 +975,7 @@ QtQuick.Templates.MenuItem 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.PageIndicator 的 DTK 样式实现。
+Qt Quick 页面指示器 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1438,7 +989,7 @@ QtQuick.Templates.PageIndicator 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Pane 的 DTK 样式实现。
+Qt Quick 面板 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1456,13 +1007,7 @@ QtQuick.Templates.Pane 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 LineEdit，提供 `isEchoMode` 只读属性指示当前是否明文显示，`echoButtonVisible` 别名属性控制显示/隐藏按钮的可见性，`toggleEchoMode()` 函数切换明文与密文显示模式。
-
-公开属性：
-- isEchoMode（bool）
-- echoButtonVisible（alias）
-公开函数：
-- toggleEchoMode()
+提供 只读指示当前是否明文显示，控制显示/隐藏按钮的可见性，切换明文与密文显示模式。
 
 #### 使用场景
 
@@ -1472,7 +1017,7 @@ QtQuick.Templates.Pane 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Label 的占位文本变体。
+Qt Quick 标签 的占位文本变体。
 
 #### 功能能力总结
 
@@ -1490,13 +1035,7 @@ QtQuick.Templates.Label 的占位文本变体。
 
 #### 功能能力总结
 
-继承 FocusScope，提供 `spinBox` 别名属性暴露内部 SpinBox 控件，`upButtonVisible` 和 `downButtonVisible` 别名属性控制加减按钮可见性，`resetButtonVisible` 别名属性控制重置按钮可见性。
-
-公开属性：
-- spinBox（alias）
-- upButtonVisible（alias）
-- downButtonVisible（alias）
-- resetButtonVisible（alias）
+提供暴露内部 SpinBox 控件，和控制加减按钮可见性，控制重置按钮可见性。
 
 #### 使用场景
 
@@ -1510,11 +1049,7 @@ DTK 风格的弹出面板。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.Popup，新增 `closeOnInactive` 属性控制失去焦点时是否自动关闭，`active` 只读属性指示弹出面板是否在活动窗口中。
-
-公开属性：
-- closeOnInactive（bool）
-- active（bool）
+新增控制失去焦点时是否自动关闭，只读指示弹出面板是否在活动窗口中。
 
 #### 使用场景
 
@@ -1528,10 +1063,7 @@ DTK 风格的弹出面板。
 
 #### 功能能力总结
 
-继承 QtQuick.Templates.Popup，新增 `blurControl` 别名属性关联窗口模糊控制项。
-
-公开属性：
-- blurControl（alias）
+新增关联窗口模糊控制项。
 
 #### 使用场景
 
@@ -1541,15 +1073,11 @@ DTK 风格的弹出面板。
 
 #### 定位
 
-QtQuick.Templates.ProgressBar 的 DTK 样式实现。
+Qt Quick 进度条 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为进度条提供 DTK 主题色和进度动画样式，新增 `formatText` 属性自定义进度文本格式，`animationStop` 属性控制动画停止状态。
-
-公开属性：
-- formatText（string）
-- animationStop（bool）
+为进度条提供 DTK 主题色和进度动画样式，新增自定义进度文本格式，控制动画停止状态。
 
 #### 使用场景
 
@@ -1563,7 +1091,7 @@ Action 的退出操作变体。
 
 #### 功能能力总结
 
-继承 Action，提供应用退出行为，文本默认为"退出"。
+提供应用退出行为，文本默认为"退出"。
 
 #### 使用场景
 
@@ -1573,7 +1101,7 @@ Action 的退出操作变体。
 
 #### 定位
 
-QtQuick.Templates.RadioButton 的 DTK 样式实现。
+Qt Quick 单选按钮 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1591,7 +1119,7 @@ Button 的推荐操作变体。
 
 #### 功能能力总结
 
-继承 Button，使用推荐按钮的主题色样式，视觉上突出于普通按钮。
+使用推荐按钮的主题色样式，视觉上突出于普通按钮。
 
 #### 使用场景
 
@@ -1605,17 +1133,7 @@ Button 的推荐操作变体。
 
 #### 功能能力总结
 
-继承 Item，提供 `offsetX` 和 `offsetY` 属性控制阴影偏移，`glowRadius` 属性控制阴影扩散范围，`spread` 属性控制阴影边缘增强程度，`color` 属性控制阴影颜色，`cornerRadius` 属性控制圆角，`fill` 别名属性控制是否填充整个区域。
-
-公开属性：
-- offsetX（real）：This property defines the offset of the shadow in the x-axis direction.
-- offsetY（real）：This property defines the offset of the shadow in the y-axis direction.
-- glowRadius（real）：This property defines how many pixels outside(or inside) the item area are reached by the shadow.
-- spread（real）：This property defines how large part of the shadow color is strengthened near the source edges.
-- color（color）：This property defines the the shadow color.
-- cornerRadius（real）：This property defines corners size of the control that draws the shadow.
-- inverseSpread（real）
-- fill（alias）：This property defines does the shadow fill the entire area.
+提供 和控制阴影偏移，控制阴影扩散范围，控制阴影边缘增强程度，控制阴影颜色，控制圆角，控制是否填充整个区域。
 
 #### 使用场景
 
@@ -1629,7 +1147,7 @@ FloatingButton 的圆形按钮变体。
 
 #### 功能能力总结
 
-继承 FloatingButton，提供圆形按钮的 DTK 主题样式。
+提供圆形按钮的 DTK 主题样式。
 
 #### 使用场景
 
@@ -1639,17 +1157,11 @@ FloatingButton 的圆形按钮变体。
 
 #### 定位
 
-QtQuick.Templates.ScrollBar 的 DTK 样式实现。
+Qt Quick 滚动条 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为滚动条提供 DTK 主题样式，新增 `backgroundColor`、`insideBorderColor`、`outsideBorderColor` 调色板属性控制滚动条外观。
-
-公开属性：
-- moving（bool）
-- backgroundColor（D.Palette）
-- insideBorderColor（D.Palette）
-- outsideBorderColor（D.Palette）
+为滚动条提供 DTK 主题样式，新增控制滚动条外观。
 
 #### 使用场景
 
@@ -1659,7 +1171,7 @@ QtQuick.Templates.ScrollBar 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.ScrollIndicator 的 DTK 样式实现。
+Qt Quick 滚动指示器 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1673,7 +1185,7 @@ QtQuick.Templates.ScrollIndicator 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.ScrollView 的 DTK 样式实现。
+Qt Quick 滚动视图 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1691,11 +1203,7 @@ QtQuick.Templates.ScrollView 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 LineEdit，新增 `placeholder` 别名属性设置搜索占位提示文字，`editting` 只读属性指示当前是否处于编辑或聚焦状态。
-
-公开属性：
-- editting（bool）
-- placeholder（alias）
+新增设置搜索占位提示文字，只读指示当前是否处于编辑或聚焦状态。
 
 #### 使用场景
 
@@ -1705,19 +1213,11 @@ QtQuick.Templates.ScrollView 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Slider 的 DTK 样式实现。
+Qt Quick 滑动条 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为滑动条提供 DTK 主题样式，新增 `grooveColor` 调色板属性控制滑槽颜色，`handleType` 别名属性设置手柄类型，`dashOffset` 和 `dashPattern` 属性控制虚线样式，`highlightedPassedGroove` 属性控制是否高亮已滑过的滑槽部分。提供 `HandleType` 枚举，值为 `NoArrowHorizontal`、`NoArrowVertical`、`ArrowUp`、`ArrowLeft`、`ArrowBottom`、`ArrowRight`。
-
-公开属性：
-- grooveColor（D.Palette）
-- dashOffset（real）
-- dashPattern（var）
-- highlightedPassedGroove（bool）
-- handleType（alias）
-枚举 HandleType：NoArrowHorizontal、NoArrowVertical、ArrowUp、ArrowLeft、ArrowBottom、ArrowRight
+为滑动条提供 DTK 主题样式，新增控制滑槽颜色，设置手柄类型，和控制虚线样式，控制是否高亮已滑过的滑槽部分。
 
 #### 使用场景
 
@@ -1731,12 +1231,7 @@ QtQuick.Templates.Slider 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 org.deepin.dtk.impl.DciIcon，提供 `type` 属性设置手柄类型（使用 `Slider.HandleType` 枚举值），`getIconNameByType()` 函数根据手柄类型返回对应图标名称。
-
-公开属性：
-- type（int）
-公开函数：
-- getIconNameByType()
+设置手柄类型（枚举值），根据手柄类型返回对应图标名称。
 
 #### 使用场景
 
@@ -1750,20 +1245,11 @@ QtQuick.Templates.Slider 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Control，提供 `text` 属性设置提示文字，`textHorizontalAlignment` 属性控制文字水平对齐，`direction` 只读属性获取刻度方向，`horizontal` 只读属性指示是否水平方向，`highlight` 属性控制是否高亮，`tickColor` 和 `textColor` 调色板属性控制刻度和文字颜色。
-
-公开属性：
-- text（string）
-- textHorizontalAlignment（int）
-- direction（int）
-- horizontal（bool）
-- highlight（bool）
-- tickColor（D.Palette）
-- textColor（D.Palette）
+设置提示文字，控制文字水平对齐，只读属性获取刻度方向，只读指示是否水平方向，控制是否高亮，和控制刻度和文字颜色。
 
 #### 使用场景
 
-在带刻度的滑动条（TipsSlider）中显示刻度提示文字时使用。
+在带刻度的滑动条中显示刻度提示文字时使用。
 
 ### SortFilterModel
 
@@ -1773,14 +1259,7 @@ QtQuick.Templates.Slider 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 DelegateModel，提供 `lessThan` 属性设置排序比较函数，`filterAcceptsItem` 属性设置过滤判断函数，`visibleGroup` 别名属性暴露可见项组，`update()` 函数触发重新排序和过滤。
-
-公开属性：
-- lessThan（var）
-- filterAcceptsItem（var）
-- visibleGroup（alias）
-公开函数：
-- update()
+设置排序比较函数，设置过滤判断函数，暴露可见项组，触发重新排序和过滤。
 
 #### 使用场景
 
@@ -1790,16 +1269,11 @@ QtQuick.Templates.Slider 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.SpinBox 的 DTK 样式实现。
+Qt Quick 数值输入框 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为数值输入框提供 DTK 主题样式，新增 `alertText`、`alertDuration`、`showAlert` 别名属性支持输入验证告警。
-
-公开属性：
-- alertText（alias）
-- alertDuration（alias）
-- showAlert（alias）
+为数值输入框提供 DTK 主题样式，新增支持输入验证告警。
 
 #### 使用场景
 
@@ -1813,15 +1287,7 @@ SpinBox 加减指示器组件。
 
 #### 功能能力总结
 
-继承 Control，提供 `spinBox` 属性关联所属 SpinBox 控件，`pressed` 属性指示按下状态，`singleIndicator` 属性控制是否为单独指示器模式，`direction` 属性设置指示器方向，`inactiveBackgroundColor` 调色板属性控制非激活背景色。提供 `IndicatorDirection` 枚举，值为 `UpIndicator`、`DownIndicator`。
-
-公开属性：
-- spinBox（Item）
-- pressed（bool）
-- singleIndicator（bool）
-- direction（int）
-- inactiveBackgroundColor（D.Palette）
-枚举 IndicatorDirection：UpIndicator、DownIndicator
+提供关联所属 SpinBox 控件，指示按下状态，控制是否为单独指示器模式，设置指示器方向，控制非激活背景色。
 
 #### 使用场景
 
@@ -1831,7 +1297,7 @@ SpinBox 加减指示器组件。
 
 #### 定位
 
-QtQuick.Templates.StackView 的 DTK 样式实现。
+Qt Quick 堆叠视图 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1849,10 +1315,7 @@ QtQuick.Templates.StackView 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 ArrowShapeWindow，新增 `control` 别名属性关联模糊控制项，通过 `D.DWindow.borderColor` 附加属性设置窗口边框颜色。
-
-公开属性：
-- control（alias）
+新增关联模糊控制项，通过附加属性设置窗口边框颜色。
 
 #### 使用场景
 
@@ -1866,10 +1329,7 @@ DTK 样式的窗口模糊背景项。
 
 #### 功能能力总结
 
-继承 org.deepin.dtk.impl.BehindWindowBlur，新增 `control` 属性关联需要模糊背景的控件，根据控件调色板自动选择模糊混合色。
-
-公开属性：
-- control（var）
+新增关联需要模糊背景的控件，根据控件调色板自动选择模糊混合色。
 
 #### 使用场景
 
@@ -1879,7 +1339,7 @@ DTK 样式的窗口模糊背景项。
 
 #### 定位
 
-QtQuick.Templates.SwipeDelegate 的 DTK 样式实现。
+Qt Quick 滑动委托项 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1893,7 +1353,7 @@ QtQuick.Templates.SwipeDelegate 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.SwipeView 的 DTK 样式实现。
+Qt Quick 滑动视图 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1907,15 +1367,11 @@ QtQuick.Templates.SwipeView 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.Switch 的 DTK 样式实现。
+Qt Quick 开关 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为开关控件提供 DTK 主题样式，新增 `backgroundColor` 和 `handleColor` 调色板属性控制开关背景和手柄颜色。
-
-公开属性：
-- backgroundColor（D.Palette）
-- handleColor（D.Palette）
+为开关控件提供 DTK 主题样式，新增 和控制开关背景和手柄颜色。
 
 #### 使用场景
 
@@ -1925,7 +1381,7 @@ QtQuick.Templates.Switch 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.TabBar 的 DTK 样式实现。
+Qt Quick 选项卡栏 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1939,16 +1395,11 @@ QtQuick.Templates.TabBar 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.TextArea 的 DTK 样式实现。
+Qt Quick 多行文本输入框 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为多行文本输入框提供 DTK 主题样式，新增 `placeholderTextColor` 调色板属性控制占位文字颜色，提供 `effectiveHorizontalAlignmentChanged` 信号通知有效水平对齐方式变化。
-
-公开属性：
-- placeholderTextColor（D.Palette）
-公开信号：
-- effectiveHorizontalAlignmentChanged()
+为多行文本输入框提供 DTK 主题样式，新增控制占位文字颜色，提供通知有效水平对齐方式变化。
 
 #### 使用场景
 
@@ -1958,20 +1409,11 @@ QtQuick.Templates.TextArea 的 DTK 样式实现。
 
 #### 定位
 
-QtQuick.Templates.TextField 的 DTK 样式实现。
+Qt Quick 单行文本输入框 的 DTK 样式实现。
 
 #### 功能能力总结
 
-为单行文本输入框提供 DTK 主题样式，新增 `placeholderTextColor` 调色板属性控制占位文字颜色，`backgroundColor` 别名属性控制背景色，`alertText`、`alertDuration`、`showAlert` 别名属性支持输入验证告警，提供 `effectiveHorizontalAlignmentChanged` 信号通知有效水平对齐方式变化。
-
-公开属性：
-- placeholderTextColor（D.Palette）
-- backgroundColor（alias）
-- alertText（alias）
-- alertDuration（alias）
-- showAlert（alias）
-公开信号：
-- effectiveHorizontalAlignmentChanged()
+为单行文本输入框提供 DTK 主题样式，新增控制占位文字颜色，控制背景色，支持输入验证告警，提供通知有效水平对齐方式变化。
 
 #### 使用场景
 
@@ -1985,10 +1427,7 @@ QtQuick.Templates.TextField 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Menu，提供浅色（LightType）、深色（DarkType）、自动（UnknownType）三种主题类型的菜单项，通过 `D.ApplicationHelper` 的主题类型常量实现切换。
-
-公开属性：
-- themeType（int）
+提供浅色、深色、自动三种主题类型的菜单项，通过 的主题类型常量实现切换。
 
 #### 使用场景
 
@@ -2002,13 +1441,7 @@ QtQuick.Templates.TextField 的 DTK 样式实现。
 
 #### 功能能力总结
 
-继承 Control，提供 `slider` 别名属性暴露内部 Slider 控件，`ticks` 别名属性接受刻度提示项集合，`tickDirection` 属性控制刻度方向。提供 `TickDirection` 枚举，值为 `Front`、`Back`。
-
-公开属性：
-- tickDirection（int）
-- slider（alias）
-- ticks（alias）
-枚举 TickDirection：Front、Back
+提供暴露内部 Slider 控件，接受刻度提示项集合，控制刻度方向。
 
 #### 使用场景
 
@@ -2022,26 +1455,7 @@ DTK 风格的窗口标题栏。
 
 #### 功能能力总结
 
-继承 Control，提供 `title` 属性设置标题文字，`icon` 别名属性设置图标，`leftContent` 和 `content` 别名属性自定义左侧和中间内容组件，`menu` 别名属性设置菜单组件，`menuDisabled` 属性控制菜单是否禁用，`aboutDialog` 属性关联关于对话框组件，`fullScreenButtonVisible` 属性控制全屏按钮可见性，`windowButtonGroup` 别名属性自定义窗口按钮组，`autoHideOnFullscreen` 属性控制全屏时是否自动隐藏，`separatorVisible` 属性控制底部分隔线可见性，`enableInWindowBlendBlur` 别名属性控制窗口内混合模糊背景，`textColor` 调色板属性控制文字颜色，`toggleWindowState()` 信号通知窗口状态切换请求。
-
-公开属性：
-- title（string）
-- menuDisabled（bool）
-- aboutDialog（Component）
-- fullScreenButtonVisible（bool）
-- autoHideOnFullscreen（bool）
-- embedMode（bool）
-- separatorVisible（bool）
-- textColor（D.Palette）
-- hasWindowFlag（bool）：: (Window.window.flags & Qt.WindowTitleHint)
-- icon（alias）
-- leftContent（alias）
-- content（alias）
-- menu（alias）
-- windowButtonGroup（alias）
-- enableInWindowBlendBlur（alias）
-公开信号：
-- toggleWindowState()
+设置标题文字，设置图标，和自定义左侧和中间内容组件，设置菜单组件，控制菜单是否禁用，关联关于对话框组件，控制全屏按钮可见性，自定义窗口按钮组，控制全屏时是否自动隐藏，控制底部分隔线可见性，控制窗口内混合模糊背景，控制文字颜色，通知窗口状态切换请求。
 
 #### 使用场景
 
@@ -2051,16 +1465,11 @@ DTK 风格的窗口标题栏。
 
 #### 定位
 
-QtQuick.Templates.Button 的工具按钮变体。
+Qt Quick 按钮 的工具按钮变体。
 
 #### 功能能力总结
 
-为工具按钮提供 DTK 主题样式，新增 `textColor` 调色板属性根据按钮状态（普通、选中、高亮）切换文字颜色，提供 `updateIndicatorAnchors()` 函数更新指示器锚点。
-
-公开属性：
-- textColor（D.Palette）
-公开函数：
-- updateIndicatorAnchors()
+为工具按钮提供 DTK 主题样式，新增根据按钮状态（普通、选中、高亮）切换文字颜色，提供更新指示器锚点。
 
 #### 使用场景
 
@@ -2070,7 +1479,7 @@ QtQuick.Templates.Button 的工具按钮变体。
 
 #### 定位
 
-QtQuick.Templates.ToolTip 的 DTK 样式实现。
+Qt Quick 提示标签 的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -2088,7 +1497,7 @@ Button 的警告操作变体。
 
 #### 功能能力总结
 
-继承 Button，使用警告按钮的主题色样式，视觉上提示风险操作。
+使用警告按钮的主题色样式，视觉上提示风险操作。
 
 #### 使用场景
 
@@ -2102,17 +1511,7 @@ Button 的警告操作变体。
 
 #### 功能能力总结
 
-继承 Control，提供 `value` 属性（0 到 100）设置进度值，`running` 属性控制动画是否运行，`backgroundColor1`、`backgroundColor2`、`dropShadowColor`、`popBackgroundColor`、`textColor` 调色板属性控制水波纹和文字颜色。
-
-公开属性：
-- value（int）：0~100
-- running（bool）
-- backgroundColor1（D.Palette）
-- backgroundColor2（D.Palette）
-- dropShadowColor（D.Palette）
-- popBackgroundColor（D.Palette）
-- textColor（D.Palette）
-- xoffset（real）
+提供（0 到 100）设置进度值，控制动画是否运行，控制水波纹和文字颜色。
 
 #### 使用场景
 
@@ -2126,15 +1525,7 @@ Button 的警告操作变体。
 
 #### 功能能力总结
 
-继承 Control，提供 `icon` 别名属性设置按钮图标，`pressed` 只读属性指示按下状态，`textColor` 和 `backgroundColor` 调色板属性控制按钮颜色，`clicked` 信号通知点击事件。
-
-公开属性：
-- pressed（bool）
-- textColor（D.Palette）
-- backgroundColor（D.Palette）
-- icon（alias）
-公开信号：
-- clicked()
+设置按钮图标，只读指示按下状态，和控制按钮颜色，通知点击事件。
 
 #### 使用场景
 
@@ -2148,18 +1539,7 @@ Button 的警告操作变体。
 
 #### 功能能力总结
 
-继承 RowLayout，提供 `textColor` 调色板属性控制按钮文字颜色，`fullScreenButtonVisible` 属性控制全屏按钮可见性，`embedMode` 属性控制嵌入模式，`maxOrWinded()` 信号通知最大化/还原请求。根据窗口标志自动判断最小化、最大化、关闭按钮的可用性。
-
-公开属性：
-- textColor（D.Palette）
-- fullScreenButtonVisible（bool）
-- embedMode（bool）
-- hasWindowFlag（bool）：: (Window.window.flags & Qt.WindowMinimizeButtonHint)
-- maxSize（size）
-- minSize（size）
-- isMaximized（bool）
-公开信号：
-- maxOrWinded()
+提供控制按钮文字颜色，控制全屏按钮可见性，控制嵌入模式，通知最大化/还原请求。根据窗口标志自动判断最小化、最大化、关闭按钮的可用性。
 
 #### 使用场景
 
@@ -2173,7 +1553,7 @@ Button 的全屏退出按钮变体。
 
 #### 功能能力总结
 
-继承 Button，提供窗口全屏退出按钮的 DTK 主题样式。
+提供窗口全屏退出按钮的 DTK 主题样式。
 
 #### 使用场景
 
@@ -2183,7 +1563,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 Settings.OptionDelegate 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 
@@ -2197,16 +1577,11 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 Settings.OptionDelegate 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 
 提供 DTK 主题样式。
-
-公开属性：
-- valueRole（string）
-- impl（alias）
-- model（alias）
 
 #### 使用场景
 
@@ -2216,7 +1591,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 Rectangle 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 
@@ -2230,7 +1605,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 Label 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 
@@ -2244,7 +1619,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 Settings.OptionDelegate 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 
@@ -2258,18 +1633,11 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 Control 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 
 提供 DTK 主题样式。
-
-公开属性：
-- checked（bool）
-- backgroundColor（D.Palette）
-- checkedTextColor（D.Palette）
-公开信号：
-- clicked()
 
 #### 使用场景
 
@@ -2279,14 +1647,11 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 RowLayout 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 
 提供 DTK 主题样式。
-
-公开属性：
-- leftVisible（bool）
 
 #### 使用场景
 
@@ -2296,18 +1661,11 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 DialogWindow 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 
 提供 DTK 主题样式。
-
-公开属性：
-- groups（list<Settings.SettingsGroup>）
-- config（QtObject）
-- container（Settings.SettingsContainer）
-- navigationView（alias）
-- contentView（alias）
 
 #### 使用场景
 
@@ -2317,7 +1675,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-继承 FlowStyle 的 DTK 控件。
+的 DTK 控件。
 
 #### 功能能力总结
 

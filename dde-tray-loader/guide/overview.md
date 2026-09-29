@@ -16,7 +16,7 @@ dde-tray-loader 是 DDE 托盘/Dock 插件加载器，提供 header-only 接口�
 
 ## 全局约定
 
-公开头文件安装在 `dde-tray-loader/` 目录下。公开类型位于 `Dock` 命名空间。插件通过 Qt Plugin 机制加载，使用 `Q_PLUGIN_METADATA` 声明 IID `com.deepin.dock.PluginsItemInterface`。插件安装到 `dde-dock/plugins/` 目录。
+公开头文件安装在 `dde-tray-loader/` 目录下。公开类型位于 `Dock` 命名空间。插件通过 Qt Plugin 机制加载，声明 IID `com.deepin.dock.PluginsItemInterface`。插件安装到 `dde-dock/plugins/` 目录。
 
 ## 按功能查阅
 

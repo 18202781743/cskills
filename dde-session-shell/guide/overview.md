@@ -10,7 +10,7 @@ dde-session-shell 是 DDE 登录锁屏壳，提供登录界面（lightdm-deepin-
 - **登录插件**：在登录界面中提供自定义认证 UI 的插件模块。
 - **托盘插件**：在登录或锁屏界面中提供托盘功能的插件模块。
 - **assist_login 插件**：通过 C 接口实现的厂商密码接收插件。
-- **模块类型**：区分插件加载方式的枚举，包括 LoginType、TrayType、FullManagedLoginType、IpcAssistLoginType、PasswordExtendLoginType。
+- **模块类型**：区分插件加载方式的枚举，包括登录型、托盘型、全托管登录型、进程辅助登录型和密码扩展登录型。
 
 ## 导出类型
 
@@ -18,7 +18,7 @@ dde-session-shell 是 DDE 登录锁屏壳，提供登录界面（lightdm-deepin-
 
 ## 全局约定
 
-公开头文件安装在 `dde-session-shell/` 目录下。C++ 接口类型位于 `dss::module` 和 `dss::module_v2` 命名空间。插件通过 Qt Plugin 机制加载，使用 `Q_DECLARE_INTERFACE` 声明接口 IID `com.deepin.dde.shell.Modules`，使用 `Q_PLUGIN_METADATA` 注册插件。登录插件推荐使用 V2 接口（`dss::module_v2::LoginModuleInterfaceV2`），V1 接口（`dss::module::LoginModuleInterface`）已过时。
+公开头文件安装在 `dde-session-shell/` 目录下。C++ 接口类型位于 `dss::module` 和 `dss::module_v2` 命名空间。插件通过 Qt Plugin 机制加载和注册。登录插件推荐使用 V2 接口，V1 接口已过时。
 
 ## 按功能查阅
 

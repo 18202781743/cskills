@@ -10,8 +10,6 @@ dde-app-services 提供 DConfig 配置管理能力，包括按应用标识和键
 
 ### 功能能力总结
 
-提供以下能力：
-
 - 按 appid 和 key 获取配置值
 - 按 appid 和 key 设置配置值
 - 按 appid 列出所有配置项
@@ -42,11 +40,9 @@ dde-app-services 提供 DConfig 配置管理能力，包括按应用标识和键
 
 ### 功能能力总结
 
-提供以下能力：
-
-- 按 appid 和 key 读取配置值（`get` 子命令）
-- 按 appid 和 key 写入配置值（`set` 子命令）
-- 按 appid 列出所有配置项（`list` 子命令）
+- 按 appid 和 key 读取配置值
+- 按 appid 和 key 写入配置值
+- 按 appid 列出所有配置项
 
 ### 使用场景
 

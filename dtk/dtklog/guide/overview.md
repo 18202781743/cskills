@@ -24,7 +24,7 @@ dtklog 是基于 Qt 的线程安全日志库，提供多级别日志输出、多
 
 公开头文件安装在按主版本区分的 DLog 目录。公开符号位于 `Dtk` 命名空间，另有 `Dtk::Core` 命名空间用于部分内部组织。版本判断和跨主版本构建方式见[集成与构建配置](integration.md)。
 
-日志宏 `dDebug`、`dInfo`、`dWarning`、`dError`、`dFatal` 以全局宏形式提供，按类别输出的 `dCDebug`、`dCInfo`、`dCWarning`、`dCError`、`dCFatal` 需指定日志类别。计时宏 `dTraceTime`、`dDebugTime`、`dInfoTime` 用于记录代码执行耗时。断言宏 `dAssert` 和 `dAssertX` 用于条件检查。
+日志功能以全局宏形式提供，包括调试、信息、警告、错误和严重错误五个级别。按类别输出日志时需指定日志类别。计时功能用于记录代码执行耗时。断言功能用于条件检查。
 
 ## 按功能查阅
 

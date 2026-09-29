@@ -24,10 +24,8 @@ Qt 服务插件类型，面向需要使用 Qt 框架开发新服务插件的调�
 
 ### 功能能力总结
 
-提供以下能力：
-
 - 以 Qt 框架实现服务逻辑
-- 安装到 `deepin-service-manager/` 目录
+- 安装到 目录
 - 通过 JSON 配置文件描述插件元数据，配置文件路径为 `share/deepin-service-manager/system/`
 
 ### 使用场景
@@ -42,10 +40,8 @@ sdbus 服务插件类型，面向需要使用 sdbus 框架开发新服务插件�
 
 ### 功能能力总结
 
-提供以下能力：
-
 - 以 sdbus 框架与 DBus 交互
-- 安装到 `deepin-service-manager/` 目录
+- 安装到 目录
 - 通过 JSON 配置文件描述插件元数据，配置文件路径为 `share/deepin-service-manager/user/`（用户级）或 `share/deepin-service-manager/system/`（系统级）
 
 ### 使用场景

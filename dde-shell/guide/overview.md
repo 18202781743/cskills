@@ -8,7 +8,7 @@ dde-shell 是 DDE Shell 框架库，提供三层插件模型（Applet → Contai
 
 - **Applet**：最基础的功能部件插件类型，不含子插件。
 - **Containment**：容器插件类型，可管理子 Applet。
-- **Panel**：顶级面板插件类型，继承自 Containment，管理窗口，可含子插件。
+- **Panel**：顶级面板插件类型，管理窗口，可含子插件。
 - **metadata.json**：插件元数据文件，描述插件 ID、版本、入口和父子关系。
 - **Layer Shell**：Wayland 协议中用于实现面板、锁屏这类覆盖层窗口的协议。
 - **DConfig**：DDE 配置中心，插件可通过其读写配置。
@@ -20,7 +20,7 @@ dde-shell 是 DDE Shell 框架库，提供三层插件模型（Applet → Contai
 
 ## 全局约定
 
-公开头文件安装在 `dde-shell/` 目录下。主要公开符号位于 `ds` 命名空间（`DS_NAMESPACE`），使用 `DS_USE_NAMESPACE` 引入。插件通过 `D_APPLET_CLASS` 宏注册，框架通过 `QPluginLoader` 加载 `.so` 文件。插件包资源安装到 `share/dde-shell/` 目录，插件库安装到 `lib/dde-shell/` 目录。QML 模块 URI 为 `org.deepin.ds`，导入版本 1.0。
+公开头文件安装在 `dde-shell/` 目录下。主要公开符号位于 `ds` 命名空间（`DS_NAMESPACE`），使用 `DS_USE_NAMESPACE` 引入。插件通过宏注册，框架通过插件加载器加载 `.so` 文件。插件包资源安装到 `share/dde-shell/` 目录，插件库安装到 `lib/dde-shell/` 目录。QML 模块 URI 为 `org.deepin.ds`，导入版本 1.0。
 
 ## 按功能查阅
 

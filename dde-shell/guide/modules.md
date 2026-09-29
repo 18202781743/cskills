@@ -10,17 +10,15 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 功能能力总结
 
-提供以下能力：
+- 加载阶段从 DConfig 或 appletData 读取配置
+- 初始化阶段设置信号连接和创建 UI
+- 返回插件 ID
+- 返回插件实例数据
+- 设置插件实例数据
+- 返回 QML 根对象（加载后可用）
+- 返回所属 Panel
 
-- 加载阶段从 DConfig 或 appletData 读取配置（`load` 方法）
-- 初始化阶段设置信号连接和创建 UI（`init` 方法）
-- 返回插件 ID（`pluginId` 方法）
-- 返回插件实例数据（`appletData` 方法）
-- 设置插件实例数据（`setAppletData` 方法）
-- 返回 QML 根对象（`rootObject` 方法，加载后可用）
-- 返回所属 Panel（`panel` 方法）
-
-生命周期顺序为：构造 → `load()` → `init()` → `rootObjectChanged`。
+生命周期顺序为：构造 → 初始化 → 加载 → 就绪。
 
 ### 使用场景
 
@@ -30,14 +28,12 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 定位
 
-容器插件类型，继承自 `DApplet`。管理子 Applet，提供子插件数据列表和添加子 Applet 的能力。
+容器插件类型，管理子 Applet，提供子插件数据列表和添加子 Applet 的能力。
 
 ### 功能能力总结
 
-提供以下能力：
-
-- 返回子插件数据列表（`groupList` 方法）
-- 添加子 Applet（`addApplet` 方法）
+- 返回子插件数据列表
+- 添加子 Applet
 
 ### 使用场景
 
@@ -47,16 +43,14 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 定位
 
-顶级面板插件类型，继承自 `DContainment`。管理窗口，提供主窗口和弹出窗口的访问能力。
+顶级面板插件类型，管理窗口，提供主窗口和弹出窗口的访问能力。
 
 ### 功能能力总结
 
-提供以下能力：
-
-- 返回主窗口（`window` 方法）
-- 返回弹出窗口（`popupWindow` 方法）
-- 返回提示窗口（`tooltipWindow` 方法）
-- 返回菜单窗口（`menuWindow` 方法）
+- 返回主窗口
+- 返回弹出窗口
+- 返回提示窗口
+- 返回菜单窗口
 
 ### 使用场景
 
@@ -70,10 +64,8 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 功能能力总结
 
-提供以下能力：
-
-- 获取单例实例（`instance` 静态方法）
-- 获取指定父插件的子插件元数据列表（`childrenPlugin` 方法，参数为父插件 ID）
+- 获取单例实例
+- 获取指定父插件的子插件元数据列表（参数为父插件 ID）
 
 ### 使用场景
 
@@ -87,12 +79,10 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 功能能力总结
 
-提供以下能力：
-
-- 按插件 ID 构造桥接对象并查找目标插件（构造函数参数为插件 ID 字符串）
-- 判断目标插件是否存在且已加载（`isValid` 方法）
-- 返回目标插件实例（`applet` 方法）
-- 返回代理对象用于属性读写和方法调用（`proxy` 方法）
+- 按插件 ID 构造桥接对象并查找目标插件
+- 判断目标插件是否存在且已加载
+- 返回目标插件实例
+- 返回代理对象用于属性读写和方法调用
 
 ### 使用场景
 
@@ -120,10 +110,8 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 功能能力总结
 
-提供以下能力：
-
-- 从插件元数据构造实例数据（`fromPluginMetaData` 静态方法）
-- 设置子插件列表（`setGroupList` 方法）
+- 从插件元数据构造实例数据
+- 设置子插件列表
 
 ### 使用场景
 
@@ -133,14 +121,11 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 定位
 
-子 Applet 项模型类型，继承自 `QAbstractListModel`。将子 Applet 的 QML item 暴露给 QML 视图。
+子 Applet 项模型类型，将子 Applet 的 QML item 暴露给 QML 视图。
 
 ### 功能能力总结
 
-提供以下能力：
-
-- 以 `QAbstractListModel` 接口暴露子 Applet 的 QML item
-- 角色数据 `Qt::UserRole+1` 对应 `model.data`
+- 以接口方式暴露子 Applet 的 QML item
 
 ### 使用场景
 
@@ -150,19 +135,17 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 
 ### 定位
 
-Dock 面板插件接口类型，继承自 `DApplet`。提供 Dock 面板的可见性控制、支持状态查询和 Dock 项信息获取能力。
+Dock 面板插件接口类型，提供 Dock 面板的可见性控制、支持状态查询和 Dock 项信息获取能力。
 
 ### 功能能力总结
 
-提供以下能力：
-
-- 返回 Dock 是否可见（`visible` 方法）
-- 设置 Dock 可见性（`setVisible` 方法）
-- 返回 Dock 是否被支持（`isSupported` 方法）
-- 设置支持状态（`setSupported` 方法）
-- 返回 Dock 项信息（`dockItemInfo` 虚方法）
-- 可见性变化通知（`visibleChanged` 信号）
-- 支持状态变化通知（`supportedChanged` 信号）
+- 返回 Dock 是否可见
+- 设置 Dock 可见性
+- 返回 Dock 是否被支持
+- 设置支持状态
+- 返回 Dock 项信息
+- 可见性变化通知
+- 支持状态变化通知
 
 ### 使用场景
 
@@ -176,16 +159,14 @@ Dock 项信息结构体，描述 Dock 区域插件项的名称、显示名称、
 
 ### 功能能力总结
 
-提供以下字段：
+- — 插件名称
+- — 显示名称
+- — 插件唯一标识键
+- — 设置键
+- — 控制中心图标
+- — 是否可见
 
-- `name`（QString）— 插件名称
-- `displayName`（QString）— 显示名称
-- `itemKey`（QString）— 插件唯一标识键
-- `settingKey`（QString）— 设置键
-- `dccIcon`（QString）— 控制中心图标
-- `visible`（bool）— 是否可见
-
-已注册为 Qt 元类型（`Q_DECLARE_METATYPE(DockItemInfo)` 和 `Q_DECLARE_METATYPE(DockItemInfos)`），并支持 DBus 序列化和反序列化。
+支持 DBus 序列化和反序列化。
 
 ### 使用场景
 
@@ -201,14 +182,12 @@ dde-shell 的 QML 模块，URI 为 `org.deepin.ds`，导入版本 1.0。提供 A
 
 #### 定位
 
-Applet 插件的 QML 根元素，提供 `Applet` 附加属性（包括 `pluginId`）。
+Applet 插件的 QML 根元素，提供附加属性，包括插件标识等平台属性。
 
 #### 功能能力总结
 
-提供以下能力：
-
 - 作为 Applet 插件 QML 入口的根元素
-- 通过 `Applet` 附加属性获取插件 ID
+- 通过附加属性获取插件 ID
 
 #### 使用场景
 
@@ -218,14 +197,12 @@ Applet 插件的 QML 根元素，提供 `Applet` 附加属性（包括 `pluginId
 
 #### 定位
 
-Containment 插件的 QML 根元素，提供 `Containment.appletItems` 模型供 Repeater 渲染子 item。
+Containment 插件的 QML 根元素，提供 模型供 Repeater 渲染子 item。
 
 #### 功能能力总结
 
-提供以下能力：
-
 - 作为 Containment 插件 QML 入口的根元素
-- 通过 `Containment.appletItems` 模型访问子 Applet item
+- 通过 模型访问子 Applet item
 
 #### 使用场景
 
@@ -239,9 +216,7 @@ Layer Shell 附加属性类型，控制 Wayland 窗口的锚定方向、层级�
 
 #### 功能能力总结
 
-提供以下能力：
-
-- 设置窗口锚定方向（AnchorTop、AnchorBottom、AnchorLeft、AnchorRight）
+- 设置窗口锚定方向（包括顶部、底部、左侧、右侧）
 - 设置窗口层级
 - 设置窗口边距
 
@@ -257,9 +232,7 @@ QML 全局对象，提供跨插件访问能力。
 
 #### 功能能力总结
 
-提供以下能力：
-
-- 按插件 ID 获取其他插件的代理对象（`DS.applet(pluginId)` 方法）
+- 按插件 ID 获取其他插件的代理对象
 
 #### 使用场景
 
