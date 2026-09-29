@@ -1,6 +1,6 @@
 # org.deepin.dde.Launcher1 接口参考
 
-该接口提供启动器的显示、隐藏、切换和模式控制能力。
+该接口提供启动器的显示、隐藏、切换能力。
 
 ## 接口信息
 
@@ -85,24 +85,6 @@ gdbus call --session \
   --dest org.deepin.dde.Launcher1 \
   --object-path /org/deepin/dde/Launcher1 \
   --method org.deepin.dde.Launcher1.Toggle
-```
-
-#### ShowByMode
-
-按指定模式显示启动器。
-
-- **功能**：按指定模式显示启动器（接口定义 mode 为 0 表示全屏模式，1 表示窗口模式）。注意：当前实现为空操作，不实际改变启动器显示状态，此方法可能已被废弃。
-- **触发条件**：由外部调用方主动调用，通常在需要以特定模式弹出启动器时触发。
-- **使用场景**：桌面环境组件需要以全屏或窗口模式打开启动器时调用（例如根据屏幕尺寸或用户偏好选择模式）。
-
-- **输入参数**: `mode`（int64, 类型 `x`）：显示模式，0 为全屏模式，1 为窗口模式
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.Launcher1 \
-  --object-path /org/deepin/dde/Launcher1 \
-  --method org.deepin.dde.Launcher1.ShowByMode 'int64 1'
 ```
 
 ### 启动器属性
