@@ -1,6 +1,6 @@
 ---
 name: dde-daemon
-description: dde-daemon 是 DDE 桌面环境的核心后端守护进程，负责管理系统音频、显示、电源、输入设备、语言与区域、系统信息、账户、蓝牙与飞行模式、搜索、锁屏与屏保、登录界面、GRUB 启动、会话与守护进程、剪贴板、事件日志与监控、应用商店会话、统一应用数据保护、状态通知、外观配置、默认应用设置和 X 权限修复。本 skill 按功能点组织，每个功能领域下同时包含相关的 D-Bus 接口文档、CLI 命令使用说明和 DConfig 配置项参考。
+description: dde-daemon 是 DDE 桌面环境的核心后端守护进程，负责管理系统音频、显示、电源、输入设备、语言与区域、系统信息、账户、蓝牙与飞行模式、搜索、锁屏与屏保、登录界面、GRUB 启动、会话与守护进程、剪贴板、事件日志与监控、应用商店会话、统一应用数据保护、状态通知、外观配置、默认应用设置和 X 权限修复。
 Categories:
   - Settings
 ---
@@ -78,7 +78,7 @@ dde-daemon 是 DDE 桌面环境的核心后端守护进程，通过 Session 和 
 ## GRUB 启动管理
 
 - **D-Bus**: [Grub2](references/dbus/org.deepin.dde.Grub2.md) — 提供 GRUB2 引导配置管理能力。
-- **CLI**: [grub2](references/cli/grub2.md) — GRUB2 相关工具，用于 GRUB 启动菜单的图形模式检测、主题设置和系统编号查询。
+- **CLI**: [grub2](references/cli/grub2.md) — GRUB2 相关工具，用于 GRUB 启动菜单的图形模式检测和系统编号查询。
 
 ## 会话与守护进程管理
 
