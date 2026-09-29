@@ -78,7 +78,7 @@ dde-daemon 是 DDE 桌面环境的核心后端守护进程，通过 Session 和 
 ## GRUB 启动管理
 
 - **D-Bus**: [Grub2](references/dbus/org.deepin.dde.Grub2.md) — 提供 GRUB2 引导配置管理能力。
-- **CLI**: [grub2](references/cli/grub2.md) — GRUB2 相关工具，用于 GRUB 启动菜单的图形模式检测和系统编号查询。
+- **CLI**: [grub2](references/cli/grub2.md) — GRUB2 相关工具，用于 GRUB 启动菜单的图形模式检测、主题设置和系统编号查询。
 
 ## 会话与守护进程管理
 
