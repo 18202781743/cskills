@@ -21,8 +21,6 @@ dde-shell 的通知服务注册了以下 D-Bus 服务接口：
 
 **兼容关系**：`org.freedesktop.Notifications` 为兼容 freedesktop 通知规范的应用而保留，功能与 `org.deepin.dde.Notification1` 的通知操作部分相同，但不包含 DDE 扩展功能。新代码应优先使用 `org.deepin.dde.Notification1`。
 
-> 注意：`org.deepin.dde.shell.notification.center` 是独立的通知中心面板接口，不属于本接口的兼容范围，详见 [org.deepin.dde.shell.notification.center](org.deepin.dde.shell.notification.center.md)。
-
 ## 方法、属性与信号
 
 ### 桌面通知操作
