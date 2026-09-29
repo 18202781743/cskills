@@ -1,10 +1,6 @@
 # org.deepin.dde.daemon.ambient-brightness DConfig 配置参考
 
-该文件文档化环境亮度感知的 DConfig 配置项，包括自动亮度开关、映射模式、加权窗口、lux-亮度曲线、滞回比例和防抖时间。仅介绍 visibility 为 public 的配置项。
-
-## 配置项总览
-
-共 9 个 public 配置项。
+该文件文档化环境亮度感知的 DConfig 配置项，包括自动亮度开关、映射模式、加权窗口、lux-亮度曲线、滞回比例和防抖时间。
 
 ## 自动亮度控制
 
