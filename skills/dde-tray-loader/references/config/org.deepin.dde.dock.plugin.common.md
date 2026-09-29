@@ -6,7 +6,7 @@
 
 | Key | Name | Description | 类型 | Permissions | Visibility |
 |---|---|---|---|---|---|
-| `defaultDockedPlugins` | 默认驻留任务栏插件 | 配置默认驻留在任务栏上的插件列表，仅控制初始默认状态，重启后生效。取值为插件名称字符串数组 | array | readonly | public |
+| `defaultDockedPlugins` | 默认驻留任务栏插件 | 配置默认驻留在任务栏上的插件列表，仅控制初始默认状态，重启后生效。取值为插件名称字符串数组，如 `["multitasking", "show-desktop", "battery", "shutdown", "datetime"]` | array | readonly | public |
 
 ## 读写示例
 
