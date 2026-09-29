@@ -27,8 +27,6 @@
 - requires_sudo: true
 
 ```bash
-pkexec gdbus call --system \
-  --dest org.deepin.dde.Greeter1 \
-  --object-path /org/deepin/dde/Greeter1 \
-  --method org.deepin.dde.Greeter1.UpdateGreeterQtTheme "fd"
+# 注意：此方法参数为 UnixFD（文件描述符），无法通过 gdbus 命令行直接传递。
+# 需通过支持文件描述符传递的 DBus 客户端（如 Python dbus 绑定）调用。
 ```

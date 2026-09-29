@@ -124,17 +124,17 @@ gdbus call --session \
 
 更改亮度。
 
-- **功能**：调节指定显示器的亮度值。
+- **功能**：调高或调低亮度。
 - **触发条件**：当用户在显示设置或快捷面板调节亮度时调用。
 - **使用场景**：控制中心亮度调节、快捷面板亮度滑块。
 
-- **输入参数**: `brightness`（double, 类型 `d`）：亮度值
+- **输入参数**: `raised`（bool, 类型 `b`）：是否调高亮度
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.Display1 \
   --object-path /org/deepin/dde/Display1 \
-  --method org.deepin.dde.Display1.ChangeBrightness 0.5
+  --method org.deepin.dde.Display1.ChangeBrightness true
 ```
 

@@ -190,7 +190,7 @@ pkexec gdbus call --system \
 - **触发条件**：当用户在控制中心关闭 GRUB2 编辑认证时调用。
 - **使用场景**：控制中心引导设置关闭编辑认证。
 
-- **输入参数**: `sender`（string, 类型 `s`）：调用方标识；`username`（string, 类型 `s`）：用户名；`password`（string, 类型 `s`）：密码
+- **输入参数**: `username`（string, 类型 `s`）：用户名
 - **返回值**: 无
 
 | 字段 | 值 |
@@ -204,7 +204,7 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Grub2 \
   --object-path /org/deepin/dde/Grub2/EditAuthentication \
-  --method org.deepin.dde.Grub2.EditAuthentication.Disable "sender" "username" "password"
+  --method org.deepin.dde.Grub2.EditAuthentication.Disable "username"
 ```
 
 #### Enable
@@ -215,7 +215,7 @@ pkexec gdbus call --system \
 - **触发条件**：当用户在控制中心开启 GRUB2 编辑认证时调用。
 - **使用场景**：控制中心引导设置开启编辑认证。
 
-- **输入参数**: `sender`（string, 类型 `s`）：调用方标识；`username`（string, 类型 `s`）：用户名；`password`（string, 类型 `s`）：密码
+- **输入参数**: `username`（string, 类型 `s`）：用户名；`password`（string, 类型 `s`）：密码
 - **返回值**: 无
 
 | 字段 | 值 |
@@ -229,7 +229,7 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Grub2 \
   --object-path /org/deepin/dde/Grub2/EditAuthentication \
-  --method org.deepin.dde.Grub2.EditAuthentication.Enable "sender" "username" "password"
+  --method org.deepin.dde.Grub2.EditAuthentication.Enable "username" "password"
 ```
 
 ### Fstart 子对象
@@ -242,7 +242,7 @@ pkexec gdbus call --system \
 - **触发条件**：当用户需要临时跳过引导菜单时调用。
 - **使用场景**：引导设置临时跳过 GRUB2 菜单。
 
-- **输入参数**: `sender`（string, 类型 `s`）：调用方标识；`enabled`（bool, 类型 `b`）：是否跳过
+- **输入参数**: `enabled`（bool, 类型 `b`）：是否跳过
 - **返回值**: 无
 
 | 字段 | 值 |
@@ -256,7 +256,7 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Grub2 \
   --object-path /org/deepin/dde/Grub2/Fstart \
-  --method org.deepin.dde.Grub2.Fstart.SkipGrub "sender" true
+  --method org.deepin.dde.Grub2.Fstart.SkipGrub true
 ```
 
 ### Theme 子对象
@@ -305,8 +305,6 @@ pkexec gdbus call --system \
 - requires_sudo: true
 
 ```bash
-pkexec gdbus call --system \
-  --dest org.deepin.dde.Grub2 \
-  --object-path /org/deepin/dde/Grub2/Theme \
-  --method org.deepin.dde.Grub2.Theme.SetBackgroundSourceFile "file"
+# 注意：此方法参数为 UnixFD（文件描述符），无法通过 gdbus 命令行直接传递。
+# 需通过支持文件描述符传递的 DBus 客户端（如 Python dbus 绑定）调用。
 ```

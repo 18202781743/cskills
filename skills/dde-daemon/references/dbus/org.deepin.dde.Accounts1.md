@@ -62,7 +62,7 @@ pkexec gdbus call --system \
 - **触发条件**：当需要通过 UID 获取用户详细信息时调用。
 - **使用场景**：权限管理、用户信息查询。
 
-- **输入参数**: `uid`（int32, 类型 `i`）：用户 ID
+- **输入参数**: `uid`（string, 类型 `s`）：用户 ID
 - **返回值**: `o`（object path）：用户路径
 
 权限：
@@ -72,7 +72,7 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Accounts1 \
   --object-path /org/deepin/dde/Accounts1 \
-  --method org.deepin.dde.Accounts1.FindUserById 1000
+  --method org.deepin.dde.Accounts1.FindUserById "1000"
 ```
 
 #### FindUserByName
@@ -168,8 +168,8 @@ pkexec gdbus call --system \
 - **触发条件**：当控制中心或管理工具请求创建用户组时调用。
 - **使用场景**：用户组管理、权限分配。
 
-- **输入参数**: `name`（string, 类型 `s`）：组名
-- **返回值**: `o`（object path）：组路径
+- **输入参数**: `groupName`（string, 类型 `s`）：组名；`gid`（uint32, 类型 `u`）：组 GID；`isSystem`（bool, 类型 `b`）：是否为系统组
+- **返回值**: 无
 
 权限：
 - requires_sudo: true
@@ -178,7 +178,7 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Accounts1 \
   --object-path /org/deepin/dde/Accounts1 \
-  --method org.deepin.dde.Accounts1.CreateGroup "group"
+  --method org.deepin.dde.Accounts1.CreateGroup "group" 0 false
 ```
 
 #### DeleteGroup
@@ -189,7 +189,7 @@ pkexec gdbus call --system \
 - **触发条件**：当控制中心或管理工具请求删除用户组时调用。
 - **使用场景**：用户组管理、权限回收。
 
-- **输入参数**: `name`（string, 类型 `s`）：组名
+- **输入参数**: `groupName`（string, 类型 `s`）：组名；`force`（bool, 类型 `b`）：是否强制删除
 - **返回值**: 无
 
 权限：
@@ -199,7 +199,7 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Accounts1 \
   --object-path /org/deepin/dde/Accounts1 \
-  --method org.deepin.dde.Accounts1.DeleteGroup "group"
+  --method org.deepin.dde.Accounts1.DeleteGroup "group" false
 ```
 
 #### GetGroups
@@ -252,7 +252,7 @@ pkexec gdbus call --system \
 - **触发条件**：当需要展示可选的预设用户组时调用。
 - **使用场景**：控制中心创建用户时选择用户组。
 
-- **输入参数**: 无
+- **输入参数**: `accountType`（int32, 类型 `i`）：账户类型
 - **返回值**: `as`（string 数组）：预设组列表
 
 权限：
@@ -262,6 +262,6 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Accounts1 \
   --object-path /org/deepin/dde/Accounts1 \
-  --method org.deepin.dde.Accounts1.GetPresetGroups
+  --method org.deepin.dde.Accounts1.GetPresetGroups 1
 ```
 
