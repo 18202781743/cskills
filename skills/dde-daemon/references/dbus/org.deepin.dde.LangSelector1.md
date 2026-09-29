@@ -68,7 +68,7 @@ gdbus call --session \
 - **使用场景**：控制中心语言和区域选择列表。
 
 - **输入参数**: 无
-- **返回值**: `locales`（`as`，string 数组）：区域列表
+- **返回值**: `locales`（`a(ss)`，结构体数组）：区域列表（每项为区域名称和描述）
 
 ```bash
 gdbus call --session \

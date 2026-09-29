@@ -20,14 +20,14 @@
 - **触发条件**：当需要检查特定端口可用性时调用。
 - **使用场景**：音频设备管理、端口状态检查。
 
-- **输入参数**: `port`（object, 类型 `o`）：端口路径
+- **输入参数**: `cardId`（uint32, 类型 `u`）：声卡 ID；`portName`（string, 类型 `s`）：端口名称
 - **返回值**: `b`（bool）：是否启用
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.Audio1 \
   --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.IsPortEnabled "/path/to/port"
+  --method org.deepin.dde.Audio1.IsPortEnabled 0 "speaker"
 ```
 
 #### NoRestartPulseAudio
@@ -37,14 +37,14 @@ gdbus call --session \
 - **功能**：设置是否在音频配置变更时不重启 PulseAudio。
 - **触发条件**：当需要控制音频配置变更后是否重启 PulseAudio 服务时调用。
 - **使用场景**：音频服务管理，避免重启 PulseAudio 导致声音中断。
-- **输入参数**: `value`（bool, 类型 `b`）：是否不重启
+- **输入参数**: 无
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.Audio1 \
   --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.NoRestartPulseAudio true
+  --method org.deepin.dde.Audio1.NoRestartPulseAudio
 ```
 
 #### Reset
@@ -89,14 +89,14 @@ gdbus call --session \
 - **功能**：设置当前音频输出或输入端口。
 - **触发条件**：当用户在控制中心选择音频输出或输入设备端口时调用。
 - **使用场景**：控制中心声音设置选择输出/输入端口。
-- **输入参数**: `port`（object, 类型 `o`）：端口路径
+- **输入参数**: `cardId`（uint32, 类型 `u`）：声卡 ID；`portName`（string, 类型 `s`）：端口名称；`direction`（int32, 类型 `i`）：方向（0=输出，1=输入）
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.Audio1 \
   --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.SetPort "/path/to/port"
+  --method org.deepin.dde.Audio1.SetPort 0 "speaker" 0
 ```
 
 #### SetPortEnabled
@@ -107,14 +107,14 @@ gdbus call --session \
 - **触发条件**：当用户在控制中心切换端口开关时调用。
 - **使用场景**：控制中心音频端口管理。
 
-- **输入参数**: `port`（object, 类型 `o`）：端口路径；`enabled`（bool, 类型 `b`）：是否启用
+- **输入参数**: `cardId`（uint32, 类型 `u`）：声卡 ID；`portName`（string, 类型 `s`）：端口名称；`enabled`（bool, 类型 `b`）：是否启用
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.Audio1 \
   --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.SetPortEnabled "/path/to/port" true
+  --method org.deepin.dde.Audio1.SetPortEnabled 0 "speaker" true
 ```
 
 #### SetCurrentAudioServer
@@ -167,107 +167,3 @@ gdbus call --session \
   --object-path /org/deepin/dde/Audio1 \
   --method org.deepin.dde.Audio1.StopAudioService
 ```
-
-#### Tick
-
-心跳检测。
-
-- **功能**：心跳检测，维持音频服务与 PulseAudio 之间的连接活跃。
-- **触发条件**：由音频服务内部定时器周期性调用。
-- **使用场景**：音频服务内部连接保活，无需外部调用。
-
-- **输入参数**: 无
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.Audio1 \
-  --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.Tick
-```
-
-#### GetMeter
-
-获取音量计。
-
-- **功能**：获取音量计对象路径，用于实时监听音频音量级别。
-- **触发条件**：当需要获取实时音量级别反馈时调用。
-- **使用场景**：音量调节界面显示实时音量级别。
-- **输入参数**: 无
-- **返回值**: `o`（object path）：音量计路径
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.Audio1 \
-  --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.GetMeter
-```
-
-#### SetBalance
-
-设置声道平衡。
-
-- **功能**：设置左右声道平衡值。
-- **触发条件**：当用户在控制中心调节左右声道平衡时调用。
-- **使用场景**：控制中心声音设置声道平衡调节。
-- **输入参数**: `value`（double, 类型 `d`）：平衡值
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.Audio1 \
-  --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.SetBalance 0.5
-```
-
-#### SetFade
-
-设置淡入淡出。
-
-- **功能**：设置前后声道淡入淡出值。
-- **触发条件**：当用户在控制中心调节前后声道淡入淡出时调用。
-- **使用场景**：控制中心声音设置前后声道调节。
-- **输入参数**: `value`（double, 类型 `d`）：淡入淡出值
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.Audio1 \
-  --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.SetFade 0.5
-```
-
-#### SetMute
-
-设置静音。
-
-- **功能**：设置音频静音状态。
-- **触发条件**：当用户在控制中心或快捷面板切换静音时调用。
-- **使用场景**：控制中心静音开关、快捷面板静音切换。
-- **输入参数**: `value`（bool, 类型 `b`）：是否静音
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.Audio1 \
-  --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.SetMute true
-```
-
-#### SetVolume
-
-设置音量。
-
-- **功能**：设置音频音量值。
-- **触发条件**：当用户在控制中心或快捷面板调节音量时调用。
-- **使用场景**：控制中心音量调节、快捷面板音量滑块。
-- **输入参数**: `value`（double, 类型 `d`）：音量值
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.Audio1 \
-  --object-path /org/deepin/dde/Audio1 \
-  --method org.deepin.dde.Audio1.SetVolume 0.5
-```
-

@@ -56,14 +56,14 @@ gdbus call --session \
 - **触发条件**：当用户在显示设置中切换显示模式时调用。
 - **使用场景**：控制中心显示设置切换多屏模式、快捷键切换显示模式。
 
-- **输入参数**: `mode`（int32, 类型 `i`）：显示模式；`screenName`（string, 类型 `s`）：屏幕名称
+- **输入参数**: `mode`（byte, 类型 `y`）：显示模式；`screenName`（string, 类型 `s`）：屏幕名称
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.Display1 \
   --object-path /org/deepin/dde/Display1 \
-  --method org.deepin.dde.Display1.SwitchMode 0 "eDP-1"
+  --method org.deepin.dde.Display1.SwitchMode byte:0 "eDP-1"
 ```
 
 #### Save

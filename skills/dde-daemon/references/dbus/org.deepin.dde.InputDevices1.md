@@ -122,7 +122,7 @@ gdbus call --session \
 - **触发条件**：当需要展示用户已添加的键盘布局时调用。
 - **使用场景**：控制中心键盘布局列表展示。
 - **输入参数**: 无
-- **返回值**: `as`（string 数组）：布局列表
+- **返回值**: `a{ss}`（字典）：布局列表（键为布局名称，值为描述）
 
 ```bash
 gdbus call --session \
@@ -139,7 +139,7 @@ gdbus call --session \
 - **触发条件**：当需要展示所有可选键盘布局时调用。
 - **使用场景**：控制中心键盘布局选择列表展示。
 - **输入参数**: 无
-- **返回值**: `as`（string 数组）：所有布局列表
+- **返回值**: `a{ss}`（字典）：所有布局列表（键为布局名称，值为描述）
 
 ```bash
 gdbus call --session \
@@ -182,22 +182,3 @@ gdbus call --session \
   --object-path /org/deepin/dde/InputDevices1 \
   --method org.deepin.dde.InputDevices1.ToggleNextLayout
 ```
-
-#### Enable
-
-启用输入设备。
-
-- **功能**：启用或禁用输入设备。
-- **触发条件**：当用户在控制中心切换输入设备启用状态时调用。
-- **使用场景**：控制中心输入设备开关。
-
-- **输入参数**: `value`（bool, 类型 `b`）：是否启用
-- **返回值**: 无
-
-```bash
-gdbus call --session \
-  --dest org.deepin.dde.InputDevices1 \
-  --object-path /org/deepin/dde/InputDevices1 \
-  --method org.deepin.dde.InputDevices1.Enable true
-```
-

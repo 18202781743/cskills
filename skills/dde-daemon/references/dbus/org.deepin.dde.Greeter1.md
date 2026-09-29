@@ -20,7 +20,7 @@
 - **触发条件**：当用户在控制中心修改主题后需要同步到登录界面时调用。
 - **使用场景**：控制中心主题设置同步到登录界面。
 
-- **输入参数**: 无
+- **输入参数**: `fd`（UnixFD, 类型 `h`）：主题文件描述符
 - **返回值**: 无
 
 权限：
@@ -30,6 +30,5 @@
 pkexec gdbus call --system \
   --dest org.deepin.dde.Greeter1 \
   --object-path /org/deepin/dde/Greeter1 \
-  --method org.deepin.dde.Greeter1.UpdateGreeterQtTheme
+  --method org.deepin.dde.Greeter1.UpdateGreeterQtTheme "fd"
 ```
-

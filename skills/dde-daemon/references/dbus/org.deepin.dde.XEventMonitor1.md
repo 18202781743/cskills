@@ -20,8 +20,8 @@
 - **触发条件**：当需要监控指定屏幕区域内的鼠标事件时调用。
 - **使用场景**：热区触发、屏幕边缘手势监控。
 
-- **输入参数**: `x`（int32, 类型 `i`）：X 坐标；`y`（int32, 类型 `i`）：Y 坐标；`width`（int32, 类型 `i`）：宽度；`height`（int32, 类型 `i`）：高度；`flags`（int32, 类型 `i`）：标志
-- **返回值**: `i`（int32）：区域 ID
+- **输入参数**: `x1`（int32, 类型 `i`）：左上角 X 坐标；`y1`（int32, 类型 `i`）：左上角 Y 坐标；`x2`（int32, 类型 `i`）：右下角 X 坐标；`y2`（int32, 类型 `i`）：右下角 Y 坐标；`flag`（int32, 类型 `i`）：标志
+- **返回值**: `s`（string）：区域 ID
 
 ```bash
 gdbus call --session \
@@ -38,13 +38,12 @@ gdbus call --session \
 - **触发条件**：当不再需要监控指定区域时调用。
 - **使用场景**：热区监控取消、区域监控清理。
 
-- **输入参数**: `id`（int32, 类型 `i`）：区域 ID
-- **返回值**: 无
+- **输入参数**: `id`（string, 类型 `s`）：区域 ID
+- **返回值**: `b`（bool）：是否成功取消
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.XEventMonitor1 \
   --object-path /org/deepin/dde/XEventMonitor1 \
-  --method org.deepin.dde.XEventMonitor1.UnregisterArea 1
+  --method org.deepin.dde.XEventMonitor1.UnregisterArea "region_id"
 ```
-

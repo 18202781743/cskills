@@ -12,69 +12,6 @@
 | Bus | System |
 ### GRUB2 管理方法
 
-#### Disable
-
-禁用 GRUB2。
-
-- **功能**：禁用 GRUB2 引导菜单，开机时不再显示引导选择界面。
-- **触发条件**：当用户在控制中心关闭 GRUB2 引导菜单时调用。
-- **使用场景**：控制中心引导设置关闭 GRUB2 菜单。
-
-- **输入参数**: 无
-- **返回值**: 无
-
-权限：
-- requires_sudo: true
-
-```bash
-pkexec gdbus call --system \
-  --dest org.deepin.dde.Grub2 \
-  --object-path /org/deepin/dde/Grub2 \
-  --method org.deepin.dde.Grub2.Disable
-```
-
-#### Enable
-
-启用 GRUB2。
-
-- **功能**：启用 GRUB2 引导菜单，开机时显示引导选择界面。
-- **触发条件**：当用户在控制中心开启 GRUB2 引导菜单时调用。
-- **使用场景**：控制中心引导设置开启 GRUB2 菜单。
-
-- **输入参数**: 无
-- **返回值**: 无
-
-权限：
-- requires_sudo: true
-
-```bash
-pkexec gdbus call --system \
-  --dest org.deepin.dde.Grub2 \
-  --object-path /org/deepin/dde/Grub2 \
-  --method org.deepin.dde.Grub2.Enable
-```
-
-#### SkipGrub
-
-跳过 GRUB2。
-
-- **功能**：设置下次启动跳过 GRUB2 引导菜单一次。
-- **触发条件**：当用户需要临时跳过引导菜单时调用。
-- **使用场景**：引导设置临时跳过 GRUB2 菜单。
-
-- **输入参数**: 无
-- **返回值**: 无
-
-权限：
-- requires_sudo: true
-
-```bash
-pkexec gdbus call --system \
-  --dest org.deepin.dde.Grub2 \
-  --object-path /org/deepin/dde/Grub2 \
-  --method org.deepin.dde.Grub2.SkipGrub
-```
-
 #### GetAvailableGfxmodes
 
 获取可用图形模式。
@@ -84,7 +21,7 @@ pkexec gdbus call --system \
 - **使用场景**：控制中心引导设置选择 GRUB2 图形分辨率。
 
 - **输入参数**: 无
-- **返回值**: `a(ss)`（元组数组）：图形模式列表
+- **返回值**: `as`（string 数组）：图形模式列表
 
 权限：
 - requires_sudo: true
@@ -230,7 +167,7 @@ pkexec gdbus call --system \
 - **触发条件**：当用户在控制中心修改引导菜单等待时间时调用。
 - **使用场景**：控制中心引导设置修改菜单超时时间。
 
-- **输入参数**: `timeout`（int32, 类型 `i`）：超时秒数
+- **输入参数**: `timeout`（uint32, 类型 `u`）：超时秒数
 - **返回值**: 无
 
 权限：
@@ -240,8 +177,89 @@ pkexec gdbus call --system \
 pkexec gdbus call --system \
   --dest org.deepin.dde.Grub2 \
   --object-path /org/deepin/dde/Grub2 \
-  --method org.deepin.dde.Grub2.SetTimeout 5
+  --method org.deepin.dde.Grub2.SetTimeout uint32:5
 ```
+
+### EditAuthentication 子对象
+
+#### Disable
+
+禁用 GRUB2 引导菜单编辑认证。
+
+- **功能**：禁用 GRUB2 引导菜单编辑密码认证。
+- **触发条件**：当用户在控制中心关闭 GRUB2 编辑认证时调用。
+- **使用场景**：控制中心引导设置关闭编辑认证。
+
+- **输入参数**: `sender`（string, 类型 `s`）：调用方标识；`username`（string, 类型 `s`）：用户名；`password`（string, 类型 `s`）：密码
+- **返回值**: 无
+
+| 字段 | 值 |
+|------|------|
+| Object path | `/org/deepin/dde/Grub2/EditAuthentication` |
+
+权限：
+- requires_sudo: true
+
+```bash
+pkexec gdbus call --system \
+  --dest org.deepin.dde.Grub2 \
+  --object-path /org/deepin/dde/Grub2/EditAuthentication \
+  --method org.deepin.dde.Grub2.EditAuthentication.Disable "sender" "username" "password"
+```
+
+#### Enable
+
+启用 GRUB2 引导菜单编辑认证。
+
+- **功能**：启用 GRUB2 引导菜单编辑密码认证。
+- **触发条件**：当用户在控制中心开启 GRUB2 编辑认证时调用。
+- **使用场景**：控制中心引导设置开启编辑认证。
+
+- **输入参数**: `sender`（string, 类型 `s`）：调用方标识；`username`（string, 类型 `s`）：用户名；`password`（string, 类型 `s`）：密码
+- **返回值**: 无
+
+| 字段 | 值 |
+|------|------|
+| Object path | `/org/deepin/dde/Grub2/EditAuthentication` |
+
+权限：
+- requires_sudo: true
+
+```bash
+pkexec gdbus call --system \
+  --dest org.deepin.dde.Grub2 \
+  --object-path /org/deepin/dde/Grub2/EditAuthentication \
+  --method org.deepin.dde.Grub2.EditAuthentication.Enable "sender" "username" "password"
+```
+
+### Fstart 子对象
+
+#### SkipGrub
+
+跳过 GRUB2。
+
+- **功能**：设置下次启动跳过 GRUB2 引导菜单一次。
+- **触发条件**：当用户需要临时跳过引导菜单时调用。
+- **使用场景**：引导设置临时跳过 GRUB2 菜单。
+
+- **输入参数**: `sender`（string, 类型 `s`）：调用方标识；`enabled`（bool, 类型 `b`）：是否跳过
+- **返回值**: 无
+
+| 字段 | 值 |
+|------|------|
+| Object path | `/org/deepin/dde/Grub2/Fstart` |
+
+权限：
+- requires_sudo: true
+
+```bash
+pkexec gdbus call --system \
+  --dest org.deepin.dde.Grub2 \
+  --object-path /org/deepin/dde/Grub2/Fstart \
+  --method org.deepin.dde.Grub2.Fstart.SkipGrub "sender" true
+```
+
+### Theme 子对象
 
 #### GetBackground
 
@@ -254,14 +272,18 @@ pkexec gdbus call --system \
 - **输入参数**: 无
 - **返回值**: `s`（string）：背景图片路径
 
+| 字段 | 值 |
+|------|------|
+| Object path | `/org/deepin/dde/Grub2/Theme` |
+
 权限：
 - requires_sudo: true
 
 ```bash
 pkexec gdbus call --system \
   --dest org.deepin.dde.Grub2 \
-  --object-path /org/deepin/dde/Grub2 \
-  --method org.deepin.dde.Grub2.GetBackground
+  --object-path /org/deepin/dde/Grub2/Theme \
+  --method org.deepin.dde.Grub2.Theme.GetBackground
 ```
 
 #### SetBackgroundSourceFile
@@ -272,8 +294,12 @@ pkexec gdbus call --system \
 - **触发条件**：当用户在控制中心选择新的背景图片时调用。
 - **使用场景**：控制中心引导设置更换背景图片。
 
-- **输入参数**: `file`（string, 类型 `s`）：文件路径
+- **输入参数**: `file`（UnixFD, 类型 `h`）：文件描述符
 - **返回值**: 无
+
+| 字段 | 值 |
+|------|------|
+| Object path | `/org/deepin/dde/Grub2/Theme` |
 
 权限：
 - requires_sudo: true
@@ -281,7 +307,6 @@ pkexec gdbus call --system \
 ```bash
 pkexec gdbus call --system \
   --dest org.deepin.dde.Grub2 \
-  --object-path /org/deepin/dde/Grub2 \
-  --method org.deepin.dde.Grub2.SetBackgroundSourceFile "/path/to/bg"
+  --object-path /org/deepin/dde/Grub2/Theme \
+  --method org.deepin.dde.Grub2.Theme.SetBackgroundSourceFile "file"
 ```
-

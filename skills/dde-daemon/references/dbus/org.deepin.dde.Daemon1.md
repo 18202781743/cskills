@@ -20,14 +20,14 @@
 - **触发条件**：当需要排查 D-Bus 调用链路问题时调用。
 - **使用场景**：开发调试、问题排查。
 
-- **输入参数**: 无
+- **输入参数**: `times`（uint32, 类型 `u`）：采样次数；`seconds`（uint32, 类型 `u`）：采样间隔秒数
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.Daemon1 \
   --object-path /org/deepin/dde/Daemon1 \
-  --method org.deepin.dde.Daemon1.CallTrace
+  --method org.deepin.dde.Daemon1.CallTrace uint32:10 uint32:5
 ```
 
 #### StartPart2

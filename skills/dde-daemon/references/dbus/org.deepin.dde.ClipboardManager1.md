@@ -37,14 +37,14 @@ gdbus call --session \
 - **功能**：移除指定的剪贴板目标。
 - **触发条件**：当需要取消某个剪贴板目标的监听时调用。
 - **使用场景**：剪贴板目标管理，取消目标监听。
-- **输入参数**: `target`（string, 类型 `s`）：目标名称
+- **输入参数**: `target`（uint32, 类型 `u`）：目标标识
 - **返回值**: 无
 
 ```bash
 gdbus call --session \
   --dest org.deepin.dde.ClipboardManager1 \
   --object-path /org/deepin/dde/ClipboardManager1 \
-  --method org.deepin.dde.ClipboardManager1.RemoveTarget "target"
+  --method org.deepin.dde.ClipboardManager1.RemoveTarget uint32:1
 ```
 
 #### SaveClipboard

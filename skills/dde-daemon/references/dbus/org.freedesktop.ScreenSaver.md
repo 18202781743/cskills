@@ -144,6 +144,6 @@ gdbus monitor --session \
 - **使用场景**：屏幕保护程序监听此信号以退出屏幕保护动画并恢复正常桌面。
 - **参数**: 无
 
-## 兼容性接口
+## 接口说明
 
-`org.deepin.dde.ScreenSaver1` 是 DDE 屏幕保护服务名，在对象路径 `/org/freedesktop/ScreenSaver` 上实现 freedesktop 标准 `org.freedesktop.ScreenSaver` 接口，兼容遵循 freedesktop 屏幕保护规范的应用程序。新代码应推荐使用 `org.freedesktop.ScreenSaver` 接口名。
+`org.freedesktop.ScreenSaver` 是 dde-daemon 实现的 freedesktop 标准屏幕保护接口，非兼容接口。dde-daemon 在 Session 总线上实现了 freedesktop ScreenSaver 规范定义的标准方法（`Inhibit`、`UnInhibit`、`SimulateUserActivity`），并扩展了 `SetTimeout` 方法及 `IdleOn`、`CycleActive`、`IdleOff` 信号。
