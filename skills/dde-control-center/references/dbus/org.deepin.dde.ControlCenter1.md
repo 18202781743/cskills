@@ -206,7 +206,7 @@ gdbus call --session \
 
 控制中心 D-Bus 服务在同一对象 `/org/deepin/dde/ControlCenter1` 上注册了以下已废弃的兼容性方法，保留用于向后兼容旧版调用方。新代码应使用推荐替代方法。
 
-- **ShowPage(QString module, QString page)**：旧版双参数页面跳转接口，通过模块名和页面名定位目标页面。功能与当前单参数 `ShowPage(QString url)` 等效，推荐使用 `ShowPage(QString url)` 替代。
-- **ShowModule(QString module)**：旧版模块显示接口，通过模块名显示指定模块。功能与 `ShowPage(QString url)` 等效，推荐使用 `ShowPage(QString url)` 替代。
+- **ShowPage(QString module, QString page)**：旧版双参数页面跳转接口，通过模块名和页面名定位目标页面。功能与当前单参数 `ShowPage(QString url)` 相同，推荐使用 `ShowPage(QString url)` 替代。
+- **ShowModule(QString module)**：旧版模块显示接口，通过模块名显示指定模块。功能与 `ShowPage(QString url)` 相同，推荐使用 `ShowPage(QString url)` 替代。
 
 以上方法仅为兼容旧版调用方保留，不建议在新代码中使用。
