@@ -160,7 +160,6 @@ gdbus call --session \
 - **功能**: 标识屏幕保护程序当前是否处于运行状态。
 - **触发条件**: 屏保启动时变为 `true`，停止时变为 `false`。
 - **使用场景**: 判断当前屏保运行状态时使用。
-- **信号关联**: 屏保启动（调用 `Start` 或 `Preview` 方法）或停止（调用 `Stop` 方法）时触发 `isRunningChanged` 信号。
 
 | 属性 | 值 |
 |------|------|
@@ -184,7 +183,6 @@ gdbus call --session \
 - **功能**: 获取或设置当前正在使用的屏保名称。
 - **触发条件**: 用户切换屏保时属性值更新。
 - **使用场景**: 获取或设置当前使用的屏保时使用。
-- **信号关联**: 设置该属性后会触发 `currentScreenSaverChanged` 信号。
 
 | 属性 | 值 |
 |------|------|
@@ -218,7 +216,6 @@ gdbus call --session \
 - **功能**: 返回系统中所有已安装的屏保名称列表。
 - **触发条件**: 安装或卸载屏保应用后属性值更新。
 - **使用场景**: 获取系统中所有可用屏保列表时使用。
-- **信号关联**: 调用 `RefreshScreenSaverList` 方法刷新屏保列表后触发 `allScreenSaverChanged` 信号。
 
 | 属性 | 值 |
 |------|------|
@@ -242,7 +239,6 @@ gdbus call --session \
 - **功能**: 获取或设置电池供电时屏保启动的空闲超时时间（单位：秒）。
 - **触发条件**: 用户在电源设置中修改时更新。
 - **使用场景**: 获取或设置电池模式下的屏保启动延迟时间时使用。
-- **信号关联**: 设置该属性后会触发 `batteryScreenSaverTimeoutChanged` 信号。
 
 | 属性 | 值 |
 |------|------|
@@ -276,7 +272,6 @@ gdbus call --session \
 - **功能**: 获取或设置交流电源供电时屏保启动的空闲超时时间（单位：秒）。
 - **触发条件**: 用户在电源设置中修改时更新。
 - **使用场景**: 获取或设置交流电源模式下的屏保启动延迟时间时使用。
-- **信号关联**: 设置该属性后会触发 `linePowerScreenSaverTimeoutChanged` 信号。
 
 | 属性 | 值 |
 |------|------|
@@ -310,7 +305,6 @@ gdbus call --session \
 - **功能**: 控制从屏保唤醒后是否自动锁定屏幕。
 - **触发条件**: 用户在锁屏设置中修改时更新。
 - **使用场景**: 控制从屏保唤醒后是否自动锁定屏幕时使用。
-- **信号关联**: 设置该属性后会触发 `lockScreenAtAwakeChanged` 信号。
 
 | 属性 | 值 |
 |------|------|
@@ -334,7 +328,7 @@ gdbus call --session \
   --dest com.deepin.ScreenSaver \
   --object-path /com/deepin/ScreenSaver \
   --method org.freedesktop.DBus.Properties.Set \
-  com.deepin.ScreenSaver lockScreenAtAwake "<true>"
+  com.deepin.ScreenSaver lockScreenAtAwake "<b true>"
 ```
 
 #### lockScreenDelay（属性）
@@ -344,7 +338,6 @@ gdbus call --session \
 - **功能**: 从屏幕保护启动开始到一定时间段内唤醒不锁定屏幕，超过该时间段后唤醒才锁定屏幕（单位：秒）。
 - **触发条件**: 用户在锁屏设置中修改时更新。
 - **使用场景**: 控制屏保启动后到锁定屏幕的延迟时间时使用。
-- **信号关联**: 设置该属性后会触发 `lockScreenDelayChanged` 信号。
 
 | 属性 | 值 |
 |------|------|
@@ -370,71 +363,6 @@ gdbus call --session \
   --method org.freedesktop.DBus.Properties.Set \
   com.deepin.ScreenSaver lockScreenDelay "<int32 5>"
 ```
-
-## 信号
-
-### allScreenSaverChanged(QStringList)
-
-屏保列表发生变化时触发。
-
-- **功能**: 通知屏保列表已发生变化。
-- **触发条件**: 调用 `RefreshScreenSaverList` 方法重新扫描屏保模块目录并更新屏保列表后触发，参数为更新后的屏保名称列表。
-- **使用场景**: 监听屏保列表变化以更新屏保选择界面时使用。
-- **关联属性**: `allScreenSaver`（只读）
-
-### batteryScreenSaverTimeoutChanged(int)
-
-电池模式下屏保超时时间发生变化时触发。
-
-- **功能**: 通知电池模式下屏保超时时间已发生变化。
-- **触发条件**: 当电源管理服务（`com.deepin.daemon.Power` 或 `org.deepin.dde.Power1`）的 `BatteryScreensaverDelay` 属性发生变化时触发，参数为新的超时时间值。
-- **使用场景**: 需要在电池模式下同步显示或响应屏保超时时间变化时使用。
-- **关联属性**: `batteryScreenSaverTimeout`（读写）
-
-### linePowerScreenSaverTimeoutChanged(int)
-
-交流电源模式下屏保超时时间发生变化时触发。
-
-- **功能**: 通知交流电源模式下屏保超时时间已发生变化。
-- **触发条件**: 当电源管理服务（`com.deepin.daemon.Power` 或 `org.deepin.dde.Power1`）的 `LinePowerScreensaverDelay` 属性发生变化时触发，参数为新的超时时间值。
-- **使用场景**: 需要在交流电源模式下同步显示或响应屏保超时时间变化时使用。
-- **关联属性**: `linePowerScreenSaverTimeout`（读写）
-
-### currentScreenSaverChanged(QString)
-
-当前使用的屏保发生变化时触发。
-
-- **功能**: 通知当前使用的屏保已切换。
-- **触发条件**: 调用 `setCurrentScreenSaver` 设置当前屏保名称且值实际发生变化时触发，参数为新的屏保名称。
-- **使用场景**: 监听当前屏保切换以更新界面显示或执行相关逻辑时使用。
-- **关联属性**: `currentScreenSaver`（读写）
-
-### isRunningChanged(bool)
-
-屏保运行状态发生变化时触发。
-
-- **功能**: 通知屏保运行状态的变化。
-- **触发条件**: 屏保启动（调用 `Start` 或 `Preview` 方法）时以 `true` 触发，屏保停止（调用 `Stop` 方法）时以 `false` 触发。
-- **使用场景**: 需要根据屏保启停状态执行相应操作（如暂停媒体播放）时使用。
-- **关联属性**: `isRunning`（只读）
-
-### lockScreenAtAwakeChanged(bool)
-
-唤醒时是否锁定屏幕的设置发生变化时触发。
-
-- **功能**: 通知唤醒时是否锁定屏幕的设置已发生变化。
-- **触发条件**: 调用 `setLockScreenAtAwake` 设置该属性且值实际发生变化时触发，参数为新的布尔值。
-- **使用场景**: 监听唤醒锁定设置变化以同步界面显示时使用。
-- **关联属性**: `lockScreenAtAwake`（读写）
-
-### lockScreenDelayChanged(int)
-
-锁定屏幕延迟时间发生变化时触发。
-
-- **功能**: 通知锁定屏幕的延迟时间已发生变化。
-- **触发条件**: 调用 `setLockScreenDelay` 设置该属性且值实际发生变化时触发，参数为新的延迟时间值（单位：秒）。
-- **使用场景**: 监听锁定延迟时间变化以同步界面显示时使用。
-- **关联属性**: `lockScreenDelay`（读写）
 
 ## 接口关系
 
