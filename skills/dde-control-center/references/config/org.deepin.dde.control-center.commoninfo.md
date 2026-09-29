@@ -1,6 +1,6 @@
 # org.deepin.dde.control-center.commoninfo
 
-通用信息配置资源，控制只读保护显示、开机壁纸编辑和 GRUB 用户名显示等通用信息配置。
+通用信息配置资源，控制只读保护显示、开机壁纸编辑和 GRUB 用户名显示配置。
 
 ## 配置项
 
