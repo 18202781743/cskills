@@ -18,7 +18,7 @@ dde-shell 提供三层插件模型（Applet、Containment、Panel）、插件元
 - 返回 QML 根对象（加载后可用）
 - 返回所属 Panel
 
-生命周期顺序为：构造 → 初始化 → 加载 → 就绪。
+生命周期顺序为：构造 → 加载 → 初始化 → 就绪。
 
 ### 使用场景
 
@@ -159,12 +159,12 @@ Dock 项信息结构体，描述 Dock 区域插件项的名称、显示名称、
 
 ### 功能能力总结
 
-- — 插件名称
-- — 显示名称
-- — 插件唯一标识键
-- — 设置键
-- — 控制中心图标
-- — 是否可见
+- `name`（QString）— 插件名称
+- `displayName`（QString）— 显示名称
+- `itemKey`（QString）— 插件唯一标识键
+- `settingKey`（QString）— 设置键
+- `dccIcon`（QString）— 控制中心图标
+- `visible`（bool）— 是否可见
 
 支持 DBus 序列化和反序列化。
 
@@ -197,12 +197,12 @@ Applet 插件的 QML 根元素，提供附加属性，包括插件标识等平�
 
 #### 定位
 
-Containment 插件的 QML 根元素，提供 模型供 Repeater 渲染子 item。
+Containment 插件的 QML 根元素，提供 `Containment.appletItems` 模型供 Repeater 渲染子 item。
 
 #### 功能能力总结
 
 - 作为 Containment 插件 QML 入口的根元素
-- 通过 模型访问子 Applet item
+- 通过 `Containment.appletItems` 模型访问子 Applet item
 
 #### 使用场景
 

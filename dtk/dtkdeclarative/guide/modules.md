@@ -90,7 +90,7 @@ QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影）时。
 
 ### 定位
 
-DTK 窗口附加提供者。
+DTK 窗口附加属性提供者。
 
 ### 功能能力总结
 
@@ -108,7 +108,7 @@ DTK 窗口附加提供者。
 
 ### 功能能力总结
 
-将 DTK 平台主题的平台主题属性（主题色、字号、图标主题）暴露为 QML 可访问的属性和信号。DTK6 已移除此类型，相关功能由 QML 层直接
+将 DTK 平台主题的平台主题属性（主题色、字号、图标主题）暴露为 QML 可访问的属性和信号。DTK6 已移除此类型，相关功能由 QML 层直接提供。
 
 ### 使用场景
 
@@ -122,11 +122,11 @@ QML 系统调色板项（仅 DTK5，已废弃）。
 
 ### 功能能力总结
 
-将系统调色板暴露为 QML 可访问的属性，支持 Active、Inactive、Disabled 三种颜色组。已废弃，应使用 替代。DTK6 已移除此类型。
+将系统调色板暴露为 QML 可访问的属性，支持 Active、Inactive、Disabled 三种颜色组。已废弃，应使用 `DQMLGlobalObject::palette` 替代。DTK6 已移除此类型。
 
 ### 使用场景
 
-已废弃，DTK5 中如需在 QML 中访问系统调色板时可使用，新代码应迁移至。
+已废弃，DTK5 中如需在 QML 中访问系统调色板时可使用，新代码应迁移至 `DQMLGlobalObject::palette`。
 ## org.deepin.dtk
 
 DTK 声明式控件的 QML 模块，提供基于 Qt Quick 的 DTK 风格控件库。导入方式为 `import org.deepin.dtk`。模块包含按钮、输入框、对话框、菜单、窗口、进度指示、滑动条、列表视图、阴影渲染、浮动面板、标题栏在内的 DTK 风格 QML 控件类型，以及通过 C++ 注册的三个 QML 类型。样式参数通过 `org.deepin.dtk.style` 子模块的单例设置，对话框控件通过 `org.deepin.dtk.settings` 子模块配置。
@@ -135,7 +135,7 @@ DTK 声明式控件的 QML 模块，提供基于 Qt Quick 的 DTK 风格控件�
 
 #### 定位
 
-QML 场景中的帧缓冲区位块传输渲染项，从 C++ 类注册为 QML 类型。
+QML 场景中的帧缓冲区位块传输渲染项，从 C++ 类 `DQuickBlitFramebuffer` 注册为 QML 类型。
 
 #### 功能能力总结
 
@@ -149,7 +149,7 @@ QML 场景中的帧缓冲区位块传输渲染项，从 C++ 类注册为 QML 类
 
 #### 定位
 
-QML 场景中的视口裁剪渲染项，从 C++ 类注册为 QML 类型。
+QML 场景中的视口裁剪渲染项，从 C++ 类 `DQuickItemViewport` 注册为 QML 类型。
 
 #### 功能能力总结
 
@@ -163,7 +163,7 @@ QML 场景中的视口裁剪渲染项，从 C++ 类注册为 QML 类型。
 
 #### 定位
 
-DTK QML 窗口类型，从 C++ 类注册为 QML 类型，同时提供窗口附加属性。
+DTK QML 窗口类型，从 C++ 类 `DQuickWindow` 注册为 QML 类型，同时提供窗口附加属性。
 
 #### 功能能力总结
 
@@ -275,7 +275,7 @@ Qt Quick 动作组的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 应用窗口 的 DTK 样式实现。
+Qt Quick 应用窗口的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -373,7 +373,7 @@ Qt Quick 应用窗口 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 忙碌指示器 的 DTK 样式实现。
+Qt Quick 忙碌指示器的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -387,7 +387,7 @@ Qt Quick 忙碌指示器 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 按钮 的 DTK 样式实现。
+Qt Quick 按钮的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -415,7 +415,7 @@ Qt Quick 按钮 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 按钮组 的 DTK 样式实现。
+Qt Quick 按钮组的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -457,7 +457,7 @@ Qt Quick 按钮组 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 复选框 的 DTK 样式实现。
+Qt Quick 复选框的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -471,7 +471,7 @@ Qt Quick 复选框 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 复选委托项 的 DTK 样式实现。
+Qt Quick 复选委托项的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -499,7 +499,7 @@ Qt Quick 复选委托项 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 下拉组合框 的 DTK 样式实现。
+Qt Quick 下拉组合框的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -513,7 +513,7 @@ Qt Quick 下拉组合框 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 容器 的 DTK 样式实现。
+Qt Quick 容器的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -527,7 +527,7 @@ Qt Quick 容器 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 控件 的 DTK 样式实现。
+Qt Quick 控件的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -555,7 +555,7 @@ Qt Quick 控件 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 延迟按钮 的 DTK 样式实现。
+Qt Quick 延迟按钮的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -569,7 +569,7 @@ Qt Quick 延迟按钮 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 旋钮 的 DTK 样式实现。
+Qt Quick 旋钮的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -583,7 +583,7 @@ Qt Quick 旋钮 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 对话框 的 DTK 样式实现。
+Qt Quick 对话框的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -597,7 +597,7 @@ Qt Quick 对话框 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 对话框按钮组 的 DTK 样式实现。
+Qt Quick 对话框按钮组的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -639,7 +639,7 @@ DTK 风格的对话框窗口。
 
 #### 定位
 
-Qt Quick 抽屉 的 DTK 样式实现。
+Qt Quick 抽屉的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -765,7 +765,7 @@ DTK 控件流式布局样式定义。
 
 #### 定位
 
-Qt Quick 分组框 的 DTK 样式实现。
+Qt Quick 分组框的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -849,7 +849,7 @@ IPv4 地址输入控件。
 
 #### 定位
 
-Qt Quick 列表项委托 的 DTK 样式实现。
+Qt Quick 列表项委托的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -877,7 +877,7 @@ Qt Quick 列表项委托 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 标签 的 DTK 样式实现。
+Qt Quick 标签的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -919,7 +919,7 @@ DTK 风格的菜单控件。
 
 #### 定位
 
-Qt Quick 菜单栏 的 DTK 样式实现。
+Qt Quick 菜单栏的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -933,7 +933,7 @@ Qt Quick 菜单栏 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 菜单项 的 DTK 样式实现。
+Qt Quick 菜单项的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -975,7 +975,7 @@ Qt Quick 菜单项 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 页面指示器 的 DTK 样式实现。
+Qt Quick 页面指示器的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -989,7 +989,7 @@ Qt Quick 页面指示器 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 面板 的 DTK 样式实现。
+Qt Quick 面板的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1073,7 +1073,7 @@ DTK 风格的弹出面板。
 
 #### 定位
 
-Qt Quick 进度条 的 DTK 样式实现。
+Qt Quick 进度条的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1101,7 +1101,7 @@ Action 的退出操作变体。
 
 #### 定位
 
-Qt Quick 单选按钮 的 DTK 样式实现。
+Qt Quick 单选按钮的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1157,7 +1157,7 @@ FloatingButton 的圆形按钮变体。
 
 #### 定位
 
-Qt Quick 滚动条 的 DTK 样式实现。
+Qt Quick 滚动条的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1171,7 +1171,7 @@ Qt Quick 滚动条 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 滚动指示器 的 DTK 样式实现。
+Qt Quick 滚动指示器的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1185,7 +1185,7 @@ Qt Quick 滚动指示器 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 滚动视图 的 DTK 样式实现。
+Qt Quick 滚动视图的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1213,7 +1213,7 @@ Qt Quick 滚动视图 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 滑动条 的 DTK 样式实现。
+Qt Quick 滑动条的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1269,7 +1269,7 @@ Qt Quick 滑动条 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 数值输入框 的 DTK 样式实现。
+Qt Quick 数值输入框的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1297,7 +1297,7 @@ SpinBox 加减指示器组件。
 
 #### 定位
 
-Qt Quick 堆叠视图 的 DTK 样式实现。
+Qt Quick 堆叠视图的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1339,7 +1339,7 @@ DTK 样式的窗口模糊背景项。
 
 #### 定位
 
-Qt Quick 滑动委托项 的 DTK 样式实现。
+Qt Quick 滑动委托项的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1353,7 +1353,7 @@ Qt Quick 滑动委托项 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 滑动视图 的 DTK 样式实现。
+Qt Quick 滑动视图的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1367,7 +1367,7 @@ Qt Quick 滑动视图 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 开关 的 DTK 样式实现。
+Qt Quick 开关的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1381,7 +1381,7 @@ Qt Quick 开关 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 选项卡栏 的 DTK 样式实现。
+Qt Quick 选项卡栏的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1395,7 +1395,7 @@ Qt Quick 选项卡栏 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 多行文本输入框 的 DTK 样式实现。
+Qt Quick 多行文本输入框的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1409,7 +1409,7 @@ Qt Quick 多行文本输入框 的 DTK 样式实现。
 
 #### 定位
 
-Qt Quick 单行文本输入框 的 DTK 样式实现。
+Qt Quick 单行文本输入框的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1427,7 +1427,7 @@ Qt Quick 单行文本输入框 的 DTK 样式实现。
 
 #### 功能能力总结
 
-提供浅色、深色、自动三种主题类型的菜单项，通过 的主题类型常量实现切换。
+提供浅色、深色、自动三种主题类型的菜单项，通过 `D.ApplicationHelper` 的主题类型常量实现切换。
 
 #### 使用场景
 
@@ -1479,7 +1479,7 @@ Qt Quick 按钮 的工具按钮变体。
 
 #### 定位
 
-Qt Quick 提示标签 的 DTK 样式实现。
+Qt Quick 提示标签的 DTK 样式实现。
 
 #### 功能能力总结
 
@@ -1563,7 +1563,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 Settings.OptionDelegate 的 DTK 控件。
 
 #### 功能能力总结
 
@@ -1577,7 +1577,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 Settings.OptionDelegate 的 DTK 控件。
 
 #### 功能能力总结
 
@@ -1591,7 +1591,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 Rectangle 的 DTK 控件。
 
 #### 功能能力总结
 
@@ -1605,7 +1605,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 Label 的 DTK 控件。
 
 #### 功能能力总结
 
@@ -1619,7 +1619,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 Settings.OptionDelegate 的 DTK 控件。
 
 #### 功能能力总结
 
@@ -1633,7 +1633,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 Control 的 DTK 控件。
 
 #### 功能能力总结
 
@@ -1647,7 +1647,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 RowLayout 的 DTK 控件。
 
 #### 功能能力总结
 
@@ -1661,7 +1661,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 DialogWindow 的 DTK 控件。
 
 #### 功能能力总结
 
@@ -1675,7 +1675,7 @@ Button 的全屏退出按钮变体。
 
 #### 定位
 
-的 DTK 控件。
+继承 FlowStyle 的 DTK 控件。
 
 #### 功能能力总结
 

@@ -72,7 +72,7 @@ qmake 模块名在 DTK6 与 DTK5 中保持不变，实际头文件路径和链�
 
 新工程优先使用 DTK6 的开发包、构建包名和导出目标。维护 DTK5 工程时，应成套使用 DTK5 的开发包和构建信息；同一构建目标不要混用两个主版本的头文件、CMake 目标或 pkg-config 参数。
 
-公开头文件 `dtkcore_global.h` 提供 `DTK_VERSION` 和 `DTK_VERSION_CHECK`，可用于按 dtkcore 版本选择编译路径。DTK5 还提供版本号和版本字符串的运行期查询；DTK6 不再提供，迁移后的代码应使用编译期版本宏。
+公开头文件 `dtkcore_global.h` 提供 `DTK_VERSION` 和 `DTK_VERSION_CHECK`，可用于按 dtkcore 版本选择编译路径。DTK5 还提供 `dtkVersion()` 和 `dtkVersionString()` 运行期查询函数；DTK6 不再提供这两个函数，迁移后的代码应使用编译期版本宏。
 
 ## 关联文档
 
