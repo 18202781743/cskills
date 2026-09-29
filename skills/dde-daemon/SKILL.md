@@ -1,6 +1,6 @@
 ---
 name: dde-daemon
-description: dde-daemon 是 DDE 桌面环境的核心后端守护进程，负责管理系统的硬件、外设、账户、电源及系统信息服务。本 skill 提供 dde-daemon 的 D-Bus 接口文档、CLI 命令使用说明和 DConfig 配置项参考。
+description: dde-daemon 是 DDE 桌面环境的核心后端守护进程，通过 Session 和 System 总线提供系统级 D-Bus 接口，同时提供 CLI 命令和 DConfig 配置项。本 skill 提供 dde-daemon 的全部功能参考文档，按三大类组织：CLI 命令包含 dde-session-daemon（会话守护进程）、dde-system-daemon（系统守护进程）、grub2（GRUB2 引导配置）、search（文件搜索）、backlight_helper（背光调节）、langselector（语言选择）、soundeffect（声音效果）、dde-lockservice（锁屏服务）、default-terminal（默认终端设置）、dde-greeter-setter（登录界面设置）、default-file-manager（默认文件管理器设置）、greeter-display-daemon（登录界面显示）、fix-xauthority-perm（Xauthority 权限修复）；D-Bus 接口包含音频管理、蓝牙管理、输入设备管理、语言选择、显示管理、账户管理、定时设置、系统信息查询、搜索服务、会话监控、声音效果管理、X 事件监控、守护进程管理、剪贴板管理、屏幕保护、系统托盘、事件日志、手势管理、背光辅助、Greeter 主题更新、锁屏服务、GRUB2 引导配置、飞行模式、UADP 服务、交换分区调度辅助、按键事件监控、应用商店会话辅助；DConfig 配置项覆盖显示器、外观、输入设备、鼠标、电源管理、音效、系统信息、触摸板、触摸屏、小红点、Wacom 数位板。其中 dde-session-daemon、dde-system-daemon 和守护进程管理（Daemon1）为 dde-daemon 自身管理功能，其余 CLI 命令、D-Bus 接口和 DConfig 配置项均为面向全局系统的服务能力。
 Categories:
   - Settings
 ---
