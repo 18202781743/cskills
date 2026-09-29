@@ -94,4 +94,4 @@ gdbus monitor --session \
 
 ## 兼容性接口
 
-`org.kde.StatusNotifierWatcher` 是 KDE 标准系统托盘状态通知接口，由 `trayicon1/` 模块在 `org.deepin.dde.TrayManager1` 服务上注册，兼容遵循 KDE StatusNotifierItem 协议的应用程序。
+`org.kde.StatusNotifierWatcher` 是 KDE 标准系统托盘状态通知接口，兼容遵循 KDE StatusNotifierItem 协议的应用程序。该接口由 dde-daemon 提供，新代码应推荐使用 `org.deepin.dde.TrayManager1`。
