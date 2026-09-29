@@ -367,6 +367,42 @@ gdbus monitor --session \
   --object-path /org/deepin/dde/Notification1
 ```
 
+#### AppSettingChanged
+
+> ⚠️ **已废弃/不推荐使用**：该信号已在代码中声明但从未 emit，当前不会触发。
+
+应用通知设置变化时发出。
+
+- **功能**: 通知外部程序某应用的通知设置 JSON 发生了变化
+- **触发条件**: 调用 `SetAppSetting` 后应触发（当前未实现，信号从未 emit）
+- **使用场景**: 通知设置界面监听应用设置的批量变化
+- **参数**:
+  - `settings`（string, 类型 `s`）：设置 JSON 字符串
+
+```bash
+gdbus monitor --session \
+  --dest org.deepin.dde.Notification1 \
+  --object-path /org/deepin/dde/Notification1
+```
+
+#### SystemSettingChanged
+
+> ⚠️ **已废弃/不推荐使用**：该信号已在代码中声明但从未 emit，当前不会触发。
+
+系统通知设置变化时发出。
+
+- **功能**: 通知外部程序系统通知设置 JSON 发生了变化
+- **触发条件**: 系统通知设置被修改后应触发（当前未实现，信号从未 emit）
+- **使用场景**: 通知设置界面监听系统设置的批量变化
+- **参数**:
+  - `settings`（string, 类型 `s`）：设置 JSON 字符串
+
+```bash
+gdbus monitor --session \
+  --dest org.deepin.dde.Notification1 \
+  --object-path /org/deepin/dde/Notification1
+```
+
 #### SystemInfoChanged
 
 系统级通知配置变化时发出。
