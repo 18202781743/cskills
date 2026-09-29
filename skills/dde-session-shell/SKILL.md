@@ -1,13 +1,13 @@
 ---
 name: dde-session-shell
-description: dde-session-shell 是 DDE 桌面环境的登录锁屏组件，负责系统锁屏、用户登录认证、关机重启界面显示。该 skill 提供锁屏程序启动、登录界面显示设置、登录欢迎界面运行、手势密码重置的 CLI 命令，锁屏界面显示控制、关机界面显示控制、电源操作的 D-Bus 接口
+description: dde-session-shell 是 DDE 桌面环境的登录锁屏组件，负责系统锁屏、用户登录认证、关机重启界面显示。该 skill 提供锁屏程序启动、登录界面显示设置、登录欢迎界面运行、手势密码重置的 CLI 命令，锁屏界面显示控制、关机界面显示控制、电源操作的 D-Bus 接口，以及快速登录开关的 DConfig 配置项
 Categories:
   - Application
 ---
 
 # dde-session-shell
 
-dde-session-shell 是 DDE 登录锁屏组件，提供锁屏程序、登录界面、关机界面的 CLI 命令工具，通过 Session 总线提供锁屏界面显示控制、关机界面显示控制和电源操作能力。
+dde-session-shell 是 DDE 登录锁屏组件，提供锁屏程序、登录界面、关机界面的 CLI 命令工具，通过 Session 总线提供锁屏界面显示控制、关机界面显示控制和电源操作能力，并通过 DConfig 暴露快速登录开关配置。
 
 ## CLI 命令
 
@@ -48,3 +48,15 @@ DDE 登录界面（LightDM Greeter），是 deepin 定制的 LightDM 欢迎程�
 提供关机界面显示和电源操作能力。
 
 详见 [org.deepin.dde.ShutdownFront1.md](references/dbus/org.deepin.dde.ShutdownFront1.md)
+
+## DConfig 配置项
+
+dde-session-shell 相关的 DConfig public 配置项仅有快速登录开关。该配置来自 dde-daemon 仓库，注册在 appId `org.deepin.dde.lightdm-deepin-greeter` 下，由 lightdm-deepin-greeter 读取应用。
+
+> 注意：dde-session-shell 自身发布的 3 个 DConfig schema（`org.deepin.dde.lock`、`org.deepin.dde.session-shell`、`org.deepin.dde.lightdm-deepin-greeter`）中所有配置项的 visibility 均为 private，按约束不纳入 skill 文档。
+
+### 快速登录开关
+
+控制是否启用快速登录功能，开启时开机后自动登录并进入锁屏状态。该配置属于 dde-daemon 发布的全局账户配置资源，非 dde-session-shell 自身发布的 schema。
+
+详见 [org.deepin.dde.daemon.accounts](references/config/org.deepin.dde.daemon.accounts.md)
