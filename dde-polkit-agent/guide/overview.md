@@ -12,7 +12,7 @@ dde-polkit-agent 是 DDE Polkit 认证代理，为需要提权的操作提供图
 
 ## 导出类型
 
-[导出类型介绍](modules.md)是本项目唯一的类型参考文档。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
+[导出类型介绍](dde-polkit-agent-dev.md)是本项目唯一的类型参考文档。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
 ## 全局约定
 
@@ -21,4 +21,4 @@ dde-polkit-agent 是 DDE Polkit 认证代理，为需要提权的操作提供图
 ## 按功能查阅
 
 - 将 dde-polkit-agent 扩展头文件引入 CMake 工程：参见[集成与构建配置](integration.md)。
-- 开发认证代理扩展插件：参见 [AgentExtension](modules.md#agentextension) 与 [AgentExtensionProxy](modules.md#agentextensionproxy)。
+- 开发认证代理扩展插件：参见 [AgentExtension](dde-polkit-agent-dev.md#agentextension) 与 [AgentExtensionProxy](dde-polkit-agent-dev.md#agentextensionproxy)。

@@ -15,7 +15,7 @@ dde-control-center 是 DDE 控制中心，提供系统设置界面框架和插�
 
 ## 导出类型
 
-[导出类型介绍](modules.md)是本项目唯一的类型参考文档。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
+[导出类型介绍](dde-control-center-dev.md)是本项目的类型参考文档，QML 接口见[dde-control-center-dev-qml.md](dde-control-center-dev-qml.md)。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
 ## 全局约定
 
@@ -24,7 +24,7 @@ dde-control-center 是 DDE 控制中心，提供系统设置界面框架和插�
 ## 按功能查阅
 
 - 将控制中心插件引入 CMake 工程：参见[集成与构建配置](integration.md)。
-- 实现插件工厂：参见 [DccFactory](modules.md#dccfactory)。
-- 描述设置项层级结构：参见 [DccObject](modules.md#dccobject)。
-- 访问控制中心单例：参见 [DccApp](modules.md#dccapp)。
-- 使用旧版模块接口：参见 [ModuleObject](modules.md#moduleobject)。
+- 实现插件工厂：参见 [DccFactory](dde-control-center-dev.md#dccfactory)。
+- 描述设置项层级结构：参见 [DccObject](dde-control-center-dev.md#dccobject)。
+- 访问控制中心单例：参见 [DccApp](dde-control-center-dev.md#dccapp)。
+- 使用旧版模块接口：参见 [ModuleObject](dde-control-center-dev.md#moduleobject)。

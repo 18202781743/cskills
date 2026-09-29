@@ -15,7 +15,7 @@ dtkgui 是基于 Qt GUI 模块的 C++ 库，提供 DTK 图形界面层面的能�
 
 ## 导出类型
 
-[导出类型介绍](modules.md)是本项目唯一的类型参考文档。它以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
+[导出类型介绍](dtk6gui-dev.md)是本项目唯一的类型参考文档。它以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
 ## 全局约定
 
@@ -26,10 +26,10 @@ dtkgui 是基于 Qt GUI 模块的 C++ 库，提供 DTK 图形界面层面的能�
 ## 按功能查阅
 
 - 将 dtkgui 引入 CMake、pkg-config 或 qmake 工程：参见[集成与构建配置](integration.md)。
-- 使用 DCI 图标：参见 [DDciIcon](modules.md#ddciicon)、[DDciIconImage](modules.md#ddciiconimage)、[DDciIconPalette](modules.md#ddciiconpalette)、[DDciIconPlayer](modules.md#ddciiconplayer) 与 [DDciIconImagePlayer](modules.md#ddciiconimageplayer)。
-- 管理调色板与主题：参见 [DPalette](modules.md#dpalette) 与 [DGuiApplicationHelper](modules.md#dguiapplicationhelper)。
-- 控制窗口装饰与平台属性：参见 [DPlatformHandle](modules.md#dplatformhandle)、[DPlatformTheme](modules.md#dplatformtheme) 与 [DWindowManagerHelper](modules.md#dwindowmanagerhelper)。
-- 图标与 SVG 渲染：参见 [DIcon](modules.md#dicon)、[DIconTheme](modules.md#diconthemecached) 与 [DSvgRenderer](modules.md#dsvgrenderer)。
-- 文件拖拽、字体管理与缩略图：参见 [DFileDrag](modules.md#dfiledrag)、[DFileDragClient](modules.md#dfiledragclient)、[DFileDragServer](modules.md#dfiledragserver)、[DFontManager](modules.md#dfontmanager) 与 [DThumbnailProvider](modules.md#dthumbnailprovider)。
-- 系统服务、区域监视与任务栏控制：参见 [DDesktopServices](modules.md#ddesktopservices)、[DRegionMonitor](modules.md#dregionmonitor) 与 [DTaskbarControl](modules.md#dtaskbarcontrol)。
-- 在 DTK5 与 DTK6 之间迁移构建配置：参见[集成与构建配置](integration.md)；迁移公开类型：参见对应的[导出类型介绍](modules.md)。
+- 使用 DCI 图标：参见 [DDciIcon](dtk6gui-dev.md#ddciicon)、[DDciIconImage](dtk6gui-dev.md#ddciiconimage)、[DDciIconPalette](dtk6gui-dev.md#ddciiconpalette)、[DDciIconPlayer](dtk6gui-dev.md#ddciiconplayer) 与 [DDciIconImagePlayer](dtk6gui-dev.md#ddciiconimageplayer)。
+- 管理调色板与主题：参见 [DPalette](dtk6gui-dev.md#dpalette) 与 [DGuiApplicationHelper](dtk6gui-dev.md#dguiapplicationhelper)。
+- 控制窗口装饰与平台属性：参见 [DPlatformHandle](dtk6gui-dev.md#dplatformhandle)、[DPlatformTheme](dtk6gui-dev.md#dplatformtheme) 与 [DWindowManagerHelper](dtk6gui-dev.md#dwindowmanagerhelper)。
+- 图标与 SVG 渲染：参见 [DIcon](dtk6gui-dev.md#dicon)、[DIconTheme](dtk6gui-dev.md#diconthemecached) 与 [DSvgRenderer](dtk6gui-dev.md#dsvgrenderer)。
+- 文件拖拽、字体管理与缩略图：参见 [DFileDrag](dtk6gui-dev.md#dfiledrag)、[DFileDragClient](dtk6gui-dev.md#dfiledragclient)、[DFileDragServer](dtk6gui-dev.md#dfiledragserver)、[DFontManager](dtk6gui-dev.md#dfontmanager) 与 [DThumbnailProvider](dtk6gui-dev.md#dthumbnailprovider)。
+- 系统服务、区域监视与任务栏控制：参见 [DDesktopServices](dtk6gui-dev.md#ddesktopservices)、[DRegionMonitor](dtk6gui-dev.md#dregionmonitor) 与 [DTaskbarControl](dtk6gui-dev.md#dtaskbarcontrol)。
+- 在 DTK5 与 DTK6 之间迁移构建配置：参见[集成与构建配置](integration.md)；迁移公开类型：参见对应的[导出类型介绍](dtk6gui-dev.md)。

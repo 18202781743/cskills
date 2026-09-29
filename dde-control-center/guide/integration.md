@@ -50,4 +50,4 @@ target_link_libraries(your-plugin PRIVATE Dde::ControlCenter)
 
 ## 关联文档
 
-- 导出类型的能力与使用场景见[导出类型介绍](modules.md)。
+- 导出类型的能力与使用场景见[导出类型介绍](dde-control-center-dev.md)。

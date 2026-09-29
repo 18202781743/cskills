@@ -1,3 +1,5 @@
+# 导出类型介绍
+
 ## org.deepin.dtk
 
 DTK 声明式控件的 QML 模块，提供基于 Qt Quick 的 DTK 风格控件库。导入方式为 `import org.deepin.dtk`。模块包含按钮、输入框、对话框、菜单、窗口、进度指示、滑动条、列表视图、阴影渲染、浮动面板、标题栏在内的 DTK 风格 QML 控件类型，以及通过 C++ 注册的三个 QML 类型。样式参数通过 `org.deepin.dtk.style` 子模块的单例设置，对话框控件通过 `org.deepin.dtk.settings` 子模块配置。

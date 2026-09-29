@@ -14,7 +14,7 @@ dde-session-shell 是 DDE 登录锁屏壳，提供登录界面（lightdm-deepin-
 
 ## 导出类型
 
-[导出类型介绍](modules.md)是本项目唯一的类型参考文档。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
+[导出类型介绍](dde-session-shell-dev.md)是本项目唯一的类型参考文档。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
 ## 全局约定
 
@@ -23,6 +23,6 @@ dde-session-shell 是 DDE 登录锁屏壳，提供登录界面（lightdm-deepin-
 ## 按功能查阅
 
 - 将 dde-session-shell 头文件引入 CMake 工程：参见[集成与构建配置](integration.md)。
-- 开发登录插件：参见 [LoginModuleInterfaceV2](modules.md#loginmoduleinterfacev2) 与 [BaseModuleInterface](modules.md#basemoduleinterface)。
-- 开发托盘插件：参见 [TrayModuleInterface](modules.md#traymoduleinterface) 与 [BaseModuleInterface](modules.md#basemoduleinterface)。
-- 开发 assist_login 插件：参见 [assist_login_interface](modules.md#assist_login_interface)。
+- 开发登录插件：参见 [LoginModuleInterfaceV2](dde-session-shell-dev.md#loginmoduleinterfacev2) 与 [BaseModuleInterface](dde-session-shell-dev.md#basemoduleinterface)。
+- 开发托盘插件：参见 [TrayModuleInterface](dde-session-shell-dev.md#traymoduleinterface) 与 [BaseModuleInterface](dde-session-shell-dev.md#basemoduleinterface)。
+- 开发 assist_login 插件：参见 [assist_login_interface](dde-session-shell-dev.md#assist_login_interface)。

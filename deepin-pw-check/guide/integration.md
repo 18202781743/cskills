@@ -43,4 +43,4 @@ deepin-pw-check 不提供 pkg-config 元数据或 qmake 模块。
 
 ## 关联文档
 
-- 导出类型的能力与使用场景见[导出类型介绍](modules.md)。
+- 导出类型的能力与使用场景见[导出类型介绍](libdeepin-pw-check-dev.md)。

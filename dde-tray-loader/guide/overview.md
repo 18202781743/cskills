@@ -12,7 +12,7 @@ dde-tray-loader 是 DDE 托盘/Dock 插件加载器，提供 header-only 接口�
 
 ## 导出类型
 
-[导出类型介绍](modules.md)是本项目唯一的类型参考文档。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
+[导出类型介绍](dde-tray-loader-dev.md)是本项目唯一的类型参考文档。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
 ## 全局约定
 
@@ -21,6 +21,6 @@ dde-tray-loader 是 DDE 托盘/Dock 插件加载器，提供 header-only 接口�
 ## 按功能查阅
 
 - 将 dde-tray-loader 引入 CMake 或 pkg-config 工程：参见[集成与构建配置](integration.md)。
-- 开发 Dock 插件：参见 [PluginsItemInterface](modules.md#pluginsiteminterface)、[PluginsItemInterfaceV2](modules.md#pluginsiteminterfacev2)、[PluginsItemInterfaceV3](modules.md#pluginsiteminterfacev3)。
-- 插件与 Dock 框架通信：参见 [PluginProxyInterface](modules.md#pluginproxyinterface)。
-- 插件管理：参见 [PluginManagerInterface](modules.md#pluginmanagerinterface)。
+- 开发 Dock 插件：参见 [PluginsItemInterface](dde-tray-loader-dev.md#pluginsiteminterface)、[PluginsItemInterfaceV2](dde-tray-loader-dev.md#pluginsiteminterfacev2)、[PluginsItemInterfaceV3](dde-tray-loader-dev.md#pluginsiteminterfacev3)。
+- 插件与 Dock 框架通信：参见 [PluginProxyInterface](dde-tray-loader-dev.md#pluginproxyinterface)。
+- 插件管理：参见 [PluginManagerInterface](dde-tray-loader-dev.md#pluginmanagerinterface)。

@@ -14,7 +14,7 @@ dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提�
 
 ## 导出类型
 
-[导出类型介绍](modules.md)是本项目唯一的类型参考文档。它以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
+[导出类型介绍](dtk6declarative-dev.md)是本项目的 C++ 类型参考文档，QML 控件见[dtkdeclarative-qml-controls.md](dtkdeclarative-qml-controls.md)，QML 设置控件见[dtkdeclarative-qml-settings.md](dtkdeclarative-qml-settings.md)。它以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
 ## 全局约定
 
@@ -23,25 +23,25 @@ dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提�
 ## 按功能查阅
 
 - 将 dtkdeclarative 引入 CMake、pkg-config 或 qmake 工程：参见[集成与构建配置](integration.md)。
-- 加载 DTK QML 应用：参见 [DAppLoader](modules.md#dapploader)。
-- 自定义 DTK 应用主窗口行为：参见 [DQmlAppMainWindowInterface](modules.md#dqmlappmainwindowinterface)。
-- 应用预加载扩展：参见 [DQmlAppPreloadInterface](modules.md#dqmlapppreloadinterface)。
-- QML 场景中的帧缓冲区位块传输与视口渲染：参见 [DQuickBlitFramebuffer](modules.md#dquickblitframebuffer) 与 [DQuickItemViewport](modules.md#dquickitemviewport)。
-- DTK 窗口属性：参见 [DQuickWindow](modules.md#dquickwindow) 与 [DQuickWindowAttached](modules.md#dquickwindowattached)。
-- DTK5 平台主题代理：参见 [DPlatformThemeProxy](modules.md#dplatformthemeproxy)。
-- 在 DTK5 与 DTK6 之间迁移构建配置：参见[集成与构建配置](integration.md)；迁移公开类型：参见对应的[导出类型介绍](modules.md)。
-- DTK QML 模块导入与类型范围：参见 [org.deepin.dtk](modules.md#orgdeepindtk)。
-- DTK 风格按钮：参见 [Button](modules.md#button)、[RoundButton](modules.md#roundbutton)、[DelayButton](modules.md#delaybutton)、[IconButton](modules.md#iconbutton)、[FloatingButton](modules.md#floatingbutton)。
-- DTK 风格文本输入：参见 [TextField](modules.md#textfield)、[TextArea](modules.md#textarea)、[SearchEdit](modules.md#searchedit)、[PasswordEdit](modules.md#passwordedit)、[IpV4LineEdit](modules.md#ipv4lineedit)、[KeySequenceEdit](modules.md#keysequenceedit)。
-- DTK 风格数值输入：参见 [SpinBox](modules.md#spinbox)、[PlusMinusSpinBox](modules.md#plusminusspinbox)、[Dial](modules.md#dial)。
-- DTK 风格选择控件：参见 [CheckBox](modules.md#checkbox)、[RadioButton](modules.md#radiobutton)、[Switch](modules.md#switch)、[ComboBox](modules.md#combobox)。
-- DTK 风格滑动条与进度指示：参见 [Slider](modules.md#slider)、[TipsSlider](modules.md#tipsslider)、[ProgressBar](modules.md#progressbar)、[WaterProgressBar](modules.md#waterprogressbar)、[BusyIndicator](modules.md#busyindicator)。
-- DTK 风格对话框与弹窗：参见 [DialogWindow](modules.md#dialogwindow)、[Dialog](modules.md#dialog)、[PopupWindow](modules.md#popupwindow)、[ArrowShapePopupWindow](modules.md#arrowshapepopupwindow)。
-- DTK 风格窗口与标题栏：参见 [DWindow](modules.md#dwindow)、[ApplicationWindow](modules.md#applicationwindow)、[TitleBar](modules.md#titlebar)。
-- DTK 风格菜单：参见 [Menu](modules.md#menu)、[MenuItem](modules.md#menuitem)、[MenuBar](modules.md#menubar)。
-- DTK 风格列表与视图：参见 [ScrollView](modules.md#scrollview)、[StackView](modules.md#stackview)、[SwipeView](modules.md#swipeview)、[ItemDelegate](modules.md#itemdelegate)。
-- DTK 风格阴影与面板渲染：参见 [BoxShadow](modules.md#boxshadow)、[BoxInsetShadow](modules.md#boxinsetshadow)、[BoxPanel](modules.md#boxpanel)、[FloatingPanel](modules.md#floatingpanel)。
-- DTK 风格标签与提示：参见 [Label](modules.md#label)、[ToolTip](modules.md#tooltip)、[AlertToolTip](modules.md#alerttooltip)。
-- DTK 设置对话框控件：参见 [SettingsDialog](modules.md#settingsdialog)、[OptionDelegate](modules.md#optiondelegate)、[NavigationTitle](modules.md#navigationtitle)。
-- DTK 样式参数：参见 [Style](modules.md#style)。
-- QML 场景中的帧缓冲区位块传输与视口渲染（QML 侧）：参见 [BlitFramebuffer](modules.md#blitframebuffer) 与 [ItemViewport](modules.md#itemviewport)。
+- 加载 DTK QML 应用：参见 [DAppLoader](dtk6declarative-dev.md#dapploader)。
+- 自定义 DTK 应用主窗口行为：参见 [DQmlAppMainWindowInterface](dtk6declarative-dev.md#dqmlappmainwindowinterface)。
+- 应用预加载扩展：参见 [DQmlAppPreloadInterface](dtk6declarative-dev.md#dqmlapppreloadinterface)。
+- QML 场景中的帧缓冲区位块传输与视口渲染：参见 [DQuickBlitFramebuffer](dtk6declarative-dev.md#dquickblitframebuffer) 与 [DQuickItemViewport](dtk6declarative-dev.md#dquickitemviewport)。
+- DTK 窗口属性：参见 [DQuickWindow](dtk6declarative-dev.md#dquickwindow) 与 [DQuickWindowAttached](dtk6declarative-dev.md#dquickwindowattached)。
+- DTK5 平台主题代理：参见 [DPlatformThemeProxy](dtk6declarative-dev.md#dplatformthemeproxy)。
+- 在 DTK5 与 DTK6 之间迁移构建配置：参见[集成与构建配置](integration.md)；迁移公开类型：参见对应的[导出类型介绍](dtk6declarative-dev.md)。
+- DTK QML 模块导入与类型范围：参见 [org.deepin.dtk](dtkdeclarative-qml-controls.md#org-deepin-dtk)。
+- DTK 风格按钮：参见 [Button](dtkdeclarative-qml-controls.md#button)、[RoundButton](dtkdeclarative-qml-controls.md#roundbutton)、[DelayButton](dtkdeclarative-qml-controls.md#delaybutton)、[IconButton](dtkdeclarative-qml-controls.md#iconbutton)、[FloatingButton](dtkdeclarative-qml-controls.md#floatingbutton)。
+- DTK 风格文本输入：参见 [TextField](dtkdeclarative-qml-controls.md#textfield)、[TextArea](dtkdeclarative-qml-controls.md#textarea)、[SearchEdit](dtkdeclarative-qml-controls.md#searchedit)、[PasswordEdit](dtkdeclarative-qml-controls.md#passwordedit)、[IpV4LineEdit](dtkdeclarative-qml-controls.md#ipv4lineedit)、[KeySequenceEdit](dtkdeclarative-qml-controls.md#keysequenceedit)。
+- DTK 风格数值输入：参见 [SpinBox](dtkdeclarative-qml-controls.md#spinbox)、[PlusMinusSpinBox](dtkdeclarative-qml-controls.md#plusminusspinbox)、[Dial](dtkdeclarative-qml-controls.md#dial)。
+- DTK 风格选择控件：参见 [CheckBox](dtkdeclarative-qml-controls.md#checkbox)、[RadioButton](dtkdeclarative-qml-controls.md#radiobutton)、[Switch](dtkdeclarative-qml-controls.md#switch)、[ComboBox](dtkdeclarative-qml-controls.md#combobox)。
+- DTK 风格滑动条与进度指示：参见 [Slider](dtkdeclarative-qml-controls.md#slider)、[TipsSlider](dtkdeclarative-qml-controls.md#tipsslider)、[ProgressBar](dtkdeclarative-qml-controls.md#progressbar)、[WaterProgressBar](dtkdeclarative-qml-controls.md#waterprogressbar)、[BusyIndicator](dtkdeclarative-qml-controls.md#busyindicator)。
+- DTK 风格对话框与弹窗：参见 [DialogWindow](dtkdeclarative-qml-controls.md#dialogwindow)、[Dialog](dtkdeclarative-qml-controls.md#dialog)、[PopupWindow](dtkdeclarative-qml-controls.md#popupwindow)、[ArrowShapePopupWindow](dtkdeclarative-qml-controls.md#arrowshapepopupwindow)。
+- DTK 风格窗口与标题栏：参见 [DWindow](dtkdeclarative-qml-controls.md#dwindow)、[ApplicationWindow](dtkdeclarative-qml-controls.md#applicationwindow)、[TitleBar](dtkdeclarative-qml-controls.md#titlebar)。
+- DTK 风格菜单：参见 [Menu](dtkdeclarative-qml-controls.md#menu)、[MenuItem](dtkdeclarative-qml-controls.md#menuitem)、[MenuBar](dtkdeclarative-qml-controls.md#menubar)。
+- DTK 风格列表与视图：参见 [ScrollView](dtkdeclarative-qml-controls.md#scrollview)、[StackView](dtkdeclarative-qml-controls.md#stackview)、[SwipeView](dtkdeclarative-qml-controls.md#swipeview)、[ItemDelegate](dtkdeclarative-qml-controls.md#itemdelegate)。
+- DTK 风格阴影与面板渲染：参见 [BoxShadow](dtkdeclarative-qml-controls.md#boxshadow)、[BoxInsetShadow](dtkdeclarative-qml-controls.md#boxinsetshadow)、[BoxPanel](dtkdeclarative-qml-controls.md#boxpanel)、[FloatingPanel](dtkdeclarative-qml-controls.md#floatingpanel)。
+- DTK 风格标签与提示：参见 [Label](dtkdeclarative-qml-controls.md#label)、[ToolTip](dtkdeclarative-qml-controls.md#tooltip)、[AlertToolTip](dtkdeclarative-qml-controls.md#alerttooltip)。
+- DTK 设置对话框控件：参见 [SettingsDialog](dtkdeclarative-qml-settings.md#settingsdialog)、[OptionDelegate](dtkdeclarative-qml-settings.md#optiondelegate)、[NavigationTitle](dtkdeclarative-qml-settings.md#navigationtitle)。
+- DTK 样式参数：参见 [Style](dtkdeclarative-qml-settings.md#style)。
+- QML 场景中的帧缓冲区位块传输与视口渲染（QML 侧）：参见 [BlitFramebuffer](dtkdeclarative-qml-controls.md#blitframebuffer) 与 [ItemViewport](dtkdeclarative-qml-controls.md#itemviewport)。

@@ -76,4 +76,4 @@ DTK5 包含 DPlatformThemeProxy 和 DQuickSystemPalette 两个 C++ 类型，DTK6
 
 ## 关联文档
 
-- 导出类型的能力与使用场景见[导出类型介绍](modules.md)。
+- 导出类型的能力与使用场景见[导出类型介绍](dtk6declarative-dev.md)。

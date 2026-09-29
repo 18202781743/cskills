@@ -16,7 +16,7 @@ dde-shell 是 DDE Shell 框架库，提供三层插件模型（Applet → Contai
 
 ## 导出类型
 
-[导出类型介绍](modules.md)是本项目唯一的类型参考文档。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
+[导出类型介绍](dde-shell-dev.md)是本项目的类型参考文档，Dock 接口见[dde-shell-dock-dev.md](dde-shell-dock-dev.md)，QML 接口见[dde-shell-dev-qml.md](dde-shell-dev-qml.md)。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
 ## 全局约定
 
@@ -25,9 +25,9 @@ dde-shell 是 DDE Shell 框架库，提供三层插件模型（Applet → Contai
 ## 按功能查阅
 
 - 将 dde-shell 引入 CMake 工程：参见[集成与构建配置](integration.md)。
-- 开发 Applet、Containment 或 Panel 插件：参见 [DApplet](modules.md#dapplet)、[DContainment](modules.md#dcontainment)、[DPanel](modules.md#dpanel)。
-- 跨插件通信：参见 [DAppletBridge](modules.md#dappletbridge)。
-- 插件发现与加载：参见 [DPluginLoader](modules.md#dpluginloader)、[DPluginMetaData](modules.md#dpluginmetadata)。
-- Dock 面板插件开发：参见 [DAppletDock](modules.md#dappletdock)、[DockItemInfo](modules.md#dockiteminfo)。
-- QML 模块使用：参见 [org.deepin.ds](modules.md#orgdeepinds)。
+- 开发 Applet、Containment 或 Panel 插件：参见 [DApplet](dde-shell-dev.md#dapplet)、[DContainment](dde-shell-dev.md#dcontainment)、[DPanel](dde-shell-dev.md#dpanel)。
+- 跨插件通信：参见 [DAppletBridge](dde-shell-dev.md#dappletbridge)。
+- 插件发现与加载：参见 [DPluginLoader](dde-shell-dev.md#dpluginloader)、[DPluginMetaData](dde-shell-dev.md#dpluginmetadata)。
+- Dock 面板插件开发：参见 [DAppletDock](dde-shell-dock-dev.md#dappletdock)、[DockItemInfo](dde-shell-dock-dev.md#dockiteminfo)。
+- QML 模块使用：参见 [org.deepin.ds](dde-shell-dev-qml.md#org-deepin-ds)。
 - 插件安装宏：参见[集成与构建配置](integration.md)。

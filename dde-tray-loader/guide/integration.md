@@ -63,4 +63,4 @@ pkg-config --cflags dde-dock
 
 ## 关联文档
 
-- 导出类型的能力与使用场景见[导出类型介绍](modules.md)。
+- 导出类型的能力与使用场景见[导出类型介绍](dde-tray-loader-dev.md)。

@@ -21,7 +21,7 @@ dtkcore 是基于 Qt 的 C++ 基础库，提供配置与设置、日志、文件
 
 ## 导出类型
 
-[导出类型介绍](modules.md)是本项目唯一的类型参考文档。它以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
+[导出类型介绍](dtk6core-dev.md)是本项目唯一的类型参考文档。它以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
 ## 全局约定
 
@@ -32,7 +32,7 @@ dtkcore 是基于 Qt 的 C++ 基础库，提供配置与设置、日志、文件
 ## 按功能查阅
 
 - 将 dtkcore 引入 CMake、qmake 或 pkg-config 工程：参见[集成与构建配置](integration.md)。
-- 管理配置或设置：参见 [DConfig](modules.md#dconfig) 与 [DSettings](modules.md#dsettings)。
-- 监视文件、查询系统信息或与 DBus 服务交互：参见 [DFileWatcher](modules.md#dfilewatcher)、[DSysInfo](modules.md#dsysinfo) 与 [DDBusCaller](modules.md#ddbuscaller)。
-- 读取 DCI 资源、探测文本编码或换算容量：参见 [DDciFile](modules.md#ddcifile)、[DTextEncoding](modules.md#dtextencoding) 与 [DDiskSizeFormatter](modules.md#ddisksizeformatter)。
-- 在 DTK5 与 DTK6 之间迁移构建配置：参见[集成与构建配置](integration.md)；迁移公开类型：参见对应的[导出类型介绍](modules.md)。
+- 管理配置或设置：参见 [DConfig](dtk6core-dev.md#dconfig) 与 [DSettings](dtk6core-dev.md#dsettings)。
+- 监视文件、查询系统信息或与 DBus 服务交互：参见 [DFileWatcher](dtk6core-dev.md#dfilewatcher)、[DSysInfo](dtk6core-dev.md#dsysinfo) 与 [DDBusCaller](dtk6core-dev.md#ddbuscaller)。
+- 读取 DCI 资源、探测文本编码或换算容量：参见 [DDciFile](dtk6core-dev.md#ddcifile)、[DTextEncoding](dtk6core-dev.md#dtextencoding) 与 [DDiskSizeFormatter](dtk6core-dev.md#ddisksizeformatter)。
+- 在 DTK5 与 DTK6 之间迁移构建配置：参见[集成与构建配置](integration.md)；迁移公开类型：参见对应的[导出类型介绍](dtk6core-dev.md)。

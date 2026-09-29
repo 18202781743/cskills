@@ -1,4 +1,6 @@
-# org.deepin.dtk.settings
+# 导出类型介绍
+
+## org.deepin.dtk.settings
 
 
 ### CheckBox

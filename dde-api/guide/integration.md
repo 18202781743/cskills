@@ -1,6 +1,6 @@
 # 集成与构建配置
 
-使用 dde-api 的 C++ header-only 接口前，需要安装开发包 `dde-api-dev`。该开发包提供头文件搜索路径。Go 工具通过 Go 构建系统独立编译，无需额外开发包。
+使用 dde-api 的 C++ header-only 接口前，需要安装开发包 `dde-api-dev`。该开发包提供头文件搜索路径。
 
 ## 开发包
 
@@ -31,10 +31,6 @@ C++ header-only 接口的公开头文件位于 `dde-api/` 目录下。包含头�
 using namespace DDE_EventLogger;
 ```
 
-## Go 工具构建
-
-Go 工具位于各子目录中，通过 Go 构建系统编译。使用方如需调用这些工具，安装对应的可执行程序即可，无需在自身工程中链接 Go 代码。
-
 ## 关联文档
 
-- 导出类型的能力与使用场景见[导出类型介绍](modules.md)。
+- 导出类型的能力与使用场景见[导出类型介绍](dde-api-dev.md)。
