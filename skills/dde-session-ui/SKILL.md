@@ -1,13 +1,13 @@
 ---
 name: dde-session-ui
-description: dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒的 CLI 命令，黑屏、警告对话框、欢迎界面、低电量提示的 D-Bus 接口，以及登录提醒开关的 DConfig 配置项（仅适用于 dde-session-ui 自身的登录提醒功能）
+description: dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸色调处理、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒、会话切换、挂起确认对话框、蓝牙配对确认的 CLI 命令，黑屏、警告对话框、低电量提示的 D-Bus 接口，以及登录提醒开关的 DConfig 配置项（仅适用于 dde-session-ui 自身的登录提醒功能）
 Categories:
   - Application
 ---
 
 # dde-session-ui
 
-dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸混合、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒的 CLI 命令，黑屏、警告对话框、欢迎界面、低电量提示的 D-Bus 接口，以及登录提醒开关的 DConfig 配置项。
+dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏、提示对话框、许可证对话框、低电量提示、壁纸色调处理、触摸屏校准、窗口管理器选择、重置密码、警告对话框、欢迎程序、登录提醒、会话切换、挂起确认对话框、蓝牙配对确认的 CLI 命令，黑屏、警告对话框、低电量提示的 D-Bus 接口，以及登录提醒开关的 DConfig 配置项。
 
 ## CLI 命令
 
@@ -37,7 +37,7 @@ DDE 低电量提示工具，当系统检测到电池电量低于阈值时弹出�
 
 ### dde-pixmix
 
-DDE 壁纸混合工具，用于将多张壁纸图片进行混合处理，输出适合当前桌面环境使用的背景图片。
+壁纸色调处理工具，对输入壁纸图片计算平均色调并叠加半透明着色层，生成适合桌面环境的背景图片。
 
 详见 [dde-pixmix.md](references/cli/dde-pixmix.md)
 
@@ -77,6 +77,23 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 
 详见 [deepin-login-reminder.md](references/cli/deepin-login-reminder.md)
 
+### dde-switchtogreeter
+
+DDE 会话切换工具，通过 systemd/login1/lightdm DBus 切换到 greeter 登录界面或其他用户的会话。
+
+详见 [dde-switchtogreeter.md](references/cli/dde-switchtogreeter.md)
+
+### dde-suspend-dialog
+
+DDE 挂起确认对话框，用于显示系统挂起或关机确认的图形化弹窗。
+
+详见 [dde-suspend-dialog.md](references/cli/dde-suspend-dialog.md)
+
+### dde-bluetooth-dialog
+
+DDE 蓝牙 PIN 码确认对话框，用于显示蓝牙设备配对时的 PIN 码确认界面。
+
+详见 [dde-bluetooth-dialog.md](references/cli/dde-bluetooth-dialog.md)
 
 ## D-Bus 接口
 
@@ -91,12 +108,6 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 提供警告对话框显示能力。
 
 详见 [org.deepin.dde.WarningDialog1.md](references/dbus/org.deepin.dde.WarningDialog1.md)
-
-### 欢迎界面
-
-提供欢迎界面显示能力。
-
-详见 [org.deepin.dde.Welcome1.md](references/dbus/org.deepin.dde.Welcome1.md)
 
 ### 低电量提示
 
