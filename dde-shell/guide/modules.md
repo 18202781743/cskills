@@ -182,7 +182,7 @@ dde-shell 的 QML 模块，URI 为 `org.deepin.ds`，导入版本 1.0。提供 A
 
 #### 定位
 
-Applet 插件的 QML 根元素，提供附加属性，包括插件标识等平台属性。
+Applet 插件的 QML 根元素，提供 `Applet` 附加属性（包括 `pluginId`）。
 
 #### 功能能力总结
 
