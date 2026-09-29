@@ -11,7 +11,7 @@ dde-polkit-agent 是 DDE 的 PolicyKit 认证代理守护进程，负责在用�
 
 本 skill 提供以下内容：
 
-- **CLI 命令**（仅作用于 dde-polkit-agent 自身）：`dde-polkit-agent` 守护进程二进制的用法和选项说明
+- **CLI 命令**（仅作用于 dde-polkit-agent 自身）：`dde-polkit-agent` 守护进程二进制的基本信息和启动方式说明
 - **D-Bus 接口**（仅作用于 dde-polkit-agent 自身认证窗口）：polkit 认证代理窗口 ID 设置接口
 
 ## CLI 命令
