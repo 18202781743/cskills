@@ -129,11 +129,7 @@ xdg-desktop-portal-dde 自身的后台服务进程，为沙箱应用（如 Flatp
 | Secret | 仅 X11（需 `XDG_CURRENT_DESKTOP=DDE` 或 `DEEPIN`） |
 | FileChooser | 双平台（Wayland 和 X11） |
 | Screenshot | 双平台（Wayland 和 X11） |
-| Notification | 双平台（Wayland 和 X11） |
-| Access | 双平台（Wayland 和 X11） |
-| AppChooser | 双平台（Wayland 和 X11） |
+| Notification | 仅 X11 |
+| Access | 仅 X11 |
+| AppChooser | 仅 X11 |
 | Request | 双平台（Wayland 和 X11） |
-
-## 兼容性说明
-
-xdg-desktop-portal-dde 的所有 D-Bus 接口均遵循 xdg-desktop-portal 标准规范，使用唯一的服务名 `org.freedesktop.impl.portal.desktop.dde` 和对象路径 `/org/freedesktop/portal/desktop`，不存在兼容旧版接口的别名或废弃接口。所有接口均为当前正在使用的标准 portal 实现接口。

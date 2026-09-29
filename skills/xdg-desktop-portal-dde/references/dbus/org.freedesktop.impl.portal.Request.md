@@ -22,3 +22,10 @@
 - **使用场景**: 沙箱应用在用户取消文件选择对话框、截图操作和取色操作这些 Portal 交互时，调用此方法清理请求资源。
 - **输入参数**: 无
 - **返回值**: 无
+
+```bash
+gdbus call --session \
+  --dest org.freedesktop.impl.portal.desktop.dde \
+  --object-path /org/freedesktop/portal/desktop/request/dde/1 \
+  --method org.freedesktop.impl.portal.Request.Close
+```
