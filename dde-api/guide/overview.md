@@ -18,5 +18,5 @@ C++ header-only 头文件安装在 `dde-api/` 目录下，主要符号位于 `DD
 
 ## 按功能查阅
 
-- 将 dde-api 引入 CMake 或 pkg-config 工程：参见[集成与构建配置](integration.md)。
+- 将 dde-api 引入 CMake 工程：参见[集成与构建配置](integration.md)。
 - 记录事件日志：参见 [EventLogger](dde-api-dev.md#eventlogger)。
