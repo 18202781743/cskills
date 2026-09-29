@@ -15,6 +15,8 @@
 
 ### 工作区背景
 
+`org.deepin.dde.Appearance1` 接口提供了同名工作区背景方法的代理转发，推荐通过 `org.deepin.dde.Appearance1` 接口统一调用。
+
 #### GetCurrentWorkspaceBackground
 
 获取当前工作区背景。

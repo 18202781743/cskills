@@ -208,6 +208,22 @@ gdbus call --session \
   --method org.deepin.dde.Appearance1.SetScaleFactor 1.25
 ```
 
+#### GetScaleFactor
+
+获取全局缩放比例。
+
+- **输入参数**: 无
+- **返回值**: `scaleFactor`（double, 类型 `d`）：当前全局缩放比例
+- **触发条件**: 需要读取当前全局缩放比例时调用
+- **使用场景**: 需要读取当前缩放比例用于显示或同步时使用。
+
+```bash
+gdbus call --session \
+  --dest org.deepin.dde.Appearance1 \
+  --object-path /org/deepin/dde/Appearance1 \
+  --method org.deepin.dde.Appearance1.GetScaleFactor
+```
+
 #### SetScreenScaleFactors
 
 设置各屏幕的缩放比例。
@@ -241,6 +257,8 @@ gdbus call --session \
 ```
 
 ### 壁纸与背景设置
+
+以下工作区背景方法（SetCurrentWorkspaceBackground、GetCurrentWorkspaceBackground、SetCurrentWorkspaceBackgroundForMonitor、GetCurrentWorkspaceBackgroundForMonitor、SetWorkspaceBackgroundForMonitor、GetWorkspaceBackgroundForMonitor）为 `org.deepin.dde.Appearance1` 对 `com.deepin.wm` 同名方法的代理转发。调用方可通过 `org.deepin.dde.Appearance1` 接口统一访问外观相关能力，无需直接调用 `com.deepin.wm`。新代码推荐使用 `org.deepin.dde.Appearance1` 接口。
 
 #### SetCurrentWorkspaceBackground
 
