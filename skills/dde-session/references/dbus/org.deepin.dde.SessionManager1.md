@@ -375,6 +375,31 @@ gdbus call --session \
   org.deepin.dde.SessionManager1 Locked
 ```
 
+#### Stage（属性）—— 已废弃/不推荐使用
+
+会话阶段。
+
+> **已废弃/不推荐使用**：此属性已标记为 `Q_DECL_DEPRECATED`，不建议在新代码中使用。代码中标注用途待确定，且变更通知信号已注释。仅保持兼容性，仍可通过 D-Bus 读取当前值。
+
+| 属性 | 值 |
+|------|------|
+| 类型 | `i` |
+| 读写权限 | read |
+
+- **功能**: 返回当前会话阶段的整数值。
+- **触发条件**: 无变更通知信号（`stageChanged` 信号已注释），属性值不会主动更新。
+- **使用场景**: 不推荐使用；仅用于兼容旧代码读取会话阶段值。
+
+读取示例：
+
+```bash
+gdbus call --session \
+  --dest org.deepin.dde.SessionManager1 \
+  --object-path /org/deepin/dde/SessionManager1 \
+  --method org.freedesktop.DBus.Properties.Get \
+  org.deepin.dde.SessionManager1 Stage
+```
+
 ### 会话管理器信号
 
 #### LockedChanged
