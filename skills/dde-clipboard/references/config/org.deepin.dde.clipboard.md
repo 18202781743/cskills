@@ -4,9 +4,9 @@
 
 ## 配置项
 
-| Key | Name | Description | 类型 | Permissions |
-|---|---|---|---|---|
-| `showTipsWidget` | 提示组件显示开关 | 控制 dde-clipboard 应用是否显示提示组件 | bool | readwrite |
+| Key | Name | Description | 类型 | 取值范围 | Permissions |
+|---|---|---|---|---|---|
+| `showTipsWidget` | 提示组件显示开关 | 控制 dde-clipboard 应用是否显示提示组件 | bool | `true` / `false` | readwrite |
 
 ## 读写示例
 
