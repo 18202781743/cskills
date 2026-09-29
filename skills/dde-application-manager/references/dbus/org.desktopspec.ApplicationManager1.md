@@ -41,6 +41,8 @@ gdbus call --session \
   --method org.desktopspec.ApplicationManager1.Identify 0
 ```
 
+> **注意**：上述 `gdbus call` 示例无法直接执行。`Identify` 方法需要 pidfd（`h` 类型），而 `gdbus call` 命令行不支持传递文件描述符（`h` 类型）参数，传入整数 `0` 无法作为 pidfd 生效。命令行场景推荐使用 `app-identifier` 工具调用该方法（已在本 skill 的 CLI 参考中说明）。
+
 #### addUserApplication
 
 添加用户应用。根据桌面文件内容和应用名称注册一个新的用户应用。
