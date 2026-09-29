@@ -1,13 +1,13 @@
 ---
 name: dde-services
-description: dde-services 是 DDE 的后端服务组件，在 Treeland 会话下提供全局电源管理、X 设置、壁纸轮播、快捷键管理、手势管理、壁纸缓存和环境亮度感知的 Session D-Bus 接口，并提供快捷键操作执行（dde-shortcut-tool）和 IP 地址监视（ipwatchd）的 CLI 命令。D-Bus 接口在 Treeland 会话下全局生效，替代 dde-daemon 的对应功能；CLI 工具为系统级工具，通常由系统守护进程自动调用。
+description: dde-services 是 DDE 的后端服务组件，在 Treeland 会话下提供全局电源管理、X 设置、壁纸轮播、快捷键管理、手势管理、壁纸缓存和环境亮度感知的 Session D-Bus 接口，提供快捷键操作执行（dde-shortcut-tool）和 IP 地址监视（ipwatchd）的 CLI 命令，并提供电源管理和环境亮度的 DConfig 配置项。D-Bus 接口在 Treeland 会话下全局生效，替代 dde-daemon 的对应功能；CLI 工具为系统级工具，通常由系统守护进程自动调用；DConfig 配置项通过 DConfig 服务统一管理。
 Categories:
   - Settings
 ---
 
 # dde-services
 
-dde-services 是 DDE 的后端服务组件，在 Treeland 会话下替代 dde-daemon 的部分后端功能。提供全局电源管理、X 设置、壁纸轮播、快捷键管理、手势管理、壁纸缓存和环境亮度感知的 Session D-Bus 接口，并提供快捷键操作执行和 IP 地址监视的 CLI 命令。
+dde-services 是 DDE 的后端服务组件，在 Treeland 会话下替代 dde-daemon 的部分后端功能。提供全局电源管理、X 设置、壁纸轮播、快捷键管理、手势管理、壁纸缓存和环境亮度感知的 Session D-Bus 接口，提供快捷键操作执行和 IP 地址监视的 CLI 命令，并提供电源管理和环境亮度的 DConfig 配置项。
 
 ## CLI 命令
 
@@ -68,3 +68,19 @@ IP 地址监视守护进程（upstream 开源项目），用于监视网络接�
 全局环境亮度感知能力。
 
 详见 [org.deepin.dde.AmbientBrightness1.md](references/dbus/org.deepin.dde.AmbientBrightness1.md)
+
+## DConfig 配置
+
+以下 DConfig 配置项通过 DConfig 服务统一管理，提供电源管理和环境亮度的配置读写能力。
+
+### 电源管理配置
+
+电源管理的 DConfig 配置项，包括 CPU 调频、节能模式、定时关机、屏幕延时、低电量策略、电源按键动作配置。
+
+详见 [org.deepin.dde.daemon.power.md](references/dconfig/org.deepin.dde.daemon.power.md)
+
+### 环境亮度配置
+
+环境亮度感知的 DConfig 配置项，包括自动亮度开关、映射模式、加权窗口、lux-亮度曲线、滞回比例和防抖时间。
+
+详见 [org.deepin.dde.daemon.ambient-brightness.md](references/dconfig/org.deepin.dde.daemon.ambient-brightness.md)
