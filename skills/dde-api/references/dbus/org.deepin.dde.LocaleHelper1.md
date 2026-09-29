@@ -64,14 +64,14 @@ pkexec gdbus call --system \
 
 ### SetAllowCaller
 
-将指定 DBus 连接名添加到允许调用者列表。
+将指定 D-Bus 连接名添加到允许调用者列表。
 
-- **功能**: 将指定的 DBus 唯一连接名添加到 LocaleHelper1 的允许调用者列表中，授权其调用该接口的方法
+- **功能**: 将指定的 D-Bus 唯一连接名添加到 LocaleHelper1 的允许调用者列表中，授权其调用该接口的方法
 - **触发条件**: 由需要授权其他连接调用 LocaleHelper1 的特权进程调用
 - **使用场景**: 桌面会话管理器授权子服务调用区域设置接口
 
 - **输入参数**:
-  - `uniqueName`（string, 类型 `s`）：待授权的 DBus 唯一连接名
+  - `uniqueName`（string, 类型 `s`）：待授权的 D-Bus 唯一连接名
 - **返回值**: 无（出错时返回 dbus.Error）
 
 权限：

@@ -336,7 +336,7 @@ gdbus call --session \
   --dest org.deepin.dde.Graphic1 \
   --object-path /org/deepin/dde/Graphic1 \
   --method org.deepin.dde.Graphic1.ResizeImage \
-  "/path/to/input.png" "/path/to/output.png" 800 600 "center" "png"
+  "/path/to/input.png" "/path/to/output.png" 800 600 "png"
 ```
 
 ### Rgb2Hsv
