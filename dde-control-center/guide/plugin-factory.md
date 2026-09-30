@@ -46,7 +46,7 @@ target_link_libraries(your-plugin PRIVATE Dde::Control-Center)
 DCC_FACTORY_CLASS(classname)
 ```
 
-- `classname` 是插件的 C++ 主类（通常继承 `DccObject`），宏会生成名为 `classname##DccFactory` 的工厂类
+- `classname` 是插件的 C++ 主类（通常继承 `QObject`），宏会生成名为 `classname##DccFactory` 的工厂类
 - 框架通过 Qt 插件机制自动加载该工厂类，调用其 `create()` 方法获取插件主对象实例
 
 用法示例：
@@ -54,7 +54,7 @@ DCC_FACTORY_CLASS(classname)
 ```cpp
 #include <dccfactory.h>
 
-class MyModule : public dccV25::DccObject
+class MyModule : public QObject
 {
     Q_OBJECT
     // ...
