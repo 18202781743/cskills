@@ -10,7 +10,7 @@ dde-session-shell 提供 C 语言辅助认证接口，面向需要以 C 函数�
 
 ### CMake 配置
 
-辅助登录接口对应的源码通过 `plugins/assist_login/interface/CMakeLists.txt` 构建为共享库 `libassist_Login_interface.so`，安装到 `lib/dde-session-shell/modules` 目录。使用方不仅需要包含头文件，还需要链接该共享库：
+使用辅助登录接口需要链接共享库 `libassist_Login_interface.so`，该库安装于 `/usr/lib/dde-session-shell/modules/` 目录：
 
 ```cmake
 target_link_libraries(your-plugin PRIVATE /usr/lib/dde-session-shell/modules/libassist_Login_interface.so)
