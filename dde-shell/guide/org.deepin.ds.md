@@ -1,18 +1,34 @@
-# 导出类型介绍
+# org.deepin.ds QML 模块
 
-dde-shell 的 QML 模块 `org.deepin.ds` 提供 Applet 根元素、Containment 根元素、Panel 附加属性、Layer Shell 窗口属性、全局 DS 对象、拖拽属性、弹出窗口和列表转表格代理模型。
+该模块提供 dde-shell 框架的 QML 类型，包括 Applet 插件根元素、Containment 插件根元素、Panel 附加属性、Layer Shell 窗口属性控制、全局 DS 单例对象、拖拽附加属性、弹出窗口和列表转表格代理模型，支持使用方在 QML 中开发插件界面和管理 Wayland 窗口。
 
-## org.deepin.ds
+## 集成
 
-### 定位
+### 使用方式
 
-dde-shell 的 QML 模块，URI 为 `org.deepin.ds`，导入版本 1.0。提供 Applet 插件的 QML 根元素、Containment 插件的 QML 根元素、Panel 附加属性、Layer Shell 窗口属性控制和全局 DS 对象，以及拖拽、弹出窗口和代理模型等辅助类型。
+该 QML 模块 URI 为 `org.deepin.ds`，导入版本为 `1.0`。该模块由 dde-shell 运行时提供，使用方无需安装额外的 QML 模块包。在 QML 文件中通过以下方式导入：
+
+```qml
+import org.deepin.ds 1.0
+```
+
+导入后可使用 `AppletItem`、`ContainmentItem`、`Panel`、`DLayerShellWindow`、`DS`、`DQuickDrag`、`PopupWindow`、`DListToTableProxyModel` 类型。其中 `Panel`、`DLayerShellWindow`、`DQuickDrag` 为附加属性类型，`DS` 为单例对象，不可直接实例化。
+
+## QML 上下文属性
+
+dde-shell 框架在运行时为插件 QML 注入上下文属性，插件 QML 可直接引用这些属性来获取框架运行时数据。这些属性由框架在加载插件 QML 时设置。
+
+### `_ds_applet`
+
+框架在加载插件 QML 文件时，将当前插件对应的 DApplet 实例注入为 `_ds_applet` 上下文属性。插件 QML 可通过该属性访问当前插件实例，读取插件数据或调用插件方法。该属性在插件 QML 加载时设置，可用范围为插件 QML 文件及其子组件。`AppletItem` 根元素通过该上下文属性获取对应的 C++ 插件实例，并经由 `Applet` 附加属性向 QML 层暴露插件 ID 和关联对象。
+
+## 模块API介绍
 
 ### AppletItem
 
 #### 定位
 
-Applet 插件的 QML 根元素，提供 `Applet` 附加属性（包括 `pluginId`）。
+Applet 插件的 QML 根元素，提供 `Applet` 附加属性。
 
 #### 功能能力总结
 

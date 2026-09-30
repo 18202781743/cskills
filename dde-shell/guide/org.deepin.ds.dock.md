@@ -1,25 +1,34 @@
-# 导出类型介绍
+# org.deepin.ds.dock QML 模块
 
-dde-shell 的 Dock QML 模块提供 Dock 面板枚举命名空间、Dock 定位附加属性和托盘区域排序与定位管理接口。
+该文件涵盖两个 QML 模块：`org.deepin.ds.dock` 提供 Dock 面板枚举命名空间和 Dock 定位附加属性，`org.deepin.ds.dock.tray` 提供托盘区域排序与定位管理接口。用于 Dock 面板及 Dock 区域插件获取 Dock 位置信息、控制窗口定位以及管理托盘项的排序、位置和可见性。
 
-## org.deepin.ds.dock
+## 集成
 
-### 定位
+### 使用方式
 
-Dock 面板 QML 模块，URI 为 `org.deepin.ds.dock`，导入版本 1.0。提供 Dock 枚举命名空间和 Dock 定位附加属性，用于 Dock 面板及 Dock 区域插件获取 Dock 位置信息和控制窗口定位。
+Dock 面板 QML 模块 URI 为 `org.deepin.ds.dock`，导入版本为 `1.0`；托盘区域 QML 模块 URI 为 `org.deepin.ds.dock.tray`，导入版本为 `1.0`。这两个模块由 dde-shell Dock 运行时提供，使用方无需安装额外的 QML 模块包。在 QML 文件中通过以下方式导入：
+
+```qml
+import org.deepin.ds.dock 1.0
+import org.deepin.ds.dock.tray 1.0
+```
+
+导入 `org.deepin.ds.dock` 后可使用 `Dock`、`DockPositioner`、`DockPanelPositioner` 类型，其中 `Dock` 为枚举命名空间，`DockPositioner` 和 `DockPanelPositioner` 为附加属性类型。导入 `org.deepin.ds.dock.tray` 后可使用 `TraySortOrderModel`、`TrayItemPositionManager`、`TrayItemPositionRegister`、`SortFilterProxyModel`、`dropIndex` 类型，其中 `TraySortOrderModel` 和 `TrayItemPositionManager` 为单例对象，`TrayItemPositionRegister` 为附加属性类型，`dropIndex` 为结构体类型。
+
+## 模块API介绍
 
 ### Dock
 
 #### 定位
 
-Dock 枚举命名空间，不可实例化。提供 Dock 面板的位置、隐藏模式、隐藏状态、指示器样式、项对齐方式、颜色主题、尺寸、动画动作、托盘弹窗类型、托盘插件类型、托盘插件尺寸策略和溢出状态等枚举值，供 Dock 区域插件在 QML 中引用。
+Dock 枚举命名空间，不可实例化。提供 Dock 面板的位置、隐藏模式、隐藏状态、指示器样式、项对齐方式、颜色主题、尺寸、动画动作、托盘弹窗类型、托盘插件类型、托盘插件尺寸策略和溢出状态等枚举值。
 
 #### 功能能力总结
 
 - 定义 Dock 面板的屏幕位置（顶部、右侧、底部、左侧）和隐藏行为模式（一直显示、一直隐藏、智能隐藏），以及隐藏状态（显示、隐藏、未知），供插件根据 Dock 的实际位置和显示状态调整布局
 - 定义指示器样式（时尚模式、高效模式）、项对齐方式（居中、左对齐、时尚对齐）和颜色主题（浅色、深色），使插件能够适配 Dock 的视觉风格
 - 定义 Dock 尺寸常量（最小、默认、最大 Dock 尺寸及任务栏图标尺寸范围），为插件提供统一的尺寸约束参考
-- 定义动画动作（显示、隐藏）、托盘弹窗类型（面板、提示、菜单、嵌入、子弹窗）、托盘插件类型（托盘、固定、快捷、卡片）、托盘插件尺寸策略（跟随系统、自定义）和溢出状态（无溢出、有溢出、全部溢出）等枚举，支持插件在不同交互场景下选择正确的行为模式
+- 定义动画动作（显示、隐藏）、托盘弹窗类型（面板、提示、菜单、嵌入、子弹窗）、托盘插件类型（托盘、固定、快捷、卡片）、托盘插件尺寸策略（跟随系统、自定义）和溢出状态（无溢出、有溢出、全部溢出）枚举，支持插件在不同交互场景下选择正确的行为模式
 
 #### 使用场景
 
@@ -57,12 +66,6 @@ Dock 面板定位附加属性类型，继承自 DockPositioner，不可实例化
 
 开发 Dock 面板窗口时，需要在 Dock 定位基础上微调窗口水平或垂直位置时使用。
 
-## org.deepin.ds.dock.tray
-
-### 定位
-
-Dock 托盘区域 QML 模块，URI 为 `org.deepin.ds.dock.tray`，导入版本 1.0。提供托盘项排序模型、托盘项位置管理、托盘项位置注册附加属性、排序过滤代理模型和拖放位置信息结构体，用于 Dock 托盘区域插件管理项的排序、位置和可见性。
-
 ### TraySortOrderModel
 
 #### 定位
@@ -89,7 +92,7 @@ Dock 托盘区域 QML 模块，URI 为 `org.deepin.ds.dock.tray`，导入版本 
 
 #### 功能能力总结
 
-- 根据 Dock 的方向（水平/垂直）和高度，以及当前可视项数量，自动计算托盘区域的整体可视尺寸，为 Dock 面板的尺寸调整提供数据支持
+- 根据 Dock 的方向（水平或垂直）和高度，以及当前可视项数量，自动计算托盘区域的整体可视尺寸，为 Dock 面板的尺寸调整提供数据支持
 - 为每个托盘项计算视觉尺寸和位置坐标，综合考虑单项视觉尺寸、项间距和项内边距，确保各项在托盘区域中均匀排列
 - 支持托盘项注册自身的视觉尺寸，使管理器能够根据实际项尺寸进行差异化布局计算
 - 提供基于坐标点的拖放索引查找能力，根据鼠标位置判断拖放目标项的索引和相对位置，支撑拖放交互的目标定位
