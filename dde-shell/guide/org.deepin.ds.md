@@ -58,7 +58,7 @@ Containment 插件的 QML 根元素，提供 `Containment.appletItems` 模型供
 
 #### 定位
 
-Panel 附加属性类型，不可实例化，通过附加属性使用。提供 Panel 面板的弹出窗口、提示窗口和菜单窗口访问能力，继承 Containment 的子 Applet 项模型和 Applet 的插件 ID、根对象等属性。
+Panel 附加属性类型，不可实例化，通过附加属性使用。提供 Panel 面板的弹出窗口、提示窗口和菜单窗口访问能力，继承 Containment 的子 Applet 项模型和 Applet 的插件 ID、根对象这些属性。
 
 #### 功能能力总结
 
