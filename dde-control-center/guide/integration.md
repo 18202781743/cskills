@@ -60,5 +60,5 @@ import org.deepin.dcc 1.0
 
 ## 关联文档
 
-- 插件工厂接口的能力与使用场景见[插件工厂接口](plugin-factory.md)。
-- QML 导出类型的能力与使用场景见[org.deepin.dcc QML 模块](org.deepin.dcc.md)。
+- 插件工厂接口的能力与使用场景见[插件工厂接口](modules-plugin-factory.md)。
+- QML 导出类型的能力与使用场景见[org.deepin.dcc QML 模块](modules-org.deepin.dcc.md)。
