@@ -8,10 +8,6 @@ dde-control-center 是 DDE 控制中心，提供系统设置界面框架和插�
 
 [插件工厂接口](plugin-factory.md)是本项目的 C++ 类型参考文档，QML 接口见[org.deepin.dcc QML 模块](org.deepin.dcc.md)。以类型名为章节，逐一说明对外导出类型的定位、功能能力和使用场景。
 
-## 全局约定
-
-公开符号位于 `dccV25` 命名空间。
-
 ## 按功能查阅
 
 - 将控制中心插件引入 CMake 工程：参见[插件工厂接口](plugin-factory.md)。

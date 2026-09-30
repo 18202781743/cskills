@@ -71,8 +71,6 @@ DCC_FACTORY_CLASS(MyModule)
 #include <dccfactory.h>
 ```
 
-公开类型位于 `dccV25` 命名空间，可使用完整限定名，也可在合适的作用域使用 `using namespace dccV25`。
-
 ## 模块API介绍
 
 ### DccFactory
