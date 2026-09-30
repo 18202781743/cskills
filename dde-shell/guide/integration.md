@@ -4,9 +4,9 @@
 
 ## 开发包
 
-框架开发包名为 `dde-shell-dev`，提供 CMake 包 `DDEShell` 和导出目标 `Dde::Shell`。
+框架开发包名为 `libdde-shell-dev`，提供 CMake 包 `DDEShell` 和导出目标 `Dde::Shell`。
 
-Dock 面板开发包名为 `dde-shell-dock-dev`，提供 CMake 包 `DDEShellDock` 和导出目标 `Dde::ShellDock`。
+Dock 面板开发包名为 `libdde-shell-dock-dev`，提供 CMake 包 `DDEShellDock` 和导出目标 `Dde::ShellDock`。
 
 ## CMake 集成
 
@@ -48,10 +48,16 @@ dde-shell 提供以下 CMake 宏用于插件包管理：
 
 ## 引用公开接口
 
-构建目标链接 dde-shell 后，可以直接包含所需类型的公开头文件：
+构建目标链接 dde-shell 后，可以直接包含所需类型的公开头文件。头文件安装在 `dde-shell/` 目录下，包含时需带该前缀：
 
 ```cpp
-#include <applet.h>
+#include <dde-shell/applet.h>
+```
+
+Dock 相关头文件安装在 `dde-shell/dock/` 目录下：
+
+```cpp
+#include <dde-shell/dock/dappletdock.h>
 ```
 
 公开类型位于 `ds` 命名空间，可使用完整限定名，也可在合适的作用域使用 `DS_USE_NAMESPACE`。
