@@ -1,6 +1,16 @@
 # org.deepin.dcc QML 模块
 
-dde-control-center 的 QML 模块 URI 为 `org.deepin.dcc`，导入版本为 `1.0`。该模块为 STATIC 模块，由控制中心运行时提供，使用方通过 `import org.deepin.dcc 1.0` 导入后可使用以下 QML 类型构建设置页面。
+该模块提供控制中心设置页面开发所需的 QML 类型，涵盖以下功能点：
+
+- **层级树构建**：通过 `DccObject` 定义设置页面的菜单项和功能项，以树形结构组织多级导航层次，支持动态增删子节点、权重排序和页面跳转定位
+- **数据模型**：通过 `DccModel` 以树形模型管理 `DccObject` 层级关系，为导航列表和搜索功能提供标准化的数据访问接口
+- **批量生成**：通过 `DccRepeater` 根据数据模型批量创建 `DccObject` 子节点，支持数据源变化时自动同步；通过定制 `Repeater` 批量生成普通 QML 控件并自动修正父项归属
+- **D-Bus 交互**：通过 `DccDBusInterface` 在 QML 中声明式地连接 D-Bus 服务，实现属性双向绑定、信号监听和异步方法调用
+- **布局模板**：通过 `DccSettingsObject` 提供标准设置页面分区布局，通过 `DccTitleObject` 提供分组标题渲染
+
+在插件 QML 文件中，使用上述类型构建设置页面：以 `DccObject` 定义页面节点和层级结构，按需使用 `DccRepeater` 批量生成子项、`DccDBusInterface` 访问系统服务、`DccSettingsObject` 和 `DccTitleObject` 搭配标准布局。
+
+使用前提：需在 CMake 中链接 dde-control-center 开发包（详见[集成与构建配置](integration.md)），并在控制中心运行时环境内使用。
 
 ## DccObject
 
