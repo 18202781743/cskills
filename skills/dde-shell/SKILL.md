@@ -65,13 +65,13 @@ dde-shell 是 DDE Shell 框架库，提供三层插件模型（Applet → Contai
 
 ### 插件框架接口
 
-C++ 框架类型参考文档，包含 DApplet、DContainment、DPanel、DAppletBridge、DPluginLoader、DPluginMetaData 等类型的定位、功能能力和使用场景。
+C++ 框架类型参考文档，包含 DApplet、DContainment、DPanel、DAppletBridge、DPluginLoader、DPluginMetaData 类型的定位、功能能力和使用场景。
 
 详见 [plugin-framework.md](interface/plugin-framework.md)
 
 ### Dock 接口
 
-Dock 面板 C++ 类型参考文档，包含 DAppletDock、DockItemInfo 等类型的定位、功能能力和使用场景。
+Dock 面板 C++ 类型参考文档，包含 DAppletDock、DockItemInfo 类型的定位、功能能力和使用场景。
 
 详见 [dock-interface.md](interface/dock-interface.md)
 

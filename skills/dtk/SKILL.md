@@ -114,9 +114,15 @@ dtkcore 是基于 Qt 的 C++ 基础库，提供配置与设置、日志、文件
 
 dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提供底层支撑。它提供 DTK 应用的 QML 加载器、应用主窗口与预加载接口、QML 场景中的帧缓冲区位块传输与视口裁剪渲染、DTK 窗口附加属性以及平台主题代理。QML 控件本身以 `org.deepin.dtk` QML 模块的形式发布，设置控件以 `org.deepin.dtk.settings` QML 模块的形式发布。
 
+### dtkdeclarative 开发指南
+
 详见 [dtkdeclarative-dev.md](interface/dtkdeclarative/dtkdeclarative-dev.md)
 
+### org.deepin.dtk QML 模块
+
 详见 [org.deepin.dtk.md](interface/dtkdeclarative/org.deepin.dtk.md)
+
+### org.deepin.dtk.settings QML 模块
 
 详见 [org.deepin.dtk.settings.md](interface/dtkdeclarative/org.deepin.dtk.settings.md)
 

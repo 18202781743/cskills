@@ -92,6 +92,6 @@ C++ 类型参考文档，包含插件工厂接口的定位、功能能力和使�
 
 ### org.deepin.dcc QML 模块
 
-QML 接口参考文档，包含 DccObject、DccApp 等类型的定位、功能能力和使用场景，用于描述设置项层级结构和访问控制中心全局状态与页面导航。
+QML 接口参考文档，包含 DccObject、DccApp 类型的定位、功能能力和使用场景，用于描述设置项层级结构和访问控制中心全局状态与页面导航。
 
 详见 [org.deepin.dcc.md](interface/org.deepin.dcc.md)
