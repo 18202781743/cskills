@@ -1,7 +1,22 @@
-# 导出类型介绍
+# org.deepin.dtk.settings QML 模块
 
-## org.deepin.dtk.settings
+org.deepin.dtk.settings QML 模块提供 DTK 风格的设置对话框控件，包括设置对话框、选项代理、导航标题、内容标题、内容背景、样式参数和多种配置项控件。
 
+## 集成
+
+### 使用方式
+
+QML 模块 URI 为 `org.deepin.dtk.settings`，导入版本为 1.0。模块以动态插件形式发布，使用方无需安装额外模块包，确保系统已安装 dtkdeclarative 运行时库即可。
+
+在 QML 文件中导入：
+
+```qml
+import org.deepin.dtk.settings 1.0
+```
+
+导入后可使用模块中的所有设置控件类型。
+
+## 模块API介绍
 
 ### CheckBox
 
@@ -128,4 +143,3 @@
 #### 使用场景
 
 需要使用 DTK 主题样式的 style/Style 控件时使用。
-
