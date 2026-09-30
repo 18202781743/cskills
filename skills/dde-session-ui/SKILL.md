@@ -1,13 +1,13 @@
 ---
 name: dde-session-ui
-description: 提供黑屏、警告对话框、欢迎界面和低电量提示的 D-Bus 接口
+description: dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏显示控制、低电量警告提示、许可证内容确认、壁纸色调处理、触摸屏校准、窗口管理器选择、密码重置、系统警告提示、欢迎引导、登录提醒、会话切换、挂起确认、蓝牙配对确认功能，以及登录提醒开关配置（仅适用于 dde-session-ui 自身的登录提醒功能）
 Categories:
   - Application
 ---
 
 # dde-session-ui
 
-dde-session-ui 是 DDE 通用 UI 组件，通过 Session 总线提供黑屏、警告对话框、欢迎界面和低电量提示能力。
+dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏显示控制、低电量警告提示、许可证内容确认、壁纸色调处理、触摸屏校准、窗口管理器选择、密码重置、系统警告提示、欢迎引导、登录提醒、会话切换、挂起确认、蓝牙配对确认功能，以及登录提醒开关配置。
 
 ## CLI 命令
 
@@ -37,7 +37,7 @@ DDE 低电量提示工具，当系统检测到电池电量低于阈值时弹出�
 
 ### dde-pixmix
 
-DDE 壁纸混合工具，用于将多张壁纸图片进行混合处理，输出适合当前桌面环境使用的背景图片。
+壁纸色调处理工具，对输入壁纸图片计算平均色调并叠加半透明着色层，生成适合桌面环境的背景图片。
 
 详见 [dde-pixmix.md](references/cli/dde-pixmix.md)
 
@@ -77,12 +77,23 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 
 详见 [deepin-login-reminder.md](references/cli/deepin-login-reminder.md)
 
-### dmemory-warning-dialog
+### dde-switchtogreeter
 
-内存警告对话框，在系统内存不足时弹出警告提示。
+DDE 会话切换工具，通过 systemd/login1/lightdm DBus 切换到 greeter 登录界面或其他用户的会话。
 
-详见 [dmemory-warning-dialog.md](references/cli/dmemory-warning-dialog.md)
+详见 [dde-switchtogreeter.md](references/cli/dde-switchtogreeter.md)
 
+### dde-suspend-dialog
+
+DDE 挂起确认对话框，用于显示系统挂起或关机确认的图形化弹窗。
+
+详见 [dde-suspend-dialog.md](references/cli/dde-suspend-dialog.md)
+
+### dde-bluetooth-dialog
+
+DDE 蓝牙 PIN 码确认对话框，用于显示蓝牙设备配对时的 PIN 码确认界面。
+
+详见 [dde-bluetooth-dialog.md](references/cli/dde-bluetooth-dialog.md)
 
 ## D-Bus 接口
 
@@ -98,24 +109,24 @@ DDE 欢迎程序，在新用户首次登录或系统安装后显示欢迎引导�
 
 详见 [org.deepin.dde.WarningDialog1.md](references/dbus/org.deepin.dde.WarningDialog1.md)
 
-### 欢迎界面
-
-提供欢迎界面显示能力。
-
-详见 [org.deepin.dde.Welcome1.md](references/dbus/org.deepin.dde.Welcome1.md)
-
 ### 低电量提示
 
 提供低电量提示显示能力。
 
 详见 [org.deepin.dde.LowPower1.md](references/dbus/org.deepin.dde.LowPower1.md)
 
+### 欢迎界面激活
+
+该接口为 D-Bus 激活型服务，用于欢迎界面的进程单实例控制。
+
+详见 [org.deepin.dde.Welcome1.md](references/dbus/org.deepin.dde.Welcome1.md)
+
 ## DConfig 配置项
 
-dde-session-ui 通过 DConfig 暴露登录提醒配置资源。
+dde-session-ui 通过 DConfig 暴露登录提醒配置资源，该配置仅适用于 dde-session-ui 自身的登录提醒功能。
 
 ### 登录提醒配置
 
-登录提醒启用开关配置。
+登录提醒启用开关配置，控制是否显示登录提醒通知。
 
 详见 [org.deepin.login-reminder](references/config/org.deepin.login-reminder.md)

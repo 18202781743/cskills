@@ -1,8 +1,8 @@
 ---
 name: dde-shell
-description: 提供任务栏控制、桌面通知发送与关闭、通知能力查询、应用与系统通知配置、通知记录状态、OSD 显示和任务管理接口
+description: dde-shell 是 DDE 桌面环境的 Shell 组件，提供任务栏位置与几何区域控制、桌面通知发送与关闭、通知开关与展示配置、通知中心面板显示控制、OSD 屏幕提示显示、任务管理窗口属性查询与操作、面板框架启动调试命令、通知行为配置（勿扰模式、通知数量限制、通知清理天数）功能。
 Categories:
-  - Application
+  - Settings
 ---
 
 # dde-shell
@@ -17,12 +17,11 @@ DDE Shell 框架主程序，是 DDE 桌面环境面板（panel）和小程序（
 
 详见 [dde-shell.md](references/cli/dde-shell.md)
 
-
 ## D-Bus 接口
 
 ### 任务栏控制
 
-提供给外部控制 Dock 的服务接口，允许外部程序控制 Dock 的显示、插件重载、位置、几何区域和主屏显示属性。
+提供给外部控制 Dock 的服务接口，允许外部程序控制 Dock 的位置、几何区域和主屏显示属性。
 
 详见 [org.deepin.ds.Dock](references/dbus/org.deepin.ds.Dock.md)
 
@@ -32,11 +31,11 @@ DDE Shell 框架主程序，是 DDE 桌面环境面板（panel）和小程序（
 
 详见 [org.deepin.dde.Notification1](references/dbus/org.deepin.dde.Notification1.md)
 
-### 桌面通知（freedesktop 标准）
+### 通知中心
 
-实现 freedesktop.org 桌面通知规范，提供桌面通知的发送、关闭和能力查询功能。
+提供通知中心面板的显示控制能力，支持切换、显示和隐藏通知中心。
 
-详见 [org.freedesktop.Notifications.md](references/dbus/org.freedesktop.Notifications.md)
+详见 [org.deepin.dde.shell.notification.center](references/dbus/org.deepin.dde.shell.notification.center.md)
 
 ### OSD 显示
 
@@ -52,16 +51,10 @@ DDE Shell 框架主程序，是 DDE 桌面环境面板（panel）和小程序（
 
 ## DConfig 配置项
 
-dde-shell 通过 DConfig 暴露通知和启动器相关的配置资源。
+dde-shell 通过 DConfig 暴露自身通知行为相关的配置资源。
 
 ### 通知配置
 
 应用通知设置、通知内容行数、最大通知气泡数量、勿扰模式、勿扰结束时间、锁屏开启勿扰、最大通知数量、通知清理天数、关闭所有通知、按时间间隔开启勿扰、勿扰开始时间配置。
 
 详见 [org.deepin.dde.shell.notification](references/config/org.deepin.dde.shell.notification.md)
-
-### 启动器配置
-
-启动器搜索行为配置。
-
-详见 [org.deepin.ds.launchpad](references/config/org.deepin.ds.launchpad.md)

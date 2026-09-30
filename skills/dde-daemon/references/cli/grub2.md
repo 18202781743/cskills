@@ -16,7 +16,7 @@ GRUB2 相关工具，用于 GRUB 启动菜单的图形模式检测、主题设�
 
 ## 用法
 
-`grub2 [options]`
+`/usr/lib/deepin-daemon/grub2 [options]`
 
 ## 参数
 
@@ -24,21 +24,21 @@ GRUB2 相关工具，用于 GRUB 启动菜单的图形模式检测、主题设�
 |------|------|------------|
 | `-debug` | 调试模式 | 否 |
 | `-prepare-gfxmode-detect` | 准备图形模式检测 | 否 |
-| `-setup-theme` | 设置主题（为兼容性保留，实际无操作） | 否 |
+| `-setup-theme` | 设置主题（已废弃/不推荐使用，为兼容性保留，实际无操作） | 否 |
 | `-os-num` | 获取系统编号 | 否 |
 
 ## 使用示例
 
 ```bash
 # 获取当前系统在 GRUB 启动菜单中的编号（多系统场景）
-grub2 -os-num
+/usr/lib/deepin-daemon/grub2 -os-num
 
 # 准备图形模式检测（检测显卡支持的分辨率模式）
-grub2 -prepare-gfxmode-detect
+/usr/lib/deepin-daemon/grub2 -prepare-gfxmode-detect
 
 # 以调试模式运行
-grub2 -debug
+/usr/lib/deepin-daemon/grub2 -debug
 
-# 设置 GRUB 主题（为兼容性保留，实际无操作）
-grub2 -setup-theme
+# 设置 GRUB 主题（已废弃/不推荐使用，为兼容性保留，实际无操作）
+/usr/lib/deepin-daemon/grub2 -setup-theme
 ```

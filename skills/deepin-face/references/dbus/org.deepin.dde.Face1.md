@@ -1,181 +1,24 @@
-# org.deepin.dde.Face1 接口参考
+# org.deepin.dde.Face1 接口参考（已废弃/不推荐使用）
 
-该接口提供人脸录入、验证和删除等生物特征识别能力。
+> **已废弃/不推荐使用**：此接口为旧版 `deepin-face` 独立组件提供的兼容接口，已废弃，不应在新代码中使用。新代码应使用 [`org.deepin.dde.Authenticate1.Face`](org.deepin.dde.Authenticate1.Face.md) 接口。该接口仍在保持兼容、仍提供能力，按 v6 §7.7 保留并标注。
 
-## 接口信息
+## 功能概述
 
-| 字段 | 值 |
-|------|------|
-| Service | `org.deepin.dde.Face1` |
-| Object path | `/org/deepin/dde/Face1` |
-| Interface | `org.deepin.dde.Face1` |
-| Bus | System |
+`org.deepin.dde.Face1` 是旧版 `deepin-face` 独立组件提供的 D-Bus 接口（对象路径 `/org/deepin/dde/Face1`，System 总线），提供以下基础人脸识别功能：
 
-> **待核验声明**：本文档接口信息基于源码静态分析，未经运行时 D-Bus 内省验证，标记为待核验。
+- **人脸录入**：EnrollStart / EnrollStop
+- **人脸验证**：VerifyStart / VerifyStop
+- **人脸删除**：Delete
+- **属性**：Claim（设备占用状态）、List（人脸列表）、CharaType（特征类型）
+- **信号**：ErollStatus（录入状态）、VerifyStatus（验证状态）
 
+## 接口关系
 
-### 人脸录入
+`org.deepin.dde.Face1` 与 `org.deepin.dde.Authenticate1.Face` 是**废弃关系**：
 
-#### EnrollStart
+- `org.deepin.dde.Face1` 来自旧版 `deepin-face` 独立组件，仅提供基础的人脸录入、验证、删除功能，已废弃，不应在新代码中使用。
+- `org.deepin.dde.Authenticate1.Face` 来自 `deepin-authentication` 统一认证服务，后者提供了更完整的人脸管理能力（包括人脸重命名、批量删除、默认设备设置、默认服务设置、共享内存信息获取、设备状态信号、属性查询）。
 
-开始人脸录入。
-
-- **输入参数**: `chara`（string, 类型 `s`）：特征标识；`charaType`（int32, 类型 `i`）：特征类型；`actionId`（string, 类型 `s`）：操作 ID
-- **返回值**: `h`（handle）：录入句柄
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1 \
-  --method org.deepin.dde.Face1.EnrollStart "face_1" 1 "enroll_action"
-```
-
-#### EnrollStop
-
-停止人脸录入。
-
-- **输入参数**: `actionId`（string, 类型 `s`）：操作 ID
-- **返回值**: 无
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1 \
-  --method org.deepin.dde.Face1.EnrollStop "enroll_action"
-```
-
-
-### 人脸验证
-
-#### VerifyStart
-
-开始人脸验证。
-
-- **输入参数**: `charas`（string 数组, 类型 `as`）：特征标识列表；`actionId`（string, 类型 `s`）：操作 ID
-- **返回值**: `h`（handle）：验证句柄
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1 \
-  --method org.deepin.dde.Face1.VerifyStart ["face_1"] "verify_action"
-```
-
-#### VerifyStop
-
-停止人脸验证。
-
-- **输入参数**: `actionId`（string, 类型 `s`）：操作 ID
-- **返回值**: 无
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1 \
-  --method org.deepin.dde.Face1.VerifyStop "verify_action"
-```
-
-
-### 人脸删除
-
-#### Delete
-
-删除指定人脸特征。
-
-- **输入参数**: `chara`（string, 类型 `s`）：特征标识
-- **返回值**: 无
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1 \
-  --method org.deepin.dde.Face1.Delete "face_1"
-```
-
-
-### 人脸属性
-
-#### Claim（属性）
-
-是否有正在进行的操作。
-
-| 属性 | 值 |
-|------|------|
-| 类型 | `b` |
-| 读写权限 | read |
-
-读取示例：
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1 \
-  --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.dde.Face1 Claim
-```
-#### List（属性）
-
-已录入的人脸特征列表。
-
-| 属性 | 值 |
-|------|------|
-| 类型 | `as` |
-| 读写权限 | read |
-
-读取示例：
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1 \
-  --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.dde.Face1 List
-```
-#### CharaType（属性）
-
-特征类型。
-
-| 属性 | 值 |
-|------|------|
-| 类型 | `i` |
-| 读写权限 | read |
-
-读取示例：
-
-```bash
-gdbus call --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1 \
-  --method org.freedesktop.DBus.Properties.Get \
-  org.deepin.dde.Face1 CharaType
-```
-
-### 人脸状态信号
-
-#### ErollStatus
-
-录入状态变化时发出。
-
-- **参数**: `chara`（string, 类型 `s`）：特征标识；`code`（int32, 类型 `i`）：状态码；`msg`（string, 类型 `s`）：状态消息
-- **触发条件**: 人脸录入过程中状态变化时发出
-
-```bash
-gdbus monitor --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1
-```
-
-#### VerifyStatus
-
-验证状态变化时发出。
-
-- **参数**: `chara`（string, 类型 `s`）：特征标识；`code`（int32, 类型 `i`）：状态码；`msg`（string, 类型 `s`）：状态消息
-- **触发条件**: 人脸验证过程中状态变化时发出
-
-```bash
-gdbus monitor --system \
-  --dest org.deepin.dde.Face1 \
-  --object-path /org/deepin/dde/Face1
-```
+**新代码应使用 `org.deepin.dde.Authenticate1.Face` 接口。**
 
 ---
