@@ -79,3 +79,19 @@ DDE 控制中心主程序，是 DDE 桌面环境中用于系统设置管理的�
 设备管理显示开关配置。为控制中心应用自身配置。
 
 详见 [org.deepin.dde.control-center.sound](references/config/org.deepin.dde.control-center.sound.md)
+
+## 开发接口
+
+dde-control-center 提供系统设置界面框架和插件机制，允许第三方开发设置模块插件。使用方通过实现插件接口、注册插件工厂并安装到指定目录，将自定义设置页面集成到控制中心。
+
+### 插件工厂接口
+
+C++ 类型参考文档，包含插件工厂接口的定位、功能能力和使用场景，涵盖插件工厂注册、CMake 集成与构建安装方式。
+
+详见 [plugin-factory.md](interface/plugin-factory.md)
+
+### org.deepin.dcc QML 模块
+
+QML 接口参考文档，包含 DccObject、DccApp 等类型的定位、功能能力和使用场景，用于描述设置项层级结构和访问控制中心全局状态与页面导航。
+
+详见 [org.deepin.dcc.md](interface/org.deepin.dcc.md)

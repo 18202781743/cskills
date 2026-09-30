@@ -66,3 +66,13 @@ GRUB 主题调整工具，用于根据屏幕分辨率和语言环境自动调整
 声音主题播放守护进程，启动后提供 `org.deepin.dde.SoundThemePlayer1` D-Bus 接口供其他程序播放系统声音。
 
 详见 [sound-theme-player.md](references/cli/sound-theme-player.md)
+
+## 开发接口
+
+dde-api 是 DDE 的 API 库，提供 header-only C++ 事件日志记录接口。调用者通过该接口将事件日志序列化后发送到后端库，由后端完成实际的日志写入。
+
+### 事件日志接口
+
+C++ 接口参考文档，涵盖 EventLogger 类和 EventLoggerData 数据结构，提供事件日志的组装、序列化与写入能力。
+
+详见 [event-logger.md](interface/event-logger.md)

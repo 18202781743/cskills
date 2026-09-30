@@ -101,3 +101,33 @@ DTK 通过 DConfig 暴露两组公共配置资源（appId 为空，所有 DTK �
 控制系统的区域格式：语言、日期、时间、数字、货币、纸张。作用范围为系统全局。
 
 详见 [org.deepin.region-format](references/config/org.deepin.region-format.md)
+
+## 开发接口
+
+### dtkcore
+
+dtkcore 是基于 Qt 的 C++ 基础库，提供配置与设置、日志、文件与目录、系统信息、DBus 通信、通知、文本处理和线程调度能力。界面控件与视觉主题由上层库提供。
+
+详见 [dtkcore-dev.md](interface/dtkcore/dtkcore-dev.md)
+
+### dtkdeclarative
+
+dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提供底层支撑。它提供 DTK 应用的 QML 加载器、应用主窗口与预加载接口、QML 场景中的帧缓冲区位块传输与视口裁剪渲染、DTK 窗口附加属性以及平台主题代理。QML 控件本身以 `org.deepin.dtk` QML 模块的形式发布，设置控件以 `org.deepin.dtk.settings` QML 模块的形式发布。
+
+详见 [dtkdeclarative-dev.md](interface/dtkdeclarative/dtkdeclarative-dev.md)
+
+详见 [org.deepin.dtk.md](interface/dtkdeclarative/org.deepin.dtk.md)
+
+详见 [org.deepin.dtk.settings.md](interface/dtkdeclarative/org.deepin.dtk.settings.md)
+
+### dtkgui
+
+dtkgui 是基于 Qt GUI 模块的 C++ 库，提供 DTK 图形界面层面的能力，包括 DCI 图标渲染与播放、调色板管理、窗口装饰与平台主题、文件拖拽、字体管理、缩略图生成、SVG 渲染、区域监视和任务栏控制。控件级别的功能由上层 dtkwidget 提供。
+
+详见 [dtkgui-dev.md](interface/dtkgui/dtkgui-dev.md)
+
+### dtkwidget
+
+dtkwidget 是基于 Qt Widgets 模块的 C++ 控件库，提供 DTK 风格的对话框、窗口、按钮、输入框、列表、视图、样式、动画效果、打印预览、设置界面和辅助工具这些控件级别的功能。图形界面层面的非控件能力（调色板、DCI 图标、窗口装饰）由下层 dtkgui 提供。
+
+详见 [dtkwidget-dev.md](interface/dtkwidget/dtkwidget-dev.md)
