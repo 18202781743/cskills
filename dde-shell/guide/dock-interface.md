@@ -25,10 +25,10 @@ target_link_libraries(your-plugin PRIVATE Dde::Shell Dde::ShellDock)
 
 ### 使用方式
 
-构建目标链接 dde-shell Dock 后，可以直接包含所需类型的公开头文件。Dock 相关头文件安装在 `dde-shell/dock/` 目录下，包含时需带该前缀：
+构建目标链接 dde-shell Dock 后，可以直接包含所需类型的公开头文件。链接 `dde-shell-frame` 后头文件搜索路径已配置完成，Dock 相关头文件在 `dock/` 子目录下，直接包含即可：
 
 ```cpp
-#include <dde-shell/dock/dappletdock.h>
+#include <dock/dappletdock.h>
 ```
 
 ## 模块API介绍

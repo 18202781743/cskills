@@ -51,7 +51,7 @@ D_APPLET_CLASS(classname)
 用法示例：
 
 ```cpp
-#include <dde-shell/pluginfactory.h>
+#include <pluginfactory.h>
 
 class MyPlugin : public DApplet
 {
@@ -64,10 +64,10 @@ D_APPLET_CLASS(MyPlugin)
 
 ### 使用方式
 
-构建目标链接 dde-shell 后，可以直接包含所需类型的公开头文件。头文件安装在 `dde-shell/` 目录下，包含时需带该前缀：
+构建目标链接 dde-shell 后，可以直接包含所需类型的公开头文件。链接 `dde-shell-frame` 后头文件搜索路径已配置完成，无需 `dde-shell/` 前缀，直接包含即可：
 
 ```cpp
-#include <dde-shell/applet.h>
+#include <applet.h>
 ```
 
 公开类型位于 `ds` 命名空间（`DS_NAMESPACE`），可使用完整限定名，也可在合适的作用域使用 `DS_USE_NAMESPACE` 引入。

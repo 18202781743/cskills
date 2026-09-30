@@ -13,7 +13,7 @@ import org.deepin.ds.dock 1.0
 import org.deepin.ds.dock.tray 1.0
 ```
 
-导入 `org.deepin.ds.dock` 后可使用 `Dock`、`DockPositioner`、`DockPanelPositioner` 类型，其中 `Dock` 为枚举命名空间，`DockPositioner` 和 `DockPanelPositioner` 为附加属性类型。导入 `org.deepin.ds.dock.tray` 后可使用 `TraySortOrderModel`、`TrayItemPositionManager`、`TrayItemPositionRegister`、`SortFilterProxyModel`、`dropIndex` 类型，其中 `TraySortOrderModel` 和 `TrayItemPositionManager` 为单例对象，`TrayItemPositionRegister` 为附加属性类型，`dropIndex` 为结构体类型。
+导入 `org.deepin.ds.dock` 后可使用 `Dock`、`DockPositioner`、`DockPanelPositioner`、`AppletDockItem` 类型，其中 `Dock` 为枚举命名空间，`DockPositioner` 和 `DockPanelPositioner` 为附加属性类型。导入 `org.deepin.ds.dock.tray` 后可使用 `TraySortOrderModel`、`TrayItemPositionManager`、`TrayItemPositionRegister`、`SortFilterProxyModel`、`dropIndex` 类型，其中 `TraySortOrderModel` 和 `TrayItemPositionManager` 为单例对象，`TrayItemPositionRegister` 为附加属性类型，`dropIndex` 为结构体类型。
 
 ## 模块API介绍
 
@@ -65,6 +65,24 @@ Dock 面板定位附加属性类型，继承自 DockPositioner，不可实例化
 #### 使用场景
 
 开发 Dock 面板窗口时，需要在 Dock 定位基础上微调窗口水平或垂直位置时使用。
+
+
+### AppletDockItem
+
+#### 定位
+
+org.deepin.ds.dock 模块中通过 QML 文件导出的 Dock 项基类型，继承自 org.deepin.ds.AppletItem，为 Dock 区域中的插件项提供 Dock 专属属性和自动尺寸计算能力。
+
+#### 功能能力总结
+
+- 提供 Dock 排列顺序属性，使 Dock 框架能够按照指定顺序排列各 Dock 项，控制项在 Dock 区域中的显示位置
+- 根据所属 Applet 的可见性和功能支持状态自动计算 Dock 项的可见状态，仅在 Applet 可见且功能受支持时才在 Dock 中显示
+- 根据 Dock 面板的位置（顶部或底部为水平方向，左侧或右侧为垂直方向）自动判断是否使用纵向布局，使 Dock 项能够适配不同方向的 Dock 面板
+- 根据 Dock 布局方向和 Dock 尺寸自动计算隐式宽度和隐式高度，在水平布局时根据 Dock 高度计算项高度，在纵向布局时根据 Dock 宽度计算项宽度，确保 Dock 项尺寸与 Dock 面板尺寸协调
+
+#### 使用场景
+
+Dock 插件开发中作为自定义 Dock 项的基类型，提供 Dock 布局所需的排列顺序控制和自动尺寸计算。
 
 ### TraySortOrderModel
 
