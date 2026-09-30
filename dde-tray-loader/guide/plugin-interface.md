@@ -60,7 +60,7 @@ API 版本号为 2.0.0，V2 接口方法标注 `@since 2.0.0`。插件可在编�
 #include <pluginsiteminterface_v3.h>
 ```
 
-辅助类型（枚举与常量）位于 `Dock` 命名空间，接口类（PluginsItemInterface、PluginsItemInterfaceV2、PluginsItemInterfaceV3）位于全局命名空间。`DockPart` 枚举定义在 `common.h` 中，位于全局命名空间。
+常量位于 `Dock` 命名空间，枚举（`DockPart`）和接口类位于全局命名空间。`DockPart` 枚举定义在 `common.h` 中。
 
 ## 模块API介绍
 
@@ -109,7 +109,7 @@ Dock 插件接口 V2，继承自 PluginsItemInterface，扩展插件标志位、
 
 #### 使用场景
 
-需要自定义插件标志位以指定插件类型和属性时，使用 flags 方法。需要在控制中心个性化设置中显示插件图标时，使用 icon 方法。开发托盘插件或快捷面板插件需要接收子插件指针时，使用 addPlugin 方法。需要与 Dock 框架进行 JSON 消息通信以扩展功能时，使用 setMessageCallback 和 message 方法。
+需要声明插件标志位、在控制中心显示插件图标、接收子插件指针或与 Dock 框架进行 JSON 消息通信时，使用 V2 接口对应方法。
 
 ### PluginsItemInterfaceV3
 
@@ -130,4 +130,4 @@ Dock 插件接口 V3，继承自 PluginsItemInterfaceV2，扩展卡片 surface �
 
 #### 使用场景
 
-需要将插件原生窗口作为卡片在 Dock 卡片区展示时，实现 cardItemKey 和 cardWindow。需要控制卡片排列顺序时，实现 cardOrder。需要为卡片提供独立的上下文菜单和提示部件时，实现 cardContextMenu、cardTipsWidget 和 invokedCardMenuItem。
+需要将插件原生窗口作为卡片在 Dock 卡片区展示并控制卡片排列顺序、独立上下文菜单和提示部件时，使用 V3 接口。
