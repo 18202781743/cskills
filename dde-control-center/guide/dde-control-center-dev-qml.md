@@ -12,17 +12,15 @@ dde-control-center 的 QML 模块 URI 为 `org.deepin.dcc`，导入版本为 `1.
 
 #### 功能能力总结
 
-- 设置节点标识：`name` 属性作为唯一标识，结合父项 `name` 组成 URL，用于定位跳转和配置隐藏、禁用
-- 设置节点位置：`parentName` 属性指定父项 URL，`weight` 属性控制同级节点排列顺序，取值范围 0–4294967295
-- 设置显示信息：`displayName` 设置显示名称，`description` 设置描述文本，`icon` 设置图标名称
-- 控制可见性与可用性：`visible` 和 `enabled` 控制节点是否显示和可用，`visibleToApp` 和 `enabledToApp` 反映经控制中心配置后的实际可见和可用状态，`canSearch` 控制节点是否参与搜索
-- 设置页面类型：`pageType` 属性指定页面渲染方式，包括 `EditorPage`（编辑控件，左侧显示名称和描述，右侧显示 `page` 组件）、`ItemPage`（整行控件）、`Menu`（菜单项，子页面为 `page`）、`MenuEditor`（菜单加编辑控件）、`Control`（页面中的控件，与其他类型组合使用）、`Editor`（`EditorPage` 与 `Control` 组合）、`Item`（`ItemPage` 与 `Control` 组合）、`UserType`（用户自定义类型，0x80 及以上）
-- 设置背景样式：`backgroundType` 属性指定背景渲染方式，包括 `AutoBg`（自动，默认）、`Normal`（正常背景）、`Hover`（悬浮背景）、`Clickable`（可点击触发 `active` 信号）、`Highlight`（高亮）、`Warning`（红色）、`ClickStyle`（有悬浮背景并可点击）
-- 设置页面内容：`page` 属性指定 `QQmlComponent` 作为节点的页面组件，`parentItem` 属性设置父 `QQuickItem`
-- 管理子节点：`children` 属性返回子节点列表，`currentObject` 属性设置或返回当前选中的子节点，`data` 为默认属性，可直接在 `DccObject` 内部嵌套子对象
-- 发出激活信号：`active` 信号在节点被激活时发出，`deactive()` 信号在节点被停用时发出
-- 发出子项变化信号：`childAdded`、`childRemoved`、`childMoved`、`childrenChanged` 信号在子节点增删移动时发出
-- 发出属性变化信号：各属性变化时分别发出对应的 changed 信号，包括 `nameChanged`、`parentNameChanged`、`weightChanged`、`displayNameChanged`、`descriptionChanged`、`iconChanged`、`iconSourceChanged`、`badgeChanged`、`visibleChanged`、`enabledChanged`、`visibleToAppChanged`、`enabledToAppChanged`、`canSearchChanged`、`backgroundTypeChanged`、`currentObjectChanged`、`pageTypeChanged`、`pageChanged`、`parentItemChanged`
+- 构建控制中心设置页面的层级树结构，每个节点代表一个菜单项或功能页面，通过父子引用和权重值自动组织多级导航层次
+- 提供节点标识与定位能力，每个节点拥有唯一名称标识，结合父节点名称组成 URL 路径，用于页面跳转、搜索定位以及全局可见性和可用性配置
+- 管理节点的显示信息，包括显示名称、描述文本、图标和角标，为界面渲染提供统一的元数据来源
+- 控制节点的可见性与可用性，区分开发者设置的本地状态和经控制中心全局配置后的实际生效状态，支持按节点控制是否参与搜索
+- 定义页面的渲染方式，支持菜单项、编辑控件、整行控件、组合控件及用户自定义等多种页面类型，适配不同布局需求
+- 配置背景渲染样式，支持自动适配、正常背景、悬浮效果、可点击交互、高亮选中、警告提示等多种视觉风格
+- 管理子节点的动态增删与层级维护，支持通过嵌套声明或引用父项名称两种方式构建父子关系，自动维护当前选中状态
+- 提供页面组件挂载能力，可将 QML 组件指定为节点的页面内容，并管理页面组件的父项归属
+- 在节点激活、停用及子节点增删移动时发出相应通知，便于插件监听页面生命周期变化并执行自定义逻辑
 
 #### 使用场景
 
@@ -36,13 +34,9 @@ dde-control-center 的 QML 模块 URI 为 `org.deepin.dcc`，导入版本为 `1.
 
 #### 功能能力总结
 
-- 设置根节点：`root` 属性指定 `DccObject` 作为模型根节点
-- 提供模型索引：`index` 返回指定位置的模型索引，`parent` 返回父索引
-- 提供行数和列数：`rowCount` 和 `columnCount` 返回指定父索引下的行数和列数
-- 提供数据：`data` 返回指定索引和角色对应的数据
-- 获取节点对象：`getObject` 方法返回指定行的 `DccObject` 指针
-- 获取节点索引：`index` 方法返回指定 `DccObject` 对应的模型索引
-- 发出根节点变化信号：`rootChanged` 信号在根节点变更时发出
+- 以树形结构管理 DccObject 层级关系，支持动态设置和切换根节点，自动维护父子索引映射
+- 为视图层提供标准化的模型数据访问接口，支持按角色获取节点属性数据，并提供行数、列数和索引查询能力
+- 自动监听 DccObject 树的增删移动变化并同步更新模型索引，保证视图与数据的一致性
 
 #### 使用场景
 
@@ -56,13 +50,9 @@ dde-control-center 的 QML 模块 URI 为 `org.deepin.dcc`，导入版本为 `1.
 
 #### 功能能力总结
 
-- 设置数据模型：`model` 属性指定数据源，支持整数（生成对应数量的对象）或模型对象
-- 设置委托组件：`delegate` 属性指定 `QQmlComponent`，用于实例化每个子 `DccObject`
-- 获取生成数量：`count` 属性返回已生成的子对象数量
-- 重置模型：`resetModel()` 方法清除并重新生成所有子对象
-- 获取指定对象：`objectAt` 方法返回指定索引处的 `DccObject` 指针
-- 发出对象增删信号：`objAdded` 信号在添加子对象时发出，`objRemoved` 信号在移除子对象时发出
-- 发出属性变化信号：`modelChanged`、`delegateChanged`、`countChanged` 信号在对应属性变化时发出
+- 根据数据模型批量生成 DccObject 子节点，支持以整数指定数量或以任意模型对象作为数据源，配合委托组件自动实例化每个子节点
+- 在数据源变化时自动同步增删子节点，支持随时重置并重新生成全部子节点
+- 提供已生成子节点的查询访问能力，并在子节点增删时发出通知，便于外部同步状态
 
 #### 使用场景
 
@@ -76,14 +66,11 @@ QML 中与 D-Bus 交互的组件，通过 `QML_NAMED_ELEMENT(DccDBusInterface)` 
 
 #### 功能能力总结
 
-- 设置 D-Bus 服务信息：`service` 属性指定服务名，`path` 属性指定对象路径，`inter` 属性（对应 `interface`）指定接口名
-- 设置总线类型：`connection` 属性指定总线类型，可选 `SessionBus`（会话总线）或 `SystemBus`（系统总线）
-- 设置属性前缀：`suffix` 属性为动态属性添加前缀，防止属性名与 QML 保留字冲突
-- 控制启用状态：`enabled` 属性控制是否连接 D-Bus
-- 异步调用方法：`callWithCallback` 方法异步调用 D-Bus 方法，通过 JS 回调函数处理返回结果和错误
-- 监听 D-Bus 属性变化：在 QML 中声明与 D-Bus 属性同名的 `property`，属性变化时自动更新并发出对应信号
-- 监听 D-Bus 信号：在 QML 中定义 `on<SignalName>` 函数关联 D-Bus 信号
-- 发出属性变化信号：`serviceChanged`、`pathChanged`、`interfaceChanged`、`connectionChanged`、`suffixChanged`、`enabledChanged` 信号在对应属性变化时发出
+- 在 QML 中提供与 D-Bus 服务交互的能力，通过声明服务名、对象路径和接口名建立连接，支持会话总线和系统总线两种连接方式
+- 自动将 D-Bus 属性映射为 QML 属性，属性变化时自动更新并在 QML 中发出对应信号，实现数据双向绑定
+- 支持 QML 中直接监听 D-Bus 信号，通过约定命名规则自动关联信号处理函数
+- 提供异步方法调用能力，通过回调函数处理返回结果和错误，避免阻塞 QML 线程
+- 支持属性名前缀隔离，防止 D-Bus 属性名与 QML 保留字冲突；支持动态启用和禁用 D-Bus 连接
 
 #### 使用场景
 
@@ -97,8 +84,8 @@ QML 中与 D-Bus 交互的组件，通过 `QML_NAMED_ELEMENT(DccDBusInterface)` 
 
 #### 功能能力总结
 
-- 继承 `QQuickRepeater` 的全部功能，包括 `model`、`delegate`、`count` 属性以及 `itemAt` 方法
-- 在子项创建时自动调整父项归属，使生成的子项正确嵌入控制中心的布局体系
+- 在控制中心 QML 模块中替代 Qt Quick 原生 Repeater，批量生成 QML 控件子项
+- 在子项创建时自动修正父项归属，确保生成的控件正确嵌入控制中心的布局体系
 
 #### 使用场景
 
@@ -112,11 +99,8 @@ QML 中与 D-Bus 交互的组件，通过 `QML_NAMED_ELEMENT(DccDBusInterface)` 
 
 #### 功能能力总结
 
-- 预创建 `body` 子节点：`name` 为 `body`，`pageType` 为 `Item`，用于承载主内容区域的子 `DccObject`
-- 预创建 `footer` 子节点：`name` 为 `footer`，`pageType` 为 `Item`，用于承载底部操作区域的子 `DccObject`
-- 提供 `bodyUrl` 只读属性：返回 `body` 子节点的完整 URL，用于通过 `parentName` 向 `body` 中添加子项
-- 提供 `footerUrl` 只读属性：返回 `footer` 子节点的完整 URL，用于通过 `parentName` 向 `footer` 中添加子项
-- 使用 `DccSettingsView` 作为 `page` 组件，自动渲染主内容区域和底部悬浮区域
+- 提供标准设置页面布局模板，预置主内容区域和底部操作区域两个子节点，并自动使用 DccSettingsView 作为页面组件渲染分区布局
+- 为主内容区域和底部操作区域分别提供可引用的 URL，插件通过 parentName 引用即可向对应区域添加子节点
 
 #### 使用场景
 
@@ -130,9 +114,8 @@ QML 中与 D-Bus 交互的组件，通过 `QML_NAMED_ELEMENT(DccDBusInterface)` 
 
 #### 功能能力总结
 
-- 渲染 `displayName` 作为标题文本，使用较大字号和深色文本
-- 渲染 `description` 作为描述文本，当描述不为空时显示，使用较小字号和半透明文本
-- 自动设置左侧内边距为 14 像素，使标题文本与内容区域对齐
+- 提供带标题和描述的分组标题节点，自动以较大深色字号渲染标题文本，以较小半透明字号渲染描述文本
+- 自动设置左侧内边距使标题与内容区域对齐，作为 DccObject 子项声明后设置显示名称和描述即可显示
 
 #### 使用场景
 
