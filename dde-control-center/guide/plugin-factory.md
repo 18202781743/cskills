@@ -14,6 +14,8 @@ dde-control-center 提供插件工厂接口，支持第三方开发设置模块�
 
 ## 集成
 
+### CMake 配置
+
 CMake 是当前推荐的集成方式。在已有构建目标上查找 `DdeControlCenter` 并链接 `Dde::Control-Center`：
 
 ```cmake
@@ -30,6 +32,8 @@ target_link_libraries(your-plugin PRIVATE Dde::Control-Center)
 - `DDE_CONTROL_CENTER_PLUGIN_INSTALL_DIR`：插件安装完整路径
 - `DDE_CONTROL_CENTER_TRANSLATION_INSTALL_DIR`：翻译文件安装路径
 
+### 构建与安装插件
+
 开发包提供以下 CMake 宏用于构建和安装插件：
 
 - `dcc_build_plugin(NAME <name> TARGET <target> [QML_ROOT_DIR <dir>] [QML_FILES <files...>] [RESOURCE_FILES <files...>])`：构建插件的 QML 模块和 C++ 库，自动处理 QML 资源。`NAME` 指定插件名（仅允许字母和数字），`TARGET` 指定 C++ 库目标名，`QML_ROOT_DIR` 指定 QML 文件根目录（默认为 `${CMAKE_CURRENT_SOURCE_DIR}/qml`），`QML_FILES` 和 `RESOURCE_FILES` 可显式指定 QML 文件和资源文件（未指定时自动搜索）。
@@ -38,7 +42,7 @@ target_link_libraries(your-plugin PRIVATE Dde::Control-Center)
 
 插件安装路径为 `${CMAKE_INSTALL_LIBDIR}/dde-control-center/plugins_v1.1/<plugin-name>/`，翻译文件安装路径为 `${CMAKE_INSTALL_DATAROOTDIR}/dde-control-center/translations/v1.1/`。
 
-## 使用方式
+### 使用方式
 
 在 C++ 源文件中通过以下方式引入公开头文件：
 
