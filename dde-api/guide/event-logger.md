@@ -4,7 +4,7 @@ dde-api 提供 header-only C++ 事件日志记录接口，主要符号位于 `DD
 
 ## 开发包
 
-- `dde-api-dev`：提供公开头文件 `dde-api/eventlogger.hpp`（安装到 `/usr/include/`）和 CMake 配置文件 `DDEAPIConfig.cmake`（安装到 `/usr/share/cmake/DDEAPI/`）
+- `dde-api-dev`：提供公开头文件 `dde-api/eventlogger.hpp` 和 CMake 配置文件 `DDEAPIConfig.cmake`
 
 ## 集成
 
