@@ -60,5 +60,5 @@ import org.deepin.dcc 1.0
 
 ## 关联文档
 
-- C++ 导出类型的能力与使用场景见[导出类型介绍](dde-control-center-dev.md)。
-- QML 导出类型的能力与使用场景见[QML 导出类型介绍](dde-control-center-dev-qml.md)。
+- 插件工厂接口的能力与使用场景见[插件工厂接口](plugin-factory.md)。
+- QML 导出类型的能力与使用场景见[org.deepin.dcc QML 模块](org.deepin.dcc.md)。
