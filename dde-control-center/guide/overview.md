@@ -25,4 +25,4 @@ dde-control-center 是 DDE 控制中心，提供系统设置界面框架和插�
 - 将控制中心插件引入 CMake 工程：参见[插件工厂接口](modules-plugin-factory.md)。
 - 实现插件工厂：参见 [DccFactory](modules-plugin-factory.md#dccfactory)。
 - 描述设置项层级结构：参见 [DccObject](modules-org.deepin.dcc.md#dccobject)。
-- 使用 QML 模块构建设置页面：参见 [org.deepin.dcc](modules-org.deepin.dcc.md#orgdeepindcc)。
+- 使用 QML 模块构建设置页面：参见 [org.deepin.dcc](modules-org.deepin.dcc.md)。
