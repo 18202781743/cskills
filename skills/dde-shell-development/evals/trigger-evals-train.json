@@ -1,0 +1,123 @@
+[
+  {
+    "query": "用 DMainWindow 写一个普通桌面应用。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DIconButton 的 dci 图标不随主题切换。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "两个 Shell 小组件需要互相调用方法。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "DApplet 插件安装后没有被 DPluginLoader 发现，帮我排查。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "dde-shell Applet 插件中怎么用 DConfig 存储用户偏好设置。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development",
+    "cross_skill": "dtk-development"
+  },
+  {
+    "query": "DConfig 的 meta 文件覆盖没有生效。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "做一个贴靠左侧、占用排他区域的 Wayland 面板窗口。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "在控制中心增加显示设置模块。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "用 DMainWindow 写一个普通 DTK 应用。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "给顶栏加一个显示 CPU 温度的 Shell 小组件。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "Dock 的 PanelPopupWindow 在多屏下位置错误。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "dde-shell Panel 的模糊效果在 Wayland 下不生效，DBlurEffectWidget 需要怎么设置。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "纯 QML Applet 应该怎样写 package 元数据和 CMake？",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "控制中心插件需要增加搜索关键词。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "控制中心 QML 缓存导致页面修改不生效。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "纯 QML 的面板插件不需要 C++，请给出 package 和安装配置。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "在控制中心增加显示设置页面。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "用 DMainWindow 做 dde-shell 面板窗口。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "Applet 安装后没有被插件加载器发现，帮我排查元数据和路径。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "自定义 Applet 的生命周期回调没有按预期调用。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "快捷面板音量控件需要发送 MSG_ITEM_ACTIVE_STATE。",
+    "should_trigger": false,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "dde-tray-loader 无法加载 api 2.0.0 插件。",
+    "should_trigger": false,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "创建一个新的 Panel 插件并在其中加载多个 Containment。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "创建一个 Panel，并在里面加载多个 Containment。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  }
+]

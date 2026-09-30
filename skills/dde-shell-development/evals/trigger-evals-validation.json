@@ -1,0 +1,92 @@
+[
+  {
+    "query": "控制中心的 QML 缓存导致页面修改不生效。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "托盘 loader 无法加载 api 2.0.0 插件。",
+    "should_trigger": false,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "普通 Qt 程序使用 QSystemTrayIcon。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "dde-shell 插件中 D.DTK.fontManager 字体大小不跟随系统缩放。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "dde-shell 插件需要使用 DPaletteHelper 获取当前主题的 ItemBackground 颜色。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "dde-shell Applet 插件用 DConfig 保存用户偏好设置，配置 ID 和 appId 怎么命名。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "Shell 重启后我的 containment 没有恢复父子关系。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "Dock 的弹出窗口在第二块显示器上偏移了，应该从哪些锚点和屏幕参数查起？",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "普通 Qt Quick 跨平台应用要显示一个列表。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "实现 V2 托盘接口的右键菜单。",
+    "should_trigger": false,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "DConfig meta 覆盖值没有生效。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "需要一个贴屏幕底部的窗口，并正确设置 exclusion zone。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "解释 Applet、Containment、Panel 的父子加载关系。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "实现 PluginsItemInterfaceV2 的托盘右键菜单。",
+    "should_trigger": false,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "给 dde-shell 顶栏开发一个显示 CPU 温度的 Applet。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "写一个锚定屏幕左侧并占用排他区域的 Wayland LayerShell 窗口。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "普通 Qt 程序使用 QSystemTrayIcon 显示菜单。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "两个 dde-shell 插件之间需要通过 DAppletBridge 调用方法。",
+    "should_trigger": true,
+    "expected_skill": "dde-shell-development"
+  }
+]

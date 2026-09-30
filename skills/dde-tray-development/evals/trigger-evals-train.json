@@ -1,0 +1,87 @@
+[
+  {
+    "query": "控制中心增加任务栏设置页面。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "dde-tray-loader 没有加载我的 api 2.0.0 插件。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "普通 Qt 程序解析一个 JSON 文件。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "快捷面板增加一个 70x60 的蓝牙开关。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "DTK 的 DAboutDialog 应该放在托盘右键菜单里吗。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "给 dde-shell 写一个顶栏 Panel 插件。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "托盘右键菜单增加一个可勾选的静音选项。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "开发一个 PluginsItemInterfaceV2 网络状态托盘插件。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "DConfig 的 meta 文件覆盖没有生效。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "快捷面板音量控件需要发送 MSG_ITEM_ACTIVE_STATE。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "托盘插件 CMake 需要 Dtk6::Core，但不依赖 Dtk6::Widget，怎么配置。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "允许用户在控制中心隐藏某个托盘插件，并提供亮暗主题图标。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "任务栏快捷面板增加一个 70x60 的蓝牙开关。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "托盘插件右键菜单增加一个可勾选的静音选项。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "用 DAppletBridge 实现两个 Shell 插件通信。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "普通 Qt 应用使用 QSystemTrayIcon 最小化到托盘。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "托盘插件的详情页返回后控件状态没有刷新。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  }
+]

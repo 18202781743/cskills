@@ -1,0 +1,197 @@
+[
+  {
+    "query": "用 DTK6 QWidget 创建一个带标题栏和设置对话框的桌面应用。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DIconButton 的 dci 图标在暗色主题下名称查找失败。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "给 deepin 应用接入 DConfig，并提供 meta 默认值。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DMainWindow 在 Wayland 下的圆角和模糊效果不正确。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "一个仍使用 DTK5 和 Qt5 的 v25 应用，怎样创建 Dialog、按钮和列表页面？",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "为 QWidget 应用配置单实例、日志、翻译和桌面文件。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "修改 dtkwidget 的 ChameleonStyle，让自定义控件读取新的 palette role。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "使用 DDBusSender 调用系统服务并处理异步返回。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "在 DDE 控制中心新增蓝牙设置插件。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "写一个 dde-shell Panel 管理顶部状态栏。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "实现 PluginsItemInterfaceV2 快捷面板插件。",
+    "should_trigger": false,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "控制中心搜索不到新加的 DccObject。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "dde-tray-loader 的右键菜单 JSON 没有响应。",
+    "should_trigger": false,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "LayerShell 顶栏需要设置 exclusionZone。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "纯 Qt 控制台程序解析一个 JSON 文件。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "写一个不依赖 DTK 的 Qt Quick 跨平台示例。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "一个仍使用 DTK5 和 Qt5 的 v25 应用怎样创建 Dialog、按钮和列表页面？",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "应用在主题切换后自定义按钮颜色没有更新，应该从哪个 DTK 层查？",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "需要编译 DTK 源码并确认 Qt5/Qt6 库没有混用。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DTK6 QML 项目如何配置 CMake 和 qmldir。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DCI 图标在暗色主题下查找失败，名称是对的但返回空图标。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "把 DTK5 QWidget 应用迁移到 DTK6，包名和头文件需要怎么改？",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "Wayland 下 DMainWindow 的圆角和模糊效果与 X11 不一致。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "自定义控件需要用 DSysInfo 判断当前系统版本做平台适配。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "一个只用 DConfig 的 Qt 项目，不用 DTK 控件，怎么配置 CMake？",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DTK 应用加载翻译后菜单和窗口标题仍未翻译。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "想用 DStandardPaths 代替 QStandardPaths 获取应用数据目录。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "控制中心模块的 QML 访问 dccData 失败。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "纯 Qt Widgets 应用不涉及 DTK，如何实现单实例？",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "普通 Qt 程序使用 QSettings 保存窗口大小。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "PyQt 应用调用 deepin 主题和图标。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "docker 容器中运行 DTK 应用缺少 D-Bus 服务。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "deepin 系统字体配置修改后 chrome 浏览器字体没变。",
+    "should_trigger": false,
+    "expected_skill": null
+  },
+  {
+    "query": "DLineEdit 的 placeholder 文字颜色在暗色主题下看不清。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DTK6 应用怎么在 CMake 中同时链接 Dtk6::Core 和 Dtk6::Widget。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "用 Qt 原生的 QFileDialog 选择文件，不需要 DTK 对话框。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DSettingsDialog 的配置项分组后页面切换不流畅。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "怎么在 Python 脚本里用 requests 库发 HTTP 请求。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "DTK 应用的 DAboutDialog 怎么设置应用图标和版本号。",
+    "should_trigger": true,
+    "expected_skill": "dtk-development"
+  }
+]

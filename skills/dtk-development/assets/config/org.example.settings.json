@@ -1,0 +1,36 @@
+{
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "canExit": {
+            "value": true,
+            "serial": 0,
+            "flags": [],
+            "name": "Allow Exit",
+            "name[zh_CN]": "允许退出",
+            "description": "Whether the application can exit",
+            "description[zh_CN]": "是否允许应用退出",
+            "permissions": "readwrite"
+        },
+        "windowWidth": {
+            "value": 800,
+            "serial": 0,
+            "flags": [],
+            "name": "Window Width",
+            "name[zh_CN]": "窗口宽度",
+            "description": "Default window width in pixels",
+            "description[zh_CN]": "默认窗口宽度（像素）",
+            "permissions": "readwrite"
+        },
+        "windowHeight": {
+            "value": 600,
+            "serial": 0,
+            "flags": [],
+            "name": "Window Height",
+            "name[zh_CN]": "窗口高度",
+            "description": "Default window height in pixels",
+            "description[zh_CN]": "默认窗口高度（像素）",
+            "permissions": "readwrite"
+        }
+    }
+}
