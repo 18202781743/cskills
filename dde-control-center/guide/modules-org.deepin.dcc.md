@@ -8,9 +8,15 @@
 - **D-Bus 交互**：通过 `DccDBusInterface` 在 QML 中声明式地连接 D-Bus 服务，实现属性双向绑定、信号监听和异步方法调用
 - **布局模板**：通过 `DccSettingsObject` 提供标准设置页面分区布局，通过 `DccTitleObject` 提供分组标题渲染
 
-在插件 QML 文件中，使用上述类型构建设置页面：以 `DccObject` 定义页面节点和层级结构，按需使用 `DccRepeater` 批量生成子项、`DccDBusInterface` 访问系统服务、`DccSettingsObject` 和 `DccTitleObject` 搭配标准布局。
+## 模块导入
 
-使用前提：需在 CMake 中链接 dde-control-center 开发包（详见[集成与构建配置](integration.md)），并在控制中心运行时环境内使用。
+该 QML 模块 URI 为 `org.deepin.dcc`，导入版本为 `1.0`。该模块为 STATIC 模块，由控制中心运行时提供，使用方无需安装额外的 QML 模块包。在 QML 文件中通过以下方式导入：
+
+```qml
+import org.deepin.dcc 1.0
+```
+
+导入后可使用 `DccObject`、`DccModel`、`DccRepeater`、`DccDBusInterface`、`Repeater` 以及控制中心提供的 QML 组件类型。`DccApp` 单例在控制中心运行时注册到该 URI，可直接在 QML 中访问。
 
 ## DccObject
 
