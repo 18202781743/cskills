@@ -17,7 +17,7 @@ dde-tray-loader 同时提供插件代理接口和插件管理器接口，分别�
 
 ## 全局约定
 
-公开头文件安装在系统头文件目录的 `dde-dock/` 子目录下，使用方通过 CMake 或 pkg-config 集成后可直接包含。公开类型位于 `Dock` 命名空间。
+公开头文件安装在系统头文件目录的 `dde-dock/` 子目录下，使用方通过 CMake 或 pkg-config 集成后可直接包含。辅助类型（枚举与常量）位于 `Dock` 命名空间，接口类（PluginsItemInterface、PluginsItemInterfaceV2、PluginsItemInterfaceV3、PluginProxyInterface、PluginManagerInterface）位于全局命名空间。
 
 插件通过 Qt Plugin 机制加载，声明 IID 标识接口版本：
 
