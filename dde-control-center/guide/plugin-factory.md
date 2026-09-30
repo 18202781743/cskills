@@ -4,13 +4,7 @@ dde-control-center 提供插件工厂接口，支持第三方开发设置模块�
 
 ## 开发包
 
-使用 dde-control-center 公开接口前，需要安装开发包 `dde-control-center-dev`。该开发包提供：
-
-- 公共头文件，安装路径 `${CMAKE_INSTALL_INCLUDEDIR}/dde-control-center`
-- 链接库 `libdde-control-center.so`
-- CMake 包 `DdeControlCenter` 与导出目标 `Dde::Control-Center`
-
-公开头文件 `dccfactory.h` 安装到 `${CMAKE_INSTALL_INCLUDEDIR}/dde-control-center` 目录下，定义了 `dccV25` 命名空间中的 `DccFactory` 类和 `DCC_FACTORY_CLASS` 宏。
+使用 dde-control-center 公开接口前，需要安装开发包 `dde-control-center-dev`。
 
 ## 集成
 
