@@ -18,17 +18,17 @@ import org.deepin.dcc 1.0
 
 控制中心框架在运行时为插件 QML 注入若干上下文属性，插件 QML 可直接引用这些属性来获取框架运行时数据。这些属性由框架在不同加载阶段设置，可用范围因属性而异。
 
-### `dccData`
+### dccData
 
 框架在加载插件主 QML 文件时，将插件工厂 `create()` 方法返回的数据对象注入为 `dccData` 上下文属性。插件可通过该对象在 QML 中访问插件提供的数据模型和业务接口。
 
 可用范围为插件主 QML 文件（如 `XxxMain.qml`）及其子组件。需要注意的是，插件根对象文件（如 `Example.qml`，文件名与插件名相同）中不可使用 `dccData`，因为该文件由框架以不同方式加载，未设置此上下文属性。
 
-### `dccModule`
+### dccModule
 
 框架在加载插件主 QML 文件时注入的模块对象，代表当前插件在设置页面树中的模块节点。可用范围为插件主 QML 文件（如 `XxxMain.qml`）及其子组件。
 
-### `dccObj`
+### dccObj
 
 框架在渲染 DccObject 的页面内容时，将当前正在渲染的 DccObject 实例注入为 `dccObj` 属性。插件在页面组件中可通过 `dccObj` 访问当前节点的属性，如 `dccObj.displayName`、`dccObj.icon`、`dccObj.description`、`dccObj.name`。可用范围为 DccObject 的 `page` 组件内（即页面渲染组件中）。
 
