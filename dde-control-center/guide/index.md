@@ -10,7 +10,7 @@ dde-control-center 是 DDE 控制中心，提供系统设置界面框架和插�
 
 ## 全局约定
 
-公开符号位于 `dccV25` 命名空间。插件通过宏注册，通过 `dcc_build_plugin` 构建和 `dcc_install_plugin` 安装。插件安装路径为 `lib/dde-control-center/plugins_v1.1/<plugin-name>/`，翻译文件安装路径为 `share/dde-control-center/translations/v1.1/`。
+公开符号位于 `dccV25` 命名空间。
 
 ## 按功能查阅
 

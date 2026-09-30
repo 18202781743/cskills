@@ -36,6 +36,33 @@ target_link_libraries(your-plugin PRIVATE Dde::Control-Center)
 
 插件安装路径为 `${CMAKE_INSTALL_LIBDIR}/dde-control-center/plugins_v1.1/<plugin-name>/`，翻译文件安装路径为 `${CMAKE_INSTALL_DATAROOTDIR}/dde-control-center/translations/v1.1/`。
 
+### 插件注册
+
+插件通过 `DCC_FACTORY_CLASS` 宏注册到控制中心框架。该宏会自动生成一个继承 `dccV25::DccFactory` 的匿名工厂子类，完成 Qt 插件元数据声明（`Q_PLUGIN_METADATA`）和接口注册（`Q_INTERFACES`），并生成 `create()` 方法实例化指定的类。
+
+宏定义如下：
+
+```cpp
+DCC_FACTORY_CLASS(classname)
+```
+
+- `classname` 是插件的 C++ 主类（通常继承 `DccObject`），宏会生成名为 `classname##DccFactory` 的工厂类
+- 框架通过 Qt 插件机制自动加载该工厂类，调用其 `create()` 方法获取插件主对象实例
+
+用法示例：
+
+```cpp
+#include <dccfactory.h>
+
+class MyModule : public dccV25::DccObject
+{
+    Q_OBJECT
+    // ...
+};
+
+DCC_FACTORY_CLASS(MyModule)
+```
+
 ### 使用方式
 
 在 C++ 源文件中通过以下方式引入公开头文件：
