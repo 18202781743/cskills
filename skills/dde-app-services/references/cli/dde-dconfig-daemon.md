@@ -26,7 +26,7 @@ DDE 配置守护进程，是 DConfig 系统的后台服务进程。它通过 DBu
 | `--help-all` | 显示包含 Qt 通用选项的完整帮助 | 否 |
 | `-t <time>` | 延迟释放时间 | 是 |
 | `-p <prefix>` | 工作目录前缀 | 是 |
-| `-e <exit>` | 资源释放后退出 | 否 |
+| `-e <exit>` | 资源释放后退出 | 是 |
 
 ## 使用示例
 
@@ -38,5 +38,5 @@ dde-dconfig-daemon -t 5000
 dde-dconfig-daemon -p /custom/prefix
 
 # 资源释放后自动退出
-dde-dconfig-daemon -e
+dde-dconfig-daemon -e true
 ```
