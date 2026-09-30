@@ -131,3 +131,98 @@ Dock 插件接口 V3，继承自 PluginsItemInterfaceV2，扩展卡片 surface �
 #### 使用场景
 
 需要将插件原生窗口作为卡片在 Dock 卡片区展示并控制卡片排列顺序、独立上下文菜单和提示部件时，使用 V3 接口。
+
+### Common
+
+#### 定位
+
+定义任务栏部件位置枚举 `DockPart`，用于标识插件项在任务栏不同区域和控制中心中的归属位置。位于全局命名空间，声明在 `common.h` 中。
+
+#### 功能能力总结
+
+- 定义快捷插件显示区域 `QuickShow`（值为 0），标识插件在任务栏快捷插件区显示
+- 定义快捷面板区域 `QuickPanel`，标识插件在快捷面板区域显示
+- 定义系统插件显示区域 `SystemPanel`，标识插件在系统插件区显示
+- 定义控制中心设置位置 `DCCSetting`，标识插件在控制中心个性化设置中显示图标
+
+#### 使用场景
+
+插件根据 `DockPart` 枚举值判断自身所处的任务栏部件位置，据此调整布局和交互行为。
+
+### Constants
+
+#### 定位
+
+`Dock` 命名空间下的公开常量集合，定义任务栏显示模式、隐藏模式、位置、隐藏状态、插件标志位、图标类型、主题类型枚举，API 版本宏，消息通信常量和尺寸常量。位于 `Dock` 命名空间，声明在 `constants.h` 中。
+
+#### 功能能力总结
+
+- 定义任务栏显示模式 `DisplayMode`：时尚模式 `Fashion`（值为 0）和高效模式 `Efficient`（值为 1），通过全局属性 `PROP_DISPLAY_MODE` 读取当前模式
+- 定义任务栏隐藏模式 `HideMode`：一直显示 `KeepShowing`（值为 0）、一直隐藏 `KeepHidden`（值为 1）、智能隐藏 `SmartHide`（值为 3），通过全局属性 `PROP_HIDE_MODE` 读取
+- 定义任务栏位置 `Position`：顶部 `Top`（值为 0）、右侧 `Right`（值为 1）、底部 `Bottom`（值为 2）、左侧 `Left`（值为 3），任务栏始终位于主屏幕边缘，通过全局属性 `PROP_POSITION` 读取
+- 定义任务栏隐藏状态 `HideState`：未知 `Unknown`（值为 0）、显示 `Show`（值为 1）、隐藏 `Hide`（值为 2），仅在隐藏模式为智能隐藏时生效，通过全局属性 `PROP_HIDE_STATE` 读取
+- 定义插件标志位枚举 `PluginFlag` 及对应的 `QFlags` 类型 `PluginFlags`，支持位运算组合：插件类型标志（`Type_Quick` 快捷插件区、`Type_Tool` 工具插件、`Type_System` 系统插件、`Type_Tray` 托盘区、`Type_Fixed` 固定区域）指定插件显示区域，快捷面板列数标志（`Quick_Panel_Single` 单列、`Quick_Panel_Multi` 双列、`Quick_Panel_Full` 整行）控制插件在快捷面板中占据的列数，插件属性标志（`Attribute_CanDrag` 支持拖拽、`Attribute_CanInsert` 支持前方插入、`Attribute_CanSetting` 可在控制中心设置、`Attribute_ForceDock` 强制显示、`Attribute_HasCard` 提供卡片 surface）描述交互行为，`Attribute_Normal` 为可拖拽、可插入、可设置的默认组合
+- 定义图标类型 `IconType`：`IconType_None`（值为 0），当前为默认值无实际意义
+- 定义主题类型 `ThemeType`：`ThemeType_None`（不涉及）、`ThemeType_Light`（亮色）、`ThemeType_Dark`（暗色），与 DTK 标志位对应
+- 提供 API 版本宏：主版本 `DOCK_API_VERSION_MAJOR`、次版本 `DOCK_API_VERSION_MINOR`、补丁版本 `DOCK_API_VERSION_PATCH`（当前为 2.0.0），版本编码宏 `DOCK_API_VERSION_CHECK(major, minor, patch)` 将版本号编码为整数用于编译期比对，`DOCK_API_VERSION` 为当前版本编码值，插件可在编译期通过 `#if (DOCK_API_VERSION >= DOCK_API_VERSION_CHECK(2, 0, 0))` 判断接口兼容性，运行时可通过 `qApp->property(DOCK_API_VERSION_PROPERTY)` 获取版本号
+- 提供消息通信字段名常量 `MSG_TYPE`（消息类型）和 `MSG_DATA`（消息数据），用于在插件 `message` 和 `MessageCallbackFunc` 方法中解析 JSON 格式数据
+- 提供插件功能可用性消息常量：`MSG_GET_SUPPORT_FLAG` 查询插件功能是否可用、`MSG_SUPPORT_FLAG` 返回可用状态、`MSG_SUPPORT_FLAG_CHANGED` 通知状态变更，插件功能不可用时任务栏将插件图标从控制中心移除
+- 提供任务栏溢出状态消息 `MSG_UPDATE_OVERFLOW_STATE`，对应溢出状态常量 `OVERFLOW_STATE_NOT_EXIST`（无溢出区）、`OVERFLOW_STATE_EXIST`（有溢出区）、`OVERFLOW_STATE_ALL`（所有应用在溢出区）
+- 提供最小弹窗高度消息 `MSG_SET_APPLET_MIN_HEIGHT`，任务栏根据快捷面板高度动态向快捷插件发送
+- 提供插件加载意愿消息 `MSG_WHETHER_WANT_TO_BE_LOADED`，插件自行决定是否被任务栏加载，不发送则默认被加载
+- 提供弹窗容器位置消息 `MSG_APPLET_CONTAINER`，标识弹窗在任务栏（`APPLET_CONTAINER_DOCK`，值为 0）或快捷面板二级页面（`APPLET_CONTAINER_QUICK_PANEL`，值为 1）显示
+- 提供插件图标激活状态消息 `MSG_ITEM_ACTIVE_STATE`，插件状态变化时主动发送给任务栏
+- 提供卡片排序消息 `MSG_CARD_ORDER`，插件在卡片 surface 创建后主动上报排序值，任务栏按该值升序排列卡片
+- 提供提示气泡更新消息 `MSG_UPDATE_TOOLTIPS_VISIBLE`，插件请求任务栏更新提示气泡，任务栏收到后调用 `itemTips()` 方法
+- 提供面板尺寸变化消息 `MSG_DOCK_PANEL_SIZE_CHANGED`，任务栏面板尺寸变化时通知插件
+- 提供时尚模式消息 `MSG_DOCK_FASHION_MODE`，surface 创建时和模式变化时任务栏主动发送，插件据此调整布局
+- 提供插件属性消息 `MSG_PLUGIN_PROPERTY`，任务栏获取插件属性（如变色龙效果），返回 `QMap<QString, QVariant>`，对应属性常量 `PLUGIN_PROP_NEED_CHAMELEON`（是否需要变色龙效果）和 `PLUGIN_PROP_CHAMELEON_MARGIN`（变色龙边距）
+- 提供快捷面板尺寸常量：`QUICK_ITEM_HEIGHT`（60）快捷面板插件高度、`QUICK_ITEM_SINGLE_WIDTH`（70）单格宽度、`QUICK_ITEM_MULTI_WIDTH`（150）双格宽度、`QUICK_ITEM_FULL_WIDTH`（310）整行宽度
+- 提供插件固定尺寸常量：`DOCK_PLUGIN_ITEM_FIXED_WIDTH`（16）和 `DOCK_PLUGIN_ITEM_FIXED_HEIGHT`（16）及组合 `DOCK_PLUGIN_ITEM_FIXED_SIZE`，用于任务栏插件；`TRAY_PLUGIN_ITEM_FIXED_WIDTH`（16）和 `TRAY_PLUGIN_ITEM_FIXED_HEIGHT`（16）及组合 `TRAY_PLUGIN_ITEM_FIXED_SIZE`，用于托盘插件；`DOCK_POPUP_WIDGET_WIDTH`（330）任务栏弹窗宽度
+- 提供快捷面板标识常量：`QUICK_TOP_ACTION` 标识快捷面板子页面右上角控件，`QUICK_ITEM_KEY` 标识快捷面板详情页面 itemWidget 对应的 itemKey
+- 提供其他常量：`DOCK_PLUGIN_MIME`（Dock 插件 MIME 类型 `dock/plugin`）、`PLUGIN_ITEM_WIDTH`（300）插件项宽度、`DOCK_MAX_SIZE`（100）Dock 最大尺寸、`PLUGIN_MIN_ICON_NAME`（`-dark`，图标采用深色的最小尺寸后缀）、`IS_TOUCH_STATE`（触摸状态属性名）、`dockMenuItemId` 和 `unDockMenuItemId`（右键菜单驻留/移除驻留选项标识）、`REQUEST_SHUTDOWN` 和 `SHUTDOWN_MENU_FLAG`（电源插件请求调出电源管理标识）
+
+#### 使用场景
+
+插件在实现接口方法、处理消息通信、声明标志位或读取任务栏运行状态时，引用 `Dock` 命名空间下的对应枚举值和常量。
+
+### PluginProxyInterface
+
+#### 定位
+
+框架传给插件的代理接口，插件通过 `PluginsItemInterface::init()` 接收框架传递的代理对象指针，调用代理方法向框架发送请求。位于全局命名空间，声明在 `pluginproxyinterface.h` 中。
+
+#### 功能能力总结
+
+- 向任务栏添加新的 Dock 项，通过插件接口指针和项标识指定要添加的项；若项标识已存在则新项将被忽略，插件需确保同一插件的多个项标识各不相同
+- 请求更新（重绘）指定 Dock 项，通过插件接口指针和项标识定位目标项
+- 请求移除指定 Dock 项，通过插件接口指针和项标识定位目标项；框架不删除插件对象，内存由插件自行管理
+- 请求设置 Dock 项所在窗口的自动隐藏行为，控制任务栏窗口是否自动隐藏
+- 请求刷新 Dock 项所在窗口的可见性状态
+- 请求设置 Dock 项弹出面板（Applet）的可见性，控制弹出面板的显示或隐藏
+- 将插件配置键值对持久化保存到配置文件 `~/.config/deepin/dde-dock.conf`，所有插件的配置按 `pluginName()` 返回值分组存储
+- 从配置文件读取插件配置值，支持传入默认值作为键不存在时的回退返回
+- 从配置文件移除插件配置，传入键列表移除指定键值对，传入空列表移除该插件的所有配置
+
+#### 使用场景
+
+插件在运行时通过代理对象向框架添加、更新、移除 Dock 项，控制窗口隐藏和弹出面板可见性，以及持久化读写插件配置。
+
+### PluginManagerInterface
+
+#### 定位
+
+插件管理器接口，提供查询已加载插件列表、项标识和元数据的能力。继承自 `QObject`，位于全局命名空间，声明在 `pluginmanagerinterface.h` 中。
+
+#### 功能能力总结
+
+- 查询所有已加载的插件接口指针列表
+- 查询在控制中心个性化设置中显示的插件接口指针列表
+- 查询当前已加载的插件接口指针列表
+- 根据插件接口指针查询对应的项标识
+- 根据插件接口指针查询插件的元数据（`QJsonObject` 格式）
+- 提供插件加载完成信号 `pluginLoadFinished`，在所有插件加载完毕时发出
+
+#### 使用场景
+
+插件或外部模块需要查询已加载插件信息或等待插件加载完成时，通过管理器接口获取插件列表和元数据。
