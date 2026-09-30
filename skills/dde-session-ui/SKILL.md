@@ -1,13 +1,13 @@
 ---
 name: dde-session-ui
-description: dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏显示控制、低电量警告提示、许可证内容确认、壁纸色调处理、触摸屏校准、窗口管理器选择、密码重置、系统警告提示、欢迎引导、登录提醒、会话切换、挂起确认、蓝牙配对确认、OSD 显示控制、通知服务、内存警告提示功能，以及登录提醒开关配置（仅适用于 dde-session-ui 自身的登录提醒功能）
+description: dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏显示控制、低电量警告提示、许可证内容确认、壁纸色调处理、触摸屏校准、窗口管理器选择、密码重置、系统警告提示、欢迎引导、登录提醒、会话切换、挂起确认、蓝牙配对确认功能，以及登录提醒开关配置（仅适用于 dde-session-ui 自身的登录提醒功能）
 Categories:
   - Application
 ---
 
 # dde-session-ui
 
-dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏显示控制、低电量警告提示、许可证内容确认、壁纸色调处理、触摸屏校准、窗口管理器选择、密码重置、系统警告提示、欢迎引导、登录提醒、会话切换、挂起确认、蓝牙配对确认、OSD 显示控制、通知服务、内存警告提示功能，以及登录提醒开关配置。
+dde-session-ui 是 DDE 通用 UI 组件集合，提供系统会话中的各类图形化交互界面。该 skill 提供黑屏显示控制、低电量警告提示、许可证内容确认、壁纸色调处理、触摸屏校准、窗口管理器选择、密码重置、系统警告提示、欢迎引导、登录提醒、会话切换、挂起确认、蓝牙配对确认功能，以及登录提醒开关配置。
 
 ## CLI 命令
 
@@ -95,14 +95,6 @@ DDE 蓝牙 PIN 码确认对话框，用于显示蓝牙设备配对时的 PIN 码
 
 详见 [dde-bluetooth-dialog.md](references/cli/dde-bluetooth-dialog.md)
 
-### dmemory-warning-dialog
-
-> ⚠️ 已废弃/不推荐使用：该模块已在 CMakeLists.txt 中注释禁用，但仍保留源码。
-
-内存警告对话框，在系统内存不足时弹出警告提示。
-
-详见 [dmemory-warning-dialog.md](references/cli/dmemory-warning-dialog.md)
-
 ## D-Bus 接口
 
 ### 黑屏控制
@@ -128,30 +120,6 @@ DDE 蓝牙 PIN 码确认对话框，用于显示蓝牙设备配对时的 PIN 码
 该接口为 D-Bus 激活型服务，用于欢迎界面的进程单实例控制。
 
 详见 [org.deepin.dde.Welcome1.md](references/dbus/org.deepin.dde.Welcome1.md)
-
-### OSD 显示控制
-
-> ⚠️ 已废弃/不推荐使用：该模块已在 CMakeLists.txt 中注释禁用，但仍保留源码。相关能力现由 dde-shell 插件提供。
-
-提供 OSD 面板的显示控制能力。
-
-详见 [org.deepin.dde.Osd1.md](references/dbus/org.deepin.dde.Osd1.md)
-
-### 通知服务
-
-> ⚠️ 已废弃/不推荐使用：该模块已在 CMakeLists.txt 中注释禁用，但仍保留源码。相关能力现由 dde-shell 插件提供。
-
-提供 DDE 通知扩展服务能力。
-
-详见 [org.deepin.dde.Notification1.md](references/dbus/org.deepin.dde.Notification1.md)
-
-### 内存警告对话框
-
-> ⚠️ 已废弃/不推荐使用：该模块已在 CMakeLists.txt 中注释禁用，但仍保留源码。
-
-提供内存警告对话框的显示控制能力。
-
-详见 [org.deepin.dde.MemoryWarningDialog1.md](references/dbus/org.deepin.dde.MemoryWarningDialog1.md)
 
 ## DConfig 配置项
 
