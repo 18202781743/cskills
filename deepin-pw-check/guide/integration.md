@@ -1,10 +1,10 @@
 # 集成与构建配置
 
-使用 deepin-pw-check 公开接口前，需要安装开发包 `libdeepin_pw_check-dev`。该开发包提供公开头文件、链接库和 pkg-config 元数据。
+使用 deepin-pw-check 公开接口前，需要安装开发包 `libdeepin-pw-check-dev`。该开发包提供公开头文件、链接库和 pkg-config 元数据。
 
 ## 开发包
 
-开发包名为 `libdeepin_pw_check-dev`，提供以下内容：
+开发包名为 `libdeepin-pw-check-dev`，提供以下内容：
 
 - 公开头文件 `deepin_pw_check.h`，安装在 `/usr/include/` 目录下。
 - 动态链接库 `libdeepin_pw_check.so` 和静态链接库 `libdeepin_pw_check.a`。

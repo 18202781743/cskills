@@ -10,32 +10,14 @@ deepin-pw-check 提供密码复杂度校验、密码强度评估、密码校验�
 
 ### 功能能力总结
 
-- **类型定义**：`PW_ERROR_TYPE` 枚举，包含 16 个枚举值，其中 1 个成功码 `PW_NO_ERR` 和 15 个密码校验错误码（`PW_NO_ERR`、`PW_ERR_PASSWORD_EMPTY`、`PW_ERR_LENGTH_SHORT`、`PW_ERR_LENGTH_LONG`、`PW_ERR_CHARACTER_INVALID`、`PW_ERR_PALINDROME`、`PW_ERR_WORD`、`PW_ERR_PW_REPEAT`、`PW_ERR_PW_MONOTONE`、`PW_ERR_PW_CONSECUTIVE_SAME`、`PW_ERR_PW_FIRST_UPPERM`、`PW_ERR_PARA`、`PW_ERR_INTERNAL`、`PW_ERR_USER`、`PW_ERR_CHARACTER_TYPE_TOO_FEW`、`PW_ERR_SAME_AS_USERNAME`）。
-- **类型定义**：`PASSWORD_LEVEL_TYPE` 枚举，包含 4 个密码强度等级（`PASSWORD_STRENGTH_LEVEL_ERROR`、`PASSWORD_STRENGTH_LEVEL_LOW`、`PASSWORD_STRENGTH_LEVEL_MIDDLE`、`PASSWORD_STRENGTH_LEVEL_HIGH`）。
-- **宏定义**：`LEVEL_STANDARD_CHECK`（标准校验，检查长度和字符）、`LEVEL_STRICT_CHECK`（严格校验，检查长度、字典词、回文和字符有效性）。
-- `deepin_pw_check`：密码复杂度校验，校验密码是否满足策略要求，返回错误码。
-- `deepin_pw_check_grub2`：grub2 密码复杂度校验，读取 grub2 配置文件校验密码，返回错误码。
-- `get_new_passwd_strength_level`：评估新密码的强度等级，返回 `PASSWORD_LEVEL_TYPE`。
-- `get_new_passwd_strength_level_grub2`：评估新密码的 grub2 强度等级，返回 `PASSWORD_LEVEL_TYPE`。
-- `err_to_string`：将 `PW_ERROR_TYPE` 错误码转换为可读字符串。
-- `err_to_string_grub2`：将 `PW_ERROR_TYPE` 错误码转换为可读字符串（grub2 版）。
-- `get_pw_min_length`：获取密码最小长度要求。
-- `get_pw_min_length_grub2`：获取 grub2 密码最小长度要求。
-- `get_pw_max_length`：获取密码最大长度要求。
-- `get_pw_max_length_grub2`：获取 grub2 密码最大长度要求。
-- `get_pw_min_character_type`：获取密码最小字符类型数要求。
-- `get_pw_min_character_type_grub2`：获取 grub2 密码最小字符类型数要求。
-- `get_pw_validate_policy`：获取密码校验策略，由配置文件 `Password:VALIDATE_POLICY` 指定。
-- `get_pw_validate_policy_grub2`：获取 grub2 密码校验策略，由 grub2 配置文件 `Password:VALIDATE_POLICY` 指定。
-- `get_pw_palimdrome_num`：获取密码回文检查位数。
-- `get_pw_palimdrome_num_grub2`：获取 grub2 密码回文检查位数。
-- `get_pw_monotone_character_num`：获取密码单调递增字符检查位数。
-- `get_pw_monotone_character_num_grub2`：获取 grub2 密码单调递增字符检查位数。
-- `get_pw_consecutive_same_character_num`：获取密码连续相同字符检查位数。
-- `get_pw_consecutive_same_character_num_grub2`：获取 grub2 密码连续相同字符检查位数。
-- `set_debug_flag`：设置调试标志，控制调试输出。
+- **密码复杂度校验**：根据配置文件中定义的密码策略对密码进行全面校验，依次检查密码是否为空、长度是否在允许范围内、字符是否均属于允许的字符集（拒绝中文字符）、字符类型数量是否达到最低要求、是否包含超过阈值的回文子串、是否匹配字典中的常见单词（基于 cracklib）、是否包含单调递增或递减的字符序列（包括键盘相邻按键序列）、是否包含连续相同字符、首字母是否大写（如策略启用）、密码是否与用户名相同（在严格策略下）。校验通过返回成功码，任一环节不通过则返回对应的错误码，调用者无需自行实现校验逻辑。普通版和 grub2 版分别使用各自的配置文件，互不干扰。
+- **密码强度等级评估**：综合密码长度和包含的字符类型数量（大写字母、小写字母、数字、特殊字符），结合配置文件中定义的强度阈值，将密码强度划分为错误、低、中、高四个等级，供调用方根据强度等级进行 UI 提示或策略决策。普通版和 grub2 版各自读取对应配置文件中的阈值。
+- **密码校验策略查询**：从配置文件中读取当前生效的密码校验策略参数，包括密码最小长度、最大长度、最小字符类型数、允许的字符集策略、回文检查位数、单调字符检查位数、连续相同字符检查位数。调用方可在校验前展示当前策略要求，或在校验失败时结合策略参数生成更具体的提示。普通版和 grub2 版分别查询各自的配置文件。
+- **错误码到可读信息转换**：将密码校验返回的错误码转换为面向最终用户的本地化可读提示字符串，部分提示会动态拼接当前配置中的实际策略参数（如最小长度、最小字符类型数等），使提示信息更加具体。普通版和 grub2 版分别使用各自的配置文件生成提示。
+- **调试控制**：通过设置全局调试标志，控制库内部是否输出包含源文件名、函数名和行号的调试日志，便于开发阶段排查密码校验流程问题。
+- **校验模式与类型定义**：提供标准校验和严格校验两种模式宏定义，标准模式仅检查长度和字符有效性，严格模式额外检查字典词、回文和字符有效性；定义了涵盖全部密码校验结果的错误码枚举（1 个成功码加 15 个错误码）和四级密码强度等级枚举，作为校验和评估功能的统一返回类型。
 
-`deepin_pw_check` 和 `deepin_pw_check_grub2` 的 `level` 参数在头文件中标注为 Deprecated。`get_pw_*` 系列函数也接受 `level` 参数，但头文件未显式标注 Deprecated。
+> **注意**：密码复杂度校验和策略查询接口中的校验级别参数在头文件中已标注为废弃，保留仅为向后兼容，实际校验行为由配置文件中的策略参数决定。
 
 ### 使用场景
 
