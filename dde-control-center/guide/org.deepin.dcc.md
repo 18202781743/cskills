@@ -30,7 +30,7 @@ import org.deepin.dcc 1.0
 
 ### `dccObj`
 
-框架在渲染 DccObject 的页面内容时，将当前正在渲染的 DccObject 实例注入为 `dccObj` 属性。插件在页面组件中可通过 `dccObj` 访问当前节点的属性，如 `dccObj.displayName`、`dccObj.icon`、`dccObj.description`、`dccObj.name` 等。可用范围为 DccObject 的 `page` 组件内（即页面渲染组件中）。
+框架在渲染 DccObject 的页面内容时，将当前正在渲染的 DccObject 实例注入为 `dccObj` 属性。插件在页面组件中可通过 `dccObj` 访问当前节点的属性，如 `dccObj.displayName`、`dccObj.icon`、`dccObj.description`、`dccObj.name`。可用范围为 DccObject 的 `page` 组件内（即页面渲染组件中）。
 
 ## 模块API介绍
 
