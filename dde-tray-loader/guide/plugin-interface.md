@@ -1,16 +1,76 @@
-# 导出类型介绍
+# 插件项接口
 
-dde-tray-loader 提供 Dock 插件接口体系，包括基础插件接口、V2 扩展插件接口、V3 扩展插件接口、插件代理接口和插件管理器接口，支持插件名称与显示名称、初始化、项部件、项提示部件、项弹出面板、项命令、项上下文菜单、项排序与容器、插件禁用、显示模式与位置变化通知、图标刷新、插件设置变化通知、插件标志位、图标获取、子插件传递、消息回调与消息通信、卡片 surface、项增删与更新、窗口自动隐藏与可见性刷新、弹出面板可见性控制、配置持久化、插件加载与查询。
+dde-tray-loader 提供 Dock 插件项接口体系，包括基础插件接口（V1）、V2 扩展插件接口和 V3 卡片 surface 扩展插件接口。插件开发者通过继承这些接口类并实现虚函数，提供任务栏项的 UI 部件、用户交互、排序与容器管理、显示模式与位置变化响应、插件标志位声明、图标获取、消息通信以及卡片 surface 能力。接口以 header-only 形式发布，使用方包含头文件即可使用，无需链接额外的共享库。
 
-辅助类型 `Dock::DisplayMode`（Fashion、Efficient）、`Dock::Position`（Top、Right、Bottom、Left）、`Dock::HideMode`（KeepShowing、KeepHidden、SmartHide）、`Dock::HideState`（Unknown、Show、Hide）、`Dock::PluginFlag`/`Dock::PluginFlags`、`Dock::IconType`、`Dock::ThemeType`（ThemeType_None、ThemeType_Light、ThemeType_Dark）和 `DockPart`（QuickShow、QuickPanel、SystemPanel、DCCSetting）定义在 `constants.h` 和 `common.h` 中，作为接口方法的参数或返回值类型使用，不单独建章节。
+## 开发包
 
-## PluginsItemInterface
+使用 dde-tray-loader 公开接口前，需要安装开发包 `dde-tray-loader-dev`。该开发包以 header-only 形式提供公开头文件和构建配置信息，不提供编译库文件。
 
-### 定位
+## 集成
+
+### CMake 配置
+
+CMake 是推荐的集成方式。查找 `DdeTrayLoader` 包后，配置脚本会自动将 `dde-dock/` 头文件目录添加到全局包含路径，无需手动设置 `include_directories()` 或 `target_link_libraries()`：
+
+```cmake
+find_package(DdeTrayLoader REQUIRED)
+```
+
+由于开发包为 header-only 形式，不提供编译库文件，也不创建任何 IMPORTED 目标，因此不需要链接步骤。`find_package` 执行后即可直接包含公开头文件。
+
+仍受支持的旧写法查找 `DdeDock` 包，同样会自动添加头文件包含路径：
+
+```cmake
+find_package(DdeDock REQUIRED)
+```
+
+此写法为兼容方式，新工程应使用 `DdeTrayLoader` 包。
+
+开发包同时提供 pkg-config 模块。`dde-dock` 模块的 Cflags 指向 `dde-dock/` 头文件目录，提供所有公开接口头文件的搜索路径，无链接库（Libs）。`dde-tray-loader` 模块提供 Wayland 协议描述文件的搜索路径，其 Cflags 指向 `dde-tray-loader/` 目录。如需同时引用 API 头文件和协议文件，可组合使用两个模块：
+
+```sh
+pkg-config --cflags dde-dock dde-tray-loader
+```
+
+### 构建与安装插件
+
+dde-tray-loader 开发包不提供专用的 CMake 宏或函数用于构建插件。插件作为普通的 Qt 共享库进行构建，需在 CMake 中声明 `QT_PLUGIN` 宏，将接口头文件目录加入包含路径，并将编译产物安装到 Dock 插件目录。
+
+插件安装路径为 `lib/dde-dock/plugins/`。
+
+### 插件注册
+
+插件通过 Qt Plugin 机制注册到 Dock 框架。插件类需使用 `Q_PLUGIN_METADATA` 声明插件元数据，使用 `Q_INTERFACES` 声明所实现的接口。Dock 框架通过 IID 区分不同版本的插件接口：
+
+- V1 接口 IID 为 `com.deepin.dock.PluginsItemInterface`
+- V2 接口 IID 为 `com.deepin.dock.PluginsItemInterface_V2`
+- V3 接口 IID 为 `com.deepin.dock.PluginsItemInterface_V3`
+
+插件根据所实现的最高版本接口，使用对应的 IID 进行注册。Dock 框架在启动时扫描插件目录，加载符合接口版本的插件。
+
+API 版本号为 2.0.0，V2 接口方法标注 `@since 2.0.0`。插件可在编译期通过 `DOCK_API_VERSION` 宏和 `DOCK_API_VERSION_CHECK` 宏比对版本号，判断接口兼容性。
+
+### 使用方式
+
+在 C++ 源文件中通过以下方式引入公开头文件：
+
+```cpp
+#include <pluginsiteminterface.h>
+#include <pluginsiteminterface_v2.h>
+#include <pluginsiteminterface_v3.h>
+```
+
+辅助类型（枚举与常量）位于 `Dock` 命名空间，接口类（PluginsItemInterface、PluginsItemInterfaceV2、PluginsItemInterfaceV3）位于全局命名空间。`DockPart` 枚举定义在 `common.h` 中，位于全局命名空间。
+
+## 模块API介绍
+
+### PluginsItemInterface
+
+#### 定位
 
 Dock 插件基础接口，所有 Dock 插件必须实现的最小接口集合。位于全局命名空间，声明 IID `com.deepin.dock.PluginsItemInterface`。插件通过继承此类并实现纯虚函数提供 Dock 项的基本能力。
 
-### 功能能力总结
+#### 功能能力总结
 
 - 提供插件身份标识，包括用于框架内部区分的唯一名称和面向用户展示的显示名称
 - 在插件加载阶段接收框架传递的代理对象指针并保存，建立插件与 Dock 框架之间的双向通信通道
@@ -28,17 +88,17 @@ Dock 插件基础接口，所有 Dock 插件必须实现的最小接口集合。
 - 支持插件尺寸策略声明，可选择跟随系统或自定义尺寸
 - 提供已废弃的插件类型分类方法（Normal/Fixed），已由 V2 接口的标志位机制替代
 
-### 使用场景
+#### 使用场景
 
 开发 Dock 插件时，作为最小接口集合继承实现，提供插件名称、显示名称、初始化、项部件、提示部件、弹出面板、点击命令、上下文菜单、排序与容器管理、禁用控制、显示模式与位置变化响应、图标刷新和设置变化通知能力。
 
-## PluginsItemInterfaceV2
+### PluginsItemInterfaceV2
 
-### 定位
+#### 定位
 
 Dock 插件接口 V2，继承自 PluginsItemInterface，扩展插件标志位、图标获取、子插件传递和消息通信能力。位于全局命名空间，声明 IID `com.deepin.dock.PluginsItemInterface_V2`。V2 接口方法标注 `@since 2.0.0`。
 
-### 功能能力总结
+#### 功能能力总结
 
 在 V1 基础上增加以下能力（`@since 2.0.0`）：
 
@@ -47,17 +107,17 @@ Dock 插件接口 V2，继承自 PluginsItemInterface，扩展插件标志位、
 - 接收框架传递的子插件指针，主要用于托盘插件和快捷面板插件承载其他插件模块，普通插件无需关注
 - 提供基于 JSON 消息的双向通信机制：插件可注册消息回调函数向框架发送 JSON 格式请求，框架也可向插件发送 JSON 请求获取数据或执行指令并接收 JSON 响应；此机制在不添加新虚函数、不破坏二进制兼容性的前提下扩展插件与框架之间的交互能力
 
-### 使用场景
+#### 使用场景
 
 需要自定义插件标志位以指定插件类型和属性时，使用 flags 方法。需要在控制中心个性化设置中显示插件图标时，使用 icon 方法。开发托盘插件或快捷面板插件需要接收子插件指针时，使用 addPlugin 方法。需要与 Dock 框架进行 JSON 消息通信以扩展功能时，使用 setMessageCallback 和 message 方法。
 
-## PluginsItemInterfaceV3
+### PluginsItemInterfaceV3
 
-### 定位
+#### 定位
 
 Dock 插件接口 V3，继承自 PluginsItemInterfaceV2，扩展卡片 surface 能力。位于全局命名空间，声明 IID `com.deepin.dock.PluginsItemInterface_V3`。插件通过卡片 surface 将原生窗口导出为 Wayland surface，在 Dock 卡片区展示。
 
-### 功能能力总结
+#### 功能能力总结
 
 在 V2 基础上增加以下能力：
 
@@ -68,38 +128,6 @@ Dock 插件接口 V3，继承自 PluginsItemInterfaceV2，扩展卡片 surface �
 - 为卡片 surface 提供独立的鼠标悬停提示部件，默认复用项的提示部件，两者均未提供时框架回退到插件显示名称
 - 响应卡片 surface 上下文菜单项的点击事件，默认转发到项的菜单项点击处理以保持向后兼容
 
-### 使用场景
+#### 使用场景
 
 需要将插件原生窗口作为卡片在 Dock 卡片区展示时，实现 cardItemKey 和 cardWindow。需要控制卡片排列顺序时，实现 cardOrder。需要为卡片提供独立的上下文菜单和提示部件时，实现 cardContextMenu、cardTipsWidget 和 invokedCardMenuItem。
-
-## PluginProxyInterface
-
-### 定位
-
-插件代理接口，插件通过此接口与 Dock 框架通信。位于全局命名空间。插件在初始化时接收代理对象指针并保存，后续通过代理对象通知框架项变化、请求窗口行为和持久化配置。
-
-### 功能能力总结
-
-- 向框架通知项的生命周期事件：新增项（需保证同一插件下所有项标识互不重复，否则新项被忽略）、更新项（触发重绘）、移除项（框架不删除插件的对象，内存由插件自行管理）
-- 请求框架控制窗口行为：设置指定项的窗口自动隐藏行为、刷新窗口可见性、控制指定项弹出面板的显示与隐藏
-- 持久化插件配置数据：以插件名称为分组，将键值对保存到 dde-dock 配置文件中；支持按键读取配置值并提供默认值兜底；支持按键列表批量移除配置项，键列表为空时移除该插件的所有配置
-
-### 使用场景
-
-插件需要向 Dock 框架通知项的添加、更新或移除时，使用 itemAdded、itemUpdate 和 itemRemoved。插件需要请求窗口自动隐藏、刷新窗口可见性或控制弹出面板可见性时，使用 requestWindowAutoHide、requestRefreshWindowVisible 和 requestSetAppletVisible。插件需要持久化配置数据时，使用 saveValue、getValue 和 removeValue。
-
-## PluginManagerInterface
-
-### 定位
-
-插件管理器接口，提供插件加载和查询能力。位于全局命名空间，继承自 QObject。
-
-### 功能能力总结
-
-- 枚举已加载的插件：查询所有已加载的插件列表、查询在控制中心设置中显示的插件列表、查询当前正在使用的插件列表
-- 获取指定插件接口对象的项标识和元数据（JSON 格式），用于在编程层面识别和检视插件
-- 在所有插件加载完成后发出通知信号，便于依赖其他插件就绪状态的后续操作
-
-### 使用场景
-
-需要以编程方式查询已加载的插件、设置中的插件或当前使用的插件时，使用 plugins、pluginsInSetting 和 currentPlugins。需要获取插件的 itemKey 或元数据时，使用 itemKey 和 metaData。需要在插件加载完成后执行后续操作时，连接 pluginLoadFinished 信号。
