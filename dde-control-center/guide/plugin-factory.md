@@ -30,9 +30,9 @@ target_link_libraries(your-plugin PRIVATE Dde::Control-Center)
 
 开发包提供以下 CMake 宏用于构建和安装插件：
 
-- `dcc_build_plugin(NAME <name> TARGET <target> [QML_ROOT_DIR <dir>] [QML_FILES <files...>] [RESOURCE_FILES <files...>])`：构建插件的 QML 模块和 C++ 库，自动处理 QML 资源。`NAME` 指定插件名（仅允许字母和数字），`TARGET` 指定 C++ 库目标名，`QML_ROOT_DIR` 指定 QML 文件根目录（默认为 `${CMAKE_CURRENT_SOURCE_DIR}/qml`），`QML_FILES` 和 `RESOURCE_FILES` 可显式指定 QML 文件和资源文件（未指定时自动搜索）。
-- `dcc_install_plugin(NAME <name> TARGET <target> [QML_ROOT_DIR <dir>] [QML_FILES <files...>] [RESOURCE_FILES <files...>])`：调用 `dcc_build_plugin` 完成构建后，额外将 `TARGET` 指定的 C++ 库安装到插件目录。
-- `dcc_handle_plugin_translation(NAME <name> [SOURCE_DIR <dir>] [QML_FILES <files...>] [SOURCE_FILES <files...>])`：处理插件翻译，生成 `.ts` 翻译源文件和 `.qm` 编译翻译文件并安装。`NAME` 指定插件名，`SOURCE_DIR` 指定源文件根目录（默认为 `${CMAKE_CURRENT_SOURCE_DIR}`），`QML_FILES` 和 `SOURCE_FILES` 可显式指定 QML 文件和源文件（未指定时自动搜索）。
+- `dcc_build_plugin`：构建插件的 QML 模块和 C++ 库，自动处理 QML 资源
+- `dcc_install_plugin`：在 `dcc_build_plugin` 基础上将 C++ 库安装到插件目录
+- `dcc_handle_plugin_translation`：处理插件翻译，生成并安装 `.ts` 和 `.qm` 翻译文件
 
 插件安装路径为 `${CMAKE_INSTALL_LIBDIR}/dde-control-center/plugins_v1.1/<plugin-name>/`，翻译文件安装路径为 `${CMAKE_INSTALL_DATAROOTDIR}/dde-control-center/translations/v1.1/`。
 
@@ -82,6 +82,7 @@ DCC_FACTORY_CLASS(MyModule)
 #### 功能能力总结
 
 - 由控制中心框架通过 Qt 插件机制自动加载，负责创建并返回插件主对象，使插件 QML 页面能直接访问插件提供的数据和业务逻辑
+- `create()` 方法返回的数据对象会作为 `dccData` 暴露给插件 QML，每个 DccObject 均可在其页面中通过 `dccData` 访问该数据对象，获取插件提供的数据模型和业务接口
 - 支持纯 C++ 插件形态，当插件不提供 QML 页面时可直接返回完整的配置对象树
 - 提供注册宏自动生成工厂子类，完成 Qt 插件元数据声明和接口注册
 
