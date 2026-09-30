@@ -6,10 +6,10 @@ dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提�
 
 ## 导出类型
 
-- [应用加载接口](modules.md)：DTK QML 应用加载器、应用主窗口接口与应用预加载扩展接口
-- [快速渲染接口](modules.md)：QML 场景中的帧缓冲区位块传输渲染与视口裁剪渲染
-- [QML 窗口接口](modules.md)：DTK 窗口及其附加属性
-- [DTK5 主题兼容接口](modules.md)：平台主题代理与系统调色板 QML 项（仅 DTK5）
+- [应用加载](dtkdeclarative-dev.md#应用加载)：DTK QML 应用加载器、应用主窗口接口与应用预加载扩展接口
+- [快速渲染](dtkdeclarative-dev.md#快速渲染)：QML 场景中的帧缓冲区位块传输渲染与视口裁剪渲染
+- [QML 窗口](dtkdeclarative-dev.md#qml-窗口)：DTK 窗口及其附加属性
+- [DTK5 主题兼容](dtkdeclarative-dev.md#dtk5-主题兼容)：平台主题代理与系统调色板 QML 项（仅 DTK5）
 - [org.deepin.dtk 按钮控件](org.deepin.dtk.md)：DTK 风格按钮、开关按钮与按钮容器
 - [org.deepin.dtk 输入控件](org.deepin.dtk.md)：DTK 风格文本输入、数值输入、选择控件与滑动条
 - [org.deepin.dtk 对话框与窗口控件](org.deepin.dtk.md)：DTK 风格对话框、弹出窗口、应用窗口与关于对话框
@@ -20,9 +20,9 @@ dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提�
 
 ## 按功能查阅
 
-- 加载 DTK QML 应用：参见 [DAppLoader](modules.md#dapploader)
-- QML 场景中的位块传输与视口渲染：参见 [DQuickBlitFramebuffer](modules.md#dquickblitframebuffer) 与 [DQuickItemViewport](modules.md#dquickitemviewport)
-- DTK 窗口属性：参见 [DQuickWindow](modules.md#dquickwindow) 与 [DQuickWindowAttached](modules.md#dquickwindowattached)
+- 加载 DTK QML 应用：参见 [DAppLoader](dtkdeclarative-dev.md#dapploader)
+- QML 场景中的位块传输与视口渲染：参见 [DQuickBlitFramebuffer](dtkdeclarative-dev.md#dquickblitframebuffer) 与 [DQuickItemViewport](dtkdeclarative-dev.md#dquickitemviewport)
+- DTK 窗口属性：参见 [DQuickWindow](dtkdeclarative-dev.md#dquickwindow) 与 [DQuickWindowAttached](dtkdeclarative-dev.md#dquickwindowattached)
 - DTK 风格按钮：参见 [Button](org.deepin.dtk.md#button) 与 [IconButton](org.deepin.dtk.md#iconbutton)
 - DTK 风格文本输入：参见 [TextField](org.deepin.dtk.md#textfield) 与 [SearchEdit](org.deepin.dtk.md#searchedit)
 - DTK 风格滑动条：参见 [Slider](org.deepin.dtk.md#slider) 与 [TipsSlider](org.deepin.dtk.md#tipsslider)
@@ -34,5 +34,5 @@ dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提�
 - DTK 风格阴影与面板：参见 [BoxShadow](org.deepin.dtk.md#boxshadow) 与 [FloatingPanel](org.deepin.dtk.md#floatingpanel)
 - DTK 风格浮动消息提示：参见 [FloatingMessage](org.deepin.dtk.md#floatingmessage)
 - DTK 设置对话框控件：参见 [SettingsDialog](org.deepin.dtk.settings.md#settingsdialog) 与 [OptionDelegate](org.deepin.dtk.settings.md#optiondelegate)
-- 将 dtkdeclarative 引入 CMake 工程：参见 [modules.md](modules.md) 中的 `## 开发包` 与 `## 集成` 章节
+- 将 dtkdeclarative 引入 CMake 工程：参见 [dtkdeclarative-dev.md](dtkdeclarative-dev.md) 中的 `## 开发包` 与 `## 集成` 章节
 - 将 DTK QML 控件引入 QML 工程：参见 [org.deepin.dtk.md](org.deepin.dtk.md) 中的 `## 集成` 章节
