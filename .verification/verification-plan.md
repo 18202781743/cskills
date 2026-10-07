@@ -717,3 +717,38 @@ grep "Button" /home/work/dtkdeclarative/build6/plugins/org/deepin/dtk/qmldir
 
 （总结验证结果）
 ```
+
+---
+
+## DTK 二次开发接口文档验证（skills/dtk/interface）
+
+本节独立验证二次开发接口目录，不替代前面的 `dtk-development` 指南验证项。
+以 `~/repo/dtkcore`、`~/repo/dtkgui`、`~/repo/dtkwidget` 和 `~/repo/dtkdeclarative`
+当前公开头文件、安装清单、QML 文件及注册代码为基准，保留各类型的“定位／功能能力总结／使用场景”格式。
+
+逐项来源见 [dtk-interface-manifest.json](dtk-interface-manifest.json)，结果见
+[dtk-interface-report.md](dtk-interface-report.md)。源码版本改变时重新审阅能力说明，不能仅更新版本号。
+
+| 模块 | 实际文档 | 验证内容 |
+|------|----------|----------|
+| dtkcore | [dtkcore-dev.md](../skills/dtk/interface/dtkcore/dtkcore-dev.md) | 配置后端和嵌套版本结构、DBus、DCI、文件路径与范围检查、日志通知、系统许可、结果模板和线程工具；核对 DTK5 的 GSettingsBackend、DTimedLoop、DAsync 与 DTK6 的 DThreadUtils |
+| dtkgui | [dtkgui-dev.md](../skills/dtk/interface/dtkgui/dtkgui-dev.md) | DCI 图标与播放器、字体字号、调色板、拖拽双方角色、平台窗口和主题、区域监视、桌面服务与图像工具；核对 WMBlurArea 字段和废弃标记 |
+| dtkwidget | [dtkwidget-dev.md](../skills/dtk/interface/dtkwidget/dtkwidget-dev.md) | 按钮、布局、展开与页面栈、对话框、消息、编辑器、视图模型、打印控件和全部设置结构、样式选项、动画、水印、窗口、标题栏工具和应用接口；核对兼容控件、Qt 别名和自由函数 |
+| dtkdeclarative C++ | [dtkdeclarative-dev.md](../skills/dtk/interface/dtkdeclarative/dtkdeclarative-dev.md) | src.cmake 安装的公开类型、加载器构造和插件生命周期、预加载接口的 creatApplication 拼写、背景采样与视口、窗口附加对象、DTK5 主题兼容类型 |
+| org.deepin.dtk | [org.deepin.dtk.md](../skills/dtk/interface/dtkdeclarative/org.deepin.dtk.md) | qt6/src/qml.cmake、QML_NAMED_ELEMENT、外部类型和显式注册的完整清单；继承、属性、信号、单例和不可创建附加类型；逐项核对 Qt5 注册差异及未完成源码实现 |
+| org.deepin.dtk.settings | [org.deepin.dtk.settings.md](../skills/dtk/interface/dtkdeclarative/org.deepin.dtk.settings.md) | 8 个 QML 文件和 SettingsOption、SettingsGroup、SettingsContainer，配置绑定、分组可见性、委托和重置；确认 Style 来自主模块的样式单例 |
+
+执行步骤：
+
+1. 按清单逐类型对照公开声明及实现；能力、方法名、枚举或版本条件不一致记为 FAIL，未找到记为 NOT FOUND，修正后重查。
+2. 扫描公开头文件的类型定义和 QML 导出清单，检查遗漏；明确排除私有嵌套类、内部命名空间助手及未注册的 QML 文件。Qt 别名不伪装为独立 DTK 子类。
+3. 检查跨文档链接、三段格式、重名章节、开发包和 CMake 集成入口。源码导出但实现不完整的组件须在能力与使用场景中标明限制。
+4. 执行以下可重复检查。脚本验证声明存在、导出覆盖、结构和文件链接；语义、安装条件和行为仍需第 1 步的人工源码对照。
+
+   ```bash
+   python .verification/verify-dtk-interface.py --source-root ~/repo
+   git diff --check
+   ```
+
+5. 有 DTK 开发包及 QML 运行环境时，编译集成片段并实例化所用控件。本次只增加能力描述，没有新增可执行示例；缺少运行环境时在报告记录未执行，不能标为运行 PASS。
+6. 检查 skill 入口的路由及 YAML。仓库原有 `Categories` 字段按项目格式保留；通用 skill 验证器对该字段的限制单独记录，不修改项目元数据以规避检查。
