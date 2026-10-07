@@ -1,6 +1,7 @@
 # DTK 二次开发接口验证报告
 
 验证日期：2026-10-07。范围：`skills/dtk/interface` 的六份文档及 `skills/dtk/SKILL.md` 开发接口入口。
+本轮重点复核 dtkdeclarative 三份文档的 DTK6 范围与功能叙述，其他模块沿用已有接口核对。
 
 ## 源码基准
 
@@ -19,17 +20,18 @@ dtkcore 的未跟踪 guide/、dtkgui 的 README.zh_CN.md 本地修改及未跟�
 
 每项保留定位、功能能力总结和使用场景。清单覆盖公开类型定义及 QML 具名导出，
 包括兼容类型、嵌套公开结构和模板；Qt 控件别名在使用方式中说明，`dwidgetutil.h` 自由函数单列。
-枚举保留在所属类型的能力说明中，内部助手和私有嵌套类型不作为开发接口推荐。
+内部助手和私有嵌套类型不作为开发接口推荐。dtkdeclarative 的条目仅覆盖 DTK6，
+正文说明功能与可观察结果，具体声明和实现依据只记录在本验证目录。
 
 | 文档 | 原有条目 | 当前条目 | 声明及覆盖检查 | 能力源码对照 |
 |------|----------|----------|----------------|--------------|
 | dtkcore-dev.md | 45 | 59 | PASS | PASS |
 | dtkgui-dev.md | 25 | 26 | PASS | PASS |
 | dtkwidget-dev.md | 108 | 177 | PASS | PASS |
-| dtkdeclarative-dev.md | 9 | 9 | PASS | PASS |
+| dtkdeclarative-dev.md | 9 | 7 | PASS | PASS |
 | org.deepin.dtk.md | 102 | 141 | PASS | PASS |
 | org.deepin.dtk.settings.md | 9 | 11 | PASS | PASS |
-| 合计 | 298 | 423 | FAIL 0，NOT FOUND 0 | 源码描述一致 |
+| 合计 | 298 | 421 | FAIL 0，NOT FOUND 0 | 功能描述与依据一致 |
 
 ## 重点修正的源码依据
 
@@ -47,18 +49,21 @@ dtkcore 的未跟踪 guide/、dtkgui 的 README.zh_CN.md 本地修改及未跟�
 | 当前公开 DPlatformHandle 与 DPlatformTheme 不因未来 TODO 被误标废弃 | dtkgui/include/kernel/dplatformhandle.h、dplatformtheme.h | PASS |
 | 配置后端、路径范围、结果模板和旧版异步类型 | dtkcore/include/global/dconfig.h、dconfigfile.h、include/filesystem/dcap*.h、include/base/dexpected.h、include/util/dasync.h、src/util/util.cmake | PASS |
 | DSecureString 不保证同时擦除普通 QString 副本 | dtkcore/include/global/dsecurestring.h、src/dsecurestring.cpp、include/util/dutil.h | PASS |
-| 加载器禁止默认构造、主组件与预加载接口、creatApplication 拼写 | dtkdeclarative/src/dapploader.h、dqmlappmainwindowinterface.h、dqmlapppreloadinterface.h | PASS |
+| 分阶段启动、主组件接入、预加载界面与运行环境准备 | dtkdeclarative/src/dapploader.h、dqmlappmainwindowinterface.h、dqmlapppreloadinterface.h 及对应实现 | PASS |
+| 仅保留 DTK6 的 7 个公开类型，移除两个兼容类型和 DTK5 集成说明 | dtkdeclarative/src/src.cmake 的公共安装列表及条件分支 | PASS |
 | 背景采样、视口与窗口附加属性 | dtkdeclarative/src/dquickblitframebuffer.h、dquickitemviewport.h、dquickwindow.h 及对应实现 | PASS |
 | DTK6 QML 文件、具名 C++ 类型、外部类型和运行时注册无遗漏 | dtkdeclarative/qt6/src/qml.cmake、src/**/*.h、qt6/src/dquickextendregister_p.h、qmlplugin/qmlplugin_plugin.cpp | PASS |
-| Qt5/Qt6 QML 注册差异，ButtonPanel 为 private，WindowQuitFullButton 未注册 | dtkdeclarative/qmlplugin/qmlplugin_plugin.cpp、qt6/src/qml.cmake | PASS |
+| 只依据 DTK6 导出清单，不加入其他模块类型及未导出的文件 | dtkdeclarative/qmlplugin/qmlplugin_plugin.cpp、qt6/src/qml.cmake | PASS |
 | DWindow、ColorSelector、MessageManager 为附加入口，AppLoader 为场景项 | dtkdeclarative/src/dquickwindow.h、src/private/dquickcontrolpalette_p.h、dmessagemanager_p.h、dquickapploaderitem_p.h | PASS |
 | 设置模块的 8 个 QML 类型和 3 个模型，Style 不属于设置模块 | dtkdeclarative/qt6/src/qml/settings/CMakeLists.txt、src/private/dsettingscontainer_p.h、qmlplugin/qmlplugin_plugin.cpp | PASS |
-| QML 插件与 Chameleon 风格包区分 | dtkdeclarative/debian/libdtk6declarative.install、libdtkdeclarative5.install 及 Chameleon 安装清单 | PASS |
+| DTK6 QML 插件与 Chameleon 风格包区分 | dtkdeclarative/debian/libdtk6declarative.install、qml6-module-qtquick-controls2-styles-chameleon.install | PASS |
+| 可折叠分组、内容行过渡及浮动面板的模糊与回退背景 | dtkdeclarative/qt6/src/qml/ControlGroup.qml、ControlGroupItem.qml、FloatingPanel.qml | PASS |
+| dtkdeclarative 的 159 个条目分别说明职责、功能结果与具体场景，正文不列举成员或叙述源码 | 三份文档逐条文字复核；能力反查上述清单及对应实现 | PASS |
 | skill 入口与相对文件链接 | 六份文档及 skills/dtk/SKILL.md | PASS |
 
 ## 可重复验证与边界
 
-执行 `python .verification/verify-dtk-interface.py --source-root ~/repo`：423 条声明来源存在，
+执行 `python .verification/verify-dtk-interface.py --source-root ~/repo`：421 条声明来源存在，
 公开头文件类型覆盖、QML 导出覆盖、三段结构和相对文件链接 PASS，FAIL 0，NOT FOUND 0。
 该脚本不能证明能力说明的语义或控件运行正确；表中的能力源码对照来自逐项阅读和修正。
 执行 `git diff --check` 通过。
@@ -67,7 +72,7 @@ dtkcore 的未跟踪 guide/、dtkgui 的 README.zh_CN.md 本地修改及未跟�
 未执行 DTK 工程编译、完整 QML 实例化或交互验证；原有集成片段按源码 CMake 导出和 Debian 安装清单核对，
 不标记为编译运行 PASS。
 
-两项导出接口有源码实现限制，已经直接写入文档：`ArrowShapePopupWindow` 引用未定义的
+两项导出接口存在功能限制，正文仅说明当前可用范围和可选的箭头面板，具体原因保留在此：`ArrowShapePopupWindow` 引用未定义的
 `ArrowShapeContainer` 和 `loader`；`StyledArrowShapeWindow` 使用未定义且未注册的
 `ArrowShapeWindow` 根类型。对应条目 PASS 表示文档准确披露现状，不表示这些控件可以直接运行。
 

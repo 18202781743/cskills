@@ -2,11 +2,9 @@
 
 dtkdeclarative 的应用加载接口提供 DTK QML 应用的加载器、应用主窗口接口和应用预加载扩展接口。
 
-dtkdeclarative 的快速渲染接口提供 QML 场景中的帧缓冲区位块传输渲染和视口裁剪渲染能力。
+dtkdeclarative 的渲染能力支持获取界面背景画面，以及将现有内容的局部区域裁剪并显示。
 
-dtkdeclarative 的 QML 窗口接口提供 DTK 窗口及其附加属性，用于在 QML 场景中控制窗口外观与行为。
-
-dtkdeclarative 的 DTK5 主题兼容接口提供平台主题代理和系统调色板 QML 项，仅在 DTK5 中提供，DTK6 已移除。
+dtkdeclarative 的窗口能力用于统一窗口装饰、系统交互和加载过渡，使窗口与 QML 内容保持一致外观。
 
 
 ## 开发包
@@ -16,8 +14,6 @@ dtkdeclarative 的 DTK5 主题兼容接口提供平台主题代理和系统调�
 - CMake 包 `Dtk6Declarative` 与导出目标 `Dtk6::Declarative`
 - pkg-config 模块 `dtk6declarative`
 - qmake 模块 `dtkdeclarative`
-
-仍需维护 DTK5 工程时，使用兼容开发包 `libdtkdeclarative-dev`。它提供 CMake 包 `DtkDeclarative`、导出目标 `Dtk::Declarative`、pkg-config 模块 `dtkdeclarative` 和同名 qmake 模块。
 
 
 ## 集成
@@ -33,13 +29,6 @@ target_link_libraries(your_target PRIVATE Dtk6::Declarative)
 
 `your_target` 替换为使用方工程中的目标名。`Dtk6::Declarative` 会向该目标提供 dtkdeclarative 的头文件搜索路径、链接信息、编译定义和传递依赖，不需要再使用 `include_directories()`、`link_directories()` 或逐项链接 dtkdeclarative 所依赖的库。
 
-仍使用 DTK5 的工程改为查找 `DtkDeclarative` 并链接 `Dtk::Declarative`：
-
-```cmake
-find_package(DtkDeclarative REQUIRED)
-target_link_libraries(your_target PRIVATE Dtk::Declarative)
-```
-
 ### 使用方式
 
 构建目标链接 dtkdeclarative 后，可以直接包含所需类型的公开转发头：
@@ -48,7 +37,7 @@ target_link_libraries(your_target PRIVATE Dtk::Declarative)
 #include <DAppLoader>
 ```
 
-也可以包含对应的实际公开头文件，例如 `#include <dapploader.h>`。公开 C++ 类型主要位于 `Dtk::Quick` 命名空间。QML 控件通过 [org.deepin.dtk](org.deepin.dtk.md) 使用，设置模型与窗口通过 [org.deepin.dtk.settings](org.deepin.dtk.settings.md) 使用。
+公开 C++ 类型位于 `Dtk::Quick` 命名空间。QML 控件通过 [org.deepin.dtk](org.deepin.dtk.md) 使用，设置模型与窗口通过 [org.deepin.dtk.settings](org.deepin.dtk.settings.md) 使用。
 
 
 ---
@@ -60,15 +49,17 @@ target_link_libraries(your_target PRIVATE Dtk::Declarative)
 
 #### 定位
 
-分阶段加载 DTK QML 应用插件的入口。
+负责组织应用启动、预加载窗口与主界面加载的应用入口。
 
 #### 功能能力总结
 
-构造时指定应用名称和可选路径，可追加和查询插件搜索路径，调用 exec 创建应用并进入事件循环。它通过 DQmlAppPreloadInterface 和 DQmlAppMainWindowInterface 分阶段加载预加载窗口与主组件，加载完成发出 loadFinished；instance 返回已经创建的加载器，默认构造函数已删除。
+将应用启动划分为预加载和主界面加载两个阶段，使应用能够先呈现启动窗口，再载入主要界面。它统一组织应用对象、界面引擎和插件发现，允许从指定位置查找应用插件，并在主界面就绪后通知加载完成。
+
+预加载界面与主界面可以分别承担启动反馈和业务交互，减少复杂界面初始化期间的空白等待。应用的具体业务、启动画面和主界面内容由配套插件提供。
 
 #### 使用场景
 
-应用由预加载插件和主组件插件构成时，在入口函数中构造加载器并调用 exec。
+适用于主界面较复杂、需要启动反馈的 QML 应用，以及希望将启动界面与业务界面分别维护的工程。使用时需要准备与加载器配套的预加载插件和主组件插件。
 
 
 ---
@@ -77,15 +68,17 @@ target_link_libraries(your_target PRIVATE Dtk::Declarative)
 
 #### 定位
 
-主组件插件的 QML 地址与引擎初始化契约。
+约定应用主组件如何接入加载流程的插件扩展接口。
 
 #### 功能能力总结
 
-主组件插件必须实现 mainComponentPath 提供 QML 主组件地址；initialize 在加载前配置 QQmlApplicationEngine，finishedLoading 在加载完成后处理引擎。通过 Qt 插件接口声明接入 DAppLoader。
+为加载器确定应用主界面，并提供主界面加载前后的扩展阶段。加载前可以为界面准备所需的应用对象和运行环境，加载完成后可以执行依赖界面就绪的初始化工作。
+
+它将主组件的提供方式与加载器的启动组织职责分开，使不同应用能够沿用相同的启动流程，同时自行决定主界面内容和初始化安排。
 
 #### 使用场景
 
-实现由 DAppLoader 发现和加载的主组件插件时。
+适用于采用 DAppLoader 的应用主组件插件，尤其是需要在界面加载前准备数据入口、在加载完成后协调业务初始化的应用。
 
 
 ---
@@ -94,19 +87,20 @@ target_link_libraries(your_target PRIVATE Dtk::Declarative)
 
 #### 定位
 
-DTK QML 应用预加载的 C++ 扩展接口。
+负责启动早期界面与运行环境准备的插件扩展接口。
 
 #### 功能能力总结
 
-预加载插件必须实现 preloadComponentPath，aboutToPreload 在预加载前配置引擎。可通过 creatApplication 创建应用对象、通过 graphicsApi 选择图形 API；公开方法的拼写为 creatApplication。
+提供主界面加载前显示的预加载界面，并允许应用在启动早期准备界面环境。预加载阶段可以确定应用对象的创建方式和图形渲染方式，为后续主组件加载建立运行基础。
+
+它使启动画面和主界面的职责分离，适合在复杂界面载入期间向用户显示等待状态；启动进度的具体呈现由预加载界面决定。
 
 #### 使用场景
 
-C++ 插件需要在 QML 应用启动早期执行预加载逻辑时实现此接口。
+适用于需要启动画面、加载提示，或需要在创建主界面前确定应用运行环境的 QML 应用。通常与应用加载器和主组件插件配合使用。
 
 
 ---
-
 
 ## 快速渲染
 
@@ -114,15 +108,17 @@ C++ 插件需要在 QML 应用启动早期执行预加载逻辑时实现此接�
 
 #### 定位
 
-QML 场景中的帧缓冲区位块传输渲染项。
+为场景背景采样和后续视觉效果提供画面来源的渲染项。
 
 #### 功能能力总结
 
-继承 QQuickItem，捕获其绘制位置之前的场景帧缓冲区内容，并通过 textureProvider 提供纹理供其他 Quick 项使用；不接收调用者提供的外部帧缓冲区。
+捕获场景中已经绘制、位于当前项目下方的画面，将这部分背景交给其他界面项目继续使用。后续项目可以基于同一背景进行局部显示、裁剪或效果组合，保持效果内容与实际场景一致。
+
+它解决的是界面背景的获取和复用，采样位置受场景绘制顺序影响。实际的模糊、边界形状和显示布局由与其配合的视觉组件承担。
 
 #### 使用场景
 
-需要读取场景背景纹理供其他 Quick 项采样时。
+适用于需要读取当前界面背景的模糊面板、局部画面复用和自定义背景效果。在组合多个视觉项目时，需要让背景采样与目标内容的绘制顺序匹配。
 
 
 ---
@@ -131,19 +127,20 @@ QML 场景中的帧缓冲区位块传输渲染项。
 
 #### 定位
 
-QML 场景中的视口裁剪渲染项。
+将现有界面项目的指定区域呈现为独立画面的视口。
 
 #### 功能能力总结
 
-通过 sourceItem 与 sourceRect 指定源项和区域，支持圆角、固定区域与 hideSource。DTK6 增加 compositionMode 及重置入口；属性变化发出相应通知，适用于图像复制与裁剪。
+从源项目选择需要显示的区域，支持局部裁剪、圆角边界和固定视口，能够控制源项目是否同时显示。它还支持画面合成，使选出的内容可以与目标显示区域结合。
+
+同一源内容可以作为局部预览或另一块界面中的视觉素材使用，视口主要负责显示范围和呈现方式，源项目仍负责自身内容的生成。
 
 #### 使用场景
 
-需要在 QML 中实现视口裁剪或局部区域渲染时。
+适用于局部预览、圆角内容展示、背景片段复用，以及只需要呈现较大界面一部分的场景。
 
 
 ---
-
 
 ## QML 窗口
 
@@ -151,15 +148,17 @@ QML 场景中的视口裁剪渲染项。
 
 #### 定位
 
-DTK QML 窗口类型。
+将 Qt Quick 窗口接入 DTK 窗口外观与交互能力的窗口类型。
 
 #### 功能能力总结
 
-继承 QQuickWindow，提供 attached 与 qmlAttachedProperties 取得 DQuickWindowAttached。QML 中注册名为 DWindow，作为附加属性入口使用，不能通过 DWindow 直接创建窗口。
+在普通界面内容之外提供 DTK 窗口装饰能力，使窗口能够统一采用圆角、边框、阴影、透明和模糊外观。它也为窗口的系统交互与加载过渡提供连接基础，使窗口呈现与应用界面保持一致。
+
+在 QML 中，这些能力通过现有窗口上的 DTK 窗口扩展使用；独立应用窗口和对话框窗口分别由相应的界面控件承载。
 
 #### 使用场景
 
-QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影）时。
+适用于需要 DTK 窗口装饰的 Qt Quick 应用，以及希望将现有窗口接入统一视觉风格的工程。
 
 
 ---
@@ -168,48 +167,17 @@ QML 中需要使用 DTK 扩展窗口属性（圆角、模糊、阴影）时。
 
 #### 定位
 
-窗口与弹出控件的平台附加属性对象。
+负责为具体窗口或弹出面板协调 DTK 装饰和窗口行为的扩展对象。
 
 #### 功能能力总结
 
-关联 QWindow 或 Popup 对象，提供窗口装饰、透明与模糊、系统移动和缩放、窗口类型与功能标志，以及加载覆盖层和转场。支持窗口最小化、最大化、全屏、恢复、系统菜单与分屏菜单；DTK6 增加 themeType、windowEffect 和 windowStartUpEffect。
+集中管理窗口圆角、边框、阴影、透明与模糊效果，并协调系统移动、缩放和窗口操作权限。它还支持窗口主题、启动效果、加载覆盖层和退出过渡，使启动、显示和退出过程能够采用一致的视觉表现。
+
+除了外观控制，也提供最小化、最大化、全屏和恢复这类窗口操作，以及系统菜单和分屏菜单交互。能力应用于关联的窗口或弹出面板，不承担业务内容的布局。
 
 #### 使用场景
 
-需要为 QQuickWindow 或 Popup 调整 DTK 装饰、交互与加载状态时。
+适用于自定义标题栏、具有特殊装饰的弹出面板，以及需要统一控制窗口外观、操作入口和加载过渡的界面。
 
 
 ---
-
-## DTK5 主题兼容
-
-### DPlatformThemeProxy
-
-#### 定位
-
-平台主题的 QML 代理接口（仅 DTK5）。
-
-#### 功能能力总结
-
-仅 DTK5 安装公开头文件。代理 DPlatformTheme 的字体、主题名、图标主题、鼠标交互参数、活动颜色、调色板与 DPI，可读写属性并接收变更通知；它是平台主题对象的代理，不负责 QML 控件布局。
-
-#### 使用场景
-
-DTK5 QML 应用中需要读取或监听平台主题属性变化时。
-
-
----
-
-### DQuickSystemPalette
-
-#### 定位
-
-QML 系统调色板项（仅 DTK5，已废弃）。
-
-#### 功能能力总结
-
-仅 DTK5 提供，已废弃。按 Active、Inactive、Disabled 颜色组暴露系统调色板和 DTK 语义颜色，以 paletteChanged 通知更新；新代码使用 QML DTK.palette。
-
-#### 使用场景
-
-已废弃，DTK5 中如需在 QML 中访问系统调色板时可使用，新代码应迁移至 `DQMLGlobalObject::palette`。

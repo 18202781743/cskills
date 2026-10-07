@@ -734,15 +734,17 @@ grep "Button" /home/work/dtkdeclarative/build6/plugins/org/deepin/dtk/qmldir
 | dtkcore | [dtkcore-dev.md](../skills/dtk/interface/dtkcore/dtkcore-dev.md) | 配置后端和嵌套版本结构、DBus、DCI、文件路径与范围检查、日志通知、系统许可、结果模板和线程工具；核对 DTK5 的 GSettingsBackend、DTimedLoop、DAsync 与 DTK6 的 DThreadUtils |
 | dtkgui | [dtkgui-dev.md](../skills/dtk/interface/dtkgui/dtkgui-dev.md) | DCI 图标与播放器、字体字号、调色板、拖拽双方角色、平台窗口和主题、区域监视、桌面服务与图像工具；核对 WMBlurArea 字段和废弃标记 |
 | dtkwidget | [dtkwidget-dev.md](../skills/dtk/interface/dtkwidget/dtkwidget-dev.md) | 按钮、布局、展开与页面栈、对话框、消息、编辑器、视图模型、打印控件和全部设置结构、样式选项、动画、水印、窗口、标题栏工具和应用接口；核对兼容控件、Qt 别名和自由函数 |
-| dtkdeclarative C++ | [dtkdeclarative-dev.md](../skills/dtk/interface/dtkdeclarative/dtkdeclarative-dev.md) | src.cmake 安装的公开类型、加载器构造和插件生命周期、预加载接口的 creatApplication 拼写、背景采样与视口、窗口附加对象、DTK5 主题兼容类型 |
-| org.deepin.dtk | [org.deepin.dtk.md](../skills/dtk/interface/dtkdeclarative/org.deepin.dtk.md) | qt6/src/qml.cmake、QML_NAMED_ELEMENT、外部类型和显式注册的完整清单；继承、属性、信号、单例和不可创建附加类型；逐项核对 Qt5 注册差异及未完成源码实现 |
-| org.deepin.dtk.settings | [org.deepin.dtk.settings.md](../skills/dtk/interface/dtkdeclarative/org.deepin.dtk.settings.md) | 8 个 QML 文件和 SettingsOption、SettingsGroup、SettingsContainer，配置绑定、分组可见性、委托和重置；确认 Style 来自主模块的样式单例 |
+| dtkdeclarative C++ | [dtkdeclarative-dev.md](../skills/dtk/interface/dtkdeclarative/dtkdeclarative-dev.md) | 仅 DTK6 安装的 7 个公开类型；按应用启动与插件衔接、背景画面采样、局部视口、窗口装饰与系统交互核对能力，不纳入 DTK5 兼容类型 |
+| org.deepin.dtk | [org.deepin.dtk.md](../skills/dtk/interface/dtkdeclarative/org.deepin.dtk.md) | DTK6 的 141 个具名类型；按按钮、窗口、输入、选择、菜单、视图、视觉效果、图标主题与配置消息核对功能；区分相近组件职责和必要使用条件，不介绍 Qt5 差异 |
+| org.deepin.dtk.settings | [org.deepin.dtk.settings.md](../skills/dtk/interface/dtkdeclarative/org.deepin.dtk.settings.md) | DTK6 的 8 个 QML 组件及 3 个设置模型；按配置同步、分组层次、导航联动、编辑提交、默认值恢复和外观定制核对功能 |
 
 执行步骤：
 
 1. 按清单逐类型对照公开声明及实现；能力、方法名、枚举或版本条件不一致记为 FAIL，未找到记为 NOT FOUND，修正后重查。
 2. 扫描公开头文件的类型定义和 QML 导出清单，检查遗漏；明确排除私有嵌套类、内部命名空间助手及未注册的 QML 文件。Qt 别名不伪装为独立 DTK 子类。
 3. 检查跨文档链接、三段格式、重名章节、开发包和 CMake 集成入口。源码导出但实现不完整的组件须在能力与使用场景中标明限制。
+   dtkdeclarative 三份正文只介绍 DTK6，逐类型检查定位是否说明解决的问题，能力总结是否展开可观察结果，使用场景是否给出具体任务及前置条件。
+   正文以功能叙述为主，不复写函数、属性、信号或继承清单，不用头文件、注册过程、源码实现说明组件；核对依据保留在验证清单和报告中。
 4. 执行以下可重复检查。脚本验证声明存在、导出覆盖、结构和文件链接；语义、安装条件和行为仍需第 1 步的人工源码对照。
 
    ```bash

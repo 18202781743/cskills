@@ -76,9 +76,7 @@
       "DQuickBlitFramebuffer": {"source": "dtkdeclarative/src/dquickblitframebuffer.h", "symbol": "DQuickBlitFramebuffer", "kind": "cpp-type"},
       "DQuickItemViewport": {"source": "dtkdeclarative/src/dquickitemviewport.h", "symbol": "DQuickItemViewport", "kind": "cpp-type"},
       "DQuickWindow": {"source": "dtkdeclarative/src/dquickwindow.h", "symbol": "DQuickWindow", "kind": "cpp-type"},
-      "DQuickWindowAttached": {"source": "dtkdeclarative/src/dquickwindow.h", "symbol": "DQuickWindowAttached", "kind": "cpp-type"},
-      "DPlatformThemeProxy": {"source": "dtkdeclarative/src/dplatformthemeproxy.h", "symbol": "DPlatformThemeProxy", "kind": "cpp-type"},
-      "DQuickSystemPalette": {"source": "dtkdeclarative/src/dquicksystempalette.h", "symbol": "DQuickSystemPalette", "kind": "cpp-type"}
+      "DQuickWindowAttached": {"source": "dtkdeclarative/src/dquickwindow.h", "symbol": "DQuickWindowAttached", "kind": "cpp-type"}
     },
     "skills/dtk/interface/dtkdeclarative/org.deepin.dtk.md": {
       "Button": {"source": "dtkdeclarative/qt6/src/qml/Button.qml", "symbol": "Button", "kind": "qml-file"},

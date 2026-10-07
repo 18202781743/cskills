@@ -108,7 +108,13 @@ def main():
 
     declarative = root / "dtkdeclarative"
     cpp_public = (declarative / "src/src.cmake").read_text()
-    for header in set(re.findall(r"\$\{PROJECT_SOURCE_DIR\}/src/(\w+\.h)", cpp_public)):
+    # The declarative guide covers DTK6 only. The initial PUBLIC_HEADERS block
+    # is installed by DTK6; subsequent DTK5-only additions are out of scope.
+    public_block = re.search(r"file\(GLOB PUBLIC_HEADERS\s+(.*?)\)", cpp_public, re.S)
+    if public_block is None:
+        print("FAIL: declarative public installation list changed; review inventory")
+        return 1
+    for header in set(re.findall(r"\$\{PROJECT_SOURCE_DIR\}/src/(\w+\.h)", public_block[1])):
         if header == "dtkdeclarative_global.h":
             continue
         relative = "dtkdeclarative/src/" + header
