@@ -10,12 +10,12 @@ dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提�
 - [快速渲染](dtkdeclarative-dev/fast-rendering.md)：QML 场景中的帧缓冲区位块传输渲染与视口裁剪渲染
 - [QML 窗口](dtkdeclarative-dev/qml-window.md)：DTK 窗口及其附加属性
 - [DTK5 主题兼容](dtkdeclarative-dev/dtk5-theme-compat.md)：平台主题代理与系统调色板 QML 项（仅 DTK5）
-- [按钮控件](org.deepin.dtk/buttons.md)：Button、RoundButton、IconButton、FloatingButton、WarningButton、ToolButton、ButtonBox、ButtonGroup、AbstractButton 等
-- [输入控件](org.deepin.dtk/input-controls.md)：TextField、TextArea、SearchEdit、PasswordEdit、SpinBox、CheckBox、RadioButton、Switch、ComboBox、Slider 等
-- [对话框与窗口控件](org.deepin.dtk/dialogs-and-windows.md)：DialogWindow、Dialog、PopupWindow、ApplicationWindow、TitleBar、Drawer、AboutDialog 等
-- [菜单与动作控件](org.deepin.dtk/menus-and-actions.md)：Menu、MenuItem、MenuBar、Action、ActionGroup 等
-- [列表与视图控件](org.deepin.dtk/list-and-views.md)：ScrollView、StackView、SwipeView、ItemDelegate、TabBar、ScrollBar 等
-- [视觉效果与渲染控件](org.deepin.dtk/visual-effects-and-rendering.md)：BoxShadow、BoxPanel、FloatingPanel、Frame、ProgressBar、Label、ToolTip、FloatingMessage 等
+- [按钮控件](org.deepin.dtk/buttons.md)：Button、RoundButton、DelayButton、IconButton、FloatingButton、WarningButton、ToolButton、RecommandButton、ButtonBox、ButtonGroup、ButtonIndicator、ButtonPanel、AbstractButton、ActionButton、WindowButton、WindowButtonGroup、WindowQuitFullButton
+- [输入控件](org.deepin.dtk/input-controls.md)：TextField、TextArea、SearchEdit、PasswordEdit、IpV4LineEdit、KeySequenceEdit、LineEdit、EditPanel、PlaceholderText、SpinBox、PlusMinusSpinBox、Dial、SpinBoxIndicator、CheckBox、RadioButton、Switch、ComboBox、CheckDelegate、SwipeDelegate、Slider、SliderHandle、SliderTipItem、TipsSlider
+- [对话框与窗口控件](org.deepin.dtk/dialogs-and-windows.md)：DialogWindow、Dialog、PopupWindow、ArrowShapePopupWindow、ArrowShapePopup、Popup、StyledArrowShapeWindow、DWindow、ApplicationWindow、TitleBar、DialogTitleBar、Drawer、AboutDialog
+- [菜单与动作控件](org.deepin.dtk/menus-and-actions.md)：Menu、MenuItem、MenuBar、MenuSeparator、ThemeMenu、AboutAction、HelpAction、QuitAction、Action、ActionGroup
+- [列表与视图控件](org.deepin.dtk/list-and-views.md)：ScrollView、StackView、SwipeView、ItemDelegate、ArrowListView、SortFilterModel、TabBar、PageIndicator、Container、Control、DialogButtonBox、ScrollBar、ScrollIndicator
+- [视觉效果与渲染控件](org.deepin.dtk/visual-effects-and-rendering.md)：BoxShadow、BoxInsetShadow、BoxPanel、FloatingPanel、RectangularShadow、HighlightPanel、ControlBackground、Frame、Pane、GroupBox、OutsideBoxBorder、InsideBoxBorder、FocusBoxBorder、BlitFramebuffer、ItemViewport、StyledBehindWindowBlur、FlowStyle、BusyIndicator、ProgressBar、WaterProgressBar、EmbeddedProgressBar、CicleSpreadAnimation、Label、ToolTip、AlertToolTip、FloatingMessage
 - [org.deepin.dtk.settings QML 模块](org.deepin.dtk.settings.md)：DTK 风格设置对话框与配置项控件
 
 ## 按功能查阅
