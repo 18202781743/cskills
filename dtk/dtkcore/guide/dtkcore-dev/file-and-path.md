@@ -1,6 +1,6 @@
 # 文件与路径
 
-本分类包含以下类型：DBaseFileWatcher、DFileWatcher、DFileSystemWatcher、DFileWatcherManager、DFileServices、DDesktopEntry、DStandardPaths、DPathBuf、DTrashManager、DRecentManager、DRecentData。
+提供文件与目录监视、文件服务、桌面条目解析、标准路径定位、路径拼接工具、回收站操作和最近使用记录管理。
 
 ## DBaseFileWatcher
 

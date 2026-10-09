@@ -1,16 +1,6 @@
 # dtkgui-dev
 
-dtkgui 的 DCI 图标接口提供 DCI 图标资源的加载、渲染与动画播放能力，包括图标容器、单帧图像访问、图像序列播放器、内嵌调色板和整体动画播放器。
-
-dtkgui 的文件拖拽、字体与缩略图接口提供跨进程文件拖拽的客户端与服务端、字体安装与管理和文件缩略图异步生成能力。
-
-dtkgui 的图标与 SVG 渲染接口提供 DTK 图标加载、图标主题缓存管理、SVG 渲染和图像格式处理能力。
-
-dtkgui 的调色板与主题接口提供 DTK 扩展调色板角色、应用级主题管理、原生设置读写和平台主题属性访问能力。
-
-dtkgui 的系统服务接口提供系统服务调用（打开文件管理器、播放系统提示音）、屏幕区域监视和任务栏进度与计数控制能力。
-
-dtkgui 的窗口与平台接口提供窗口平台属性控制、窗口管理器功能查询、跨进程窗口分组和外部窗口引用能力。
+dtkgui 是 DTK 的 GUI 基础层，提供 DCI 图标资源管理、图标与 SVG 渲染、文件拖拽与缩略图、调色板与主题、系统服务和窗口与平台等 GUI 层能力，为 dtkwidget 和 dtkdeclarative 提供底层图形与平台支持。
 
 ## 开发包
 
@@ -57,9 +47,9 @@ target_link_libraries(your_target PRIVATE Dtk::Gui)
 
 ## 接口分类
 
-- [DCI 图标](dtkgui-dev/dci-icons.md) — DDciIcon DCI 图标加载与渲染、DDciIconImage 单帧图像访问、DDciIconImagePlayer 图像序列播放器、DDciIconPalette 内嵌调色板、DDciIconPlayer 整体动画播放器
-- [文件拖拽、字体与缩略图](dtkgui-dev/file-drag-font-and-thumbnail.md) — DFileDrag 跨进程文件拖拽、DFileDragClient 拖拽客户端、DFileDragServer 拖拽服务端、DFontManager 字体安装与管理、DThumbnailProvider 文件缩略图异步生成
-- [图标与 SVG 渲染](dtkgui-dev/icon-and-svg-rendering.md) — DIcon DTK 图标加载、DIconTheme::Cached 图标主题缓存管理、DSvgRenderer SVG 渲染、DImageHandler 图像格式处理
-- [调色板与主题](dtkgui-dev/palette-and-theme.md) — DPalette 扩展调色板角色、DGuiApplicationHelper 应用级主题管理、DNativeSettings 原生设置读写、DPlatformTheme 平台主题属性访问
-- [系统服务](dtkgui-dev/system-services.md) — DDesktopServices 系统服务调用、DRegionMonitor 屏幕区域监视、DTaskbarControl 任务栏进度与计数控制
-- [窗口与平台](dtkgui-dev/window-and-platform.md) — DPlatformHandle 窗口平台属性控制、DWindowManagerHelper 窗口管理器功能查询、DWindowGroupLeader 跨进程窗口分组、DForeignWindow 外部窗口引用
+- [DCI 图标](dtkgui-dev/dci-icons.md) — 提供 DCI 图标资源的加载、渲染与动画播放能力，包括图标容器、单帧图像访问、图像序列播放器、内嵌调色板和整体动画播放器
+- [文件拖拽、字体与缩略图](dtkgui-dev/file-drag-font-and-thumbnail.md) — 提供跨进程文件拖拽的客户端与服务端、字体安装与管理以及文件缩略图异步生成能力
+- [图标与 SVG 渲染](dtkgui-dev/icon-and-svg-rendering.md) — 提供 DTK 图标加载、图标主题缓存管理、SVG 渲染和图像格式处理能力
+- [调色板与主题](dtkgui-dev/palette-and-theme.md) — 提供 DTK 扩展调色板角色、应用级主题管理、原生设置读写和平台主题属性访问能力
+- [系统服务](dtkgui-dev/system-services.md) — 提供系统服务调用（打开文件管理器、播放系统提示音）、屏幕区域监视和任务栏进度与计数控制能力
+- [窗口与平台](dtkgui-dev/window-and-platform.md) — 提供窗口平台属性控制、窗口管理器功能查询、跨进程窗口分组和外部窗口引用能力

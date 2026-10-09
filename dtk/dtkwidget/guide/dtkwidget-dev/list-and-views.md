@@ -1,6 +1,6 @@
 # 列表与视图
 
-本分类包含以下类型：DListView、DSimpleListView、DSimpleListItem、DStandardItem、DStyledItemDelegate。
+提供列表展示和项渲染能力，支持标准项和自定义样式化项代理，适用于设置面板、文件浏览等结构化数据展示场景。
 
 ## DListView
 

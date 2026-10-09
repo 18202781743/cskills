@@ -1,6 +1,6 @@
 # 浮层与提示
 
-本分类包含以下类型：DFloatingWidget、DFloatingMessage、DMessageManager、DTipLabel、DToolTip、DAlertControl、DToast。
+提供浮动在主界面之上的临时消息和提示控件，支持消息停留、自动消失和吐司式通知，适用于不阻塞用户操作的轻量反馈场景。
 
 ## DFloatingWidget
 

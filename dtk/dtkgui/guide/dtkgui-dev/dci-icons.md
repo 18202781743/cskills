@@ -1,6 +1,6 @@
 # DCI 图标
 
-本分类包含以下类型：DDciIcon、DDciIconImage、DDciIconImagePlayer、DDciIconPalette、DDciIconPlayer。
+提供 DCI 图标资源的加载、渲染与动画播放能力，包括图标容器、单帧图像访问、图像序列播放器、内嵌调色板和整体动画播放器。
 
 ## DDciIcon
 

@@ -1,6 +1,6 @@
 # 快速渲染
 
-本分类包含以下类型：DQuickBlitFramebuffer、DQuickItemViewport。
+提供 QML 场景中的帧缓冲区位块传输渲染和视口裁剪渲染能力。
 
 ## DQuickBlitFramebuffer
 

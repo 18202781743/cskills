@@ -2,8 +2,6 @@
 
 org.deepin.dtk.settings 是 dtkdeclarative 提供的设置界面 QML 模块，为 DTK 应用提供开箱即用的设置对话框框架。模块内置导航栏与内容区的联动布局，支持从配置模型自动生成复选框、下拉框、文本输入等配置项控件，统一遵循 DTK 主题样式。
 
-本模块包含以下类型：CheckBox、ComboBox、ContentBackground、ContentTitle、LineEdit、NavigationTitle、OptionDelegate、SettingsDialog、Style。
-
 ## 集成
 
 ### 使用方式

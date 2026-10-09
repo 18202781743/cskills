@@ -1,6 +1,6 @@
 # 日志与通知
 
-本分类包含以下类型：DLogManager、DNotifySender。
+提供日志规则设置、日志文件定位和桌面通知发送能力。
 
 ## DLogManager
 

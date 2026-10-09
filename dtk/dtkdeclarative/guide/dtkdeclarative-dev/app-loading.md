@@ -1,6 +1,6 @@
 # 应用加载
 
-本分类包含以下类型：DAppLoader、DQmlAppMainWindowInterface、DQmlAppPreloadInterface。
+提供 DTK QML 应用的加载器、应用主窗口接口和应用预加载扩展接口。
 
 ## DAppLoader
 

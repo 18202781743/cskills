@@ -1,6 +1,6 @@
 # DTK5 主题兼容
 
-本分类包含以下类型：DPlatformThemeProxy、DQuickSystemPalette。
+提供平台主题代理和系统调色板 QML 项，仅在 DTK5 中提供，DTK6 已移除。
 
 ## DPlatformThemeProxy
 

@@ -1,6 +1,6 @@
 # 调色板与主题
 
-本分类包含以下类型：DPalette、DGuiApplicationHelper、DNativeSettings、DPlatformTheme。
+提供 DTK 扩展调色板角色、应用级主题管理、原生设置读写和平台主题属性访问能力。
 
 ## DPalette
 

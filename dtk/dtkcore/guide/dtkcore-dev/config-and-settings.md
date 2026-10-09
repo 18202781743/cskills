@@ -1,6 +1,6 @@
 # 配置与设置
 
-本分类包含以下类型：DConfig、DConfigCache、DConfigFile、DConfigMeta、DSettings、DSettingsBackend、DSettingsDConfigBackend、DSettingsGroup、DSettingsOption、GSettingsBackend、QSettingBackend。
+提供统一的配置读写入口、配置缓存与文件访问、配置元信息查询，以及基于后端抽象的设置模型管理，支持分组层级结构与多种持久化后端。
 
 ## DConfig
 

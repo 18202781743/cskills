@@ -1,8 +1,6 @@
 # 按钮控件
 
-本分类包含以下类型：Button、RoundButton、DelayButton、IconButton、FloatingButton、WarningButton、ToolButton、RecommandButton、ButtonBox、ButtonGroup、ButtonIndicator、ButtonPanel、AbstractButton、ActionButton、WindowButton、WindowButtonGroup、WindowQuitFullButton。
-
-
+提供图标、语义化、开关切换、浮动操作等多种按钮及按钮组容器，覆盖常见交互触发场景。
 
 ## Button
 
@@ -241,6 +239,5 @@ Button 的全屏退出按钮变体。
 ### 使用场景
 
 窗口全屏状态下显示退出全屏按钮时使用。
-
 
 ---

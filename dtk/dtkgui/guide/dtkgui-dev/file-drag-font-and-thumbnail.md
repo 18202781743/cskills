@@ -1,6 +1,6 @@
 # 文件拖拽、字体与缩略图
 
-本分类包含以下类型：DFileDrag、DFileDragClient、DFileDragServer、DFontManager、DThumbnailProvider。
+提供跨进程文件拖拽的客户端与服务端、字体安装与管理以及文件缩略图异步生成能力。
 
 ## DFileDrag
 

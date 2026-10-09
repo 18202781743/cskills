@@ -1,6 +1,6 @@
 # 窗口与标题栏
 
-本分类包含以下类型：DSegmentedControl、DSegmentedHighlight、DMainWindow、DTitlebar、DPlatformWindowHandle、DWindowCloseButton、DWindowMaxButton、DWindowMinButton、DWindowOptionButton、DWindowQuitFullButton、DTabletWindowOptionButton、DApplication。
+提供 DTK 风格的主窗口框架和自定义标题栏，集成窗口圆角、阴影、拖拽、最大化/最小化/关闭按钮等窗口装饰和交互能力。
 
 ## DSegmentedControl
 

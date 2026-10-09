@@ -1,8 +1,6 @@
 # 输入控件
 
-本分类包含以下类型：TextField、TextArea、SearchEdit、PasswordEdit、IpV4LineEdit、KeySequenceEdit、LineEdit、EditPanel、PlaceholderText、SpinBox、PlusMinusSpinBox、Dial、SpinBoxIndicator、CheckBox、RadioButton、Switch、ComboBox、CheckDelegate、SwipeDelegate、Slider、SliderHandle、SliderTipItem、TipsSlider。
-
-
+提供文本编辑、密码、搜索、IP 地址、快捷键、数值微调、复选、单选、开关、下拉选择和滑动条等输入控件。
 
 ## TextField
 
@@ -325,6 +323,5 @@ Qt Quick 滑动条的 DTK 样式实现。
 ### 使用场景
 
 需要带刻度标记和提示文字的滑动条时使用。
-
 
 ---

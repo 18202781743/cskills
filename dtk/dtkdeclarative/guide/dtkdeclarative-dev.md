@@ -1,12 +1,6 @@
 # dtkdeclarative-dev
 
-dtkdeclarative 的应用加载接口提供 DTK QML 应用的加载器、应用主窗口接口和应用预加载扩展接口。
-
-dtkdeclarative 的快速渲染接口提供 QML 场景中的帧缓冲区位块传输渲染和视口裁剪渲染能力。
-
-dtkdeclarative 的 QML 窗口接口提供 DTK 窗口及其附加属性，用于在 QML 场景中控制窗口外观与行为。
-
-dtkdeclarative 的 DTK5 主题兼容接口提供平台主题代理和系统调色板 QML 项，仅在 DTK5 中提供，DTK6 已移除。
+dtkdeclarative 是 DTK 的 QML 声明式控件库，提供 DTK QML 应用的加载、快速渲染、QML 窗口控制和 DTK5 主题兼容等 C++ 层能力，与 org.deepin.dtk QML 模块配合使用，为 DTK 声明式应用提供底层支持。
 
 ## 开发包
 
@@ -53,7 +47,7 @@ target_link_libraries(your_target PRIVATE Dtk::Declarative)
 
 ## 接口分类
 
-- [应用加载](dtkdeclarative-dev/app-loading.md) — DAppLoader QML 应用加载器、DQmlAppMainWindowInterface 应用主窗口接口、DQmlAppPreloadInterface 应用预加载扩展接口
-- [快速渲染](dtkdeclarative-dev/fast-rendering.md) — DQuickBlitFramebuffer 帧缓冲区位块传输渲染、DQuickItemViewport 视口裁剪渲染
-- [QML 窗口](dtkdeclarative-dev/qml-window.md) — DQuickWindow DTK 窗口、DQuickWindowAttached 窗口附加属性
-- [DTK5 主题兼容](dtkdeclarative-dev/dtk5-theme-compat.md) — DPlatformThemeProxy 平台主题代理、DQuickSystemPalette 系统调色板 QML 项（仅 DTK5）
+- [应用加载](dtkdeclarative-dev/app-loading.md) — 提供 DTK QML 应用的加载器、应用主窗口接口和应用预加载扩展接口
+- [快速渲染](dtkdeclarative-dev/fast-rendering.md) — 提供 QML 场景中的帧缓冲区位块传输渲染和视口裁剪渲染能力
+- [QML 窗口](dtkdeclarative-dev/qml-window.md) — 提供 DTK 窗口及其附加属性，用于在 QML 场景中控制窗口外观与行为
+- [DTK5 主题兼容](dtkdeclarative-dev/dtk5-theme-compat.md) — 提供平台主题代理和系统调色板 QML 项，仅在 DTK5 中提供，DTK6 已移除

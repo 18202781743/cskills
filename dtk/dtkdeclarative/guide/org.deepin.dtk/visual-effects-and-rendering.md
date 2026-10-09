@@ -1,8 +1,6 @@
 # 视觉效果与渲染控件
 
-本分类包含以下类型：BoxShadow、BoxInsetShadow、BoxPanel、FloatingPanel、RectangularShadow、HighlightPanel、ControlBackground、Frame、Pane、GroupBox、OutsideBoxBorder、InsideBoxBorder、FocusBoxBorder、BlitFramebuffer、ItemViewport、StyledBehindWindowBlur、FlowStyle、BusyIndicator、ProgressBar、WaterProgressBar、EmbeddedProgressBar、CicleSpreadAnimation、Label、ToolTip、AlertToolTip、FloatingMessage。
-
-
+提供阴影、面板、圆角裁剪、高斯模糊、进度指示、动画、标签和提示等视觉效果与渲染控件。
 
 ## BoxShadow
 

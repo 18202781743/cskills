@@ -1,6 +1,6 @@
 # 系统信息与许可
 
-本分类包含以下类型：DSysInfo、DSGApplication、DLicenseInfo、DLicenseInfo::DComponentInfo。
+提供发行版、产品、组织、架构及硬件运行状态查询，应用标识查询，以及组件级许可信息读取能力。
 
 ## DSysInfo
 

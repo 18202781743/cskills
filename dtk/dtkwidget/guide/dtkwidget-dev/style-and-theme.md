@@ -1,6 +1,6 @@
 # 样式与主题
 
-本分类包含以下类型：DStyle、DStyleHelper、DStyleOption、DStyleOptionBackgroundGroup、DStyleOptionButton、DStyleOptionLineEdit、DStyleOptionViewItem、DStyledIconEngine、DStylePainter、DApplicationHelper、DPaletteHelper、DSizeMode、DFontSizeManager、DThemeManager、DApplicationSettings、DAccessibilityChecker、DHiDPIHelper、DWaterMarkHelper。
+管理 DTK 样式引擎、调色板、主题切换、尺寸模式、字号规格和水印效果，并为无障碍检查提供开发辅助工具。
 
 ## DStyle
 

@@ -1,6 +1,6 @@
 # 视觉效果与进度
 
-本分类包含以下类型：DBlurEffectWidget、DBlurEffectWithBorderWidget、DClipEffectWidget、DGraphicsClipEffect、DGraphicsDropShadowEffect、DBounceAnimation、DWaterProgress、DSpinner、DColoredProgressBar、DProgressBar、DIndeterminateProgressbar、DPageIndicator。
+为控件和窗口添加高斯模糊、圆角裁剪、投影阴影等视觉增强效果，并提供弹跳动画、水波进度、加载指示器和进度条等动态反馈控件。
 
 ## DBlurEffectWidget
 

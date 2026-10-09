@@ -1,6 +1,6 @@
 # 图标与 SVG 渲染
 
-本分类包含以下类型：DIcon、DIconTheme::Cached、DSvgRenderer、DImageHandler。
+提供 DTK 图标加载、图标主题缓存管理、SVG 渲染和图像格式处理能力。
 
 ## DIcon
 

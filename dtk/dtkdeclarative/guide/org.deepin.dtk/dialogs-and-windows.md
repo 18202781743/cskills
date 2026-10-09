@@ -1,8 +1,6 @@
 # 对话框与窗口控件
 
-本分类包含以下类型：DialogWindow、Dialog、PopupWindow、ArrowShapePopupWindow、ArrowShapePopup、Popup、StyledArrowShapeWindow、DWindow、ApplicationWindow、TitleBar、DialogTitleBar、Drawer、AboutDialog。
-
-
+提供模态/非模态对话框、弹窗、抽屉、应用主窗口、标题栏和关于对话框等窗口与对话框控件。
 
 ## DialogWindow
 
@@ -185,6 +183,5 @@ Qt Quick 抽屉的 DTK 样式实现。
 ### 使用场景
 
 应用需要展示标准关于对话框（产品名称、图标、版本号、描述、许可证、公司 Logo、官网链接）时使用。
-
 
 ---

@@ -1,6 +1,6 @@
 # 设置界面
 
-本分类包含以下类型：DSettingsDialog、DSettingsWidgetFactory。
+提供从配置模型自动生成设置界面的框架，通过设置对话框和控件工厂将配置项映射为复选框、下拉框等界面控件。
 
 ## DSettingsDialog
 

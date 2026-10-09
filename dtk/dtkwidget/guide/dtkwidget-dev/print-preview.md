@@ -1,6 +1,6 @@
 # 打印预览
 
-本分类包含以下类型：DPrintPreviewDialog、DPrintPreviewSettingInfo、DPrintPreviewSettingInterface。
+提供打印预览对话框及关联的页面设置能力，支持在预览界面中调整打印参数并实时查看效果。
 
 ## DPrintPreviewDialog
 

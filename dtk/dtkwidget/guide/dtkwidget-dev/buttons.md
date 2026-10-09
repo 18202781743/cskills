@@ -1,6 +1,6 @@
 # 按钮
 
-本分类包含以下类型：DIconButton、DSuggestButton、DWarningButton、DToolButton、DCommandLinkButton、DSwitchButton、DButtonBox、DFloatingButton、DArrowButton、DImageButton。
+提供图标、语义化（建议/警告）、开关切换、命令链接、浮动操作、方向箭头等多种按钮及按钮组容器，覆盖常见交互触发场景。
 
 ## DIconButton
 

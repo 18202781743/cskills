@@ -1,6 +1,6 @@
 # 对话框
 
-本分类包含以下类型：DAbstractDialog、DDialog、DDialogCloseButton、DAboutDialog、DFileDialog、DInputDialog、DLicenseDialog、DFeatureDisplayDialog。
+提供模态与非模态对话框基类框架，并内置关于、文件选择、文本输入、许可证展示和功能特性介绍等常用专用对话框。
 
 ## DAbstractDialog
 

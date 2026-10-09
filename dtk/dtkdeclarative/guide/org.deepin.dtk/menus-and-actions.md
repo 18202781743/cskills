@@ -1,8 +1,6 @@
 # 菜单与动作控件
 
-本分类包含以下类型：Menu、MenuItem、MenuBar、MenuSeparator、ThemeMenu、AboutAction、HelpAction、QuitAction、Action、ActionGroup。
-
-
+提供上下文菜单、菜单栏、菜单项分隔、主题切换菜单以及关于/帮助/退出等标准动作和动作组。
 
 ## Menu
 
@@ -143,6 +141,5 @@ Qt Quick 动作组的 DTK 样式实现。
 ### 使用场景
 
 需要在菜单或工具栏中实现互斥选择的动作组时使用。
-
 
 ---

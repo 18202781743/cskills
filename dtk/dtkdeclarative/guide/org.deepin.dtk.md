@@ -2,8 +2,6 @@
 
 org.deepin.dtk 是 dtkdeclarative 提供的 QML 声明式控件模块，为 DTK 应用提供一套完整的界面控件库。模块覆盖按钮、对话框与窗口、文本与数值输入、菜单与动作、列表与视图以及视觉效果与渲染等常见交互场景，所有控件统一遵循 DTK 设计规范的主题色、圆角和交互反馈风格，可与 `org.deepin.dtk.style` 样式单例和 `org.deepin.dtk.settings` 设置模块配合使用。
 
-
-
 ## 集成
 
 ### 使用方式
@@ -18,15 +16,14 @@ import org.deepin.dtk 1.0
 
 导入后可使用模块中的所有控件类型。样式参数通过 `org.deepin.dtk.style` 子模块的单例设置，对话框控件通过 `org.deepin.dtk.settings` 子模块配置。
 
-
 ---
 
 ## 接口分类
 
-- [按钮控件](org.deepin.dtk/buttons.md) — Button、RoundButton、DelayButton、IconButton、FloatingButton、WarningButton、ToolButton、RecommandButton、ButtonBox、ButtonGroup、ButtonIndicator、ButtonPanel、AbstractButton、ActionButton、WindowButton、WindowButtonGroup、WindowQuitFullButton
-- [对话框与窗口控件](org.deepin.dtk/dialogs-and-windows.md) — DialogWindow、Dialog、PopupWindow、ArrowShapePopupWindow、ArrowShapePopup、Popup、StyledArrowShapeWindow、DWindow、ApplicationWindow、TitleBar、DialogTitleBar、Drawer、AboutDialog
-- [输入控件](org.deepin.dtk/input-controls.md) — TextField、TextArea、SearchEdit、PasswordEdit、IpV4LineEdit、KeySequenceEdit、LineEdit、EditPanel、PlaceholderText、SpinBox、PlusMinusSpinBox、Dial、SpinBoxIndicator、CheckBox、RadioButton、Switch、ComboBox、CheckDelegate、SwipeDelegate、Slider、SliderHandle、SliderTipItem、TipsSlider
-- [菜单与动作控件](org.deepin.dtk/menus-and-actions.md) — Menu、MenuItem、MenuBar、MenuSeparator、ThemeMenu、AboutAction、HelpAction、QuitAction、Action、ActionGroup
-- [列表与视图控件](org.deepin.dtk/list-and-views.md) — ScrollView、StackView、SwipeView、ItemDelegate、ArrowListView、SortFilterModel、TabBar、PageIndicator、Container、Control、DialogButtonBox、ScrollBar、ScrollIndicator
-- [视觉效果与渲染控件](org.deepin.dtk/visual-effects-and-rendering.md) — BoxShadow、BoxInsetShadow、BoxPanel、FloatingPanel、RectangularShadow、HighlightPanel、ControlBackground、Frame、Pane、GroupBox、OutsideBoxBorder、InsideBoxBorder、FocusBoxBorder、BlitFramebuffer、ItemViewport、StyledBehindWindowBlur、FlowStyle、BusyIndicator、ProgressBar、WaterProgressBar、EmbeddedProgressBar、CicleSpreadAnimation、Label、ToolTip、AlertToolTip、FloatingMessage
+- [按钮控件](org.deepin.dtk/buttons.md) — 提供图标、语义化、开关切换、浮动操作等多种按钮及按钮组容器，覆盖常见交互触发场景
+- [对话框与窗口控件](org.deepin.dtk/dialogs-and-windows.md) — 提供模态/非模态对话框、弹窗、抽屉、应用主窗口、标题栏和关于对话框等窗口与对话框控件
+- [输入控件](org.deepin.dtk/input-controls.md) — 提供文本编辑、密码、搜索、IP 地址、快捷键、数值微调、复选、单选、开关、下拉选择和滑动条等输入控件
+- [菜单与动作控件](org.deepin.dtk/menus-and-actions.md) — 提供上下文菜单、菜单栏、菜单项分隔、主题切换菜单以及关于/帮助/退出等标准动作和动作组
+- [列表与视图控件](org.deepin.dtk/list-and-views.md) — 提供滚动视图、堆栈视图、滑动视图、列表项代理、排序过滤模型、标签页栏和页面指示器等列表与导航视图
+- [视觉效果与渲染控件](org.deepin.dtk/visual-effects-and-rendering.md) — 提供阴影、面板、圆角裁剪、高斯模糊、进度指示、动画、标签和提示等视觉效果与渲染控件
 

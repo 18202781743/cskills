@@ -1,6 +1,6 @@
 # 工具与线程
 
-本分类包含以下类型：DAbstractUnitFormatter、DDiskSizeFormatter、DTimeUnitFormatter、DThreadUtils、DThreadUtil::FunctionCallProxy、DSingleton、DObject、DVtableHook。
+提供单位换算与格式化、线程投递、单例基类模板、对象基类、虚函数表操作以及路径拼接工具。
 
 ## DAbstractUnitFormatter
 

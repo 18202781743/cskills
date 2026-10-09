@@ -1,6 +1,6 @@
 # DCI 与文本处理
 
-本分类包含以下类型：DDciFile、DTextEncoding、DSecureString。
+提供 DCI 容器的加载、节点查询与数据读写，文本编码探测与字符集转换，以及安全字符串管理能力。
 
 ## DDciFile
 

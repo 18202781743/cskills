@@ -1,6 +1,6 @@
 # 工具与辅助
 
-本分类包含以下类型：DLabel、DImageViewer、DFileIconProvider、DWidgetUtil。
+提供标签显示、图片查看、文件图标获取等辅助控件和控件操作工具函数，补充核心控件库未覆盖的通用界面需求。
 
 ## DLabel
 

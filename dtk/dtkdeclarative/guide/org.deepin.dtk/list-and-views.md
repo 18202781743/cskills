@@ -1,8 +1,6 @@
 # 列表与视图控件
 
-本分类包含以下类型：ScrollView、StackView、SwipeView、ItemDelegate、ArrowListView、SortFilterModel、TabBar、PageIndicator、Container、Control、DialogButtonBox、ScrollBar、ScrollIndicator。
-
-
+提供滚动视图、堆栈视图、滑动视图、列表项代理、排序过滤模型、标签页栏和页面指示器等列表与导航视图。
 
 ## ScrollView
 
@@ -185,6 +183,5 @@ Qt Quick 滚动指示器的 DTK 样式实现。
 ### 使用场景
 
 在不需要交互滚动条仅提示可滚动时使用。
-
 
 ---

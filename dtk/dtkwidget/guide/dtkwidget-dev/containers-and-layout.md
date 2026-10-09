@@ -1,6 +1,6 @@
 # 容器与布局
 
-本分类包含以下类型：DFrame、DHorizontalLine、DVerticalLine、DBackgroundGroup、DShadowLine、DDrawer、DDrawerGroup、DExpandGroup、DArrowLineDrawer、DArrowLineExpand、DArrowRectangle、DAnchors、DTabBar。
+提供框架、分隔线、分组背景等结构化容器，以及抽屉、展开组等可折叠内容区域和锚点布局、标签页栏等布局工具，帮助组织界面层级和空间分配。
 
 ## DFrame
 

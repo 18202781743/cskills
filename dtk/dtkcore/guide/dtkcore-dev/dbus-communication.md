@@ -1,6 +1,6 @@
 # DBus 通信
 
-本分类包含以下类型：DDBusCaller、DDBusData、DDBusExtendedAbstractInterface、DDBusProperty、DDBusSender、DExportedInterface。
+提供链式 DBus 调用构造、异步方法提交、远端属性读写、扩展接口代理（含属性缓存与批量获取）以及接口导出能力。
 
 ## DDBusCaller
 

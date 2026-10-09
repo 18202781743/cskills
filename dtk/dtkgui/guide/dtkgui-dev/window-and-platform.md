@@ -1,6 +1,6 @@
 # 窗口与平台
 
-本分类包含以下类型：DPlatformHandle、DWindowManagerHelper、DWindowGroupLeader、DForeignWindow。
+提供窗口平台属性控制、窗口管理器功能查询、跨进程窗口分组和外部窗口引用能力。
 
 ## DPlatformHandle
 

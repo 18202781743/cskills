@@ -1,6 +1,6 @@
 # QML 窗口
 
-本分类包含以下类型：DQuickWindow、DQuickWindowAttached。
+提供 DTK 窗口及其附加属性，用于在 QML 场景中控制窗口外观与行为。
 
 ## DQuickWindow
 

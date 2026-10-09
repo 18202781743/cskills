@@ -1,6 +1,6 @@
 # 系统服务
 
-本分类包含以下类型：DDesktopServices、DRegionMonitor、DTaskbarControl。
+提供系统服务调用（打开文件管理器、播放系统提示音）、屏幕区域监视和任务栏进度与计数控制能力。
 
 ## DDesktopServices
 
