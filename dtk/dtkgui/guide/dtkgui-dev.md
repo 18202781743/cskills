@@ -1,6 +1,6 @@
 # dtkgui-dev
 
-dtkgui 是 DTK 的 GUI 基础层，提供 DCI 图标资源管理、图标与 SVG 渲染、文件拖拽与缩略图、调色板与主题、系统服务和窗口与平台等 GUI 层能力，为 dtkwidget 和 dtkdeclarative 提供底层图形与平台支持。
+dtkgui 是 DTK 的 GUI 基础层，GUI 层能力涵盖 DCI 图标资源管理、图标与 SVG 渲染、文件拖拽与缩略图、调色板与主题、系统服务和窗口与平台，为 dtkwidget 和 dtkdeclarative 提供底层图形与平台支持。
 
 ## 开发包
 

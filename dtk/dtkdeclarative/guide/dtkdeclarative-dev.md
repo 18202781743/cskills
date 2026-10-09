@@ -1,6 +1,6 @@
 # dtkdeclarative-dev
 
-dtkdeclarative 是 DTK 的 QML 声明式控件库，提供 DTK QML 应用的加载、快速渲染、QML 窗口控制和 DTK5 主题兼容等 C++ 层能力，与 org.deepin.dtk QML 模块配合使用，为 DTK 声明式应用提供底层支持。
+dtkdeclarative 是 DTK 的 QML 声明式控件库，C++ 层能力涵盖 DTK QML 应用的加载、快速渲染、QML 窗口控制和 DTK5 主题兼容，与 org.deepin.dtk QML 模块配合使用，为 DTK 声明式应用提供底层支持。
 
 ## 开发包
 
