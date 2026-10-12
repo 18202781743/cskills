@@ -20,7 +20,7 @@ import org.deepin.dtk 1.0
 
 ## 接口分类
 
-- [按钮控件](org.deepin.dtk/buttons.md) — 提供图标、语义化、开关切换、浮动操作等多种按钮及按钮组容器，覆盖常见交互触发场景
+- [按钮控件](org.deepin.dtk/buttons.md) — 提供图标按钮、语义化按钮、开关切换按钮、浮动操作按钮四种按钮类型及按钮组容器，覆盖常见交互触发场景
 - [对话框与窗口控件](org.deepin.dtk/dialogs-and-windows.md) — 窗口与对话框控件涵盖模态/非模态对话框、弹窗、抽屉、应用主窗口、标题栏和关于对话框
 - [输入控件](org.deepin.dtk/input-controls.md) — 输入控件涵盖文本编辑、密码、搜索、IP 地址、快捷键、数值微调、复选、单选、开关、下拉选择和滑动条
 - [菜单与动作控件](org.deepin.dtk/menus-and-actions.md) — 标准动作和动作组涵盖上下文菜单、菜单栏、菜单项分隔、主题切换菜单以及关于/帮助/退出
