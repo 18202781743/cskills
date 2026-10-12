@@ -1,8 +1,9 @@
 ---
 name: dde-tray-loader
-description: dde-tray-loader 是 DDE 桌面环境的托盘插件加载器组件，负责加载和管理系统托盘区域的插件。提供键盘布局切换、托盘图标管理、插件加载、电源管理配置（充电保护阈值与电池时间显示）、默认驻留插件列表管理功能
+description: dde-tray-loader 是 DDE 桌面环境的托盘插件加载器组件，负责加载和管理系统托盘区域的插件。提供键盘布局切换、托盘图标管理、插件加载、电源管理配置（充电保护阈值与电池时间显示）、默认驻留插件列表管理功能，提供 Dock 插件项 C++ 接口供第三方开发托盘插件
 Categories:
   - Settings
+  - Develop
 ---
 
 # dde-tray-loader

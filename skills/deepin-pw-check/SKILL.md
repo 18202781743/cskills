@@ -1,8 +1,9 @@
 ---
 name: deepin-pw-check
-description: deepin-pw-check 是 DDE 的密码安全策略组件，通过 System 总线提供密码校验开关、密码长度限制、校验策略、校验规则数量、首字母大写要求的系统级读写及配置管理接口
+description: deepin-pw-check 是 DDE 的密码安全策略组件，通过 System 总线提供密码校验开关、密码长度限制、校验策略、校验规则数量、首字母大写要求的系统级读写及配置管理接口，提供密码校验 C 接口开发库
 Categories:
   - Settings
+  - Develop
 ---
 
 # deepin-pw-check

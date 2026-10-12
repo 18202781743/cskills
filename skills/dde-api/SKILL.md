@@ -1,6 +1,6 @@
 ---
 name: dde-api
-description: dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供图像处理、拼音查询、蓝牙设备管理、区域设置、声音主题播放的 D-Bus 接口，同时提供文件打开、GRUB 主题调整、图片模糊处理、声音主题播放守护进程的 CLI 命令
+description: dde-api 是 DDE 后端调用库组件，通过 Session 和 System 总线提供图像处理、拼音查询、蓝牙设备管理、区域设置、声音主题播放的 D-Bus 接口，同时提供文件打开、GRUB 主题调整、图片模糊处理、声音主题播放守护进程的 CLI 命令，提供事件日志记录 C 接口开发库
 Categories:
   - Develop
 ---

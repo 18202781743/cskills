@@ -1,9 +1,10 @@
 ---
 name: dde-control-center
-description: dde-control-center 是 DDE 控制中心，是 DDE 桌面环境中用于系统设置管理的核心图形应用。本 skill 提供控制中心应用启动与模块查看的 CLI 命令、控制中心窗口显示控制与页面跳转及全局搜索的 D-Bus 接口、控制中心应用自身的窗口尺寸、模块显隐、个性化图标主题隐藏、账户头像、只读保护显示、开机壁纸编辑和 GRUB 用户名显示、显示亮度、日期时间 NTP 服务器、声音设备管理的 DConfig 配置项
+description: dde-control-center 是 DDE 控制中心，是 DDE 桌面环境中用于系统设置管理的核心图形应用。本 skill 提供控制中心应用启动与模块查看的 CLI 命令、控制中心窗口显示控制与页面跳转及全局搜索的 D-Bus 接口、控制中心应用自身的窗口尺寸、模块显隐、个性化图标主题隐藏、账户头像、只读保护显示、开机壁纸编辑和 GRUB 用户名显示、显示亮度、日期时间 NTP 服务器、声音设备管理的 DConfig 配置项，提供插件工厂接口和 org.deepin.dcc QML 模块等开发接口
 Categories:
   - Application
   - Settings
+  - Develop
 ---
 
 # dde-control-center
