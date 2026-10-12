@@ -104,12 +104,6 @@ DTK 通过 DConfig 暴露两组公共配置资源（appId 为空，所有 DTK �
 
 ## 开发接口
 
-### dtkcore 概览
-
-dtkcore 二次开发文档概览，包含项目定位、导出类型索引和按功能查阅指引。
-
-详见 [index.md](interface/dtkcore/index.md)
-
 ### dtkcore
 
 dtkcore 是基于 Qt 的 C++ 基础库，提供配置与设置、日志、文件与目录、系统信息、DBus 通信、通知、文本处理和线程调度能力。界面控件与视觉主题由上层库提供。
@@ -157,12 +151,6 @@ dtkcore 是基于 Qt 的 C++ 基础库，提供配置与设置、日志、文件
 提供单位换算与格式化、线程投递、单例基类模板、对象基类、虚函数表操作以及路径拼接工具。
 
 详见 [tools-and-threading.md](interface/dtkcore/dtkcore-dev/tools-and-threading.md)
-
-### dtkdeclarative 概览
-
-dtkdeclarative 二次开发文档概览，包含项目定位、导出类型索引和按功能查阅指引。
-
-详见 [index.md](interface/dtkdeclarative/index.md)
 
 ### dtkdeclarative
 
@@ -238,12 +226,6 @@ dtkdeclarative 是基于 Qt Quick 的 C++ 库，为 DTK QML 声明式控件提�
 
 详见 [org.deepin.dtk.settings.md](interface/dtkdeclarative/org.deepin.dtk.settings.md)
 
-### dtkgui 概览
-
-dtkgui 二次开发文档概览，包含项目定位、导出类型索引和按功能查阅指引。
-
-详见 [index.md](interface/dtkgui/index.md)
-
 ### dtkgui
 
 dtkgui 是基于 Qt GUI 模块的 C++ 库，提供 DTK 图形界面层面的能力，包括 DCI 图标渲染与播放、调色板管理、窗口装饰与平台主题、文件拖拽、字体管理、缩略图生成、SVG 渲染、区域监视和任务栏控制。控件级别的功能由上层 dtkwidget 提供。
@@ -285,12 +267,6 @@ dtkgui 是基于 Qt GUI 模块的 C++ 库，提供 DTK 图形界面层面的能�
 提供窗口平台属性控制、窗口管理器功能查询、跨进程窗口分组和外部窗口引用能力。
 
 详见 [window-and-platform.md](interface/dtkgui/dtkgui-dev/window-and-platform.md)
-
-### dtkwidget 概览
-
-dtkwidget 二次开发文档概览，包含项目定位、导出类型索引和按功能查阅指引。
-
-详见 [index.md](interface/dtkwidget/index.md)
 
 ### dtkwidget
 

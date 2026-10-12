@@ -63,12 +63,6 @@ dde-shell 通过 DConfig 暴露自身通知行为相关的配置资源。
 
 dde-shell 是 DDE Shell 框架库，提供三层插件模型（Applet → Containment → Panel）、元数据驱动的插件发现、Wayland Layer Shell 窗口管理、跨插件通信机制和 Dock 面板插件接口。使用方通过 CMake 集成框架库开发 applet 插件，或通过 Dock 接口开发 Dock 区域插件。
 
-### 概览
-
-二次开发文档概览，包含项目定位、导出类型索引和按功能查阅指引。
-
-详见 [index.md](interface/index.md)
-
 ### 插件框架接口
 
 C++ 框架类型参考文档，包含 DApplet、DContainment、DPanel、DAppletBridge、DPluginLoader、DPluginMetaData 类型的定位、功能能力和使用场景。

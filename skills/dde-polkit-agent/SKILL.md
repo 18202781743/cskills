@@ -34,12 +34,6 @@ dde-polkit-agent 在 Session 总线上注册 D-Bus 服务 `org.deepin.dde.Polkit
 
 dde-polkit-agent 是 DDE 桌面环境的 Polkit 认证代理，为需要提权的操作提供图形化认证对话框。项目通过安装公开头文件，允许第三方继承扩展接口并编译为共享库插件，由认证代理在运行时加载，从而自定义认证行为。
 
-### 概览
-
-二次开发文档概览，包含项目定位、导出类型索引和按功能查阅指引。
-
-详见 [index.md](interface/index.md)
-
 ### 认证代理扩展接口
 
 C++ 接口参考文档，包含 AgentExtension 和 AgentExtensionProxy 两个公开抽象接口的定位、功能能力和使用场景，以及扩展插件的集成与构建方式。
