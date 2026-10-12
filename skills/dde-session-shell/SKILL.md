@@ -1,6 +1,6 @@
 ---
 name: dde-session-shell
-description: dde-session-shell 是 DDE 桌面环境的登录锁屏组件，负责系统锁屏、用户登录认证、关机重启界面显示。该 skill 提供锁屏程序启动、登录界面显示设置、登录欢迎界面运行、手势密码重置的 CLI 命令，锁屏界面显示控制、关机界面显示控制、电源操作的 D-Bus 接口，以及快速登录开关的 DConfig 配置项，提供登录插件接口、托盘插件接口和辅助登录 C 接口等开发接口
+description: dde-session-shell 是 DDE 桌面环境的登录锁屏组件，负责系统锁屏、用户登录认证、关机重启界面显示。该 skill 提供锁屏程序启动、登录界面显示设置、登录欢迎界面运行、手势密码重置的 CLI 命令，锁屏界面显示控制、关机界面显示控制、电源操作的 D-Bus 接口，以及快速登录开关的 DConfig 配置项，提供登录插件接口、托盘插件接口和辅助登录 C 接口开发接口
 Categories:
   - Application
   - Develop
