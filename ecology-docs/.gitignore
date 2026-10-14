@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.har
+session.json
+credentials.json
+credentials.enc
+*.swp
+*.swo
+captcha.png
+captcha-*.png
+.http-login-cookies.txt
+scripts/*.png

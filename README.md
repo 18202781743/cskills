@@ -15,6 +15,7 @@
 | [remote-dev-sync](remote-dev-sync/SKILL.md) | 本地开发、远程编译同步工具 | 使用 rsync 和 SSH 将本地代码同步到远程机器构建和测试 |
 | [linglong-runtime-update](linglong-runtime-update/SKILL.md) | DTK 玲珑 Runtime 更新自动化 | CRP 打包、Jenkins 构建、Runtime 仓库更新和 Layer 推送 |
 | [uos-pms-bug-workflow-trigger](uos-pms-bug-workflow-trigger/SKILL.md) | UOS PMS Bug 流程触发工具 | 通过命令行解决、激活或关闭 PMS Bug |
+| [ecology-docs](ecology-docs/SKILL.md) | 统信生态文档后台自动化 | 登录与会话复用、目录文章查询、Markdown 新建更新、图片附件上传回读 |
 
 ## 与 deepin-skills 的关系
 

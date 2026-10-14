@@ -1,0 +1,4 @@
+requests>=2.31,<3
+# 凭据加密使用操作系统已有 cryptography、PyGObject/libsecret 和 Secret Service。
+# ddddocr 用于验证码自动识别（可选）；缺少时回退为人工填写验证码。
+ddddocr>=1.5,<2

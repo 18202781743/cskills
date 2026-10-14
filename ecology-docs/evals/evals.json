@@ -1,0 +1,43 @@
+{
+  "skill_name": "ecology-docs",
+  "evals": [
+    {
+      "id": 2,
+      "prompt": "将 /tmp/article.md 更新到 ecology 后台文章 6ac8995468952e2c3444cbda，已发布状态保留。先说明如何预演，实际执行需备份并防止覆盖他人修改。此次只做离线预演。",
+      "expected_output": "update --dry-run 无网络；实际 update 保留状态，备份、重复读取、回读验证，说明原子性限制。",
+      "files": [],
+      "assertions": [
+        "提供保留当前状态的离线预演命令与零请求证据",
+        "说明备份、回读及非原子并发窗口"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "上传 /tmp/example.zip 并用于新文档，目录 ID 是 6ac899545d7f04b26ef81da9，标题为示例。请写出执行步骤，不实际上传或新建。",
+      "expected_output": "upload 后哈希验证并替换链接；create 使用 dirid 对应 parent，默认草稿，返回 ID 后回读。",
+      "files": [],
+      "assertions": [
+        "提供 upload/create 固定命令，正确使用目录参数和草稿",
+        "要求附件下载哈希验证并避免重复创建"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "已有加密账号密码，但会话失效；我使用没有图像识别能力的 AI。请执行登录入口完成认证。",
+      "expected_output": "login 自动获取并识别验证码后直接提交，识别失败或验证码被拒时自动换图重试；全部失败才输出 captcha_image 路径并让用户到真人终端重试，不在非交互终端等待输入，也不提供验证码参数。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "将生态文档账号密码保存在 ~/.config 下，不能明文保存，也不要安装软件。如果密钥环不可用应该如何处理？",
+      "expected_output": "使用 auth_session.py configure；Fernet 密文 credentials.enc 加系统密钥环持有密钥；缺组件或密钥环不可用明确失败，不回退明文。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "列出生态文档后台的完整组织结构，再只看目录 6ac899545d7f04b26ef81da9 下的子树，不读取每篇正文。",
+      "expected_output": "使用 ecology_docs.py list 和 list --parent；展示层级目录和文章元信息，按排序排列，缺失父目录的项不遗漏。",
+      "files": []
+    }
+  ]
+}
