@@ -1,0 +1,68 @@
+[
+  {
+    "query": "普通 QWidget 程序通过 DBus 打开控制中心。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "托盘插件用 DConfig 持久化用户设置，配置 ID 应该怎么命名，meta 文件放哪里。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "快捷面板点击后打开详情页并返回主面板。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "托盘插件使用 DIconTheme 加载主题图标，暗色主题下 findQIcon 返回空图标。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "开发一个 dde-shell Containment 插件管理 Dock Applet。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  },
+  {
+    "query": "任务栏从底部移到左侧后，托盘图标需要旋转。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "快捷面板点击后需要打开详情页并返回主面板。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "控制中心增加蓝牙设置页面。",
+    "should_trigger": false,
+    "expected_skill": "dde-control-center-development"
+  },
+  {
+    "query": "托盘插件怎么用 DGuiApplicationHelper 适配亮暗主题图标。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development",
+    "cross_skill": "dtk-development"
+  },
+  {
+    "query": "QSystemTrayIcon 的菜单需要支持勾选项。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "处理 MSG_GET_SUPPORT_FLAG 和插件可用状态变化通知。",
+    "should_trigger": true,
+    "expected_skill": "dde-tray-development"
+  },
+  {
+    "query": "DIconButton 的 dci 图标不随主题切换。",
+    "should_trigger": false,
+    "expected_skill": "dtk-development"
+  },
+  {
+    "query": "创建一个 LayerShell 侧边栏窗口。",
+    "should_trigger": false,
+    "expected_skill": "dde-shell-development"
+  }
+]

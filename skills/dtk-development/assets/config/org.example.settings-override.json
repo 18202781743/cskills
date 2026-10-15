@@ -1,0 +1,14 @@
+{
+    "magic": "dsg.config.override",
+    "version": "1.0",
+    "contents": {
+        "canExit": {
+            "value": false,
+            "serial": 1
+        },
+        "windowWidth": {
+            "value": 1024,
+            "serial": 1
+        }
+    }
+}

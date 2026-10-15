@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=My DTK App
+Name[zh_CN]=我的 DTK 应用
+Comment=A DTK desktop application
+Comment[zh_CN]=一个 DTK 桌面应用
+Exec=myapp
+Icon=myapp
+Categories=Utility;
+Terminal=false
+StartupNotify=true
